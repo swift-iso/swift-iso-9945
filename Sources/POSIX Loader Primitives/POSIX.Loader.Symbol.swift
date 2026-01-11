@@ -62,7 +62,6 @@ extension POSIX.Loader.Symbol {
     /// typealias MyFunc = @convention(c) () -> Int32
     /// let func = unsafeBitCast(sym, to: MyFunc.self)
     /// ```
-    @inlinable
     public static func lookup(
         name: UnsafePointer<CChar>,
         in scope: Scope

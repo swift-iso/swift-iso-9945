@@ -48,7 +48,6 @@ extension POSIX.Loader.Library {
     ///   - options: Loading options. Default: `.now` (fail-early).
     /// - Returns: Handle to the loaded library.
     /// - Throws: `Loader.Error.open` with dlerror message.
-    @inlinable
     public static func open(
         path: UnsafePointer<CChar>?,
         options: Options = .now
@@ -66,7 +65,6 @@ extension POSIX.Loader.Library {
     ///
     /// - Parameter handle: The library handle to close.
     /// - Throws: `Loader.Error.close` on failure.
-    @inlinable
     public static func close(_ handle: Handle) throws(Loader.Error) {
         // Clear stale error
         _ = dlerror()
