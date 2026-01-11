@@ -12,8 +12,8 @@
 #if os(macOS)
 
     import Darwin
-    import Test_Support_Primitives
-    import Testing
+    import Test_Primitives
+import Testing_Extras
 
     import Kernel_Primitives
     @testable import POSIX_Kernel_Primitives
@@ -21,10 +21,6 @@ import POSIX_Primitives
 
     extension Kernel.Process.Execute {
         #TestSuites
-    }
-
-    extension Kernel.Process.Execute.Test {
-        @Suite struct Integration {}
     }
 
     // MARK: - Integration Tests

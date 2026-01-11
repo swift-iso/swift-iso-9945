@@ -12,8 +12,8 @@
 // Signal.Error only exists on POSIX platforms
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
-    import Test_Support_Primitives
-    import Testing
+    import Test_Primitives
+import Testing_Extras
 
     import Kernel_Primitives
     @testable import POSIX_Kernel_Primitives

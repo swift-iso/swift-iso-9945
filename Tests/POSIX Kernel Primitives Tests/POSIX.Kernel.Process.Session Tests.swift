@@ -11,8 +11,8 @@
 
 #if os(macOS)
 
-    import Test_Support_Primitives
-    import Testing
+    import Test_Primitives
+import Testing_Extras
 
     import Kernel_Primitives
     @testable import POSIX_Kernel_Primitives
@@ -21,9 +21,6 @@
         #TestSuites
     }
 
-    extension Kernel.Process.Session.Test {
-        @Suite struct Integration {}
-    }
 
     // MARK: - Unit Tests
 

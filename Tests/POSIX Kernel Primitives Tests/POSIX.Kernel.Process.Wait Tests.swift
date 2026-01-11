@@ -11,8 +11,8 @@
 
 #if os(macOS)
 
-    import Test_Support_Primitives
-    import Testing
+    import Test_Primitives
+import Testing_Extras
 
     import Kernel_Primitives
     @testable import POSIX_Kernel_Primitives
@@ -20,10 +20,6 @@ import POSIX_Primitives
 
     extension Kernel.Process.Wait {
         #TestSuites
-    }
-
-    extension Kernel.Process.Wait.Test {
-        @Suite struct Integration {}
     }
 
     // MARK: - Selector Tests

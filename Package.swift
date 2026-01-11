@@ -20,10 +20,16 @@ let package = Package(
             name: "POSIX Kernel Primitives",
             targets: ["POSIX Kernel Primitives"]
         ),
+        .library(
+            name: "POSIX Loader Primitives",
+            targets: ["POSIX Loader Primitives"]
+        ),
     ],
     dependencies: [
         .package(path: "../swift-kernel-primitives"),
-        .package(path: "../swift-test-support-primitives"),
+        .package(path: "../swift-loader-primitives"),
+        .package(path: "../swift-test-primitives"),
+        .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
         .target(
@@ -42,6 +48,15 @@ let package = Package(
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
             ]
         ),
+        .target(
+            name: "POSIX Loader Primitives",
+            dependencies: [
+                .target(name: "POSIX Primitives"),
+                .product(name: "Loader Primitives", package: "swift-loader-primitives"),
+                .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
+            ],
+            path: "Sources/POSIX Loader Primitives"
+        ),
         .executableTarget(
             name: "posix-test-helper",
             dependencies: [],
@@ -53,7 +68,8 @@ let package = Package(
                 "POSIX Kernel Primitives",
                 "posix-test-helper",
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Test Support Primitives", package: "swift-test-support-primitives"),
+                .product(name: "Test Primitives", package: "swift-test-primitives"),
+                .product(name: "Testing Extras", package: "swift-testing-extras"),
             ],
             path: "Tests/POSIX Kernel Primitives Tests"
         ),

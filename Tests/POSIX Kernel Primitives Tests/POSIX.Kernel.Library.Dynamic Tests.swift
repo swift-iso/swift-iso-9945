@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Test_Support_Primitives
-import Testing
+import Test_Primitives
+import Testing_Extras
 
 @testable import POSIX_Kernel_Primitives
 import POSIX_Primitives
