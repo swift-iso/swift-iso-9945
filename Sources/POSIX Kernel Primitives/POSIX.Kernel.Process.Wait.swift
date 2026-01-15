@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Wait operations namespace.
     ///
     /// ## Threading
@@ -36,7 +36,7 @@ extension POSIX.Kernel.Process {
 
 // MARK: - Selector
 
-extension POSIX.Kernel.Process.Wait {
+extension ISO_9945.Kernel.Process.Wait {
     /// Selector for which child(ren) to wait for.
     ///
     /// Replaces POSIX magic values (-1, 0, <-1) with explicit cases.
@@ -66,7 +66,7 @@ extension POSIX.Kernel.Process.Wait {
 
 // MARK: - Result
 
-extension POSIX.Kernel.Process.Wait {
+extension ISO_9945.Kernel.Process.Wait {
     /// Result of a wait operation.
     public struct Result: Sendable, Equatable {
         /// The process ID that changed state.
@@ -84,7 +84,7 @@ extension POSIX.Kernel.Process.Wait {
 
 // MARK: - Wait Operation
 
-extension POSIX.Kernel.Process.Wait {
+extension ISO_9945.Kernel.Process.Wait {
     /// Waits for child process(es) to change state.
     ///
     /// - Parameters:

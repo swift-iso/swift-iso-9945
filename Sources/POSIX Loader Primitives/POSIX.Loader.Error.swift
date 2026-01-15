@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Loader {
+extension ISO_9945.Loader {
     /// Errors from POSIX dynamic loader operations.
     ///
     /// Wraps `Loader.Error` with POSIX-specific error capture from `dlerror()`.
@@ -30,7 +30,7 @@ extension POSIX.Loader {
 // MARK: - Error Capture
 
 #if !os(Windows)
-extension POSIX.Loader {
+extension ISO_9945.Loader {
     /// Captures dlerror() into a Loader.Message.
     ///
     /// MUST be called immediately after a failing loader call.

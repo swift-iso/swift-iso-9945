@@ -23,14 +23,14 @@ public import POSIX_Primitives
     internal import CPOSIXProcessShim
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Execute operations namespace.
     public enum Execute {}
 }
 
 // MARK: - Execute Operation
 
-extension POSIX.Kernel.Process.Execute {
+extension ISO_9945.Kernel.Process.Execute {
     /// Replaces current process image with a new program.
     ///
     /// - Parameters:

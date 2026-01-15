@@ -23,7 +23,7 @@ public import POSIX_Primitives
     internal import CPOSIXProcessShim
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Exit status from wait operations.
     ///
     /// Wraps the raw status integer with typed accessors.
@@ -48,7 +48,7 @@ extension POSIX.Kernel.Process {
 
 // MARK: - Boolean Status Checks
 
-extension POSIX.Kernel.Process.Status {
+extension ISO_9945.Kernel.Process.Status {
     /// Whether process exited normally (WIFEXITED).
     public var exited: Bool {
         swift_WIFEXITED(rawValue) != 0
@@ -72,7 +72,7 @@ extension POSIX.Kernel.Process.Status {
 
 // MARK: - Nest.Name Accessors
 
-extension POSIX.Kernel.Process.Status {
+extension ISO_9945.Kernel.Process.Status {
     /// Nested accessor for exit code info.
     public var exit: Exit { Exit(self) }
 
@@ -160,7 +160,7 @@ extension POSIX.Kernel.Process.Status {
 
 // MARK: - Typed Classification
 
-extension POSIX.Kernel.Process.Status {
+extension ISO_9945.Kernel.Process.Status {
     /// Typed classification for pattern matching.
     ///
     /// Derived from raw accessors — no information loss.

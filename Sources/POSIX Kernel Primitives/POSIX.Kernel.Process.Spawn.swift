@@ -23,14 +23,14 @@ public import POSIX_Primitives
     internal import CPOSIXProcessShim
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Spawn operations namespace.
     public enum Spawn {}
 }
 
 // MARK: - Spawn Operation
 
-extension POSIX.Kernel.Process.Spawn {
+extension ISO_9945.Kernel.Process.Spawn {
     /// Spawns a new process to execute the specified program.
     ///
     /// Unlike `fork()` followed by `exec()`, `posix_spawn()` does NOT duplicate the

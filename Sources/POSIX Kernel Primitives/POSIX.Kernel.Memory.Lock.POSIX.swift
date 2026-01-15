@@ -14,7 +14,7 @@ public import POSIX_Primitives
 
 // MARK: - POSIX-Specific Typed API
 
-extension POSIX.Kernel.Memory.Lock {
+extension ISO_9945.Kernel.Memory.Lock {
     /// Locks all current and/or future pages using typed flags.
     ///
     /// - Parameter flags: Typed flags for mlockall.

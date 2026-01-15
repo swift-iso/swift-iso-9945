@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Signal.Action {
+extension ISO_9945.Kernel.Signal.Action {
     /// Signal action flags.
     ///
     /// These flags modify how signals are handled when delivered.

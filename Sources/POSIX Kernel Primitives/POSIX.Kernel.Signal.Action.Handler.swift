@@ -20,7 +20,7 @@ public import POSIX_Primitives
     public import Musl
 #endif
 
-extension POSIX.Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     /// Signal action operations namespace.
     ///
     /// ## Threading
@@ -34,7 +34,7 @@ extension POSIX.Kernel.Signal {
     public enum Action {}
 }
 
-extension POSIX.Kernel.Signal.Action {
+extension ISO_9945.Kernel.Signal.Action {
     /// Handler disposition for a signal.
     ///
     /// Specifies what happens when a signal is delivered: use the default action,
@@ -108,7 +108,7 @@ extension POSIX.Kernel.Signal.Action {
 
 // MARK: - Internal Helpers
 
-extension POSIX.Kernel.Signal.Action.Handler {
+extension ISO_9945.Kernel.Signal.Action.Handler {
     /// Whether this handler requires the SA_SIGINFO flag.
     internal var requiresSigInfo: Bool {
         if case .customInfo = unsafe self { return true }

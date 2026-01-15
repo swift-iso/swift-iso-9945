@@ -20,14 +20,14 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Kill operations namespace.
     public enum Kill {}
 }
 
 // MARK: - Signal
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// POSIX signals for process control.
     ///
     /// This is a focused subset of signals used for process management.
@@ -41,7 +41,7 @@ extension POSIX.Kernel.Process {
     }
 }
 
-extension POSIX.Kernel.Process.Signal {
+extension ISO_9945.Kernel.Process.Signal {
     /// Stop process (cannot be caught or ignored).
     public static var stop: Self { Self(rawValue: SIGSTOP) }
 
@@ -63,7 +63,7 @@ extension POSIX.Kernel.Process.Signal {
 
 // MARK: - Kill Operation
 
-extension POSIX.Kernel.Process.Kill {
+extension ISO_9945.Kernel.Process.Kill {
     /// Sends a signal to a process.
     ///
     /// - Parameters:

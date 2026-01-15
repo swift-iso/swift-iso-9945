@@ -20,7 +20,7 @@ public import POSIX_Primitives
     import Musl
 #endif
 
-extension POSIX.Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     /// Signal mask operations namespace.
     ///
     /// ## Threading
@@ -34,7 +34,7 @@ extension POSIX.Kernel.Signal {
     public enum Mask {}
 }
 
-extension POSIX.Kernel.Signal.Mask {
+extension ISO_9945.Kernel.Signal.Mask {
     /// Specifies how to modify the signal mask.
     ///
     /// Used with `Mask.change(_:signals:)` to specify whether signals
@@ -65,7 +65,7 @@ extension POSIX.Kernel.Signal.Mask {
 
 // MARK: - CustomStringConvertible
 
-extension POSIX.Kernel.Signal.Mask.How: CustomStringConvertible {
+extension ISO_9945.Kernel.Signal.Mask.How: CustomStringConvertible {
     public var description: String {
         switch self {
         case .block: return "block"

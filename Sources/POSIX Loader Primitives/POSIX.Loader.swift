@@ -12,7 +12,7 @@
 public import Loader_Primitives
 public import POSIX_Primitives
 
-extension POSIX {
+extension ISO_9945 {
     /// POSIX dynamic loader interface.
     ///
     /// Provides access to `dlopen`/`dlsym`/`dlclose` functionality

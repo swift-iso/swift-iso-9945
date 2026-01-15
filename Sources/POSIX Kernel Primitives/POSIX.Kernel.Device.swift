@@ -14,7 +14,7 @@ public import POSIX_Primitives
 
 // MARK: - Major/Minor Extraction
 
-extension POSIX.Kernel.Device {
+extension ISO_9945.Kernel.Device {
     /// The major device number (identifies device type/driver).
     ///
     /// This uses the standard Linux encoding for dev_t.
@@ -43,7 +43,7 @@ extension POSIX.Kernel.Device {
 
 // MARK: - Typed Major/Minor
 
-extension POSIX.Kernel.Device {
+extension ISO_9945.Kernel.Device {
     /// Type-safe wrapper for a major device number.
     ///
     /// This is a semantic wrapper only, not a validated range.
@@ -86,7 +86,7 @@ extension POSIX.Kernel.Device {
 
 // MARK: - CustomStringConvertible
 
-extension POSIX.Kernel.Device: @retroactive CustomStringConvertible {
+extension ISO_9945.Kernel.Device: @retroactive CustomStringConvertible {
     /// Returns "major:minor" format for POSIX device IDs.
     public var description: String {
         "\(major):\(minor)"

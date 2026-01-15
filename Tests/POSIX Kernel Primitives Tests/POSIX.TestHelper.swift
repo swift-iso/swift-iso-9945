@@ -136,18 +136,37 @@ import POSIX_Primitives
         /// - Parameter args: Command and arguments.
         /// - Returns: The process ID of the spawned helper.
         /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
-        static func spawn(_ args: [String]) throws -> Kernel.Process.ID {
+        static func spawn(_ args: [Swift.String]) throws -> Kernel.Process.ID {
             let path = executablePath()
             let allArgs = [path] + args
-            let envp: [String] = []
 
-            return try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
-                    try POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
+            return try unsafe path.withCString { pathCStr in
+                // Build argv array
+                var argvPtrs: [UnsafePointer<CChar>?] = []
+                var argvStorage: [ContiguousArray<CChar>] = []
+
+                for arg in allArgs {
+                    var chars = ContiguousArray<CChar>(arg.utf8.map { CChar(bitPattern: $0) })
+                    chars.append(0)
+                    argvStorage.append(chars)
+                }
+
+                for i in argvStorage.indices {
+                    argvPtrs.append(argvStorage[i].withUnsafeBufferPointer { $0.baseAddress })
+                }
+                argvPtrs.append(nil)
+
+                // Empty envp
+                var envpPtrs: [UnsafePointer<CChar>?] = [nil]
+
+                return try unsafe argvPtrs.withUnsafeBufferPointer { argvBuf in
+                    try unsafe envpPtrs.withUnsafeBufferPointer { envpBuf in
+                        try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                            path: pathCStr,
+                            argv: argvBuf.baseAddress!,
+                            envp: envpBuf.baseAddress!
+                        )
+                    }
                 }
             }
         }

@@ -12,7 +12,7 @@
 public import Kernel_Primitives
 public import POSIX_Primitives
 
-extension POSIX.Kernel.Signal.Action {
+extension ISO_9945.Kernel.Signal.Action {
     /// Swift representation of signal action configuration.
     ///
     /// Encapsulates handler, mask, and flags without exposing the

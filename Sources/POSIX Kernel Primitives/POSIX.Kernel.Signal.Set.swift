@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     /// A set of signals.
     ///
     /// Wraps `sigset_t` with type-safe Swift operations.
@@ -150,7 +150,7 @@ extension POSIX.Kernel.Signal {
 
 // MARK: - Internal Access
 
-extension POSIX.Kernel.Signal.Set {
+extension ISO_9945.Kernel.Signal.Set {
     /// Provides read access to the underlying `sigset_t` for syscall interop.
     @unsafe
     internal func withUnsafePointer<R>(_ body: (UnsafePointer<sigset_t>) throws -> R) rethrows -> R {

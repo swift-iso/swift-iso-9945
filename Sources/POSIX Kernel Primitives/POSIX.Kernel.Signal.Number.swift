@@ -20,7 +20,7 @@ public import POSIX_Primitives
     import Musl
 #endif
 
-extension POSIX.Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     /// A signal number.
     ///
     /// Use named constants (`.interrupt`, `.terminate`, etc.) for portable code.
@@ -51,7 +51,7 @@ extension POSIX.Kernel.Signal {
 
 // MARK: - Standard POSIX Signals
 
-extension POSIX.Kernel.Signal.Number {
+extension ISO_9945.Kernel.Signal.Number {
     /// Hangup detected on controlling terminal or death of controlling process.
     ///
     /// - POSIX: `SIGHUP`
@@ -197,7 +197,7 @@ extension POSIX.Kernel.Signal.Number {
 
 // MARK: - CustomStringConvertible
 
-extension POSIX.Kernel.Signal.Number: CustomStringConvertible {
+extension ISO_9945.Kernel.Signal.Number: CustomStringConvertible {
     public var description: String {
         switch self {
         case .hangup: return "SIGHUP"

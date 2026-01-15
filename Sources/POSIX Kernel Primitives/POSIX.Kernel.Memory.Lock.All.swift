@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Memory.Lock {
+extension ISO_9945.Kernel.Memory.Lock {
     /// Locks all current and/or future pages in the process address space.
     ///
     /// - Parameter flags: Raw flags for mlockall (MCL_CURRENT, MCL_FUTURE, etc.).

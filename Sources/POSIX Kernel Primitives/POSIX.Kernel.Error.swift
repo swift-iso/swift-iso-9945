@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Error {
+extension ISO_9945.Kernel.Error {
     /// Captures current errno as a `Kernel.Error.Code`.
     ///
     /// Must be called immediately after a failing syscall, before any other libc call.

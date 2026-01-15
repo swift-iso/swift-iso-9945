@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Loader {
+extension ISO_9945.Loader {
     /// POSIX dynamic library operations.
     ///
     /// Wraps `dlopen`/`dlclose` on POSIX systems.
@@ -29,7 +29,7 @@ extension POSIX.Loader {
 
 // MARK: - Handle Alias
 
-extension POSIX.Loader.Library {
+extension ISO_9945.Loader.Library {
     /// Library handle type.
     ///
     /// Aliases to `Loader.Library.Handle` from swift-loader-primitives.
@@ -40,7 +40,7 @@ extension POSIX.Loader.Library {
 
 #if !os(Windows)
 
-extension POSIX.Loader.Library {
+extension ISO_9945.Loader.Library {
     /// Opens a dynamic library.
     ///
     /// - Parameters:

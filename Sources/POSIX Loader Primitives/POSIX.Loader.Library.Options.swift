@@ -21,7 +21,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Loader.Library {
+extension ISO_9945.Loader.Library {
     /// Options for loading dynamic libraries.
     ///
     /// Maps to RTLD_* flags on POSIX.
@@ -39,7 +39,7 @@ extension POSIX.Loader.Library {
 
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
-extension POSIX.Loader.Library.Options {
+extension ISO_9945.Loader.Library.Options {
     /// Resolve symbols lazily (RTLD_LAZY).
     ///
     /// Defers symbol resolution until first use; may hide errors
@@ -70,7 +70,7 @@ extension POSIX.Loader.Library.Options {
 
 #if canImport(Darwin)
 
-extension POSIX.Loader.Library.Options {
+extension ISO_9945.Loader.Library.Options {
     /// Don't load, just check if loadable (RTLD_NOLOAD).
     ///
     /// Returns the handle if the library is already loaded,

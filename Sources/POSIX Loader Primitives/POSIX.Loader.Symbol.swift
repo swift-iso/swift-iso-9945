@@ -21,7 +21,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Loader {
+extension ISO_9945.Loader {
     /// POSIX symbol lookup interface.
     ///
     /// Wraps `dlsym` on POSIX systems.
@@ -30,7 +30,7 @@ extension POSIX.Loader {
 
 // MARK: - Scope Alias
 
-extension POSIX.Loader.Symbol {
+extension ISO_9945.Loader.Symbol {
     /// Symbol lookup scope.
     ///
     /// Aliases to `Loader.Symbol.Scope` from swift-loader-primitives.
@@ -41,7 +41,7 @@ extension POSIX.Loader.Symbol {
 
 #if !os(Windows)
 
-extension POSIX.Loader.Symbol {
+extension ISO_9945.Loader.Symbol {
     /// Looks up a symbol in a library or scope.
     ///
     /// - Parameters:

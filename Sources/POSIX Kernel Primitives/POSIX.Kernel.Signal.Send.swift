@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     /// Signal sending operations.
     ///
     /// ## Threading
@@ -33,7 +33,7 @@ extension POSIX.Kernel.Signal {
     public enum Send {}
 }
 
-extension POSIX.Kernel.Signal.Send {
+extension ISO_9945.Kernel.Signal.Send {
     /// Sends a signal to a process.
     ///
     /// - Parameters:

@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     /// Signal-related errors.
     ///
     /// Uses operation carriers with semantic accessors to keep the enum stable
@@ -47,7 +47,7 @@ extension POSIX.Kernel.Signal {
 
 // MARK: - Error Code Mapping
 
-extension POSIX.Kernel.Signal.Error {
+extension ISO_9945.Kernel.Signal.Error {
     /// Creates a signal error from an error code.
     ///
     /// Maps EINTR to `.interrupted`. Returns `nil` for non-signal error codes.
@@ -64,7 +64,7 @@ extension POSIX.Kernel.Signal.Error {
 
 // MARK: - Semantic Accessors
 
-extension POSIX.Kernel.Signal.Error {
+extension ISO_9945.Kernel.Signal.Error {
     /// The underlying error code, if any.
     public var code: Kernel.Error.Code? {
         switch self {
@@ -118,7 +118,7 @@ extension POSIX.Kernel.Signal.Error {
 
 // MARK: - CustomStringConvertible
 
-extension POSIX.Kernel.Signal.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Signal.Error: CustomStringConvertible {
     public var description: String {
         switch self {
         case .interrupted:

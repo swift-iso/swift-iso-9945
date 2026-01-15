@@ -20,7 +20,7 @@ public import POSIX_Primitives
     public import Musl
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Session operations namespace.
     ///
     /// ## Threading
@@ -35,7 +35,7 @@ extension POSIX.Kernel.Process {
 
 // MARK: - Session ID
 
-extension POSIX.Kernel.Process.Session {
+extension ISO_9945.Kernel.Process.Session {
     /// Session ID wrapper.
     ///
     /// A type-safe wrapper for session identifiers.
@@ -44,7 +44,7 @@ extension POSIX.Kernel.Process.Session {
 
 // MARK: - Session Operations
 
-extension POSIX.Kernel.Process.Session {
+extension ISO_9945.Kernel.Process.Session {
     /// Creates a new session with the calling process as leader.
     ///
     /// - Returns: The new session ID.

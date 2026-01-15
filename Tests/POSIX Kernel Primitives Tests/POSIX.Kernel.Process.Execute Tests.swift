@@ -13,11 +13,11 @@
 
     import Darwin
     import Test_Primitives
-import Testing_Extras
+    import Testing_Extras
 
     import Kernel_Primitives
     @testable import POSIX_Kernel_Primitives
-import POSIX_Primitives
+    import POSIX_Primitives
 
     extension Kernel.Process.Execute {
         #TestSuites
@@ -31,7 +31,7 @@ import POSIX_Primitives
 
     extension Kernel.Process.Execute.Test.Integration {
         /// Finds an executable "true" command, trying common paths.
-        private static func findTruePath() -> String {
+        private static func findTruePath() -> Swift.String {
             for path in ["/usr/bin/true", "/bin/true"] {
                 if access(path, X_OK) == 0 {
                     return path
@@ -40,21 +40,60 @@ import POSIX_Primitives
             return "/usr/bin/true"  // Fallback, may fail
         }
 
+        /// Helper to spawn a process using Swift.String arrays
+        private static func spawnHelper(
+            path: Swift.String,
+            argv: [Swift.String],
+            envp: [Swift.String]
+        ) throws -> Kernel.Process.ID {
+            return try unsafe path.withCString { pathCStr in
+                // Build argv array
+                var argvStorage: [ContiguousArray<CChar>] = []
+                for arg in argv {
+                    var chars = ContiguousArray<CChar>(arg.utf8.map { CChar(bitPattern: $0) })
+                    chars.append(0)
+                    argvStorage.append(chars)
+                }
+
+                var argvPtrs: [UnsafePointer<CChar>?] = []
+                for i in argvStorage.indices {
+                    argvPtrs.append(argvStorage[i].withUnsafeBufferPointer { $0.baseAddress })
+                }
+                argvPtrs.append(nil)
+
+                // Build envp array
+                var envpStorage: [ContiguousArray<CChar>] = []
+                for env in envp {
+                    var chars = ContiguousArray<CChar>(env.utf8.map { CChar(bitPattern: $0) })
+                    chars.append(0)
+                    envpStorage.append(chars)
+                }
+
+                var envpPtrs: [UnsafePointer<CChar>?] = []
+                for i in envpStorage.indices {
+                    envpPtrs.append(envpStorage[i].withUnsafeBufferPointer { $0.baseAddress })
+                }
+                envpPtrs.append(nil)
+
+                return try unsafe argvPtrs.withUnsafeBufferPointer { argvBuf in
+                    try unsafe envpPtrs.withUnsafeBufferPointer { envpBuf in
+                        try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                            path: pathCStr,
+                            argv: argvBuf.baseAddress!,
+                            envp: envpBuf.baseAddress!
+                        )
+                    }
+                }
+            }
+        }
+
         @Test("spawn with /usr/bin/true or /bin/true succeeds")
         func spawnTrue() throws {
             let path = Self.findTruePath()
             let argv = [path]
-            let envp: [String] = []
+            let envp: [Swift.String] = []
 
-            let child = try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-                    try POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
-            }
+            let child = try Self.spawnHelper(path: path, argv: argv, envp: envp)
 
             let result = try Kernel.Process.Wait.wait(.process(child))
             #expect(result != nil, "Wait should return a result")
@@ -65,28 +104,14 @@ import POSIX_Primitives
         func spawnInvalidPath() throws {
             let path = "/nonexistent/path/to/binary"
             let argv = [path]
-            let envp: [String] = []
-
-            // Use a typed helper to preserve error type through Swift's type inference
-            func doSpawn() throws(Kernel.Path.String.Error<POSIX.Kernel.Process.Error>) -> Kernel.Process.ID {
-                try Kernel.Path.scope.array(argv, envp) {
-                    (argvPtr: UnsafePointer<UnsafePointer<CChar>?>, envpPtr: UnsafePointer<UnsafePointer<CChar>?>) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID in
-                    // argv[0] is already the path, use it directly
-                    try POSIX.Kernel.Process.Spawn.spawn(
-                        path: argvPtr[0]!,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
-            }
+            let envp: [Swift.String] = []
 
             do {
-                _ = try doSpawn()
+                _ = try Self.spawnHelper(path: path, argv: argv, envp: envp)
                 Issue.record("Expected spawn to throw for invalid path")
-            } catch {
-                // With pass-through overloads, error is single-layer: .body(.spawn(...))
-                guard case .body(.spawn(let code)) = error else {
-                    Issue.record("Expected .body(.spawn(...)), got \(error)")
+            } catch let error as POSIX.Kernel.Process.Error {
+                guard case .spawn(let code) = error else {
+                    Issue.record("Expected .spawn(...), got \(error)")
                     return
                 }
                 #expect(code.posix == ENOENT, "Expected ENOENT, got \(code)")
@@ -97,17 +122,9 @@ import POSIX_Primitives
         func spawnPassesArguments() throws {
             let path = "/bin/sh"
             let argv = ["/bin/sh", "-c", "exit 42"]
-            let envp: [String] = []
+            let envp: [Swift.String] = []
 
-            let child = try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-                    try POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
-            }
+            let child = try Self.spawnHelper(path: path, argv: argv, envp: envp)
 
             let result = try Kernel.Process.Wait.wait(.process(child))
             #expect(result?.status.exit.code == 42, "Shell should exit with code 42")
@@ -121,15 +138,7 @@ import POSIX_Primitives
             let argv = ["/bin/sh", "-c", "exit ${TEST_EXIT_CODE:-99}"]
             let envp = ["TEST_EXIT_CODE=77"]
 
-            let child = try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-                    try POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
-            }
+            let child = try Self.spawnHelper(path: path, argv: argv, envp: envp)
 
             let result = try Kernel.Process.Wait.wait(.process(child))
             #expect(result?.status.exit.code == 77, "Shell should exit with env value 77")

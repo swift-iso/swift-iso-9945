@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Socket {
+extension ISO_9945.Kernel.Socket {
     /// Socket pair operations for bidirectional inter-process communication.
     ///
     /// Creates a pair of connected Unix domain sockets. Unlike pipes, socket pairs
@@ -35,7 +35,7 @@ extension POSIX.Kernel.Socket {
     public enum Pair: Sendable {}
 }
 
-extension POSIX.Kernel.Socket.Pair {
+extension ISO_9945.Kernel.Socket.Pair {
     /// Errors from socket pair operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// Platform-specific error.
@@ -54,7 +54,7 @@ extension POSIX.Kernel.Socket.Pair {
     }
 }
 
-extension POSIX.Kernel.Socket.Pair.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Socket.Pair.Error: CustomStringConvertible {
     public var description: String {
         switch self {
         case .platform(let p):
@@ -66,7 +66,7 @@ extension POSIX.Kernel.Socket.Pair.Error: CustomStringConvertible {
     }
 }
 
-extension POSIX.Kernel.Socket.Pair {
+extension ISO_9945.Kernel.Socket.Pair {
     /// Creates a connected pair of Unix domain stream sockets.
     ///
     /// Both sockets are `AF_UNIX` / `SOCK_STREAM` and can be used for

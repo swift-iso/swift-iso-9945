@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Signal.Action {
+extension ISO_9945.Kernel.Signal.Action {
     /// Sets the signal action, returning the previous configuration.
     ///
     /// - Parameters:
@@ -142,7 +142,7 @@ extension sigaction {
 
 // MARK: - Configuration ← sigaction
 
-extension POSIX.Kernel.Signal.Action.Configuration {
+extension ISO_9945.Kernel.Signal.Action.Configuration {
     /// Creates a Configuration from a raw sigaction struct.
     @unsafe
     internal init(_ action: sigaction) {

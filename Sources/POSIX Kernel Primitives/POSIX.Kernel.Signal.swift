@@ -12,7 +12,7 @@
 public import Kernel_Primitives
 public import POSIX_Primitives
 
-extension POSIX.Kernel {
+extension ISO_9945.Kernel {
     /// POSIX signal handling.
     ///
     /// Signal handling operations including:

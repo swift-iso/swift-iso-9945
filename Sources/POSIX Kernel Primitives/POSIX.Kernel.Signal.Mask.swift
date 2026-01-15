@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Signal.Mask {
+extension ISO_9945.Kernel.Signal.Mask {
     /// Changes the signal mask for the calling thread.
     ///
     /// - Parameters:

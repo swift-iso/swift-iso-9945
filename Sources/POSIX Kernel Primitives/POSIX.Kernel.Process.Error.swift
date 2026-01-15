@@ -20,7 +20,7 @@ public import POSIX_Primitives
     import Musl
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Process-related errors.
     ///
     /// Uses operation carriers with semantic accessors. No dedicated `.interrupted`
@@ -51,7 +51,7 @@ extension POSIX.Kernel.Process {
 
 // MARK: - Semantic Accessors
 
-extension POSIX.Kernel.Process.Error {
+extension ISO_9945.Kernel.Process.Error {
     /// The underlying error code.
     public var code: Kernel.Error.Code {
         switch self {
@@ -110,7 +110,7 @@ extension POSIX.Kernel.Process.Error {
 
 // MARK: - CustomStringConvertible
 
-extension POSIX.Kernel.Process.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Process.Error: CustomStringConvertible {
     public var description: String {
         switch self {
         case .fork(let code):

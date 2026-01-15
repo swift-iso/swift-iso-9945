@@ -20,14 +20,14 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Exit operations namespace.
     public enum Exit {}
 }
 
 // MARK: - Exit Operation
 
-extension POSIX.Kernel.Process.Exit {
+extension ISO_9945.Kernel.Process.Exit {
     /// Terminates the calling process immediately.
     ///
     /// - Parameter status: Exit status code (0-255 meaningful).

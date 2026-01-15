@@ -21,14 +21,14 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Process {
+extension ISO_9945.Kernel.Process {
     /// Fork operations namespace.
     public enum Fork {}
 }
 
 // MARK: - Result
 
-extension POSIX.Kernel.Process.Fork {
+extension ISO_9945.Kernel.Process.Fork {
     /// Result of fork() indicating parent or child.
     public enum Result: Sendable, Equatable {
         /// In child process (fork returned 0).
@@ -43,7 +43,7 @@ extension POSIX.Kernel.Process.Fork {
 
 // MARK: - Fork Operation
 
-extension POSIX.Kernel.Process.Fork {
+extension ISO_9945.Kernel.Process.Fork {
     /// Creates a new process by duplicating the calling process.
     ///
     /// - Returns: `.child` in the child process, `.parent(child:)` in the parent.

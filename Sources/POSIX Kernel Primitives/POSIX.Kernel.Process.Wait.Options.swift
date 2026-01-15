@@ -20,7 +20,7 @@ public import POSIX_Primitives
     internal import Musl
 #endif
 
-extension POSIX.Kernel.Process.Wait {
+extension ISO_9945.Kernel.Process.Wait {
     /// Options for wait operations.
     ///
     /// ## Usage

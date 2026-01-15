@@ -1,19 +1,19 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-posix open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives
+@_spi(Syscall) public import Kernel_Primitives
 public import POSIX_Primitives
 
-extension POSIX_Primitives.POSIX {
-    /// POSIX kernel mechanisms.
+extension ISO_9945 {
+    /// ISO 9945 (POSIX) kernel mechanisms.
     ///
     /// This is a typealias to `Kernel_Primitives.Kernel`, allowing POSIX-specific
     /// extensions to be added to the shared Kernel type.
@@ -24,4 +24,19 @@ extension POSIX_Primitives.POSIX {
     /// - Memory locking (mlockall)
     /// - Dynamic library loading (dlopen, dlsym, dlclose)
     public typealias Kernel = Kernel_Primitives.Kernel
+}
+
+// MARK: - POSIX.Kernel.Descriptor Veneer
+
+extension Kernel_Primitives.Kernel.Descriptor {
+    /// Creates a descriptor by borrowing a POSIX file descriptor.
+    ///
+    /// - Parameter fd: The raw POSIX file descriptor (Int32).
+    /// - Returns: A `Kernel.Descriptor` wrapping the file descriptor.
+    public static func borrowing(_ fd: Int32) -> Self {
+        Self(_rawValue: fd)
+    }
+
+    /// The raw POSIX file descriptor value.
+    public var fileDescriptor: Int32 { _rawValue }
 }

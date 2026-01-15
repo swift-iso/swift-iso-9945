@@ -21,7 +21,7 @@ public import POSIX_Primitives
     public import Musl
 #endif
 
-extension POSIX.Kernel.Memory.Lock.All {
+extension ISO_9945.Kernel.Memory.Lock.All {
     /// Flags for mlockall().
     public struct Flags: Sendable, Equatable, Hashable {
         public let rawValue: Int32

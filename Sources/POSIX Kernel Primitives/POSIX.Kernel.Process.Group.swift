@@ -22,7 +22,7 @@ public import POSIX_Primitives
 
 // MARK: - Process.Group.ID
 
-extension POSIX.Kernel.Process.Group {
+extension ISO_9945.Kernel.Process.Group {
     /// POSIX process group ID.
     ///
     /// A type-safe wrapper for process group identifiers used in signal sending.
@@ -49,7 +49,7 @@ extension Tagged where Tag == POSIX.Kernel.Process.Group, RawValue == pid_t {
 
 // MARK: - Process Selector
 
-extension POSIX.Kernel.Process.Group {
+extension ISO_9945.Kernel.Process.Group {
     /// Which process to modify.
     ///
     /// Replaces POSIX "pid=0 means calling process" convention with explicit cases.
@@ -64,7 +64,7 @@ extension POSIX.Kernel.Process.Group {
 
 // MARK: - Target Selector
 
-extension POSIX.Kernel.Process.Group {
+extension ISO_9945.Kernel.Process.Group {
     /// Target process group.
     ///
     /// Replaces POSIX "pgid=0 means use pid as new group" convention with explicit cases.
@@ -81,7 +81,7 @@ extension POSIX.Kernel.Process.Group {
 
 // MARK: - Group Operations
 
-extension POSIX.Kernel.Process.Group {
+extension ISO_9945.Kernel.Process.Group {
     /// Sets the process group of a process.
     ///
     /// - Parameters:
