@@ -40,60 +40,21 @@
             return "/usr/bin/true"  // Fallback, may fail
         }
 
-        /// Helper to spawn a process using Swift.String arrays
-        private static func spawnHelper(
-            path: Swift.String,
-            argv: [Swift.String],
-            envp: [Swift.String]
-        ) throws -> Kernel.Process.ID {
-            return try unsafe path.withCString { pathCStr in
-                // Build argv array
-                var argvStorage: [ContiguousArray<CChar>] = []
-                for arg in argv {
-                    var chars = ContiguousArray<CChar>(arg.utf8.map { CChar(bitPattern: $0) })
-                    chars.append(0)
-                    argvStorage.append(chars)
-                }
-
-                var argvPtrs: [UnsafePointer<CChar>?] = []
-                for i in argvStorage.indices {
-                    argvPtrs.append(argvStorage[i].withUnsafeBufferPointer { $0.baseAddress })
-                }
-                argvPtrs.append(nil)
-
-                // Build envp array
-                var envpStorage: [ContiguousArray<CChar>] = []
-                for env in envp {
-                    var chars = ContiguousArray<CChar>(env.utf8.map { CChar(bitPattern: $0) })
-                    chars.append(0)
-                    envpStorage.append(chars)
-                }
-
-                var envpPtrs: [UnsafePointer<CChar>?] = []
-                for i in envpStorage.indices {
-                    envpPtrs.append(envpStorage[i].withUnsafeBufferPointer { $0.baseAddress })
-                }
-                envpPtrs.append(nil)
-
-                return try unsafe argvPtrs.withUnsafeBufferPointer { argvBuf in
-                    try unsafe envpPtrs.withUnsafeBufferPointer { envpBuf in
-                        try unsafe POSIX.Kernel.Process.Spawn.spawn(
-                            path: pathCStr,
-                            argv: argvBuf.baseAddress!,
-                            envp: envpBuf.baseAddress!
-                        )
-                    }
-                }
-            }
-        }
-
         @Test("spawn with /usr/bin/true or /bin/true succeeds")
         func spawnTrue() throws {
             let path = Self.findTruePath()
             let argv = [path]
             let envp: [Swift.String] = []
 
-            let child = try Self.spawnHelper(path: path, argv: argv, envp: envp)
+            let child = try Kernel.Path.scope(path) { pathPtr in
+                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                        path: pathPtr.unsafeCString,
+                        argv: argvPtr,
+                        envp: envpPtr
+                    )
+                }
+            }
 
             let result = try Kernel.Process.Wait.wait(.process(child))
             #expect(result != nil, "Wait should return a result")
@@ -106,12 +67,25 @@
             let argv = [path]
             let envp: [Swift.String] = []
 
+            func doSpawn() throws(Kernel.Path.String.Error<POSIX.Kernel.Process.Error>) -> Kernel.Process.ID {
+                try Kernel.Path.scope.array(argv, envp) {
+                    (argvPtr: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>,
+                     envpPtr: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID in
+                    // argv[0] is already the path, use it directly
+                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                        path: argvPtr[0]!,
+                        argv: argvPtr,
+                        envp: envpPtr
+                    )
+                }
+            }
+
             do {
-                _ = try Self.spawnHelper(path: path, argv: argv, envp: envp)
+                _ = try doSpawn()
                 Issue.record("Expected spawn to throw for invalid path")
-            } catch let error as POSIX.Kernel.Process.Error {
-                guard case .spawn(let code) = error else {
-                    Issue.record("Expected .spawn(...), got \(error)")
+            } catch {
+                guard case .body(.spawn(let code)) = error else {
+                    Issue.record("Expected .body(.spawn(...)), got \(error)")
                     return
                 }
                 #expect(code.posix == ENOENT, "Expected ENOENT, got \(code)")
@@ -124,7 +98,15 @@
             let argv = ["/bin/sh", "-c", "exit 42"]
             let envp: [Swift.String] = []
 
-            let child = try Self.spawnHelper(path: path, argv: argv, envp: envp)
+            let child = try Kernel.Path.scope(path) { pathPtr in
+                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                        path: pathPtr.unsafeCString,
+                        argv: argvPtr,
+                        envp: envpPtr
+                    )
+                }
+            }
 
             let result = try Kernel.Process.Wait.wait(.process(child))
             #expect(result?.status.exit.code == 42, "Shell should exit with code 42")
@@ -138,7 +120,15 @@
             let argv = ["/bin/sh", "-c", "exit ${TEST_EXIT_CODE:-99}"]
             let envp = ["TEST_EXIT_CODE=77"]
 
-            let child = try Self.spawnHelper(path: path, argv: argv, envp: envp)
+            let child = try Kernel.Path.scope(path) { pathPtr in
+                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                        path: pathPtr.unsafeCString,
+                        argv: argvPtr,
+                        envp: envpPtr
+                    )
+                }
+            }
 
             let result = try Kernel.Process.Wait.wait(.process(child))
             #expect(result?.status.exit.code == 77, "Shell should exit with env value 77")

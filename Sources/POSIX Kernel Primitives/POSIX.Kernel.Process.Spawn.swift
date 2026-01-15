@@ -100,4 +100,29 @@ extension ISO_9945.Kernel.Process.Spawn {
 
         return Kernel.Process.ID(pid)
     }
+
+    /// Spawns a new process using `Kernel.Path.Char` pointers.
+    ///
+    /// This overload bridges from `Kernel.Path.Char` (UInt8 on POSIX) to `CChar`
+    /// for syscall compatibility. Use this with `Kernel.Path.scope`.
+    ///
+    /// - Parameters:
+    ///   - path: Path to the executable.
+    ///   - argv: Argument vector (null-terminated array).
+    ///   - envp: Environment vector (null-terminated array).
+    /// - Returns: The process ID of the spawned child.
+    /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
+    @unsafe
+    public static func spawn(
+        path: UnsafePointer<Kernel.Path.Char>,
+        argv: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>,
+        envp: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>
+    ) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID {
+        // Bridge UInt8 pointers to CChar pointers
+        let pathCChar = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
+        let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
+
+        return try unsafe spawn(path: pathCChar, argv: argvCChar, envp: envpCChar)
+    }
 }
