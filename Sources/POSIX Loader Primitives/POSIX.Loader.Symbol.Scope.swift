@@ -32,14 +32,15 @@ extension Loader.Symbol.Scope {
     ///
     /// Uses platform constants from dlfcn.h via C shims.
     /// NEVER hardcodes sentinel bit patterns.
+    @unsafe
     package var dlsymHandle: UnsafeMutableRawPointer? {
-        switch self {
+        switch unsafe self {
         case .handle(let h):
-            return h.rawValue
+            return unsafe h.rawValue
         case .default:
-            return swift_RTLD_DEFAULT()
+            return unsafe swift_RTLD_DEFAULT()
         case .next:
-            return swift_RTLD_NEXT()
+            return unsafe swift_RTLD_NEXT()
         }
     }
 }

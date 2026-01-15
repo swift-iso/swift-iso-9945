@@ -62,21 +62,22 @@ extension POSIX.Loader.Symbol {
     /// typealias MyFunc = @convention(c) () -> Int32
     /// let func = unsafeBitCast(sym, to: MyFunc.self)
     /// ```
+    @unsafe
     public static func lookup(
         name: UnsafePointer<CChar>,
         in scope: Scope
     ) throws(Loader.Error) -> UnsafeRawPointer {
         // Clear stale error
-        _ = dlerror()
+        _ = unsafe dlerror()
 
-        let sym = dlsym(scope.dlsymHandle, name)
+        let sym = unsafe dlsym(scope.dlsymHandle, name)
 
         // Check for error (sym can legitimately be NULL for data symbols)
-        if let errorCStr = dlerror() {
-            throw .symbol(Loader.Message(String(cString: errorCStr)))
+        if let errorCStr = unsafe dlerror() {
+            throw .symbol(Loader.Message(unsafe String(cString: errorCStr)))
         }
 
-        guard let sym else {
+        guard let sym = unsafe sym else {
             throw .symbol(Loader.Message("symbol resolved to NULL (no dlerror)"))
         }
 

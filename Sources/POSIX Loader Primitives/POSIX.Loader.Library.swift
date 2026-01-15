@@ -48,28 +48,30 @@ extension POSIX.Loader.Library {
     ///   - options: Loading options. Default: `.now` (fail-early).
     /// - Returns: Handle to the loaded library.
     /// - Throws: `Loader.Error.open` with dlerror message.
+    @unsafe
     public static func open(
         path: UnsafePointer<CChar>?,
         options: Options = .now
     ) throws(Loader.Error) -> Handle {
         // Clear stale error
-        _ = dlerror()
+        _ = unsafe dlerror()
 
-        guard let handle = dlopen(path, options.rawValue) else {
+        guard let handle = unsafe dlopen(path, options.rawValue) else {
             throw .open(POSIX.Loader.captureError())
         }
-        return Handle(rawValue: handle)
+        return unsafe Handle(rawValue: handle)
     }
 
     /// Closes a dynamic library.
     ///
     /// - Parameter handle: The library handle to close.
     /// - Throws: `Loader.Error.close` on failure.
+    @unsafe
     public static func close(_ handle: Handle) throws(Loader.Error) {
         // Clear stale error
-        _ = dlerror()
+        _ = unsafe dlerror()
 
-        guard dlclose(handle.rawValue) == 0 else {
+        guard unsafe dlclose(handle.rawValue) == 0 else {
             throw .close(POSIX.Loader.captureError())
         }
     }

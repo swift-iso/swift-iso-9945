@@ -66,6 +66,7 @@ extension POSIX.Kernel.Signal.Action {
     /// }
     /// let config = POSIX.Kernel.Signal.Action.Configuration(handler: .custom(handler))
     /// ```
+    @unsafe
     public enum Handler: Sendable {
         /// Use the default action for this signal.
         ///
@@ -110,7 +111,7 @@ extension POSIX.Kernel.Signal.Action {
 extension POSIX.Kernel.Signal.Action.Handler {
     /// Whether this handler requires the SA_SIGINFO flag.
     internal var requiresSigInfo: Bool {
-        if case .customInfo = self { return true }
+        if case .customInfo = unsafe self { return true }
         return false
     }
 }

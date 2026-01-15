@@ -76,6 +76,7 @@ extension POSIX.Kernel.Process.Spawn {
     ///
     /// let result = try Kernel.Process.Wait.wait(.process(child))
     /// ```
+    @unsafe
     public static func spawn(
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
@@ -83,7 +84,7 @@ extension POSIX.Kernel.Process.Spawn {
     ) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID {
         var pid: pid_t = 0
 
-        let rc = swift_posix_spawn(
+        let rc = unsafe swift_posix_spawn(
             &pid,
             path,
             nil,  // file_actions

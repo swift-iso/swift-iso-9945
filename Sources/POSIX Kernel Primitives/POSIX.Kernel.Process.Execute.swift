@@ -82,6 +82,7 @@ extension POSIX.Kernel.Process.Execute {
     ///     let result = try POSIX.Kernel.Process.Wait.wait(.process(child))
     /// }
     /// ```
+    @unsafe
     public static func execve(
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
@@ -89,11 +90,11 @@ extension POSIX.Kernel.Process.Execute {
     ) throws(POSIX.Kernel.Process.Error) {
         // execve only returns on failure
         #if canImport(Darwin)
-            _ = swift_execve(path, argv, envp)
+            _ = unsafe swift_execve(path, argv, envp)
         #elseif canImport(Glibc)
-            _ = swift_execve(path, argv, envp)
+            _ = unsafe swift_execve(path, argv, envp)
         #elseif canImport(Musl)
-            _ = Musl.execve(path, argv, envp)
+            _ = unsafe Musl.execve(path, argv, envp)
         #endif
         throw .execute(POSIX.Kernel.Error.captureErrno())
     }

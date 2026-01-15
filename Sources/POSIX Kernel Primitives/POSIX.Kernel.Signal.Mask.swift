@@ -52,11 +52,11 @@ extension POSIX.Kernel.Signal.Mask {
         signals: POSIX.Kernel.Signal.Set
     ) throws(POSIX.Kernel.Signal.Error) -> POSIX.Kernel.Signal.Set {
         var previous = sigset_t()
-        sigemptyset(&previous)
+        unsafe sigemptyset(&previous)
 
         // pthread_sigmask returns error number directly, not via errno
-        let error = signals.withUnsafePointer { setPtr in
-            pthread_sigmask(how.rawValue, setPtr, &previous)
+        let error = unsafe signals.withUnsafePointer { setPtr in
+            unsafe pthread_sigmask(how.rawValue, setPtr, &previous)
         }
 
         guard error == 0 else {
@@ -90,9 +90,9 @@ extension POSIX.Kernel.Signal.Mask {
 
     public static func pending() throws(POSIX.Kernel.Signal.Error) -> POSIX.Kernel.Signal.Set {
         var set = sigset_t()
-        sigemptyset(&set)
+        unsafe sigemptyset(&set)
 
-        guard sigpending(&set) == 0 else {
+        guard unsafe sigpending(&set) == 0 else {
             throw .mask(POSIX.Kernel.Error.captureErrno())
         }
 

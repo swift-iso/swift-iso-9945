@@ -93,11 +93,11 @@ extension POSIX.Kernel.Socket.Pair {
     public static func create() throws(Error) -> (Kernel.Socket.Descriptor, Kernel.Socket.Descriptor) {
         var fds: [Int32] = [0, 0]
         #if canImport(Darwin)
-            let result = Darwin.socketpair(AF_UNIX, SOCK_STREAM, 0, &fds)
+            let result = unsafe Darwin.socketpair(AF_UNIX, SOCK_STREAM, 0, &fds)
         #elseif canImport(Glibc)
-            let result = Glibc.socketpair(AF_UNIX, Int32(SOCK_STREAM.rawValue), 0, &fds)
+            let result = unsafe Glibc.socketpair(AF_UNIX, Int32(SOCK_STREAM.rawValue), 0, &fds)
         #elseif canImport(Musl)
-            let result = Musl.socketpair(AF_UNIX, SOCK_STREAM, 0, &fds)
+            let result = unsafe Musl.socketpair(AF_UNIX, SOCK_STREAM, 0, &fds)
         #endif
         guard result == 0 else {
             throw currentError()

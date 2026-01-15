@@ -37,8 +37,8 @@ extension POSIX.Loader {
     /// Always returns a valid message (worst case: "unknown error").
     @usableFromInline
     internal static func captureError() -> Loader.Message {
-        if let cstr = dlerror() {
-            return Loader.Message(String(cString: cstr))
+        if let cstr = unsafe dlerror() {
+            return Loader.Message(unsafe String(cString: cstr))
         }
         return Loader.Message("unknown error")
     }

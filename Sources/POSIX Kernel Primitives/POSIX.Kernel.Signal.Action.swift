@@ -41,18 +41,19 @@ extension POSIX.Kernel.Signal.Action {
     /// ```
     @discardableResult
 
+    @unsafe
     public static func set(
         signal: POSIX.Kernel.Signal.Number,
         _ configuration: Configuration
     ) throws(POSIX.Kernel.Signal.Error) -> Configuration {
-        var newAction = sigaction(configuration)
+        var newAction = unsafe sigaction(configuration)
         var oldAction = sigaction()
 
-        guard sigaction(signal.rawValue, &newAction, &oldAction) == 0 else {
+        guard unsafe sigaction(signal.rawValue, &newAction, &oldAction) == 0 else {
             throw .action(POSIX.Kernel.Error.captureErrno())
         }
 
-        return Configuration(oldAction)
+        return unsafe Configuration(oldAction)
     }
 
     /// Gets the current signal action configuration.
@@ -73,16 +74,17 @@ extension POSIX.Kernel.Signal.Action {
     /// }
     /// ```
 
+    @unsafe
     public static func get(
         signal: POSIX.Kernel.Signal.Number
     ) throws(POSIX.Kernel.Signal.Error) -> Configuration {
         var action = sigaction()
 
-        guard sigaction(signal.rawValue, nil, &action) == 0 else {
+        guard unsafe sigaction(signal.rawValue, nil, &action) == 0 else {
             throw .action(POSIX.Kernel.Error.captureErrno())
         }
 
-        return Configuration(action)
+        return unsafe Configuration(action)
     }
 }
 
@@ -90,6 +92,7 @@ extension POSIX.Kernel.Signal.Action {
 
 extension sigaction {
     /// Creates a sigaction struct from a Configuration.
+    @unsafe
     internal init(_ configuration: POSIX.Kernel.Signal.Action.Configuration) {
         self.init()
 
@@ -101,37 +104,37 @@ extension sigaction {
 
         // Set handler based on type
         #if canImport(Darwin)
-            switch configuration.handler {
+            switch unsafe configuration.handler {
             case .default:
-                self.__sigaction_u.__sa_handler = SIG_DFL
+                unsafe (self.__sigaction_u.__sa_handler = SIG_DFL)
             case .ignore:
-                self.__sigaction_u.__sa_handler = SIG_IGN
+                unsafe (self.__sigaction_u.__sa_handler = SIG_IGN)
             case .custom(let handler):
-                self.__sigaction_u.__sa_handler = handler
+                unsafe (self.__sigaction_u.__sa_handler = handler)
             case .customInfo(let handler):
-                self.__sigaction_u.__sa_sigaction = handler
+                unsafe (self.__sigaction_u.__sa_sigaction = handler)
             }
         #elseif canImport(Glibc)
-            switch configuration.handler {
+            switch unsafe configuration.handler {
             case .default:
-                self.__sigaction_handler.sa_handler = SIG_DFL
+                unsafe (self.__sigaction_handler.sa_handler = SIG_DFL)
             case .ignore:
-                self.__sigaction_handler.sa_handler = SIG_IGN
+                unsafe (self.__sigaction_handler.sa_handler = SIG_IGN)
             case .custom(let handler):
-                self.__sigaction_handler.sa_handler = handler
+                unsafe (self.__sigaction_handler.sa_handler = handler)
             case .customInfo(let handler):
-                self.__sigaction_handler.sa_sigaction = handler
+                unsafe (self.__sigaction_handler.sa_sigaction = handler)
             }
         #elseif canImport(Musl)
-            switch configuration.handler {
+            switch unsafe configuration.handler {
             case .default:
-                self.sa_handler = SIG_DFL
+                unsafe (self.sa_handler = SIG_DFL)
             case .ignore:
-                self.sa_handler = SIG_IGN
+                unsafe (self.sa_handler = SIG_IGN)
             case .custom(let handler):
-                self.sa_handler = handler
+                unsafe (self.sa_handler = handler)
             case .customInfo(let handler):
-                self.sa_sigaction = handler
+                unsafe (self.sa_sigaction = handler)
             }
         #endif
     }
@@ -141,6 +144,7 @@ extension sigaction {
 
 extension POSIX.Kernel.Signal.Action.Configuration {
     /// Creates a Configuration from a raw sigaction struct.
+    @unsafe
     internal init(_ action: sigaction) {
         let flags = POSIX.Kernel.Signal.Action.Flags(rawValue: action.sa_flags)
         let mask = POSIX.Kernel.Signal.Set(storage: action.sa_mask)
@@ -149,43 +153,43 @@ extension POSIX.Kernel.Signal.Action.Configuration {
         let handler: POSIX.Kernel.Signal.Action.Handler
 
         #if canImport(Darwin)
-            let handlerPtr = action.__sigaction_u.__sa_handler
-            let sigactionPtr = action.__sigaction_u.__sa_sigaction
+            let handlerPtr = unsafe action.__sigaction_u.__sa_handler
+            let sigactionPtr = unsafe action.__sigaction_u.__sa_sigaction
         #elseif canImport(Glibc)
-            let handlerPtr = action.__sigaction_handler.sa_handler
-            let sigactionPtr = action.__sigaction_handler.sa_sigaction
+            let handlerPtr = unsafe action.__sigaction_handler.sa_handler
+            let sigactionPtr = unsafe action.__sigaction_handler.sa_sigaction
         #elseif canImport(Musl)
-            let handlerPtr = action.sa_handler
-            let sigactionPtr = action.sa_sigaction
+            let handlerPtr = unsafe action.sa_handler
+            let sigactionPtr = unsafe action.sa_sigaction
         #endif
 
         if flags.contains(.sigInfo) {
             // SA_SIGINFO set, use sa_sigaction
-            if let ptr = sigactionPtr {
-                handler = .customInfo(ptr)
+            if let ptr = unsafe sigactionPtr {
+                unsafe (handler = .customInfo(ptr))
             } else {
                 // Shouldn't happen, but fallback to default
-                handler = .default
+                unsafe (handler = .default)
             }
         } else {
             // Check for special handler values using raw pointer comparison
             // SIG_DFL and SIG_IGN are special constants (typically 0 and 1)
-            let handlerRaw = unsafeBitCast(handlerPtr, to: Int.self)
-            let sigDflRaw = unsafeBitCast(SIG_DFL, to: Int.self)
-            let sigIgnRaw = unsafeBitCast(SIG_IGN, to: Int.self)
+            let handlerRaw = unsafe unsafeBitCast(handlerPtr, to: Int.self)
+            let sigDflRaw = unsafe unsafeBitCast(SIG_DFL, to: Int.self)
+            let sigIgnRaw = unsafe unsafeBitCast(SIG_IGN, to: Int.self)
 
             if handlerRaw == sigDflRaw {
-                handler = .default
+                unsafe (handler = .default)
             } else if handlerRaw == sigIgnRaw {
-                handler = .ignore
+                unsafe (handler = .ignore)
             } else if let ptr = handlerPtr {
-                handler = .custom(ptr)
+                unsafe (handler = .custom(ptr))
             } else {
-                handler = .default
+                unsafe (handler = .default)
             }
         }
 
         // Use unchecked init - kernel state has correct handler/flags relationship
-        self.init(__unchecked: (), handler: handler, mask: mask, flags: flags)
+        unsafe self.init(__unchecked: (), handler: handler, mask: mask, flags: flags)
     }
 }

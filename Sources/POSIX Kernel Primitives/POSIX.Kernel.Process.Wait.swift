@@ -135,7 +135,7 @@ extension POSIX.Kernel.Process.Wait {
             }
 
         var status: Int32 = 0
-        let result = waitpid(pid, &status, options.rawValue)
+        let result = unsafe waitpid(pid, &status, options.rawValue)
 
         if result == -1 {
             throw .wait(POSIX.Kernel.Error.captureErrno())

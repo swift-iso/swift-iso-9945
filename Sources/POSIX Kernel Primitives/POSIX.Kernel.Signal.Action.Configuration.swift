@@ -48,6 +48,7 @@ extension POSIX.Kernel.Signal.Action {
     ///     mask: blocked
     /// )
     /// ```
+    @safe
     public struct Configuration: Sendable {
         /// The handler disposition for the signal.
         public let handler: Handler
@@ -73,16 +74,17 @@ extension POSIX.Kernel.Signal.Action {
         /// - If `handler` is `.customInfo`, `.sigInfo` flag is added automatically.
         /// - If `handler` is `.custom`, `.sigInfo` flag is removed if present.
 
+        @unsafe
         public init(
             handler: Handler,
             mask: POSIX.Kernel.Signal.Set = POSIX.Kernel.Signal.Set(),
             flags: Flags = []
         ) {
-            self.handler = handler
+            unsafe (self.handler = handler)
             self.mask = mask
 
             // Enforce invariants
-            switch handler {
+            switch unsafe handler {
             case .customInfo:
                 // SA_SIGINFO required for sa_sigaction handler
                 self.flags = flags.union(.sigInfo)
@@ -98,13 +100,14 @@ extension POSIX.Kernel.Signal.Action {
         ///
         /// Used internally when reconstructing from kernel state where
         /// the handler/flags relationship is already correct.
+        @unsafe
         internal init(
             __unchecked: Void,
             handler: Handler,
             mask: POSIX.Kernel.Signal.Set,
             flags: Flags
         ) {
-            self.handler = handler
+            unsafe (self.handler = handler)
             self.mask = mask
             self.flags = flags
         }
