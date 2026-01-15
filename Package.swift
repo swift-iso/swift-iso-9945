@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-posix-primitives",
+    name: "swift-iso-9945",
     platforms: [
         .macOS(.v26),
         .iOS(.v26),
@@ -26,9 +26,9 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../swift-kernel-primitives"),
-        .package(path: "../swift-loader-primitives"),
-        .package(path: "../swift-test-primitives"),
+        .package(path: "../../swift-primitives/swift-kernel-primitives"),
+        .package(path: "../../swift-primitives/swift-loader-primitives"),
+        .package(path: "../../swift-primitives/swift-test-primitives"),
         .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
