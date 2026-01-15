@@ -26,10 +26,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-kernel-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-loader-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-test-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-foundations/swift-testing-extras.git", from: "0.0.1"),
+        .package(path: "../swift-kernel-primitives"),
+        .package(path: "../swift-loader-primitives"),
+        .package(path: "../swift-test-primitives"),
+        .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
     targets: [
         .target(
