@@ -1,0 +1,39 @@
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
+
+@_spi(Syscall) public import Kernel_Primitives
+public import ISO_9945
+
+#if canImport(Darwin)
+    internal import Darwin
+#elseif canImport(Glibc)
+    internal import Glibc
+#elseif canImport(Musl)
+    internal import Musl
+#endif
+
+// MARK: - POSIX socket backlog
+
+extension Kernel.Socket.Backlog {
+    /// System maximum backlog.
+    ///
+    /// Uses `SOMAXCONN` which typically maps to the system's maximum
+    /// allowed backlog value.
+    public static var max: Kernel.Socket.Backlog {
+        #if canImport(Darwin)
+            Kernel.Socket.Backlog(Darwin.SOMAXCONN)
+        #elseif canImport(Musl)
+            Kernel.Socket.Backlog(Musl.SOMAXCONN)
+        #elseif canImport(Glibc)
+            Kernel.Socket.Backlog(Glibc.SOMAXCONN)
+        #endif
+    }
+}
