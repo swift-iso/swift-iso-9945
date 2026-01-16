@@ -22,15 +22,15 @@ public import ISO_9945
 
 // MARK: - POSIX rename() syscall
 
-extension ISO_9945.Kernel.Rename {
-    /// Renames a file or directory.
+extension ISO_9945.Kernel.File.Move {
+    /// Moves/renames a file or directory.
     ///
     /// - Parameters:
     ///   - oldPath: The current path.
     ///   - newPath: The new path.
-    /// - Throws: `Kernel.Rename.Error` on failure.
+    /// - Throws: `Kernel.File.Move.Error` on failure.
 
-    public static func rename(
+    public static func move(
         from oldPath: UnsafePointer<Kernel.Path.Char>,
         to newPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
@@ -50,19 +50,19 @@ extension ISO_9945.Kernel.Rename {
         }
     }
 
-    /// Renames a file or directory relative to directory descriptors.
+    /// Moves/renames a file or directory relative to directory descriptors.
     ///
     /// - Parameters:
     ///   - oldDescriptor: Directory descriptor for the old path.
     ///   - oldPath: The current path.
     ///   - newDescriptor: Directory descriptor for the new path.
     ///   - newPath: The new path.
-    /// - Throws: `Kernel.Rename.Error` on failure.
+    /// - Throws: `Kernel.File.Move.Error` on failure.
 
-    public static func renameat(
-        _ oldDescriptor: Kernel.Descriptor,
+    public static func move(
+        from oldDescriptor: Kernel.Descriptor,
         oldPath: UnsafePointer<Kernel.Path.Char>,
-        _ newDescriptor: Kernel.Descriptor,
+        to newDescriptor: Kernel.Descriptor,
         newPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
         let cOldPath = unsafe UnsafeRawPointer(oldPath).assumingMemoryBound(to: CChar.self)
@@ -93,11 +93,11 @@ extension ISO_9945.Kernel.Rename {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Rename {
-    public typealias Error = Kernel.Rename.Error
+extension ISO_9945.Kernel.File.Move {
+    public typealias Error = Kernel.File.Move.Error
 }
 
-extension Kernel.Rename.Error {
+extension Kernel.File.Move.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()

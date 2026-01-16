@@ -22,14 +22,14 @@ public import ISO_9945
 
 // MARK: - POSIX fsync() syscall
 
-extension ISO_9945.Kernel.Sync {
+extension ISO_9945.Kernel.File.Flush {
     /// Synchronizes a file's in-core state with storage device.
     ///
     /// Flushes all modified data and attributes of the file to permanent storage.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.Sync.Error` on failure.
-    public static func sync(_ descriptor: Kernel.Descriptor) throws(Error) {
+    /// - Throws: `Kernel.File.Flush.Error` on failure.
+    public static func flush(_ descriptor: Kernel.Descriptor) throws(Error) {
         #if canImport(Darwin)
             let result = Darwin.fsync(descriptor._rawValue)
         #elseif canImport(Musl)
@@ -44,12 +44,12 @@ extension ISO_9945.Kernel.Sync {
     #if os(Linux)
     /// Synchronizes a file's data (without metadata) to storage device.
     ///
-    /// Like `sync()`, but does not flush modified metadata unless needed
+    /// Like `flush()`, but does not flush modified metadata unless needed
     /// to allow subsequent data retrieval.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.Sync.Error` on failure.
-    public static func dataSync(_ descriptor: Kernel.Descriptor) throws(Error) {
+    /// - Throws: `Kernel.File.Flush.Error` on failure.
+    public static func flushData(_ descriptor: Kernel.Descriptor) throws(Error) {
         let result = Glibc.fdatasync(descriptor._rawValue)
         try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
     }
@@ -61,8 +61,8 @@ extension ISO_9945.Kernel.Sync {
     /// Uses F_FULLFSYNC to ensure data is flushed through disk caches.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.Sync.Error` on failure.
-    public static func fullSync(_ descriptor: Kernel.Descriptor) throws(Error) {
+    /// - Throws: `Kernel.File.Flush.Error` on failure.
+    public static func fullFlush(_ descriptor: Kernel.Descriptor) throws(Error) {
         let result = Darwin.fcntl(descriptor._rawValue, F_FULLFSYNC)
         try Kernel.Syscall.require(result, .not(-1), orThrow: Error.current())
     }
@@ -71,11 +71,11 @@ extension ISO_9945.Kernel.Sync {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Sync {
-    public typealias Error = Kernel.Sync.Error
+extension ISO_9945.Kernel.File.Flush {
+    public typealias Error = Kernel.File.Flush.Error
 }
 
-extension Kernel.Sync.Error {
+extension Kernel.File.Flush.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

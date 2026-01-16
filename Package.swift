@@ -33,6 +33,8 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-kernel-primitives"),
         .package(path: "../../swift-primitives/swift-loader-primitives"),
         .package(path: "../../swift-primitives/swift-string-primitives"),
+        .package(path: "../../swift-primitives/swift-clock-primitives"),
+        .package(path: "../../swift-primitives/swift-terminal-primitives"),
         .package(path: "../../swift-primitives/swift-test-primitives"),
         .package(path: "../../swift-foundations/swift-testing-extras"),
     ],
@@ -52,6 +54,8 @@ let package = Package(
                 .target(name: "ISO 9945"),
                 .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
+                .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
             ],
             path: "Sources/ISO 9945 Kernel"
         ),

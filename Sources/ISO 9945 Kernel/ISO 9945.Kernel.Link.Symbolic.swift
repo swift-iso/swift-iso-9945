@@ -22,13 +22,13 @@ public import ISO_9945
 
 // MARK: - POSIX symlink() syscall
 
-extension ISO_9945.Kernel.Symlink {
+extension ISO_9945.Kernel.Link.Symbolic {
     /// Creates a symbolic link.
     ///
     /// - Parameters:
     ///   - target: The path the symlink points to.
     ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `Kernel.Symlink.Error` on failure.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
 
     public static func create(
         target: UnsafePointer<Kernel.Path.Char>,
@@ -56,11 +56,11 @@ extension ISO_9945.Kernel.Symlink {
     ///   - target: The path the symlink points to.
     ///   - descriptor: The directory descriptor.
     ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `Kernel.Symlink.Error` on failure.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
 
-    public static func symlinkat(
+    public static func create(
         target: UnsafePointer<Kernel.Path.Char>,
-        _ descriptor: Kernel.Descriptor,
+        relativeTo descriptor: Kernel.Descriptor,
         linkPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
         let cTarget = unsafe UnsafeRawPointer(target).assumingMemoryBound(to: CChar.self)
@@ -83,8 +83,8 @@ extension ISO_9945.Kernel.Symlink {
     ///
     /// - Parameter path: The path to the symbolic link.
     /// - Returns: The target path as a string.
-    /// - Throws: `Kernel.Symlink.Error` on failure.
-    public static func read(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> String {
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    public static func readTarget(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> String {
         let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
 
         // Start with a reasonable buffer size
@@ -125,9 +125,9 @@ extension ISO_9945.Kernel.Symlink {
     ///   - path: The path to the symbolic link.
     ///   - buffer: Buffer to read into.
     /// - Returns: Number of bytes read.
-    /// - Throws: `Kernel.Symlink.Error` on failure.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
 
-    public static func read(
+    public static func readTarget(
         at path: UnsafePointer<Kernel.Path.Char>,
         into buffer: UnsafeMutableBufferPointer<CChar>
     ) throws(Error) -> Int {
@@ -151,11 +151,11 @@ extension ISO_9945.Kernel.Symlink {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Symlink {
-    public typealias Error = Kernel.Symlink.Error
+extension ISO_9945.Kernel.Link.Symbolic {
+    public typealias Error = Kernel.Link.Symbolic.Error
 }
 
-extension Kernel.Symlink.Error {
+extension Kernel.Link.Symbolic.Error {
     /// Creates an error from the current errno for create operations.
     internal static func currentCreate() -> Self {
         let code = Kernel.Error.Code.current()
@@ -190,7 +190,7 @@ extension Kernel.Symlink.Error {
         case .EACCES:
             return .permission
         case .EINVAL:
-            return .notSymlink
+            return .notSymbolicLink
         case .ENOTDIR:
             return .notDirectory
         case .ELOOP:

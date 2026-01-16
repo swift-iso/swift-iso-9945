@@ -60,10 +60,10 @@ extension ISO_9945.Kernel.Link {
     ///   - flags: Flags to control the operation.
     /// - Throws: `Kernel.Link.Error` on failure.
 
-    public static func linkat(
-        _ existingDescriptor: Kernel.Descriptor,
+    public static func create(
+        from existingDescriptor: Kernel.Descriptor,
         existingPath: UnsafePointer<Kernel.Path.Char>,
-        _ linkDescriptor: Kernel.Descriptor,
+        at linkDescriptor: Kernel.Descriptor,
         linkPath: UnsafePointer<Kernel.Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {

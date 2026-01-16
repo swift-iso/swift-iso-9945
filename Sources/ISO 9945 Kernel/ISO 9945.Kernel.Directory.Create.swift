@@ -20,70 +20,71 @@ public import ISO_9945
     internal import Musl
 #endif
 
-// MARK: - POSIX unlink() syscall
+// MARK: - POSIX mkdir() syscall
 
-extension ISO_9945.Kernel.Unlink {
-    /// Removes a file or symbolic link.
-    ///
-    /// - Parameter path: The path to the file to remove.
-    /// - Throws: `Kernel.Unlink.Error` on failure.
-    public static func unlink(_ path: borrowing Kernel.Path) throws(Error) {
-        try unlink(path.unsafeCString)
-    }
-
-    /// Removes a file or symbolic link using an unsafe path pointer.
-    ///
-    /// - Parameter path: The path to the file to remove.
-    /// - Throws: `Kernel.Unlink.Error` on failure.
-
-    public static func unlink(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
-
-        #if canImport(Darwin)
-            let result = Darwin.unlink(cPath)
-        #elseif canImport(Musl)
-            let result = Musl.unlink(cPath)
-        #elseif canImport(Glibc)
-            let result = Glibc.unlink(cPath)
-        #endif
-
-        try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
-    }
-
-    /// Removes a file or symbolic link relative to a directory descriptor.
+extension ISO_9945.Kernel.Directory.Create {
+    /// Creates a directory.
     ///
     /// - Parameters:
-    ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
-    ///   - path: The path to the file to remove.
-    ///   - flags: Flags to control the operation (e.g., AT_REMOVEDIR).
-    /// - Throws: `Kernel.Unlink.Error` on failure.
+    ///   - path: The path to create.
+    ///   - permissions: The permissions for the new directory (default: 0o755).
+    /// - Throws: `Kernel.Directory.Create.Error` on failure.
 
-    public static func unlinkat(
-        _ descriptor: Kernel.Descriptor,
-        path: UnsafePointer<Kernel.Path.Char>,
-        flags: Int32 = 0
+    public static func create(
+        _ path: UnsafePointer<Kernel.Path.Char>,
+        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
 
         #if canImport(Darwin)
-            let result = Darwin.unlinkat(descriptor._rawValue, cPath, flags)
+            let result = Darwin.mkdir(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
-            let result = Musl.unlinkat(descriptor._rawValue, cPath, flags)
+            let result = Musl.mkdir(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)
-            let result = Glibc.unlinkat(descriptor._rawValue, cPath, flags)
+            let result = Glibc.mkdir(cPath, mode_t(permissions.rawValue))
         #endif
 
-        try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
+        guard result == 0 else {
+            throw Error.current()
+        }
+    }
+
+    /// Creates a directory relative to a directory descriptor.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
+    ///   - path: The path to create.
+    ///   - permissions: The permissions for the new directory (default: 0o755).
+    /// - Throws: `Kernel.Directory.Create.Error` on failure.
+
+    public static func create(
+        relativeTo descriptor: Kernel.Descriptor,
+        path: UnsafePointer<Kernel.Path.Char>,
+        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+    ) throws(Error) {
+        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+
+        #if canImport(Darwin)
+            let result = Darwin.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+        #elseif canImport(Musl)
+            let result = Musl.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+        #elseif canImport(Glibc)
+            let result = Glibc.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+        #endif
+
+        guard result == 0 else {
+            throw Error.current()
+        }
     }
 }
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Unlink {
-    public typealias Error = Kernel.Unlink.Error
+extension ISO_9945.Kernel.Directory.Create {
+    public typealias Error = Kernel.Directory.Create.Error
 }
 
-extension Kernel.Unlink.Error {
+extension Kernel.Directory.Create.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()
@@ -92,14 +93,14 @@ extension Kernel.Unlink.Error {
             return .notFound
         case .EACCES, .EPERM:
             return .permission
-        case .EISDIR:
-            return .isDirectory
+        case .EEXIST:
+            return .exists
         case .ENOTDIR:
             return .notDirectory
         case .EROFS:
             return .readOnly
-        case .EBUSY:
-            return .busy
+        case .ENOSPC:
+            return .noSpace
         case .ELOOP:
             return .loop
         case .ENAMETOOLONG:

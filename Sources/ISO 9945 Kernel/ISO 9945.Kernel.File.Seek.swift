@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX lseek() syscall
 
-extension ISO_9945.Kernel.Seek {
+extension ISO_9945.Kernel.File.Seek {
     /// Repositions the file offset of a file descriptor.
     ///
     /// - Parameters:
@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.Seek {
     ///   - offset: The offset value.
     ///   - whence: The reference point for the offset.
     /// - Returns: The resulting offset from the beginning of the file.
-    /// - Throws: `Kernel.Seek.Error` on failure.
+    /// - Throws: `Kernel.File.Seek.Error` on failure.
     @discardableResult
     public static func seek(
         _ descriptor: Kernel.Descriptor,
@@ -55,7 +55,7 @@ extension ISO_9945.Kernel.Seek {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Returns: The current offset from the beginning of the file.
-    /// - Throws: `Kernel.Seek.Error` on failure.
+    /// - Throws: `Kernel.File.Seek.Error` on failure.
     public static func tell(_ descriptor: Kernel.Descriptor) throws(Error) -> Int64 {
         try seek(descriptor, offset: 0, whence: .current)
     }
@@ -63,7 +63,7 @@ extension ISO_9945.Kernel.Seek {
 
 // MARK: - Whence
 
-extension ISO_9945.Kernel.Seek {
+extension ISO_9945.Kernel.File.Seek {
     /// The reference point for seek operations.
     public struct Whence: RawRepresentable, Sendable, Hashable {
         public let rawValue: Int32
@@ -99,11 +99,11 @@ extension ISO_9945.Kernel.Seek {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Seek {
-    public typealias Error = Kernel.Seek.Error
+extension ISO_9945.Kernel.File.Seek {
+    public typealias Error = Kernel.File.Seek.Error
 }
 
-extension Kernel.Seek.Error {
+extension Kernel.File.Seek.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

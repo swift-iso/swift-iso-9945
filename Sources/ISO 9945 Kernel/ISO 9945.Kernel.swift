@@ -12,6 +12,10 @@
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 
+// Re-export Terminal and Clock primitives with their POSIX implementations
+@_exported public import Terminal_Primitives
+@_exported public import Clock_Primitives
+
 extension ISO_9945 {
     /// ISO 9945 (POSIX) kernel mechanisms.
     ///

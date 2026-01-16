@@ -22,19 +22,19 @@ public import ISO_9945
 
 // MARK: - POSIX chmod() syscall
 
-extension ISO_9945.Kernel.File.Chmod {
+extension ISO_9945.Kernel.File.Attributes {
     /// Changes the permissions of a file.
     ///
     /// - Parameters:
     ///   - path: The path to the file.
     ///   - permissions: The new permissions.
-    /// - Throws: `Kernel.File.Chmod.Error` on failure.
+    /// - Throws: `Kernel.File.Attributes.Error` on failure.
 
-    public static func chmod(
+    public static func setPermissions(
         path: borrowing Kernel.Path,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
-        try chmod(path: path.unsafeCString, permissions: permissions)
+        try setPermissions(path: path.unsafeCString, permissions: permissions)
     }
 
     /// Changes the permissions of a file using a path character pointer.
@@ -42,8 +42,8 @@ extension ISO_9945.Kernel.File.Chmod {
     /// - Parameters:
     ///   - path: The path as a pointer to Kernel.Path.Char (UInt8).
     ///   - permissions: The new permissions.
-    /// - Throws: `Kernel.File.Chmod.Error` on failure.
-    public static func chmod(
+    /// - Throws: `Kernel.File.Attributes.Error` on failure.
+    public static func setPermissions(
         path: UnsafePointer<Kernel.Path.Char>,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
@@ -66,8 +66,8 @@ extension ISO_9945.Kernel.File.Chmod {
     /// - Parameters:
     ///   - descriptor: The file descriptor.
     ///   - permissions: The new permissions.
-    /// - Throws: `Kernel.File.Chmod.Error` on failure.
-    public static func fchmod(
+    /// - Throws: `Kernel.File.Attributes.Error` on failure.
+    public static func setPermissions(
         _ descriptor: Kernel.Descriptor,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
@@ -87,7 +87,7 @@ extension ISO_9945.Kernel.File.Chmod {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Chmod.Error {
+extension Kernel.File.Attributes.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {

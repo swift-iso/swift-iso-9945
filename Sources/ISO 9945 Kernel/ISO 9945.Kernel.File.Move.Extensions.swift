@@ -24,23 +24,36 @@ public import ISO_9945
     internal import CLinuxShim
 #endif
 
+// MARK: - Extended Move Operations
+
+extension ISO_9945.Kernel.File.Move {
+    /// Extended atomic move operations (noClobber, exchange).
+    public enum Extended {
+        /// Error type for extended move operations.
+        ///
+        /// Uses `Kernel.File.Rename.Error` which has appropriate cases for
+        /// atomic rename operations.
+        public typealias Error = Kernel.File.Rename.Error
+    }
+}
+
 // MARK: - Darwin Implementation
 
 #if canImport(Darwin)
 
-extension ISO_9945.Kernel.File.Rename {
-    /// Atomically renames a file, failing if destination exists.
+extension ISO_9945.Kernel.File.Move {
+    /// Atomically moves a file, failing if destination exists.
     ///
     /// Uses `renamex_np` with `RENAME_EXCL` flag on Darwin.
     ///
     /// - Parameters:
     ///   - oldPath: Source path.
     ///   - newPath: Destination path.
-    /// - Throws: `Error` if the rename fails.
+    /// - Throws: `ExtendedError` if the move fails.
     public static func noClobber(
         from oldPath: UnsafePointer<CChar>,
         to newPath: UnsafePointer<CChar>
-    ) throws(Error) {
+    ) throws(Extended.Error) {
         let result = renamex_np(oldPath, newPath, UInt32(RENAME_EXCL))
 
         guard result == 0 else {
@@ -64,11 +77,11 @@ extension ISO_9945.Kernel.File.Rename {
     /// - Parameters:
     ///   - path1: First path.
     ///   - path2: Second path.
-    /// - Throws: `Error` on failure.
+    /// - Throws: `ExtendedError` on failure.
     public static func exchange(
         _ path1: UnsafePointer<CChar>,
         _ path2: UnsafePointer<CChar>
-    ) throws(Error) {
+    ) throws(Extended.Error) {
         let result = renamex_np(path1, path2, UInt32(RENAME_SWAP))
 
         guard result == 0 else {
@@ -87,8 +100,8 @@ extension ISO_9945.Kernel.File.Rename {
 
 #elseif canImport(Glibc) || canImport(Musl)
 
-extension ISO_9945.Kernel.File.Rename {
-    /// Atomically renames a file, failing if destination exists.
+extension ISO_9945.Kernel.File.Move {
+    /// Atomically moves a file, failing if destination exists.
     ///
     /// Uses `renameat2` with `RENAME_NOREPLACE` flag on Linux.
     /// Falls back to `link` + `unlink` if renameat2 is not supported.
@@ -96,11 +109,11 @@ extension ISO_9945.Kernel.File.Rename {
     /// - Parameters:
     ///   - oldPath: Source path.
     ///   - newPath: Destination path.
-    /// - Throws: `Error` if the rename fails.
+    /// - Throws: `ExtendedError` if the move fails.
     public static func noClobber(
         from oldPath: UnsafePointer<CChar>,
         to newPath: UnsafePointer<CChar>
-    ) throws(Error) {
+    ) throws(Extended.Error) {
         #if canImport(CLinuxShim)
         // Try renameat2 first
         let result = swift_renameat2(
@@ -150,11 +163,11 @@ extension ISO_9945.Kernel.File.Rename {
     /// - Parameters:
     ///   - path1: First path.
     ///   - path2: Second path.
-    /// - Throws: `Error` on failure.
+    /// - Throws: `ExtendedError` on failure.
     public static func exchange(
         _ path1: UnsafePointer<CChar>,
         _ path2: UnsafePointer<CChar>
-    ) throws(Error) {
+    ) throws(Extended.Error) {
         #if canImport(CLinuxShim)
         let result = swift_renameat2(
             AT_FDCWD,
@@ -187,7 +200,7 @@ extension ISO_9945.Kernel.File.Rename {
     private static func linkUnlinkFallback(
         from oldPath: UnsafePointer<CChar>,
         to newPath: UnsafePointer<CChar>
-    ) throws(Error) {
+    ) throws(Extended.Error) {
         #if canImport(Musl)
         let linkResult = Musl.link(oldPath, newPath)
         #else

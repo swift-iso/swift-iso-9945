@@ -141,7 +141,7 @@ private func withTempFile<R>(
         }
         defer {
             try? ISO_9945.Kernel.Close.close(fd)
-            try? ISO_9945.Kernel.Unlink.unlink(path)
+            try? ISO_9945.Kernel.File.Delete.delete(path)
         }
         return try body(path, fd)
     }
@@ -245,7 +245,7 @@ extension POSIXLockIntegration {
 
             defer {
                 try? ISO_9945.Kernel.Close.close(fd)
-                try? ISO_9945.Kernel.Unlink.unlink(path)
+                try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 
             // Spawn helper to hold the lock for 1000ms

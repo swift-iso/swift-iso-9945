@@ -46,7 +46,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
             try ISO_9945.Kernel.Close.close(fd)
 
             // Cleanup
-            try? ISO_9945.Kernel.Unlink.unlink(path)
+            try? ISO_9945.Kernel.File.Delete.delete(path)
         }
     }
 
@@ -86,7 +86,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
 
             defer {
                 try? ISO_9945.Kernel.Close.close(fd)
-                try? ISO_9945.Kernel.Unlink.unlink(path)
+                try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 
             // Write
@@ -121,7 +121,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
 
             defer {
                 try? ISO_9945.Kernel.Close.close(fd)
-                try? ISO_9945.Kernel.Unlink.unlink(path)
+                try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 
             // Read from empty file using pread at offset 0

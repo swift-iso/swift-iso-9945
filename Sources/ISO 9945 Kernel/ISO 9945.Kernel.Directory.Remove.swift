@@ -22,13 +22,13 @@ public import ISO_9945
 
 // MARK: - POSIX rmdir() syscall
 
-extension ISO_9945.Kernel.Rmdir {
+extension ISO_9945.Kernel.Directory.Remove {
     /// Removes an empty directory.
     ///
     /// - Parameter path: The path to remove.
-    /// - Throws: `Kernel.Rmdir.Error` on failure.
+    /// - Throws: `Kernel.Directory.Remove.Error` on failure.
 
-    public static func rmdir(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
+    public static func remove(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
         let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
 
         #if canImport(Darwin)
@@ -47,11 +47,11 @@ extension ISO_9945.Kernel.Rmdir {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Rmdir {
-    public typealias Error = Kernel.Rmdir.Error
+extension ISO_9945.Kernel.Directory.Remove {
+    public typealias Error = Kernel.Directory.Remove.Error
 }
 
-extension Kernel.Rmdir.Error {
+extension Kernel.Directory.Remove.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()

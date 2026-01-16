@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX utimensat() syscall
 
-extension ISO_9945.Kernel.File.Utimensat {
+extension ISO_9945.Kernel.File.Times {
     /// Sets the access and modification times of a file.
     ///
     /// - Parameters:
@@ -30,15 +30,15 @@ extension ISO_9945.Kernel.File.Utimensat {
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
-    /// - Throws: `Kernel.File.Utimensat.Error` on failure.
+    /// - Throws: `Kernel.File.Times.Error` on failure.
 
-    public static func utimensat(
+    public static func setTimes(
         path: borrowing Kernel.Path,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time,
         followSymlinks: Bool = true
     ) throws(Error) {
-        try utimensat(
+        try setTimes(
             path: path.unsafeCString,
             accessTime: accessTime,
             modificationTime: modificationTime,
@@ -53,8 +53,8 @@ extension ISO_9945.Kernel.File.Utimensat {
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
-    /// - Throws: `Kernel.File.Utimensat.Error` on failure.
-    public static func utimensat(
+    /// - Throws: `Kernel.File.Times.Error` on failure.
+    public static func setTimes(
         path: UnsafePointer<Kernel.Path.Char>,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time,
@@ -92,8 +92,8 @@ extension ISO_9945.Kernel.File.Utimensat {
     ///   - descriptor: The file descriptor.
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
-    /// - Throws: `Kernel.File.Utimensat.Error` on failure.
-    public static func futimens(
+    /// - Throws: `Kernel.File.Times.Error` on failure.
+    public static func setTimes(
         _ descriptor: Kernel.Descriptor,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time
@@ -124,7 +124,7 @@ extension ISO_9945.Kernel.File.Utimensat {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Utimensat.Error {
+extension Kernel.File.Times.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {

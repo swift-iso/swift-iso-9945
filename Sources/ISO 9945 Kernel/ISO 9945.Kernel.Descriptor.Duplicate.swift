@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX dup() syscalls
 
-extension ISO_9945.Kernel.Dup {
+extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// Duplicates a file descriptor.
     ///
     /// Creates a copy of the file descriptor using the lowest-numbered
@@ -30,8 +30,8 @@ extension ISO_9945.Kernel.Dup {
     ///
     /// - Parameter descriptor: The file descriptor to duplicate.
     /// - Returns: The new file descriptor.
-    /// - Throws: `Kernel.Dup.Error` on failure.
-    public static func dup(_ descriptor: Kernel.Descriptor) throws(Error) -> Kernel.Descriptor {
+    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
+    public static func duplicate(_ descriptor: Kernel.Descriptor) throws(Error) -> Kernel.Descriptor {
         #if canImport(Darwin)
             let result = Darwin.dup(descriptor._rawValue)
         #elseif canImport(Musl)
@@ -55,9 +55,9 @@ extension ISO_9945.Kernel.Dup {
     ///   - descriptor: The file descriptor to duplicate.
     ///   - newDescriptor: The target descriptor number.
     /// - Returns: The new file descriptor (same as `newDescriptor`).
-    /// - Throws: `Kernel.Dup.Error` on failure.
+    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
     @discardableResult
-    public static func dup2(
+    public static func duplicate(
         _ descriptor: Kernel.Descriptor,
         to newDescriptor: Kernel.Descriptor
     ) throws(Error) -> Kernel.Descriptor {
@@ -83,9 +83,9 @@ extension ISO_9945.Kernel.Dup {
     ///   - newDescriptor: The target descriptor number.
     ///   - flags: Flags to apply (currently only O_CLOEXEC).
     /// - Returns: The new file descriptor.
-    /// - Throws: `Kernel.Dup.Error` on failure.
+    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
     @discardableResult
-    public static func dup3(
+    public static func duplicate(
         _ descriptor: Kernel.Descriptor,
         to newDescriptor: Kernel.Descriptor,
         flags: Flags
@@ -98,7 +98,7 @@ extension ISO_9945.Kernel.Dup {
         return Kernel.Descriptor(_rawValue: result)
     }
 
-    /// Flags for dup3 (Linux).
+    /// Flags for duplicate with flags (Linux).
     public struct Flags: OptionSet, Sendable {
         public let rawValue: Int32
 
@@ -114,11 +114,11 @@ extension ISO_9945.Kernel.Dup {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Dup {
-    public typealias Error = Kernel.Dup.Error
+extension ISO_9945.Kernel.Descriptor.Duplicate {
+    public typealias Error = Kernel.Descriptor.Duplicate.Error
 }
 
-extension Kernel.Dup.Error {
+extension Kernel.Descriptor.Duplicate.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno
@@ -133,7 +133,7 @@ extension Kernel.Dup.Error {
     }
 }
 
-extension Kernel.Dup.Error: CustomStringConvertible {
+extension Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
     public var description: String {
         switch self {
         case .handle(let e):
