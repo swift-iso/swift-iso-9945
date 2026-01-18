@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -23,19 +24,33 @@ public import ISO_9945
 // MARK: - POSIX link() syscall
 
 extension ISO_9945.Kernel.Link {
-    /// Creates a hard link.
+    /// Creates a hard link using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
     ///
     /// - Parameters:
     ///   - linkPath: The path where the hard link will be created.
     ///   - existingPath: The path to the existing file.
     /// - Throws: `Kernel.Link.Error` on failure.
-
     public static func create(
+        at linkPath: borrowing Kernel.Path,
+        to existingPath: borrowing Kernel.Path
+    ) throws(Error) {
+        try unsafe linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try existingPath.withUnsafeCString { (existingPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+                try _create(at: linkPtr, to: existingPtr)
+            }
+        }
+    }
+
+    /// Internal implementation for creating a hard link using unsafe path pointers.
+    @usableFromInline
+    internal static func _create(
         at linkPath: UnsafePointer<Kernel.Path.Char>,
         to existingPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
-        let cLinkPath = unsafe UnsafeRawPointer(linkPath).assumingMemoryBound(to: CChar.self)
-        let cExistingPath = unsafe UnsafeRawPointer(existingPath).assumingMemoryBound(to: CChar.self)
+        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
+        let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)
 
         #if canImport(Darwin)
             let result = Darwin.link(cExistingPath, cLinkPath)
@@ -50,25 +65,17 @@ extension ISO_9945.Kernel.Link {
         }
     }
 
-    /// Creates a hard link relative to directory descriptors.
-    ///
-    /// - Parameters:
-    ///   - existingDescriptor: Directory descriptor for the existing file.
-    ///   - existingPath: The path to the existing file.
-    ///   - linkDescriptor: Directory descriptor for the link location.
-    ///   - linkPath: The path where the hard link will be created.
-    ///   - flags: Flags to control the operation.
-    /// - Throws: `Kernel.Link.Error` on failure.
-
-    public static func create(
+    /// Internal implementation for creating a hard link relative to directory descriptors.
+    @usableFromInline
+    internal static func _create(
         from existingDescriptor: Kernel.Descriptor,
         existingPath: UnsafePointer<Kernel.Path.Char>,
         at linkDescriptor: Kernel.Descriptor,
         linkPath: UnsafePointer<Kernel.Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
-        let cExistingPath = unsafe UnsafeRawPointer(existingPath).assumingMemoryBound(to: CChar.self)
-        let cLinkPath = unsafe UnsafeRawPointer(linkPath).assumingMemoryBound(to: CChar.self)
+        let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)
+        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
 
         #if canImport(Darwin)
             let result = Darwin.linkat(
@@ -92,27 +99,6 @@ extension ISO_9945.Kernel.Link {
 
         guard result == 0 else {
             throw Error.current()
-        }
-    }
-
-    // MARK: - Ergonomic Kernel.Path Overloads
-
-    /// Creates a hard link using `Kernel.Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameters:
-    ///   - linkPath: The path where the hard link will be created.
-    ///   - existingPath: The path to the existing file.
-    /// - Throws: `Kernel.Link.Error` on failure.
-    public static func create(
-        at linkPath: borrowing Kernel.Path,
-        to existingPath: borrowing Kernel.Path
-    ) throws(Error) {
-        try unsafe linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try existingPath.withUnsafeCString { (existingPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-                try create(at: linkPtr, to: existingPtr)
-            }
         }
     }
 }

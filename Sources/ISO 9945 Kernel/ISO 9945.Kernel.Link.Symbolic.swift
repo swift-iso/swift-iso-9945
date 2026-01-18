@@ -24,14 +24,9 @@ internal import ISO_9945_ABI
 // MARK: - POSIX symlink() syscall
 
 extension ISO_9945.Kernel.Link.Symbolic {
-    /// Creates a symbolic link.
-    ///
-    /// - Parameters:
-    ///   - target: The path the symlink points to.
-    ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-
-    public static func create(
+    /// Internal implementation for creating a symbolic link.
+    @usableFromInline
+    internal static func _create(
         target: UnsafePointer<Kernel.Path.Char>,
         at linkPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
@@ -51,15 +46,9 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Creates a symbolic link relative to a directory descriptor.
-    ///
-    /// - Parameters:
-    ///   - target: The path the symlink points to.
-    ///   - descriptor: The directory descriptor.
-    ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-
-    public static func create(
+    /// Internal implementation for creating a symbolic link relative to a directory descriptor.
+    @usableFromInline
+    internal static func _create(
         target: UnsafePointer<Kernel.Path.Char>,
         relativeTo descriptor: Kernel.Descriptor,
         linkPath: UnsafePointer<Kernel.Path.Char>
@@ -80,12 +69,9 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Reads the target of a symbolic link.
-    ///
-    /// - Parameter path: The path to the symbolic link.
-    /// - Returns: The target path as a `Kernel.String`.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-    public static func readTarget(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> Kernel.String {
+    /// Internal implementation for reading the target of a symbolic link.
+    @usableFromInline
+    internal static func _readTarget(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> Kernel.String {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         // Start with a reasonable buffer size
@@ -125,15 +111,9 @@ extension ISO_9945.Kernel.Link.Symbolic {
         throw .bufferTooSmall
     }
 
-    /// Reads the target of a symbolic link into a provided buffer.
-    ///
-    /// - Parameters:
-    ///   - path: The path to the symbolic link.
-    ///   - buffer: Buffer to read into.
-    /// - Returns: Number of bytes read.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-
-    public static func readTarget(
+    /// Internal implementation for reading the target into a provided buffer.
+    @usableFromInline
+    internal static func _readTarget(
         at path: UnsafePointer<Kernel.Path.Char>,
         into buffer: UnsafeMutableBufferPointer<CChar>
     ) throws(Error) -> Int {
@@ -170,7 +150,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ) throws(Error) {
         try unsafe target.withUnsafeCString { (targetPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
             try linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-                try create(target: targetPtr, at: linkPtr)
+                try _create(target: targetPtr, at: linkPtr)
             }
         }
     }
@@ -184,7 +164,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
     public static func readTarget(at path: borrowing Kernel.Path) throws(Error) -> Kernel.String {
         try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try readTarget(at: ptr)
+            try _readTarget(at: ptr)
         }
     }
 }

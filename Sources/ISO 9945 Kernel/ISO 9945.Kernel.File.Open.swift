@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -55,29 +56,21 @@ extension ISO_9945.Kernel.File.Open {
         options: Kernel.File.Open.Options,
         permissions: Kernel.File.Permissions
     ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
-        try open(unsafePath: path.unsafeCString, mode: mode, options: options, permissions: permissions)
+        try unsafe path.withUnsafeCString { cString throws(Kernel.File.Open.Error) in
+            try _open(unsafePath: cString, mode: mode, options: options, permissions: permissions)
+        }
     }
 
-    /// Opens a file at the specified path using an unsafe C string pointer.
-    ///
-    /// This is the low-level variant for callers that already have a null-terminated
-    /// path string. Prefer ``open(path:mode:options:permissions:)`` when possible.
-    ///
-    /// - Parameters:
-    ///   - unsafePath: Null-terminated path string. Must remain valid for the call duration.
-    ///   - mode: Read/write access mode.
-    ///   - options: Creation and behavior options.
-    ///   - permissions: POSIX permissions for newly created files.
-    /// - Returns: A file descriptor for the opened file.
-    /// - Throws: ``Kernel/File/Open/Error`` on failure.
-    public static func open(
+    /// Internal implementation for opening a file using an unsafe C string pointer.
+    @usableFromInline
+    internal static func _open(
         unsafePath: UnsafePointer<Kernel.Path.Char>,
         mode: Kernel.File.Open.Mode,
         options: Kernel.File.Open.Options,
         permissions: Kernel.File.Permissions
     ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
         let flags = mode.posixFlags | options.posixFlags
-        let cPath = unsafe UnsafeRawPointer(unsafePath).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
         let fd: Int32
         #if canImport(Darwin)

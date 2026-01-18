@@ -33,43 +33,36 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Returns: The absolute path of the current working directory.
     /// - Throws: ``Error`` on failure.
     public static func current() throws(Error) -> Kernel.String {
-        // Start with reasonable buffer size, grow if needed
-        var bufferSize = 1024
+        var out: Kernel.String? = nil
+        var thrown: Error? = nil
 
-        while true {
-            var buffer = [CChar](repeating: 0, count: bufferSize)
+        Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
+            guard let base = buffer.baseAddress, buffer.count > 0 else {
+                thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
+                return
+            }
 
             #if canImport(Darwin)
-                let result = Darwin.getcwd(&buffer, bufferSize)
+                let result = unsafe Darwin.getcwd(base, buffer.count)
             #elseif canImport(Musl)
-                let result = Musl.getcwd(&buffer, bufferSize)
+                let result = unsafe Musl.getcwd(base, buffer.count)
             #elseif canImport(Glibc)
-                let result = Glibc.getcwd(&buffer, bufferSize)
+                let result = unsafe Glibc.getcwd(base, buffer.count)
             #endif
 
-            if result != nil {
-                // getcwd NUL-terminates; project and copy
-                return buffer.withUnsafeBytes { rawBuffer in
-                    let u8Ptr = unsafe rawBuffer.baseAddress!.assumingMemoryBound(to: UInt8.self)
-                    let view = unsafe Kernel.String.View(u8Ptr)
-                    return unsafe Kernel.String(copying: view)
-                }
+            guard result != nil else {
+                thrown = Kernel.Directory.Working.Error.current()
+                return
             }
 
-            let code = Kernel.Error.Code.posix(errno)
-
-            // ERANGE means buffer too small, double and retry
-            if code.posix == ERANGE {
-                bufferSize *= 2
-                // Sanity check - PATH_MAX is typically 4096
-                if bufferSize > 65536 {
-                    throw .platform(Kernel.Error(code: code))
-                }
-                continue
-            }
-
-            throw Kernel.Directory.Working.Error.fromPosixErrno(code)
+            // getcwd NUL-terminates; project and copy
+            let u8Ptr = unsafe UnsafePointer<UInt8>(base)
+            let view = unsafe Kernel.String.View(u8Ptr)
+            out = unsafe Kernel.String(copying: view)
         }
+
+        if let thrown { throw thrown }
+        return unsafe out!
     }
 
     /// Fills the provided buffer with the current working directory path.
@@ -88,11 +81,11 @@ extension ISO_9945.Kernel.Directory.Working {
         }
 
         #if canImport(Darwin)
-            let result = Darwin.getcwd(base, buffer.count)
+            let result = unsafe Darwin.getcwd(base, buffer.count)
         #elseif canImport(Musl)
-            let result = Musl.getcwd(base, buffer.count)
+            let result = unsafe Musl.getcwd(base, buffer.count)
         #elseif canImport(Glibc)
-            let result = Glibc.getcwd(base, buffer.count)
+            let result = unsafe Glibc.getcwd(base, buffer.count)
         #endif
 
         guard result != nil else {
@@ -101,7 +94,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
         // Find null terminator to get length
         var length = 0
-        while length < buffer.count && base[length] != 0 {
+        while length < buffer.count && (unsafe base[length]) != 0 {
             length += 1
         }
 

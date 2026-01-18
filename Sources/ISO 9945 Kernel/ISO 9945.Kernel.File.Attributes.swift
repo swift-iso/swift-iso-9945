@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -34,7 +35,9 @@ extension ISO_9945.Kernel.File.Attributes {
         path: borrowing Kernel.Path,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
-        try setPermissions(path: path.unsafeCString, permissions: permissions)
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try _setPermissions(path: cString, permissions: permissions)
+        }
     }
 
     /// Changes the permissions of a file using a path character pointer.
@@ -43,11 +46,12 @@ extension ISO_9945.Kernel.File.Attributes {
     ///   - path: The path as a pointer to Kernel.Path.Char (UInt8).
     ///   - permissions: The new permissions.
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
-    public static func setPermissions(
+    @usableFromInline
+    internal static func _setPermissions(
         path: UnsafePointer<Kernel.Path.Char>,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
             let result = Darwin.chmod(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Musl)

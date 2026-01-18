@@ -86,8 +86,8 @@ extension ISO_9945.Kernel.File.Move {
         to newDescriptor: Kernel.Descriptor,
         newPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
-        let cOldPath = unsafe UnsafeRawPointer(oldPath).assumingMemoryBound(to: CChar.self)
-        let cNewPath = unsafe UnsafeRawPointer(newPath).assumingMemoryBound(to: CChar.self)
+        let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
+        let cNewPath = unsafe UnsafePointer<CChar>(newPath)
 
         #if canImport(Darwin)
             let result = Darwin.renameat(

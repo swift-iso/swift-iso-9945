@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -23,18 +24,30 @@ public import ISO_9945
 // MARK: - POSIX mkdir() syscall
 
 extension ISO_9945.Kernel.Directory.Create {
-    /// Creates a directory.
+    /// Creates a directory using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
     ///
     /// - Parameters:
     ///   - path: The path to create.
     ///   - permissions: The permissions for the new directory (default: 0o755).
     /// - Throws: `Kernel.Directory.Create.Error` on failure.
-
     public static func create(
+        _ path: borrowing Kernel.Path,
+        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+    ) throws(Error) {
+        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try _create(ptr, permissions: permissions)
+        }
+    }
+
+    /// Internal implementation for creating a directory using an unsafe path pointer.
+    @usableFromInline
+    internal static func _create(
         _ path: UnsafePointer<Kernel.Path.Char>,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
             let result = Darwin.mkdir(cPath, mode_t(permissions.rawValue))
@@ -49,20 +62,14 @@ extension ISO_9945.Kernel.Directory.Create {
         }
     }
 
-    /// Creates a directory relative to a directory descriptor.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
-    ///   - path: The path to create.
-    ///   - permissions: The permissions for the new directory (default: 0o755).
-    /// - Throws: `Kernel.Directory.Create.Error` on failure.
-
-    public static func create(
+    /// Internal implementation for creating a directory relative to a descriptor.
+    @usableFromInline
+    internal static func _create(
         relativeTo descriptor: Kernel.Descriptor,
         path: UnsafePointer<Kernel.Path.Char>,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
             let result = Darwin.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
@@ -74,25 +81,6 @@ extension ISO_9945.Kernel.Directory.Create {
 
         guard result == 0 else {
             throw Error.current()
-        }
-    }
-
-    // MARK: - Ergonomic Kernel.Path Overloads
-
-    /// Creates a directory using `Kernel.Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameters:
-    ///   - path: The path to create.
-    ///   - permissions: The permissions for the new directory (default: 0o755).
-    /// - Throws: `Kernel.Directory.Create.Error` on failure.
-    public static func create(
-        _ path: borrowing Kernel.Path,
-        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
-    ) throws(Error) {
-        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try create(ptr, permissions: permissions)
         }
     }
 }

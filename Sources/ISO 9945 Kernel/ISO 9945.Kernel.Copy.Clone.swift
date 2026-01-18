@@ -13,6 +13,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -100,12 +101,13 @@ extension ISO_9945.Kernel.Copy.Clone {
         from sourcePath: borrowing Kernel.Path,
         to destPath: borrowing Kernel.Path
     ) throws(Kernel.Copy.Error) {
-        let srcCString = UnsafeRawPointer(sourcePath.unsafeCString).assumingMemoryBound(to: CChar.self)
-        let dstCString = UnsafeRawPointer(destPath.unsafeCString).assumingMemoryBound(to: CChar.self)
-
-        let result = Darwin.clonefile(srcCString, dstCString, 0)
-        guard result == 0 else {
-            throw Kernel.Copy.Error(posixErrno: errno)
+        try unsafe sourcePath.withUnsafeCString { srcCString throws(Kernel.Copy.Error) in
+            try destPath.withUnsafeCString { dstCString throws(Kernel.Copy.Error) in
+                let result = Darwin.clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
+                guard result == 0 else {
+                    throw Kernel.Copy.Error(posixErrno: errno)
+                }
+            }
         }
     }
 }

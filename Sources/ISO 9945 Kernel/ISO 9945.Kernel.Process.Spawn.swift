@@ -11,6 +11,7 @@
 
 public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -119,7 +120,7 @@ extension ISO_9945.Kernel.Process.Spawn {
         envp: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>
     ) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID {
         // Bridge UInt8 pointers to CChar pointers
-        let pathCChar = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let pathCChar = unsafe UnsafePointer<CChar>(path)
         let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
         let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
 

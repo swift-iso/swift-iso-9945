@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -28,16 +29,15 @@ extension ISO_9945.Kernel.File.Delete {
     /// - Parameter path: The path to the file to remove.
     /// - Throws: `Kernel.File.Delete.Error` on failure.
     public static func delete(_ path: borrowing Kernel.Path) throws(Error) {
-        try delete(path.unsafeCString)
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try _delete(cString)
+        }
     }
 
-    /// Removes a file or symbolic link using an unsafe path pointer.
-    ///
-    /// - Parameter path: The path to the file to remove.
-    /// - Throws: `Kernel.File.Delete.Error` on failure.
-
-    public static func delete(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+    /// Internal implementation for removing a file using an unsafe path pointer.
+    @usableFromInline
+    internal static func _delete(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
             let result = Darwin.unlink(cPath)
@@ -57,13 +57,13 @@ extension ISO_9945.Kernel.File.Delete {
     ///   - path: The path to the file to remove.
     ///   - flags: Flags to control the operation (e.g., AT_REMOVEDIR).
     /// - Throws: `Kernel.File.Delete.Error` on failure.
-
-    public static func delete(
+    @usableFromInline
+    internal static func _delete(
         relativeTo descriptor: Kernel.Descriptor,
         path: UnsafePointer<Kernel.Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
             let result = Darwin.unlinkat(descriptor._rawValue, cPath, flags)

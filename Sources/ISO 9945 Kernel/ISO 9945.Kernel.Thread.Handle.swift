@@ -34,6 +34,7 @@ extension ISO_9945.Kernel.Thread {
     /// This type is `@unchecked Sendable` because the underlying `pthread_t`
     /// can be safely passed between threads.
     /// The move-only constraint ensures exactly-once consumption.
+    @safe
     public struct Handle: ~Copyable, @unchecked Sendable {
         internal let rawValue: pthread_t
 

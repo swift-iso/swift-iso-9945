@@ -24,12 +24,22 @@ internal import ISO_9945_ABI
 // MARK: - POSIX rmdir() syscall
 
 extension ISO_9945.Kernel.Directory.Remove {
-    /// Removes an empty directory.
+    /// Removes an empty directory using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
     ///
     /// - Parameter path: The path to remove.
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
+    public static func remove(_ path: borrowing Kernel.Path) throws(Error) {
+        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try _remove(ptr)
+        }
+    }
+
+    /// Internal implementation for removing an empty directory using an unsafe path pointer.
+    @usableFromInline
     @unsafe
-    public static func remove(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
+    internal static func _remove(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
@@ -42,18 +52,6 @@ extension ISO_9945.Kernel.Directory.Remove {
 
         guard result == 0 else {
             throw Error.current()
-        }
-    }
-
-    /// Removes an empty directory using `Kernel.Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameter path: The path to remove.
-    /// - Throws: `Kernel.Directory.Remove.Error` on failure.
-    public static func remove(_ path: borrowing Kernel.Path) throws(Error) {
-        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try remove(ptr)
         }
     }
 }

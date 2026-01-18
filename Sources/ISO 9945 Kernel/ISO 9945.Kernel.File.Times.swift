@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -38,12 +39,14 @@ extension ISO_9945.Kernel.File.Times {
         modificationTime: Kernel.Time,
         followSymlinks: Bool = true
     ) throws(Error) {
-        try setTimes(
-            path: path.unsafeCString,
-            accessTime: accessTime,
-            modificationTime: modificationTime,
-            followSymlinks: followSymlinks
-        )
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try _setTimes(
+                path: cString,
+                accessTime: accessTime,
+                modificationTime: modificationTime,
+                followSymlinks: followSymlinks
+            )
+        }
     }
 
     /// Sets the access and modification times of a file using a path character pointer.
@@ -54,13 +57,14 @@ extension ISO_9945.Kernel.File.Times {
     ///   - modificationTime: The new modification time.
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
     /// - Throws: `Kernel.File.Times.Error` on failure.
-    public static func setTimes(
+    @usableFromInline
+    internal static func _setTimes(
         path: UnsafePointer<Kernel.Path.Char>,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time,
         followSymlinks: Bool = true
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
         var times = [timespec](repeating: timespec(), count: 2)
 
         // Access time

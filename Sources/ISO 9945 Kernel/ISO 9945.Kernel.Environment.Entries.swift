@@ -46,6 +46,7 @@ extension ISO_9945.Kernel.Environment {
     ///     print(String(cString: entry.name), String(cString: entry.value))
     /// }
     /// ```
+    @safe
     public struct Entries: ~Copyable, ~Escapable {
         @usableFromInline
         internal var index: Int

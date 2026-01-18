@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -73,8 +74,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
     public static func get(path: borrowing Kernel.Path) throws(Error) -> Kernel.File.Stats {
-        let cPath = unsafe UnsafeRawPointer(path.unsafeCString).assumingMemoryBound(to: CChar.self)
-        return try unsafe get(unsafePath: cPath)
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try get(unsafePath: UnsafePointer<CChar>(cString))
+        }
     }
 
     /// Gets file metadata for a path using an unsafe C string pointer.
@@ -112,8 +114,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
     public static func lget(path: borrowing Kernel.Path) throws(Error) -> Kernel.File.Stats {
-        let cPath = unsafe UnsafeRawPointer(path.unsafeCString).assumingMemoryBound(to: CChar.self)
-        return try unsafe lget(unsafePath: cPath)
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try lget(unsafePath: UnsafePointer<CChar>(cString))
+        }
     }
 
     /// Gets file metadata for a path without following symlinks using an unsafe C string pointer.

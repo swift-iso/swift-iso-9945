@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -36,7 +37,9 @@ extension ISO_9945.Kernel.File.Chown {
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
-        try chown(path: path.unsafeCString, uid: uid, gid: gid)
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try _chown(path: cString, uid: uid, gid: gid)
+        }
     }
 
     /// Changes the ownership of a file using a path character pointer.
@@ -46,12 +49,13 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
     /// - Throws: `Kernel.File.Chown.Error` on failure.
-    public static func chown(
+    @usableFromInline
+    internal static func _chown(
         path: UnsafePointer<Kernel.Path.Char>,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
             let result = Darwin.chown(cPath, uid.rawValue, gid.rawValue)
         #elseif canImport(Musl)
@@ -103,7 +107,9 @@ extension ISO_9945.Kernel.File.Chown {
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
-        try lchown(path: path.unsafeCString, uid: uid, gid: gid)
+        try unsafe path.withUnsafeCString { cString throws(Error) in
+            try _lchown(path: cString, uid: uid, gid: gid)
+        }
     }
 
     /// Changes the ownership of a symbolic link using a path character pointer.
@@ -113,12 +119,13 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
     /// - Throws: `Kernel.File.Chown.Error` on failure.
-    public static func lchown(
+    @usableFromInline
+    internal static func _lchown(
         path: UnsafePointer<Kernel.Path.Char>,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
             let result = Darwin.lchown(cPath, uid.rawValue, gid.rawValue)
         #elseif canImport(Musl)

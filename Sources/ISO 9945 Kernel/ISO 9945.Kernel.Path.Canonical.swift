@@ -41,18 +41,14 @@ extension ISO_9945.Kernel.Path.Canonical {
     public static func canonicalize(
         _ path: borrowing Kernel.Path
     ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
-        let cPath = unsafe UnsafePointer<CChar>(path.unsafeCString)
-        return try canonicalize(unsafePath: cPath)
+        try unsafe path.withUnsafeCString { cString throws(Kernel.Path.Canonical.Error) in
+            try _canonicalize(unsafePath: UnsafePointer<CChar>(cString))
+        }
     }
 
-    /// Resolves a path to its canonical absolute form using an unsafe C string.
-    ///
-    /// Low-level variant for callers that already have a null-terminated path.
-    ///
-    /// - Parameter unsafePath: Null-terminated path string.
-    /// - Returns: The canonical absolute path as a `Kernel.String`.
-    /// - Throws: ``Kernel.Path.Canonical.Error`` on failure.
-    public static func canonicalize(
+    /// Internal implementation for path canonicalization.
+    @usableFromInline
+    internal static func _canonicalize(
         unsafePath: UnsafePointer<CChar>
     ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
         #if canImport(Darwin)
