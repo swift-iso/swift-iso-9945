@@ -55,7 +55,7 @@ extension ISO_9945.Kernel.Socket.Pair {
 }
 
 extension ISO_9945.Kernel.Socket.Pair.Error: CustomStringConvertible {
-    public var description: String {
+    public var description: Swift.String {
         switch self {
         case .platform(let p):
             switch p {

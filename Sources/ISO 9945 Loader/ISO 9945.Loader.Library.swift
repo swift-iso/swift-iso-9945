@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Loader_Primitives
-public import ISO_9945
+public import ISO_9945  // For ISO_9945.Loader typealias
 
 #if canImport(Darwin)
     internal import Darwin
@@ -20,28 +20,14 @@ public import ISO_9945
     internal import Musl
 #endif
 
-extension ISO_9945.Loader {
-    /// POSIX dynamic library operations.
-    ///
-    /// Wraps `dlopen`/`dlclose` on POSIX systems.
-    public enum Library: Sendable {}
-}
-
-// MARK: - Handle Alias
-
-extension ISO_9945.Loader.Library {
-    /// Library handle type.
-    ///
-    /// Aliases to `Loader.Library.Handle` from swift-loader-primitives.
-    public typealias Handle = Loader.Library.Handle
-}
-
 // MARK: - POSIX Implementation
 
 #if !os(Windows)
 
 extension ISO_9945.Loader.Library {
-    /// Opens a dynamic library.
+    /// Opens a dynamic library (POSIX).
+    ///
+    /// Wraps `dlopen` on POSIX systems.
     ///
     /// - Parameters:
     ///   - path: Path to the library, or `nil` for the main executable.
@@ -57,12 +43,14 @@ extension ISO_9945.Loader.Library {
         _ = unsafe dlerror()
 
         guard let handle = unsafe dlopen(path, options.rawValue) else {
-            throw .open(POSIX.Loader.captureError())
+            throw .open(ISO_9945.Loader.Error.captureError())
         }
         return unsafe Handle(rawValue: handle)
     }
 
-    /// Closes a dynamic library.
+    /// Closes a dynamic library (POSIX).
+    ///
+    /// Wraps `dlclose` on POSIX systems.
     ///
     /// - Parameter handle: The library handle to close.
     /// - Throws: `Loader.Error.close` on failure.
@@ -72,7 +60,7 @@ extension ISO_9945.Loader.Library {
         _ = unsafe dlerror()
 
         guard unsafe dlclose(handle.rawValue) == 0 else {
-            throw .close(POSIX.Loader.captureError())
+            throw .close(ISO_9945.Loader.Error.captureError())
         }
     }
 }

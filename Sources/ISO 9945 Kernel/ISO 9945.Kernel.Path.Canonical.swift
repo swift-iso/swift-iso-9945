@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -35,12 +36,12 @@ extension ISO_9945.Kernel.Path.Canonical {
     /// - `.permission`: Permission denied for a path component
     ///
     /// - Parameter path: The path to canonicalize.
-    /// - Returns: The canonical absolute path as a String.
+    /// - Returns: The canonical absolute path as a `Kernel.String`.
     /// - Throws: ``Kernel.Path.Canonical.Error`` on failure.
     public static func canonicalize(
         _ path: borrowing Kernel.Path
-    ) throws(Kernel.Path.Canonical.Error) -> String {
-        let cPath = unsafe UnsafeRawPointer(path.unsafeCString).assumingMemoryBound(to: CChar.self)
+    ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
+        let cPath = unsafe UnsafePointer<CChar>(path.unsafeCString)
         return try canonicalize(unsafePath: cPath)
     }
 
@@ -49,11 +50,11 @@ extension ISO_9945.Kernel.Path.Canonical {
     /// Low-level variant for callers that already have a null-terminated path.
     ///
     /// - Parameter unsafePath: Null-terminated path string.
-    /// - Returns: The canonical absolute path as a String.
+    /// - Returns: The canonical absolute path as a `Kernel.String`.
     /// - Throws: ``Kernel.Path.Canonical.Error`` on failure.
     public static func canonicalize(
         unsafePath: UnsafePointer<CChar>
-    ) throws(Kernel.Path.Canonical.Error) -> String {
+    ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
         #if canImport(Darwin)
             let result = Darwin.realpath(unsafePath, nil)
         #elseif canImport(Musl)
@@ -67,7 +68,11 @@ extension ISO_9945.Kernel.Path.Canonical {
         }
 
         defer { free(result) }
-        return String(cString: result)
+
+        // Project CChar* → UInt8*, create View, copy to owned Kernel.String
+        let u8Ptr = unsafe UnsafePointer<UInt8>(result)
+        let view = unsafe Kernel.String.View(u8Ptr)
+        return unsafe Kernel.String(copying: view)
     }
 }
 

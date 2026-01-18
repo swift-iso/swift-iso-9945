@@ -10,21 +10,24 @@
 // ===----------------------------------------------------------------------===//
 
 public import Loader_Primitives
-public import ISO_9945
+public import ISO_9945  // For ISO_9945.Loader typealias
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import Kernel_Primitives
 #elseif canImport(Glibc)
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
 #endif
 
+// MARK: - POSIX Options Type
+
+#if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
+
 extension ISO_9945.Loader.Library {
-    /// Options for loading dynamic libraries.
+    /// Options for loading dynamic libraries (POSIX).
     ///
-    /// Maps to RTLD_* flags on POSIX.
+    /// Maps to RTLD_* flags on POSIX systems.
     public struct Options: OptionSet, Sendable, Hashable {
         public let rawValue: Int32
 
@@ -35,9 +38,7 @@ extension ISO_9945.Loader.Library {
     }
 }
 
-// MARK: - Standard Options (POSIX only)
-
-#if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
+// MARK: - Standard Options
 
 extension ISO_9945.Loader.Library.Options {
     /// Resolve symbols lazily (RTLD_LAZY).

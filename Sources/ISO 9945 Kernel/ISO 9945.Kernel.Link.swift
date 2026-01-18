@@ -94,6 +94,27 @@ extension ISO_9945.Kernel.Link {
             throw Error.current()
         }
     }
+
+    // MARK: - Ergonomic Kernel.Path Overloads
+
+    /// Creates a hard link using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
+    ///
+    /// - Parameters:
+    ///   - linkPath: The path where the hard link will be created.
+    ///   - existingPath: The path to the existing file.
+    /// - Throws: `Kernel.Link.Error` on failure.
+    public static func create(
+        at linkPath: borrowing Kernel.Path,
+        to existingPath: borrowing Kernel.Path
+    ) throws(Error) {
+        try unsafe linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try existingPath.withUnsafeCString { (existingPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+                try create(at: linkPtr, to: existingPtr)
+            }
+        }
+    }
 }
 
 // MARK: - Error

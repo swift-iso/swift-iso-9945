@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -50,11 +51,14 @@ extension ISO_9945.Kernel.File.Move {
     ///   - oldPath: Source path.
     ///   - newPath: Destination path.
     /// - Throws: `ExtendedError` if the move fails.
+    @unsafe
     public static func noClobber(
-        from oldPath: UnsafePointer<CChar>,
-        to newPath: UnsafePointer<CChar>
+        from oldPath: UnsafePointer<Kernel.Path.Char>,
+        to newPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Extended.Error) {
-        let result = renamex_np(oldPath, newPath, UInt32(RENAME_EXCL))
+        let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
+        let cNewPath = unsafe UnsafePointer<CChar>(newPath)
+        let result = unsafe renamex_np(cOldPath, cNewPath, UInt32(RENAME_EXCL))
 
         guard result == 0 else {
             let code = Kernel.Error.Code.captureErrno()
@@ -69,6 +73,18 @@ extension ISO_9945.Kernel.File.Move {
         }
     }
 
+    /// Atomically moves a file using `Kernel.Path`, failing if destination exists.
+    public static func noClobber(
+        from oldPath: borrowing Kernel.Path,
+        to newPath: borrowing Kernel.Path
+    ) throws(Extended.Error) {
+        try unsafe oldPath.withUnsafeCString { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try newPath.withUnsafeCString { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+                try noClobber(from: oldPtr, to: newPtr)
+            }
+        }
+    }
+
     /// Atomically exchanges two files.
     ///
     /// Uses `renamex_np` with `RENAME_SWAP` flag on Darwin.
@@ -78,11 +94,14 @@ extension ISO_9945.Kernel.File.Move {
     ///   - path1: First path.
     ///   - path2: Second path.
     /// - Throws: `ExtendedError` on failure.
+    @unsafe
     public static func exchange(
-        _ path1: UnsafePointer<CChar>,
-        _ path2: UnsafePointer<CChar>
+        _ path1: UnsafePointer<Kernel.Path.Char>,
+        _ path2: UnsafePointer<Kernel.Path.Char>
     ) throws(Extended.Error) {
-        let result = renamex_np(path1, path2, UInt32(RENAME_SWAP))
+        let cPath1 = unsafe UnsafePointer<CChar>(path1)
+        let cPath2 = unsafe UnsafePointer<CChar>(path2)
+        let result = unsafe renamex_np(cPath1, cPath2, UInt32(RENAME_SWAP))
 
         guard result == 0 else {
             let code = Kernel.Error.Code.captureErrno()
@@ -91,6 +110,18 @@ extension ISO_9945.Kernel.File.Move {
                 throw .permission(code)
             default:
                 throw .platform(code)
+            }
+        }
+    }
+
+    /// Atomically exchanges two files using `Kernel.Path`.
+    public static func exchange(
+        _ path1: borrowing Kernel.Path,
+        _ path2: borrowing Kernel.Path
+    ) throws(Extended.Error) {
+        try unsafe path1.withUnsafeCString { (ptr1: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try path2.withUnsafeCString { (ptr2: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+                try exchange(ptr1, ptr2)
             }
         }
     }
@@ -110,17 +141,21 @@ extension ISO_9945.Kernel.File.Move {
     ///   - oldPath: Source path.
     ///   - newPath: Destination path.
     /// - Throws: `ExtendedError` if the move fails.
+    @unsafe
     public static func noClobber(
-        from oldPath: UnsafePointer<CChar>,
-        to newPath: UnsafePointer<CChar>
+        from oldPath: UnsafePointer<Kernel.Path.Char>,
+        to newPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Extended.Error) {
+        let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
+        let cNewPath = unsafe UnsafePointer<CChar>(newPath)
+
         #if canImport(CLinuxShim)
         // Try renameat2 first
-        let result = swift_renameat2(
+        let result = unsafe swift_renameat2(
             AT_FDCWD,
-            oldPath,
+            cOldPath,
             AT_FDCWD,
-            newPath,
+            cNewPath,
             UInt32(RENAME_NOREPLACE)
         )
 
@@ -134,12 +169,12 @@ extension ISO_9945.Kernel.File.Move {
             throw .exists
         case ENOSYS, EINVAL, EOPNOTSUPP:
             // renameat2 not available, fall back to link+unlink
-            try linkUnlinkFallback(from: oldPath, to: newPath)
+            try unsafe linkUnlinkFallback(from: cOldPath, to: cNewPath)
         case EPERM:
             // EPERM could be permission error OR filesystem rejecting flag
             // Try fallback first
             do {
-                try linkUnlinkFallback(from: oldPath, to: newPath)
+                try unsafe linkUnlinkFallback(from: cOldPath, to: cNewPath)
             } catch {
                 // Fallback also failed - report original EPERM
                 throw .permission(code)
@@ -151,8 +186,20 @@ extension ISO_9945.Kernel.File.Move {
         }
         #else
         // No CLinuxShim, use link+unlink fallback directly
-        try linkUnlinkFallback(from: oldPath, to: newPath)
+        try unsafe linkUnlinkFallback(from: cOldPath, to: cNewPath)
         #endif
+    }
+
+    /// Atomically moves a file using `Kernel.Path`, failing if destination exists.
+    public static func noClobber(
+        from oldPath: borrowing Kernel.Path,
+        to newPath: borrowing Kernel.Path
+    ) throws(Extended.Error) {
+        try unsafe oldPath.withUnsafeCString { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try newPath.withUnsafeCString { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+                try noClobber(from: oldPtr, to: newPtr)
+            }
+        }
     }
 
     /// Atomically exchanges two files.
@@ -164,16 +211,20 @@ extension ISO_9945.Kernel.File.Move {
     ///   - path1: First path.
     ///   - path2: Second path.
     /// - Throws: `ExtendedError` on failure.
+    @unsafe
     public static func exchange(
-        _ path1: UnsafePointer<CChar>,
-        _ path2: UnsafePointer<CChar>
+        _ path1: UnsafePointer<Kernel.Path.Char>,
+        _ path2: UnsafePointer<Kernel.Path.Char>
     ) throws(Extended.Error) {
+        let cPath1 = unsafe UnsafePointer<CChar>(path1)
+        let cPath2 = unsafe UnsafePointer<CChar>(path2)
+
         #if canImport(CLinuxShim)
-        let result = swift_renameat2(
+        let result = unsafe swift_renameat2(
             AT_FDCWD,
-            path1,
+            cPath1,
             AT_FDCWD,
-            path2,
+            cPath2,
             UInt32(RENAME_EXCHANGE)
         )
 
@@ -193,18 +244,31 @@ extension ISO_9945.Kernel.File.Move {
         #endif
     }
 
+    /// Atomically exchanges two files using `Kernel.Path`.
+    public static func exchange(
+        _ path1: borrowing Kernel.Path,
+        _ path2: borrowing Kernel.Path
+    ) throws(Extended.Error) {
+        try unsafe path1.withUnsafeCString { (ptr1: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try path2.withUnsafeCString { (ptr2: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+                try exchange(ptr1, ptr2)
+            }
+        }
+    }
+
     /// Fallback implementation using link + unlink.
     ///
     /// - link() is atomic and fails with EEXIST if dest exists
     /// - unlink() removes the source name after successful link
+    @unsafe
     private static func linkUnlinkFallback(
         from oldPath: UnsafePointer<CChar>,
         to newPath: UnsafePointer<CChar>
     ) throws(Extended.Error) {
         #if canImport(Musl)
-        let linkResult = Musl.link(oldPath, newPath)
+        let linkResult = unsafe Musl.link(oldPath, newPath)
         #else
-        let linkResult = Glibc.link(oldPath, newPath)
+        let linkResult = unsafe Glibc.link(oldPath, newPath)
         #endif
 
         guard linkResult == 0 else {
@@ -222,9 +286,9 @@ extension ISO_9945.Kernel.File.Move {
         // Both names now point to same inode
         // Remove the old name; new name remains
         #if canImport(Musl)
-        _ = Musl.unlink(oldPath)  // Ignore errors - write succeeded
+        _ = unsafe Musl.unlink(oldPath)  // Ignore errors - write succeeded
         #else
-        _ = Glibc.unlink(oldPath)  // Ignore errors - write succeeded
+        _ = unsafe Glibc.unlink(oldPath)  // Ignore errors - write succeeded
         #endif
     }
 }

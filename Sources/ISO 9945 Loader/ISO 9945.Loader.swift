@@ -18,6 +18,8 @@ extension ISO_9945 {
     /// Provides access to `dlopen`/`dlsym`/`dlclose` functionality
     /// on POSIX-compliant systems (Darwin, Linux).
     ///
+    /// Aliases to `Loader` from swift-loader-primitives.
+    ///
     /// ## Design
     ///
     /// POSIX.Loader is organized into:
@@ -32,5 +34,5 @@ extension ISO_9945 {
     /// - libdl.so / ld.so on Linux
     ///
     /// Therefore, they belong in `Loader`, NOT `Kernel`.
-    public enum Loader: Sendable {}
+    public typealias Loader = Loader_Primitives.Loader
 }

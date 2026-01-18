@@ -12,12 +12,12 @@
 #if !os(Windows)
 
     import Test_Primitives
-import Testing_Extras
+import Testing
 
     import Kernel_Primitives
     @testable import ISO_9945_Kernel
 
-    // Note: Kernel.Process.ID already has #TestSuites from elsewhere.
+    // Note: Kernel.Process.ID already has #Tests from elsewhere.
     // We add tests in a separate file to test the .parent accessor.
 
     // MARK: - Parent Accessor Tests

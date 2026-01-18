@@ -76,6 +76,25 @@ extension ISO_9945.Kernel.Directory.Create {
             throw Error.current()
         }
     }
+
+    // MARK: - Ergonomic Kernel.Path Overloads
+
+    /// Creates a directory using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
+    ///
+    /// - Parameters:
+    ///   - path: The path to create.
+    ///   - permissions: The permissions for the new directory (default: 0o755).
+    /// - Throws: `Kernel.Directory.Create.Error` on failure.
+    public static func create(
+        _ path: borrowing Kernel.Path,
+        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+    ) throws(Error) {
+        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try create(ptr, permissions: permissions)
+        }
+    }
 }
 
 // MARK: - Error

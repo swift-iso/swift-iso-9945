@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -30,23 +31,43 @@ extension ISO_9945.Kernel.File.Move {
     ///   - newPath: The new path.
     /// - Throws: `Kernel.File.Move.Error` on failure.
 
+    @unsafe
     public static func move(
         from oldPath: UnsafePointer<Kernel.Path.Char>,
         to newPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
-        let cOldPath = unsafe UnsafeRawPointer(oldPath).assumingMemoryBound(to: CChar.self)
-        let cNewPath = unsafe UnsafeRawPointer(newPath).assumingMemoryBound(to: CChar.self)
+        let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
+        let cNewPath = unsafe UnsafePointer<CChar>(newPath)
 
         #if canImport(Darwin)
-            let result = Darwin.rename(cOldPath, cNewPath)
+            let result = unsafe Darwin.rename(cOldPath, cNewPath)
         #elseif canImport(Musl)
-            let result = Musl.rename(cOldPath, cNewPath)
+            let result = unsafe Musl.rename(cOldPath, cNewPath)
         #elseif canImport(Glibc)
-            let result = Glibc.rename(cOldPath, cNewPath)
+            let result = unsafe Glibc.rename(cOldPath, cNewPath)
         #endif
 
         guard result == 0 else {
             throw Error.current()
+        }
+    }
+
+    /// Moves/renames a file or directory using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
+    ///
+    /// - Parameters:
+    ///   - oldPath: The current path.
+    ///   - newPath: The new path.
+    /// - Throws: `Kernel.File.Move.Error` on failure.
+    public static func move(
+        from oldPath: borrowing Kernel.Path,
+        to newPath: borrowing Kernel.Path
+    ) throws(Error) {
+        try unsafe oldPath.withUnsafeCString { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try newPath.withUnsafeCString { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+                try move(from: oldPtr, to: newPtr)
+            }
         }
     }
 

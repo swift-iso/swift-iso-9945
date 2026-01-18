@@ -119,7 +119,7 @@ extension ISO_9945.Kernel.Signal.Error {
 // MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Signal.Error: CustomStringConvertible {
-    public var description: String {
+    public var description: Swift.String {
         switch self {
         case .interrupted:
             return "interrupted by signal"

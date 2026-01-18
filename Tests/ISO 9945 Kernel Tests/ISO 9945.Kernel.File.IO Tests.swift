@@ -16,12 +16,12 @@ import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives
 import Test_Primitives
 import Testing
-import Testing_Extras
+import Testing
 
 @testable import ISO_9945_Kernel
 
 extension ISO_9945.Kernel.File.Open {
-    #TestSuites
+    #Tests
 }
 
 // MARK: - Integration Tests (require full POSIX module for file I/O)

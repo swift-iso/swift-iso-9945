@@ -111,7 +111,7 @@ extension ISO_9945.Kernel.Process.Error {
 // MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Process.Error: CustomStringConvertible {
-    public var description: String {
+    public var description: Swift.String {
         switch self {
         case .fork(let code):
             return "fork failed: \(code)"

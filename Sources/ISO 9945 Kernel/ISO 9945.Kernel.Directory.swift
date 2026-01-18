@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -106,12 +107,26 @@ extension ISO_9945.Kernel.Directory {
     /// - Throws: `Kernel.Directory.Error` on failure.
     @unsafe
     public static func open(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> Stream {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         guard let dir = unsafe opendir(cPath) else {
             throw Error.currentOpen()
         }
         return Stream(dir: unsafe dir)
+    }
+
+    /// Opens a directory for iteration using a `Kernel.Path`.
+    ///
+    /// This is the preferred entry point. The pointer-based overload exists
+    /// for cases where you already have a raw pointer.
+    ///
+    /// - Parameter path: The path to the directory.
+    /// - Returns: A directory stream for iteration.
+    /// - Throws: `Kernel.Directory.Error` on failure.
+    public static func open(at path: borrowing Kernel.Path) throws(Error) -> Stream {
+        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try open(at: ptr)
+        }
     }
 }
 

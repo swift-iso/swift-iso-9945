@@ -11,12 +11,12 @@
 
 import Kernel_Primitives
 import Test_Primitives
-import Testing_Extras
+import Testing
 
 @testable import ISO_9945_Kernel
 
 extension Kernel.Signal {
-    #TestSuites
+    #Tests
 }
 
 // MARK: - Unit Tests

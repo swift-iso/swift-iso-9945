@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.Signal.Mask {
 // MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Signal.Mask.How: CustomStringConvertible {
-    public var description: String {
+    public var description: Swift.String {
         switch self {
         case .block: return "block"
         case .unblock: return "unblock"

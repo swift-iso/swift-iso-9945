@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -27,20 +28,32 @@ extension ISO_9945.Kernel.Directory.Remove {
     ///
     /// - Parameter path: The path to remove.
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
-
+    @unsafe
     public static func remove(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let result = Darwin.rmdir(cPath)
+            let result = unsafe Darwin.rmdir(cPath)
         #elseif canImport(Musl)
-            let result = Musl.rmdir(cPath)
+            let result = unsafe Musl.rmdir(cPath)
         #elseif canImport(Glibc)
-            let result = Glibc.rmdir(cPath)
+            let result = unsafe Glibc.rmdir(cPath)
         #endif
 
         guard result == 0 else {
             throw Error.current()
+        }
+    }
+
+    /// Removes an empty directory using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
+    ///
+    /// - Parameter path: The path to remove.
+    /// - Throws: `Kernel.Directory.Remove.Error` on failure.
+    public static func remove(_ path: borrowing Kernel.Path) throws(Error) {
+        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try remove(ptr)
         }
     }
 }

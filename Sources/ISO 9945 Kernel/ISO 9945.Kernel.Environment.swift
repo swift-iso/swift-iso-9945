@@ -12,6 +12,7 @@
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 public import String_Primitives
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -33,11 +34,13 @@ extension ISO_9945.Kernel.Environment {
     ///   the internal storage which can be invalidated by setenv/unsetenv.
 
     public static func get(_ name: UnsafePointer<Kernel.String.Char>) -> Kernel.String? {
-        guard let valuePtr = getenv(name) else {
+        let cName = unsafe UnsafePointer<CChar>(name)
+        guard let valuePtr = unsafe getenv(cName) else {
             return nil
         }
-        let view = Kernel.String.View(valuePtr)
-        return Kernel.String(copying: view)
+        let u8Ptr = unsafe UnsafePointer<UInt8>(valuePtr)
+        let view = unsafe Kernel.String.View(u8Ptr)
+        return unsafe Kernel.String(copying: view)
     }
 
     /// Sets an environment variable.
@@ -53,7 +56,9 @@ extension ISO_9945.Kernel.Environment {
         to value: UnsafePointer<Kernel.String.Char>,
         overwrite: Bool = true
     ) throws(Kernel.Environment.Error) {
-        let result = setenv(name, value, overwrite ? 1 : 0)
+        let cName = unsafe UnsafePointer<CChar>(name)
+        let cValue = unsafe UnsafePointer<CChar>(value)
+        let result = unsafe setenv(cName, cValue, overwrite ? 1 : 0)
         guard result == 0 else {
             throw .current()
         }
@@ -67,7 +72,8 @@ extension ISO_9945.Kernel.Environment {
     /// - Note: Does not fail if the variable does not exist.
 
     public static func unset(_ name: UnsafePointer<Kernel.String.Char>) throws(Kernel.Environment.Error) {
-        let result = unsetenv(name)
+        let cName = unsafe UnsafePointer<CChar>(name)
+        let result = unsafe unsetenv(cName)
         guard result == 0 else {
             throw .current()
         }

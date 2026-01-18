@@ -12,6 +12,7 @@
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 public import String_Primitives
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -51,12 +52,14 @@ extension ISO_9945.Kernel.Environment {
 
         /// Temporary buffer for null-terminated name (we modify environ entry in-place).
         /// Stores the original '=' character to restore after yielding entry.
+        /// Uses `CChar` because `environ` provides `CChar*` pointers.
         @usableFromInline
-        internal var savedSeparator: Kernel.String.Char
+        internal var savedSeparator: CChar
 
         /// Pointer to the separator position for restoration.
+        /// Uses `CChar` because `environ` provides `CChar*` pointers.
         @usableFromInline
-        internal var separatorPtr: UnsafeMutablePointer<Kernel.String.Char>?
+        internal var separatorPtr: UnsafeMutablePointer<CChar>?
 
         /// Creates an iterator over all environment variables.
 
@@ -124,8 +127,9 @@ extension ISO_9945.Kernel.Environment.Entries {
         separatorPtr = sepPtr
         sepPtr.pointee = 0
 
-        let namePtr = UnsafePointer(entry)
-        let valuePtr = UnsafePointer(entry + j + 1)
+        // Convert CChar pointers to UInt8 pointers at the boundary
+        let namePtr = unsafe UnsafePointer<UInt8>(UnsafePointer(entry))
+        let valuePtr = unsafe UnsafePointer<UInt8>(UnsafePointer(entry + j + 1))
 
         return unsafe _overrideLifetime(
             Kernel.Environment.Entry(name: namePtr, value: valuePtr),

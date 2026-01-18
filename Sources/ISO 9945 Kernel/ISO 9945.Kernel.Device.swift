@@ -88,7 +88,7 @@ extension ISO_9945.Kernel.Device {
 
 extension ISO_9945.Kernel.Device: @retroactive CustomStringConvertible {
     /// Returns "major:minor" format for POSIX device IDs.
-    public var description: String {
+    public var description: Swift.String {
         "\(major):\(minor)"
     }
 }

@@ -134,7 +134,7 @@ extension Kernel.Descriptor.Duplicate.Error {
 }
 
 extension Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
-    public var description: String {
+    public var description: Swift.String {
         switch self {
         case .handle(let e):
             return "handle: \(e)"

@@ -9,8 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
+
 public import Loader_Primitives
-public import ISO_9945
+public import String_Primitives
+public import ISO_9945  // For ISO_9945.Loader typealias
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -20,17 +24,7 @@ public import ISO_9945
     internal import Musl
 #endif
 
-extension ISO_9945.Loader {
-    /// Errors from POSIX dynamic loader operations.
-    ///
-    /// Wraps `Loader.Error` with POSIX-specific error capture from `dlerror()`.
-    public typealias Error = Loader.Error
-}
-
-// MARK: - Error Capture
-
-#if !os(Windows)
-extension ISO_9945.Loader {
+extension ISO_9945.Loader.Error {
     /// Captures dlerror() into a Loader.Message.
     ///
     /// MUST be called immediately after a failing loader call.
@@ -38,9 +32,12 @@ extension ISO_9945.Loader {
     @usableFromInline
     internal static func captureError() -> Loader.Message {
         if let cstr = unsafe dlerror() {
-            return Loader.Message(unsafe String(cString: cstr))
+            let u8Ptr = unsafe UnsafePointer<UInt8>(cstr)
+            let view = unsafe String_Primitives.String.View(u8Ptr)
+            return unsafe Loader.Message(copying: view)
         }
-        return Loader.Message("unknown error")
+        // Fallback: create message from literal
+        return Loader.Message(ascii: "unknown error")
     }
 }
 #endif

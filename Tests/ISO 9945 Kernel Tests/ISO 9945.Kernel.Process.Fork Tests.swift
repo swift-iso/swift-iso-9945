@@ -12,13 +12,13 @@
 #if os(macOS)
 
     import Test_Primitives
-import Testing_Extras
+import Testing
 
     import Kernel_Primitives
     @testable import ISO_9945_Kernel
 
     extension Kernel.Process.Fork {
-        #TestSuites
+        #Tests
     }
 
     // MARK: - Unit Tests

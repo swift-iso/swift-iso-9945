@@ -13,13 +13,13 @@
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
     import Test_Primitives
-import Testing_Extras
+import Testing
 
     import Kernel_Primitives
     @testable import ISO_9945_Kernel
 
     extension Kernel.Signal.Error {
-        #TestSuites
+        #Tests
     }
 
     // MARK: - Signal.Error Tests

@@ -16,7 +16,7 @@ import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives
 import Test_Primitives
 import Testing
-import Testing_Extras
+import Testing
 
 #if canImport(Darwin)
     import Darwin

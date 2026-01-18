@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -23,7 +24,7 @@ public import ISO_9945
 // MARK: - POSIX getcwd() syscall
 
 extension ISO_9945.Kernel.Directory.Working {
-    /// Returns the current working directory as a String.
+    /// Returns the current working directory as a `Kernel.String`.
     ///
     /// ## Errors
     /// - `.path(.notFound)`: Directory has been deleted
@@ -31,7 +32,7 @@ extension ISO_9945.Kernel.Directory.Working {
     ///
     /// - Returns: The absolute path of the current working directory.
     /// - Throws: ``Error`` on failure.
-    public static func current() throws(Error) -> String {
+    public static func current() throws(Error) -> Kernel.String {
         // Start with reasonable buffer size, grow if needed
         var bufferSize = 1024
 
@@ -47,9 +48,12 @@ extension ISO_9945.Kernel.Directory.Working {
             #endif
 
             if result != nil {
-                // Find null terminator and decode
-                let length = buffer.firstIndex(of: 0) ?? buffer.count
-                return String(decoding: buffer[..<length].map { UInt8(bitPattern: $0) }, as: UTF8.self)
+                // getcwd NUL-terminates; project and copy
+                return buffer.withUnsafeBytes { rawBuffer in
+                    let u8Ptr = unsafe rawBuffer.baseAddress!.assumingMemoryBound(to: UInt8.self)
+                    let view = unsafe Kernel.String.View(u8Ptr)
+                    return unsafe Kernel.String(copying: view)
+                }
             }
 
             let code = Kernel.Error.Code.posix(errno)

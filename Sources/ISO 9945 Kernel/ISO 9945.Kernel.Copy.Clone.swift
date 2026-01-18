@@ -97,22 +97,6 @@ extension ISO_9945.Kernel.Copy.Clone {
     /// - Throws: ``Kernel/Copy/Error`` on failure.
 
     public static func file(
-        from sourcePath: String,
-        to destPath: String
-    ) throws(Kernel.Copy.Error) {
-        let result = sourcePath.withCString { src in
-            destPath.withCString { dst in
-                Darwin.clonefile(src, dst, 0)
-            }
-        }
-        guard result == 0 else {
-            throw Kernel.Copy.Error(posixErrno: errno)
-        }
-    }
-
-    /// Clones a file using Kernel.Path paths.
-
-    public static func file(
         from sourcePath: borrowing Kernel.Path,
         to destPath: borrowing Kernel.Path
     ) throws(Kernel.Copy.Error) {

@@ -23,6 +23,8 @@ public import ISO_9945
     internal import Musl
 #endif
 
+internal import ASCII
+
 // MARK: - Capability Probing
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
@@ -38,13 +40,14 @@ extension ISO_9945.Kernel.File.Clone.Capability {
             throw .platform(code: .posix(errno), operation: .statfs)
         }
 
-        // APFS filesystem type
-        let fsType = withUnsafeBytes(of: statfsBuf.f_fstypename) { buf in
-            String(cString: buf.bindMemory(to: CChar.self).baseAddress!)
-        }
-
         // APFS supports cloning
-        if fsType == "apfs" {
+        let isAPFS = withUnsafeBytes(of: statfsBuf.f_fstypename) { buf in
+            unsafe Binary.ASCII.equals.nulTerminated(
+                buf.baseAddress!.assumingMemoryBound(to: UInt8.self),
+                "apfs"
+            )
+        }
+        if isAPFS {
             return .reflink
         }
 

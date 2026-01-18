@@ -11,6 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
@@ -34,8 +35,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
         target: UnsafePointer<Kernel.Path.Char>,
         at linkPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
-        let cTarget = unsafe UnsafeRawPointer(target).assumingMemoryBound(to: CChar.self)
-        let cLinkPath = unsafe UnsafeRawPointer(linkPath).assumingMemoryBound(to: CChar.self)
+        let cTarget = unsafe UnsafePointer<CChar>(target)
+        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
 
         #if canImport(Darwin)
             let result = Darwin.symlink(cTarget, cLinkPath)
@@ -63,8 +64,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
         relativeTo descriptor: Kernel.Descriptor,
         linkPath: UnsafePointer<Kernel.Path.Char>
     ) throws(Error) {
-        let cTarget = unsafe UnsafeRawPointer(target).assumingMemoryBound(to: CChar.self)
-        let cLinkPath = unsafe UnsafeRawPointer(linkPath).assumingMemoryBound(to: CChar.self)
+        let cTarget = unsafe UnsafePointer<CChar>(target)
+        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
 
         #if canImport(Darwin)
             let result = Darwin.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
@@ -82,16 +83,17 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// Reads the target of a symbolic link.
     ///
     /// - Parameter path: The path to the symbolic link.
-    /// - Returns: The target path as a string.
+    /// - Returns: The target path as a `Kernel.String`.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-    public static func readTarget(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> String {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+    public static func readTarget(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> Kernel.String {
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         // Start with a reasonable buffer size
         var bufferSize = 256
 
         while bufferSize <= 65536 {
-            let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize)
+            // Allocate bufferSize + 1 to have room for the NUL terminator we'll add
+            let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize + 1)
             defer { buffer.deallocate() }
 
             #if canImport(Darwin)
@@ -108,8 +110,12 @@ extension ISO_9945.Kernel.Link.Symbolic {
 
             // If the result fits in the buffer, we're done
             if count < bufferSize {
-                buffer[count] = 0  // Null-terminate
-                return String(cString: buffer)
+                // readlink does NOT NUL-terminate — we must add it
+                buffer[count] = 0
+
+                let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
+                let view = unsafe Kernel.String.View(u8Ptr)
+                return unsafe Kernel.String(copying: view)
             }
 
             // Otherwise, double the buffer and try again
@@ -131,7 +137,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
         at path: UnsafePointer<Kernel.Path.Char>,
         into buffer: UnsafeMutableBufferPointer<CChar>
     ) throws(Error) -> Int {
-        let cPath = unsafe UnsafeRawPointer(path).assumingMemoryBound(to: CChar.self)
+        let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
             let count = Darwin.readlink(cPath, buffer.baseAddress!, buffer.count)
@@ -146,6 +152,40 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
 
         return count
+    }
+
+    // MARK: - Ergonomic Kernel.Path Overloads
+
+    /// Creates a symbolic link using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
+    ///
+    /// - Parameters:
+    ///   - target: The path the symlink points to.
+    ///   - linkPath: The path where the symlink will be created.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    public static func create(
+        target: borrowing Kernel.Path,
+        at linkPath: borrowing Kernel.Path
+    ) throws(Error) {
+        try unsafe target.withUnsafeCString { (targetPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+                try create(target: targetPtr, at: linkPtr)
+            }
+        }
+    }
+
+    /// Reads the target of a symbolic link using `Kernel.Path`.
+    ///
+    /// This is the preferred entry point.
+    ///
+    /// - Parameter path: The path to the symbolic link.
+    /// - Returns: The target path as a `Kernel.String`.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    public static func readTarget(at path: borrowing Kernel.Path) throws(Error) -> Kernel.String {
+        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try readTarget(at: ptr)
+        }
     }
 }
 

@@ -12,14 +12,14 @@
 #if !os(Windows)
 
     import Test_Primitives
-import Testing_Extras
+import Testing
 
     import Kernel_Primitives
     @testable import ISO_9945_Kernel
 import ISO_9945
 
     extension POSIX.Kernel.Device {
-        #TestSuites
+        #Tests
     }
 
     // MARK: - Major/Minor Tests

@@ -12,14 +12,14 @@
 #if os(macOS)
 
     import Test_Primitives
-import Testing_Extras
+import Testing
 
     import Kernel_Primitives
     @testable import ISO_9945_Kernel
 import ISO_9945
 
     extension Kernel.Process.Wait {
-        #TestSuites
+        #Tests
     }
 
     // MARK: - Selector Tests

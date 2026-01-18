@@ -10,39 +10,26 @@
 // ===----------------------------------------------------------------------===//
 
 public import Loader_Primitives
-public import ISO_9945
+public import String_Primitives
+public import ISO_9945  // For ISO_9945.Loader typealias
+internal import ISO_9945_ABI
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import Kernel_Primitives
 #elseif canImport(Glibc)
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
 #endif
 
-extension ISO_9945.Loader {
-    /// POSIX symbol lookup interface.
-    ///
-    /// Wraps `dlsym` on POSIX systems.
-    public enum Symbol: Sendable {}
-}
-
-// MARK: - Scope Alias
-
-extension ISO_9945.Loader.Symbol {
-    /// Symbol lookup scope.
-    ///
-    /// Aliases to `Loader.Symbol.Scope` from swift-loader-primitives.
-    public typealias Scope = Loader.Symbol.Scope
-}
-
 // MARK: - POSIX Implementation
 
 #if !os(Windows)
 
 extension ISO_9945.Loader.Symbol {
-    /// Looks up a symbol in a library or scope.
+    /// Looks up a symbol in a library or scope (POSIX).
+    ///
+    /// Wraps `dlsym` on POSIX systems.
     ///
     /// - Parameters:
     ///   - name: The symbol name (C string).
@@ -58,7 +45,7 @@ extension ISO_9945.Loader.Symbol {
     /// ## Example
     ///
     /// ```swift
-    /// let sym = try POSIX.Loader.Symbol.lookup(name: "myFunction", in: .default)
+    /// let sym = try Loader.Symbol.lookup(name: "myFunction", in: .default)
     /// typealias MyFunc = @convention(c) () -> Int32
     /// let func = unsafeBitCast(sym, to: MyFunc.self)
     /// ```
@@ -74,11 +61,13 @@ extension ISO_9945.Loader.Symbol {
 
         // Check for error (sym can legitimately be NULL for data symbols)
         if let errorCStr = unsafe dlerror() {
-            throw .symbol(Loader.Message(unsafe String(cString: errorCStr)))
+            let u8Ptr = unsafe UnsafePointer<UInt8>(errorCStr)
+            let view = unsafe String_Primitives.String.View(u8Ptr)
+            throw .symbol(unsafe Loader.Message(copying: view))
         }
 
         guard let sym = unsafe sym else {
-            throw .symbol(Loader.Message("symbol resolved to NULL (no dlerror)"))
+            throw .symbol(Loader.Message(ascii: "symbol resolved to NULL (no dlerror)"))
         }
 
         return UnsafeRawPointer(sym)

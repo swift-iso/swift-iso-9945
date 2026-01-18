@@ -16,12 +16,12 @@ import Kernel_Primitives
 import Synchronization
 import Test_Primitives
 import Testing
-import Testing_Extras
+import Testing
 
 @testable import ISO_9945_Kernel
 
 extension ISO_9945.Kernel.Thread {
-    #TestSuites
+    #Tests
 }
 
 // MARK: - Unit Tests

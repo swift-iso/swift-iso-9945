@@ -36,13 +36,19 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-clock-primitives"),
         .package(path: "../../swift-primitives/swift-terminal-primitives"),
         .package(path: "../../swift-primitives/swift-test-primitives"),
-        .package(path: "../../swift-foundations/swift-testing-extras"),
+        .package(path: "../../swift-foundations/swift-ascii"),
+        .package(path: "../../swift-foundations/swift-testing"),
     ],
     targets: [
         .target(
             name: "ISO 9945",
             dependencies: [],
             path: "Sources/ISO 9945"
+        ),
+        .target(
+            name: "ISO 9945 ABI",
+            dependencies: [],
+            path: "Sources/ISO 9945 ABI"
         ),
         .target(
             name: "CPOSIXProcessShim",
@@ -52,10 +58,12 @@ let package = Package(
             name: "ISO 9945 Kernel",
             dependencies: [
                 .target(name: "ISO 9945"),
+                .target(name: "ISO 9945 ABI"),
                 .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
+                .product(name: "ASCII", package: "swift-ascii"),
             ],
             path: "Sources/ISO 9945 Kernel"
         ),
@@ -63,6 +71,7 @@ let package = Package(
             name: "ISO 9945 Loader",
             dependencies: [
                 .target(name: "ISO 9945"),
+                .target(name: "ISO 9945 ABI"),
                 .product(name: "Loader Primitives", package: "swift-loader-primitives"),
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
             ],
@@ -99,7 +108,7 @@ let package = Package(
                 "ISO 9945 Kernel Test Support",
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Test Primitives", package: "swift-test-primitives"),
-                .product(name: "Testing Extras", package: "swift-testing-extras"),
+                .product(name: "Testing", package: "swift-testing"),
             ],
             path: "Tests/ISO 9945 Kernel Tests"
         ),

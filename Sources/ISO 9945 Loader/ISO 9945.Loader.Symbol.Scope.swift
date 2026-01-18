@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Loader_Primitives
-public import ISO_9945
+public import ISO_9945  // For ISO_9945.Loader typealias
 
 #if canImport(Darwin)
     internal import Darwin
@@ -27,7 +27,7 @@ public import ISO_9945
 
 #if !os(Windows)
 
-extension Loader.Symbol.Scope {
+extension ISO_9945.Loader.Symbol.Scope {
     /// Converts scope to dlsym handle pointer.
     ///
     /// Uses platform constants from dlfcn.h via C shims.
