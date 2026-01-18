@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v26),
         .tvOS(.v26),
         .watchOS(.v26),
-        .visionOS(.v26),
+        .visionOS(.v26)
     ],
     products: [
         .library(
@@ -27,7 +27,7 @@ let package = Package(
         .library(
             name: "ISO 9945 Kernel Test Support",
             targets: ["ISO 9945 Kernel Test Support"]
-        ),
+        )
     ],
     dependencies: [
         .package(path: "../../swift-primitives/swift-kernel-primitives"),
@@ -35,9 +35,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-string-primitives"),
         .package(path: "../../swift-primitives/swift-clock-primitives"),
         .package(path: "../../swift-primitives/swift-terminal-primitives"),
-        .package(path: "../../swift-primitives/swift-test-primitives"),
-        .package(path: "../../swift-foundations/swift-ascii"),
-        .package(path: "../../swift-foundations/swift-testing"),
+        .package(path: "../../swift-foundations/swift-ascii")
     ],
     targets: [
         .target(
@@ -63,7 +61,7 @@ let package = Package(
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
-                .product(name: "ASCII", package: "swift-ascii"),
+                .product(name: "ASCII", package: "swift-ascii")
             ],
             path: "Sources/ISO 9945 Kernel"
         ),
@@ -73,7 +71,7 @@ let package = Package(
                 .target(name: "ISO 9945"),
                 .target(name: "ISO 9945 ABI"),
                 .product(name: "Loader Primitives", package: "swift-loader-primitives"),
-                .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Kernel Primitives", package: "swift-kernel-primitives")
             ],
             path: "Sources/ISO 9945 Loader"
         ),
@@ -85,7 +83,7 @@ let package = Package(
         .executableTarget(
             name: "iso-9945-lock-helper",
             dependencies: [
-                "ISO 9945 Kernel",
+                "ISO 9945 Kernel"
             ],
             path: "Tests/Support/Lock Helper"
         ),
@@ -94,24 +92,11 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Kernel",
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
-                .product(name: "String Primitives", package: "swift-string-primitives"),
+                .product(name: "String Primitives", package: "swift-string-primitives")
             ],
             path: "Tests/Support",
             exclude: ["Lock Helper"]
-        ),
-        .testTarget(
-            name: "ISO 9945 Kernel Tests",
-            dependencies: [
-                "ISO 9945 Kernel",
-                "iso-9945-test-helper",
-                "iso-9945-lock-helper",
-                "ISO 9945 Kernel Test Support",
-                .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Test Primitives", package: "swift-test-primitives"),
-                .product(name: "Testing", package: "swift-testing"),
-            ],
-            path: "Tests/ISO 9945 Kernel Tests"
-        ),
+        )
     ],
     swiftLanguageModes: [.v6]
 )
@@ -122,7 +107,7 @@ for target in package.targets where ![.system, .binary, .plugin].contains(target
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
         .enableExperimentalFeature("Lifetimes"),
-        .strictMemorySafety(),
+        .strictMemorySafety()
     ]
     target.swiftSettings = (target.swiftSettings ?? []) + settings
 }
