@@ -32,8 +32,8 @@ internal import ASCII
 
 extension ISO_9945.Kernel.File.Clone.Capability {
     /// Probes whether the filesystem at the given path supports cloning.
-    public static func probe(at path: borrowing Kernel.Path) throws(Kernel.File.Clone.Error.Syscall) -> Kernel.File.Clone.Capability {
-        try unsafe path.withUnsafeCString { cString throws(Kernel.File.Clone.Error.Syscall) in
+    public static func probe(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Kernel.File.Clone.Capability {
+        try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statfsBuf = Darwin.statfs()
             let result = statfs(UnsafePointer<CChar>(cString), &statfsBuf)
 
@@ -61,8 +61,8 @@ extension ISO_9945.Kernel.File.Clone.Capability {
 
 extension ISO_9945.Kernel.File.Clone.Capability {
     /// Probes whether the filesystem at the given path supports cloning.
-    public static func probe(at path: borrowing Kernel.Path) throws(Kernel.File.Clone.Error.Syscall) -> Kernel.File.Clone.Capability {
-        try unsafe path.withUnsafeCString { cString throws(Kernel.File.Clone.Error.Syscall) in
+    public static func probe(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Kernel.File.Clone.Capability {
+        try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statfsBuf = statfs()
             let result = Glibc.statfs(UnsafePointer<CChar>(cString), &statfsBuf)
 
@@ -91,8 +91,8 @@ extension ISO_9945.Kernel.File.Clone.Capability {
 
 extension ISO_9945.Kernel.File.Clone.Metadata {
     /// Gets the size of a file.
-    public static func size(at path: borrowing Kernel.Path) throws(Kernel.File.Clone.Error.Syscall) -> Int {
-        try unsafe path.withUnsafeCString { cString throws(Kernel.File.Clone.Error.Syscall) in
+    public static func size(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Int {
+        try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statBuf = Darwin.stat()
             let result = stat(UnsafePointer<CChar>(cString), &statBuf)
 
@@ -109,8 +109,8 @@ extension ISO_9945.Kernel.File.Clone.Metadata {
 
 extension ISO_9945.Kernel.File.Clone.Metadata {
     /// Gets the size of a file.
-    public static func size(at path: borrowing Kernel.Path) throws(Kernel.File.Clone.Error.Syscall) -> Int {
-        try unsafe path.withUnsafeCString { cString throws(Kernel.File.Clone.Error.Syscall) in
+    public static func size(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Int {
+        try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statBuf = Glibc.stat()
             let result = stat(UnsafePointer<CChar>(cString), &statBuf)
 
@@ -140,11 +140,11 @@ extension ISO_9945.Kernel.File.Clone {
         /// - Returns: `true` if cloned, `false` if not supported.
         /// - Throws: `Kernel.File.Clone.Error.Syscall` for other errors.
         public static func attempt(
-            source: borrowing Kernel.Path,
-            destination: borrowing Kernel.Path
+            source: borrowing Kernel.Path.View,
+            destination: borrowing Kernel.Path.View
         ) throws(Kernel.File.Clone.Error.Syscall) -> Bool {
-            try unsafe source.withUnsafeCString { srcCString throws(Kernel.File.Clone.Error.Syscall) in
-                try destination.withUnsafeCString { dstCString throws(Kernel.File.Clone.Error.Syscall) in
+            try unsafe source.withUnsafePointer { srcCString throws(Kernel.File.Clone.Error.Syscall) in
+                try destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
                     let result = clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
 
                     if result == 0 {
@@ -169,11 +169,11 @@ extension ISO_9945.Kernel.File.Clone {
         ///
         /// This attempts CoW clone first, falls back to copy.
         public static func clone(
-            source: borrowing Kernel.Path,
-            destination: borrowing Kernel.Path
+            source: borrowing Kernel.Path.View,
+            destination: borrowing Kernel.Path.View
         ) throws(Kernel.File.Clone.Error.Syscall) {
-            try unsafe source.withUnsafeCString { srcCString throws(Kernel.File.Clone.Error.Syscall) in
-                try destination.withUnsafeCString { dstCString throws(Kernel.File.Clone.Error.Syscall) in
+            try unsafe source.withUnsafePointer { srcCString throws(Kernel.File.Clone.Error.Syscall) in
+                try destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
                     let srcPtr = UnsafePointer<CChar>(srcCString)
                     let dstPtr = UnsafePointer<CChar>(dstCString)
 
@@ -195,11 +195,11 @@ extension ISO_9945.Kernel.File.Clone {
 
         /// Copies a file using copyfile() without clone attempt.
         public static func data(
-            source: borrowing Kernel.Path,
-            destination: borrowing Kernel.Path
+            source: borrowing Kernel.Path.View,
+            destination: borrowing Kernel.Path.View
         ) throws(Kernel.File.Clone.Error.Syscall) {
-            try unsafe source.withUnsafeCString { srcCString throws(Kernel.File.Clone.Error.Syscall) in
-                try destination.withUnsafeCString { dstCString throws(Kernel.File.Clone.Error.Syscall) in
+            try unsafe source.withUnsafePointer { srcCString throws(Kernel.File.Clone.Error.Syscall) in
+                try destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
                     let srcPtr = UnsafePointer<CChar>(srcCString)
                     let dstPtr = UnsafePointer<CChar>(dstCString)
 

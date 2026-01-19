@@ -24,7 +24,7 @@ public import ISO_9945
 
 // MARK: - POSIX madvise Constants
 
-extension Kernel.Memory.Map.Advice {
+extension ISO_9945.Kernel.Memory.Map.Advice {
     /// Normal access pattern (default).
     ///
     /// No special treatment - the system will read-ahead and free pages as normal.
@@ -69,7 +69,7 @@ extension Kernel.Memory.Map.Advice {
 #if canImport(Darwin)
 // MARK: - Darwin-specific Advice
 
-extension Kernel.Memory.Map.Advice {
+extension ISO_9945.Kernel.Memory.Map.Advice {
     /// Free pages immediately (Darwin).
     ///
     /// Similar to `dontNeed` but guarantees the pages are freed immediately.
@@ -89,7 +89,7 @@ extension Kernel.Memory.Map.Advice {
 #if canImport(Glibc) || canImport(Musl)
 // MARK: - Linux-specific Advice
 
-extension Kernel.Memory.Map.Advice {
+extension ISO_9945.Kernel.Memory.Map.Advice {
     /// Remove pages from memory (Linux).
     ///
     /// For shared memory or file mappings, removes the pages from memory

@@ -144,7 +144,7 @@ extension ISO_9945.Kernel.IO.Read {
 
 // MARK: - Error Conversion
 
-extension Kernel.IO.Read.Error {
+extension ISO_9945.Kernel.IO.Read.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

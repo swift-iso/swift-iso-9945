@@ -58,7 +58,15 @@ extension ISO_9945.Kernel.Memory.Shared {
         options: Kernel.Memory.Shared.Options = [],
         permissions: Kernel.File.Permissions = .ownerReadWrite
     ) throws(Kernel.Memory.Shared.Error) -> Kernel.Descriptor {
-        let flags = access.posixFlags | options.posixFlags
+        // Convert Access to POSIX flags at syscall boundary
+        let accessMode: Int32 = switch (access.read, access.write) {
+        case (true, false):  O_RDONLY
+        case (false, true):  O_WRONLY
+        case (true, true):   O_RDWR
+        case (false, false): O_RDONLY
+        }
+
+        let flags = accessMode | options.rawValue
 
         #if canImport(Darwin)
             // Use shim because Darwin declares shm_open as variadic

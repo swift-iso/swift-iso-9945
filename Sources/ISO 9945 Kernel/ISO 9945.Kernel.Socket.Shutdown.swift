@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
 
 // MARK: - Error Conversion
 
-extension Kernel.Socket.Shutdown.Error {
+extension ISO_9945.Kernel.Socket.Shutdown.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

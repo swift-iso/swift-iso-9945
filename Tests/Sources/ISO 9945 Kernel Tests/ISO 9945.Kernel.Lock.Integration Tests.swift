@@ -130,7 +130,7 @@ private func withTempFile<R>(
     return try ISO_9945.Kernel.Path.scope(pathString) { path in
         let fd = try ISO_9945.Kernel.File.Open.open(
             path: path,
-            mode: [.read, .write],
+            mode: .readWrite,
             options: [.create, .truncate],
             permissions: .ownerReadWrite
         )
@@ -232,7 +232,7 @@ extension POSIXLockIntegration {
             // Create and prepare the file
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
-                mode: [.read, .write],
+                mode: .readWrite,
                 options: [.create, .truncate],
                 permissions: .ownerReadWrite
             )

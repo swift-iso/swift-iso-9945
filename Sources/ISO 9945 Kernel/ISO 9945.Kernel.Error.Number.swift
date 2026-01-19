@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX error number constants
 
-extension Kernel.Error.Number {
+extension ISO_9945.Kernel.Error.Number {
     /// File or directory does not exist (ENOENT).
     public static var noEntry: Self { Self(ENOENT) }
 

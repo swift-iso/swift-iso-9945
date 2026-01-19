@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX socket backlog
 
-extension Kernel.Socket.Backlog {
+extension ISO_9945.Kernel.Socket.Backlog {
     /// System maximum backlog.
     ///
     /// Uses `SOMAXCONN` which typically maps to the system's maximum

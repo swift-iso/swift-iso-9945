@@ -21,10 +21,97 @@ internal import ISO_9945_ABI
     internal import Musl
 #endif
 
-// MARK: - POSIX Path Canonicalization
+// MARK: - Borrow-First APIs
 
 extension ISO_9945.Kernel.Path.Canonical {
-    /// Resolves a path to its canonical absolute form.
+
+    /// Canonical primitive: scoped access to canonicalized path bytes.
+    ///
+    /// This is the most primitive API. It provides zero-copy access to the
+    /// raw bytes returned by `realpath(3)`. The closure receives a `Span`
+    /// that does NOT include the NUL terminator.
+    ///
+    /// - Parameters:
+    ///   - path: The path to canonicalize.
+    ///   - body: A closure that processes the canonical path bytes. Non-throwing.
+    /// - Returns: The result of the closure.
+    /// - Throws: ``Kernel.Path.Canonical.Error`` on syscall failure.
+    public static func withCanonicalBytes<R: ~Copyable>(
+        _ path: borrowing Kernel.Path.View,
+        _ body: (Span<Kernel.Path.Char>) -> R
+    ) throws(Kernel.Path.Canonical.Error) -> R {
+        try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
+            let unsafePath = UnsafePointer<CChar>(cString)
+
+            #if canImport(Darwin)
+                let result = Darwin.realpath(unsafePath, nil)
+            #elseif canImport(Musl)
+                let result = Musl.realpath(unsafePath, nil)
+            #elseif canImport(Glibc)
+                let result = Glibc.realpath(unsafePath, nil)
+            #endif
+
+            guard let result else {
+                throw .current()
+            }
+
+            defer { free(result) }
+
+            // Find length (realpath NUL-terminates)
+            var length = 0
+            while (unsafe result[length]) != 0 {
+                length += 1
+            }
+
+            let u8Ptr = unsafe UnsafePointer<UInt8>(result)
+            let span = unsafe Span(_unsafeStart: u8Ptr, count: length)
+            return body(span)
+        }
+    }
+
+    /// Convenience: scoped access as NUL-terminated view.
+    ///
+    /// This API provides a `Kernel.String.View` for APIs that expect
+    /// NUL-terminated strings. The underlying buffer already includes
+    /// the NUL terminator from `realpath(3)`.
+    ///
+    /// - Parameters:
+    ///   - path: The path to canonicalize.
+    ///   - body: A closure that processes the canonical path view. Non-throwing.
+    /// - Returns: The result of the closure.
+    /// - Throws: ``Kernel.Path.Canonical.Error`` on syscall failure.
+    public static func withCanonical<R: ~Copyable>(
+        _ path: borrowing Kernel.Path.View,
+        _ body: (borrowing Kernel.String.View) -> R
+    ) throws(Kernel.Path.Canonical.Error) -> R {
+        try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
+            let unsafePath = UnsafePointer<CChar>(cString)
+
+            #if canImport(Darwin)
+                let result = Darwin.realpath(unsafePath, nil)
+            #elseif canImport(Musl)
+                let result = Musl.realpath(unsafePath, nil)
+            #elseif canImport(Glibc)
+                let result = Glibc.realpath(unsafePath, nil)
+            #endif
+
+            guard let result else {
+                throw .current()
+            }
+
+            defer { free(result) }
+
+            let u8Ptr = unsafe UnsafePointer<UInt8>(result)
+            let view = unsafe Kernel.String.View(u8Ptr)
+            return body(view)
+        }
+    }
+
+    /// Owned convenience: resolves a path to its canonical absolute form.
+    ///
+    /// This is the simplest API but involves allocation. For callers that
+    /// need to transform the result (e.g., into a `File.Path`), prefer
+    /// `withCanonicalBytes` or `withCanonical` to avoid intermediate allocations.
     ///
     /// Resolves all symlinks, eliminates `.` and `..` components,
     /// and returns the absolute path.
@@ -39,42 +126,17 @@ extension ISO_9945.Kernel.Path.Canonical {
     /// - Returns: The canonical absolute path as a `Kernel.String`.
     /// - Throws: ``Kernel.Path.Canonical.Error`` on failure.
     public static func canonicalize(
-        _ path: borrowing Kernel.Path
+        _ path: borrowing Kernel.Path.View
     ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
-        try unsafe path.withUnsafeCString { cString throws(Kernel.Path.Canonical.Error) in
-            try _canonicalize(unsafePath: UnsafePointer<CChar>(cString))
+        try withCanonical(path) { view in
+            Kernel.String(copying: view)
         }
-    }
-
-    /// Internal implementation for path canonicalization.
-    @usableFromInline
-    internal static func _canonicalize(
-        unsafePath: UnsafePointer<CChar>
-    ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
-        #if canImport(Darwin)
-            let result = Darwin.realpath(unsafePath, nil)
-        #elseif canImport(Musl)
-            let result = Musl.realpath(unsafePath, nil)
-        #elseif canImport(Glibc)
-            let result = Glibc.realpath(unsafePath, nil)
-        #endif
-
-        guard let result else {
-            throw .current()
-        }
-
-        defer { free(result) }
-
-        // Project CChar* → UInt8*, create View, copy to owned Kernel.String
-        let u8Ptr = unsafe UnsafePointer<UInt8>(result)
-        let view = unsafe Kernel.String.View(u8Ptr)
-        return unsafe Kernel.String(copying: view)
     }
 }
 
 // MARK: - Error Current
 
-extension Kernel.Path.Canonical.Error {
+extension ISO_9945.Kernel.Path.Canonical.Error {
     /// Creates an error from the current errno value.
 
     static func current() -> Kernel.Path.Canonical.Error {

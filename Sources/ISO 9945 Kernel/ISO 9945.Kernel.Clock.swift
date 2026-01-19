@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX clock operations
 
-extension Kernel.Clock.Continuous {
+extension ISO_9945.Kernel.Clock.Continuous {
     /// Returns the current continuous time in nanoseconds since boot.
     ///
     /// - Darwin: Uses `CLOCK_MONOTONIC` which advances during system sleep.
@@ -43,7 +43,7 @@ extension Kernel.Clock.Continuous {
     }
 }
 
-extension Kernel.Clock.Suspending {
+extension ISO_9945.Kernel.Clock.Suspending {
     /// Returns the current suspending time in nanoseconds since boot.
     ///
     /// - Darwin: Uses `CLOCK_UPTIME_RAW` which pauses during system sleep.

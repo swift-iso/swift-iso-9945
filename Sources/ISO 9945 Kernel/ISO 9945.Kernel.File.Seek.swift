@@ -103,7 +103,7 @@ extension ISO_9945.Kernel.File.Seek {
     public typealias Error = Kernel.File.Seek.Error
 }
 
-extension Kernel.File.Seek.Error {
+extension ISO_9945.Kernel.File.Seek.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

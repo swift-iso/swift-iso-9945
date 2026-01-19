@@ -96,7 +96,7 @@ extension ISO_9945.Kernel.File.Control {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Control.Error {
+extension ISO_9945.Kernel.File.Control.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

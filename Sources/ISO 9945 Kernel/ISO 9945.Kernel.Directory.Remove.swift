@@ -30,8 +30,8 @@ extension ISO_9945.Kernel.Directory.Remove {
     ///
     /// - Parameter path: The path to remove.
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
-    public static func remove(_ path: borrowing Kernel.Path) throws(Error) {
-        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+    public static func remove(_ path: borrowing Kernel.Path.View) throws(Error) {
+        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
             try _remove(ptr)
         }
     }
@@ -62,7 +62,7 @@ extension ISO_9945.Kernel.Directory.Remove {
     public typealias Error = Kernel.Directory.Remove.Error
 }
 
-extension Kernel.Directory.Remove.Error {
+extension ISO_9945.Kernel.Directory.Remove.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()

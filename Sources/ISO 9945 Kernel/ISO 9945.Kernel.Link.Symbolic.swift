@@ -69,48 +69,6 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Internal implementation for reading the target of a symbolic link.
-    @usableFromInline
-    internal static func _readTarget(at path: UnsafePointer<Kernel.Path.Char>) throws(Error) -> Kernel.String {
-        let cPath = unsafe UnsafePointer<CChar>(path)
-
-        // Start with a reasonable buffer size
-        var bufferSize = 256
-
-        while bufferSize <= 65536 {
-            // Allocate bufferSize + 1 to have room for the NUL terminator we'll add
-            let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize + 1)
-            defer { buffer.deallocate() }
-
-            #if canImport(Darwin)
-                let count = Darwin.readlink(cPath, buffer, bufferSize)
-            #elseif canImport(Musl)
-                let count = Musl.readlink(cPath, buffer, bufferSize)
-            #elseif canImport(Glibc)
-                let count = Glibc.readlink(cPath, buffer, bufferSize)
-            #endif
-
-            guard count >= 0 else {
-                throw Error.currentRead()
-            }
-
-            // If the result fits in the buffer, we're done
-            if count < bufferSize {
-                // readlink does NOT NUL-terminate — we must add it
-                buffer[count] = 0
-
-                let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
-                let view = unsafe Kernel.String.View(u8Ptr)
-                return unsafe Kernel.String(copying: view)
-            }
-
-            // Otherwise, double the buffer and try again
-            bufferSize *= 2
-        }
-
-        throw .bufferTooSmall
-    }
-
     /// Internal implementation for reading the target into a provided buffer.
     @usableFromInline
     internal static func _readTarget(
@@ -145,26 +103,128 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///   - linkPath: The path where the symlink will be created.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
     public static func create(
-        target: borrowing Kernel.Path,
-        at linkPath: borrowing Kernel.Path
+        target: borrowing Kernel.Path.View,
+        at linkPath: borrowing Kernel.Path.View
     ) throws(Error) {
-        try unsafe target.withUnsafeCString { (targetPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
                 try _create(target: targetPtr, at: linkPtr)
             }
         }
     }
+}
 
-    /// Reads the target of a symbolic link using `Kernel.Path`.
+// MARK: - Borrow-First APIs
+
+extension ISO_9945.Kernel.Link.Symbolic {
+
+    /// Canonical primitive: scoped access to symlink target bytes.
     ///
-    /// This is the preferred entry point.
+    /// This is the most primitive API. It provides zero-copy access to the
+    /// raw bytes returned by `readlink(2)`. The closure receives a `Span`
+    /// that does NOT include a NUL terminator (readlink returns a count).
+    ///
+    /// - Parameters:
+    ///   - path: The path to the symbolic link.
+    ///   - body: A closure that processes the target bytes. Non-throwing.
+    /// - Returns: The result of the closure.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
+    public static func withTargetBytes<R: ~Copyable>(
+        at path: borrowing Kernel.Path.View,
+        _ body: (Span<Kernel.Path.Char>) -> R
+    ) throws(Error) -> R {
+        try unsafe path.withUnsafePointer { cPath throws(Error) in
+            var bufferSize = 256
+
+            while bufferSize <= 65536 {
+                let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize)
+                defer { buffer.deallocate() }
+
+                #if canImport(Darwin)
+                    let count = Darwin.readlink(cPath, buffer, bufferSize)
+                #elseif canImport(Musl)
+                    let count = Musl.readlink(cPath, buffer, bufferSize)
+                #elseif canImport(Glibc)
+                    let count = Glibc.readlink(cPath, buffer, bufferSize)
+                #endif
+
+                guard count >= 0 else {
+                    throw Error.currentRead()
+                }
+
+                if count < bufferSize {
+                    let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
+                    let span = unsafe Span(_unsafeStart: u8Ptr, count: count)
+                    return body(span)
+                }
+
+                bufferSize *= 2
+            }
+
+            throw .bufferTooSmall
+        }
+    }
+
+    /// Convenience: scoped access as NUL-terminated view.
+    ///
+    /// This API adds a NUL terminator internally and provides a
+    /// `Kernel.String.View` for APIs that expect NUL-terminated strings.
+    ///
+    /// - Parameters:
+    ///   - path: The path to the symbolic link.
+    ///   - body: A closure that processes the target view. Non-throwing.
+    /// - Returns: The result of the closure.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
+    public static func withTarget<R: ~Copyable>(
+        at path: borrowing Kernel.Path.View,
+        _ body: (borrowing Kernel.String.View) -> R
+    ) throws(Error) -> R {
+        try unsafe path.withUnsafePointer { cPath throws(Error) in
+            var bufferSize = 256
+
+            while bufferSize <= 65536 {
+                // Allocate extra byte for NUL terminator
+                let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize + 1)
+                defer { buffer.deallocate() }
+
+                #if canImport(Darwin)
+                    let count = Darwin.readlink(cPath, buffer, bufferSize)
+                #elseif canImport(Musl)
+                    let count = Musl.readlink(cPath, buffer, bufferSize)
+                #elseif canImport(Glibc)
+                    let count = Glibc.readlink(cPath, buffer, bufferSize)
+                #endif
+
+                guard count >= 0 else {
+                    throw Error.currentRead()
+                }
+
+                if count < bufferSize {
+                    buffer[count] = 0  // NUL terminate
+                    let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
+                    let view = unsafe Kernel.String.View(u8Ptr)
+                    return body(view)
+                }
+
+                bufferSize *= 2
+            }
+
+            throw .bufferTooSmall
+        }
+    }
+
+    /// Owned convenience: returns allocated string.
+    ///
+    /// This is the simplest API but involves allocation. For callers that
+    /// need to transform the result (e.g., into a `File.Path`), prefer
+    /// `withTargetBytes` or `withTarget` to avoid intermediate allocations.
     ///
     /// - Parameter path: The path to the symbolic link.
     /// - Returns: The target path as a `Kernel.String`.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-    public static func readTarget(at path: borrowing Kernel.Path) throws(Error) -> Kernel.String {
-        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try _readTarget(at: ptr)
+    public static func readTarget(at path: borrowing Kernel.Path.View) throws(Error) -> Kernel.String {
+        try withTarget(at: path) { view in
+            Kernel.String(copying: view)
         }
     }
 }
@@ -175,7 +235,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     public typealias Error = Kernel.Link.Symbolic.Error
 }
 
-extension Kernel.Link.Symbolic.Error {
+extension ISO_9945.Kernel.Link.Symbolic.Error {
     /// Creates an error from the current errno for create operations.
     internal static func currentCreate() -> Self {
         let code = Kernel.Error.Code.current()

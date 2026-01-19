@@ -175,7 +175,7 @@ extension ISO_9945.Kernel.IO.Write {
 
 // MARK: - Error Conversion
 
-extension Kernel.IO.Write.Error {
+extension ISO_9945.Kernel.IO.Write.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

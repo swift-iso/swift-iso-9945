@@ -26,6 +26,8 @@ internal import ISO_9945_ABI
 extension ISO_9945.Kernel.File.Open {
     /// Opens a file at the specified path.
     ///
+    /// Zero-allocation file open using borrowed path view.
+    ///
     /// ## Threading
     /// This call blocks until the open completes. The open syscall may block
     /// on networked filesystems or when opening FIFOs/device files.
@@ -36,32 +38,32 @@ extension ISO_9945.Kernel.File.Open {
     /// kernel resource until process termination.
     ///
     /// ## Errors
-    /// - ``Error/notFound``: Path does not exist and `.create` not specified
-    /// - ``Error/exists``: Path exists and `.exclusive` was specified
-    /// - ``Error/permission``: Insufficient permissions for requested mode
-    /// - ``Error/isDirectory``: Cannot open directory with write mode
-    /// - ``Error/tooManyOpen``: Process or system descriptor limit reached
+    /// - ``Error/path(_:)``: Path does not exist, is invalid, or resolution failed
+    /// - ``Error/permission(_:)``: Insufficient permissions for requested mode
+    /// - ``Error/handle(_:)``: Process or system descriptor limit reached
+    /// - ``Error/space(_:)``: No space for file creation
+    /// - ``Error/io(_:)``: I/O error during open
     ///
     /// - Parameters:
-    ///   - path: The file path to open.
-    ///   - mode: Read/write access mode.
-    ///   - options: Creation and behavior options.
+    ///   - path: The file path to open (borrowed, zero-copy).
+    ///   - mode: Read/write access mode (.read, .write, or .readWrite).
+    ///   - options: Creation and behavior options (.create, .truncate, etc.).
     ///   - permissions: POSIX permissions for newly created files.
     /// - Returns: A file descriptor for the opened file.
     /// - Throws: ``Kernel/File/Open/Error`` on failure.
-
+    /// - Complexity: O(1) in Swift, O(path length) in kernel.
     public static func open(
-        path: borrowing Kernel.Path,
+        path: borrowing Kernel.Path.View,
         mode: Kernel.File.Open.Mode,
         options: Kernel.File.Open.Options,
         permissions: Kernel.File.Permissions
     ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
-        try unsafe path.withUnsafeCString { cString throws(Kernel.File.Open.Error) in
+        try unsafe path.withUnsafePointer { cString throws(Kernel.File.Open.Error) in
             try _open(unsafePath: cString, mode: mode, options: options, permissions: permissions)
         }
     }
 
-    /// Internal implementation for opening a file using an unsafe C string pointer.
+    /// Internal implementation using unsafe C string pointer.
     @usableFromInline
     internal static func _open(
         unsafePath: UnsafePointer<Kernel.Path.Char>,
@@ -69,37 +71,40 @@ extension ISO_9945.Kernel.File.Open {
         options: Kernel.File.Open.Options,
         permissions: Kernel.File.Permissions
     ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
-        let flags = mode.posixFlags | options.posixFlags
         let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
-        let fd: Int32
-        #if canImport(Darwin)
-            if options.contains(.create) {
-                fd = unsafe Darwin.open(cPath, flags, mode_t(permissions.rawValue))
-            } else {
-                fd = unsafe Darwin.open(cPath, flags)
-            }
-        #elseif canImport(Musl)
-            if options.contains(.create) {
-                fd = unsafe Musl.open(cPath, flags, mode_t(permissions.rawValue))
-            } else {
-                fd = unsafe Musl.open(cPath, flags)
-            }
-        #elseif canImport(Glibc)
-            if options.contains(.create) {
-                fd = unsafe Glibc.open(cPath, flags, mode_t(permissions.rawValue))
-            } else {
-                fd = unsafe Glibc.open(cPath, flags)
-            }
-        #endif
-
-        guard fd >= 0 else {
-            throw Kernel.File.Open.Error.current()
+        // Convert Mode to POSIX access flags at syscall boundary
+        let accessMode: Int32 = switch (mode.read, mode.write) {
+        case (true, false):  O_RDONLY
+        case (false, true):  O_WRONLY
+        case (true, true):   O_RDWR
+        case (false, false): O_RDONLY
         }
 
         #if canImport(Darwin)
-            if options.contains(.noCache) {
+            // Darwin: exclude internal noCache flag from open(), apply via fcntl after
+            let flags = accessMode | options.openFlags
+
+            let fd = unsafe Darwin.open(cPath, flags, mode_t(permissions.rawValue))
+            guard fd >= 0 else {
+                throw Kernel.File.Open.Error.current()
+            }
+
+            // Apply F_NOCACHE if requested
+            if options.needsNoCache {
                 _ = unsafe fcntl(fd, F_NOCACHE, 1)
+            }
+        #elseif canImport(Musl)
+            let flags = accessMode | options.rawValue
+            let fd = unsafe Musl.open(cPath, flags, mode_t(permissions.rawValue))
+            guard fd >= 0 else {
+                throw Kernel.File.Open.Error.current()
+            }
+        #elseif canImport(Glibc)
+            let flags = accessMode | options.rawValue
+            let fd = unsafe Glibc.open(cPath, flags, mode_t(permissions.rawValue))
+            guard fd >= 0 else {
+                throw Kernel.File.Open.Error.current()
             }
         #endif
 
@@ -109,26 +114,10 @@ extension ISO_9945.Kernel.File.Open {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Open.Error {
+extension ISO_9945.Kernel.File.Open.Error {
     /// Creates an error from the current errno value.
+    @usableFromInline
     internal static func current() -> Self {
-        let e = errno
-        let code = Kernel.Error.Code.posix(e)
-        if let pathError = Kernel.Path.Resolution.Error(code: code) {
-            return .path(pathError)
-        }
-        if let permError = Kernel.Permission.Error(code: code) {
-            return .permission(permError)
-        }
-        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
-            return .handle(handleError)
-        }
-        if let spaceError = Kernel.Storage.Error(code: code) {
-            return .space(spaceError)
-        }
-        if let ioError = Kernel.IO.Error(code: code) {
-            return .io(ioError)
-        }
-        return .platform(Kernel.Error(code: code))
+        Self(code: .posix(errno))
     }
 }

@@ -28,8 +28,8 @@ extension ISO_9945.Kernel.File.Delete {
     ///
     /// - Parameter path: The path to the file to remove.
     /// - Throws: `Kernel.File.Delete.Error` on failure.
-    public static func delete(_ path: borrowing Kernel.Path) throws(Error) {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+    public static func delete(_ path: borrowing Kernel.Path.View) throws(Error) {
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try _delete(cString)
         }
     }
@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.File.Delete {
     public typealias Error = Kernel.File.Delete.Error
 }
 
-extension Kernel.File.Delete.Error {
+extension ISO_9945.Kernel.File.Delete.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()

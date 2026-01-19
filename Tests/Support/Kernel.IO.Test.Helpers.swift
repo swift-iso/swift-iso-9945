@@ -31,7 +31,7 @@
             let fd = try ISO_9945.Kernel.Path.scope(pathString) { path in
                 try ISO_9945.Kernel.File.Open.open(
                     path: path,
-                    mode: [.read, .write],
+                    mode: .readWrite,
                     options: [.create, .truncate, .exclusive],
                     permissions: .ownerReadWrite
                 )
@@ -71,7 +71,7 @@
         /// - Throws: `TempFileError` if creation fails, or rethrows from body
         public static func withTempFile<R>(
             prefix: Swift.String = "io-test",
-            _ body: (borrowing Kernel.Path, Kernel.Descriptor) throws -> R
+            _ body: (borrowing Kernel.Path.View, Kernel.Descriptor) throws -> R
         ) throws -> R {
             let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
             return try ISO_9945.Kernel.Path.scope(pathString) { path in
@@ -79,7 +79,7 @@
                 do {
                     fd = try ISO_9945.Kernel.File.Open.open(
                         path: path,
-                        mode: [.read, .write],
+                        mode: .readWrite,
                         options: [.create, .truncate, .exclusive],
                         permissions: .ownerReadWrite
                     )
@@ -107,7 +107,7 @@
         public static func withTempFile<R>(
             content: Swift.String,
             prefix: Swift.String = "io-test",
-            _ body: (borrowing Kernel.Path, Kernel.Descriptor) throws -> R
+            _ body: (borrowing Kernel.Path.View, Kernel.Descriptor) throws -> R
         ) throws -> R {
             try withTempFile(prefix: prefix) { path, fd in
                 var contentBytes = Array(content.utf8)
@@ -131,7 +131,7 @@
         public static func withTempFileForHandle<R>(
             content: Swift.String? = nil,
             prefix: Swift.String = "handle-test",
-            _ body: (borrowing Kernel.Path, Kernel.File.Descriptor) throws -> R
+            _ body: (borrowing Kernel.Path.View, Kernel.File.Descriptor) throws -> R
         ) throws -> R {
             let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
             return try ISO_9945.Kernel.Path.scope(pathString) { path in
@@ -139,7 +139,7 @@
                 do {
                     fd = try ISO_9945.Kernel.File.Open.open(
                         path: path,
-                        mode: [.read, .write],
+                        mode: .readWrite,
                         options: [.create, .truncate, .exclusive],
                         permissions: .ownerReadWrite
                     )

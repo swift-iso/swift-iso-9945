@@ -53,7 +53,7 @@ struct LockHelper {
                 // Open file for reading/writing (required for exclusive locks)
                 let fd = try ISO_9945.Kernel.File.Open.open(
                     path: kernelPath,
-                    mode: [.read, .write],
+                    mode: .readWrite,
                     options: [],
                     permissions: 0
                 )

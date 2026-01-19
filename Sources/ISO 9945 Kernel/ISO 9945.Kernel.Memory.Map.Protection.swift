@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX mmap protection
 
-extension Kernel.Memory.Map.Protection {
+extension ISO_9945.Kernel.Memory.Map.Protection {
     /// Permits reading from mapped pages.
     public static let read = Self(rawValue: PROT_READ)
 

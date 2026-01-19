@@ -61,11 +61,11 @@ extension ISO_9945.Kernel.File.Move {
     ///   - newPath: The new path.
     /// - Throws: `Kernel.File.Move.Error` on failure.
     public static func move(
-        from oldPath: borrowing Kernel.Path,
-        to newPath: borrowing Kernel.Path
+        from oldPath: borrowing Kernel.Path.View,
+        to newPath: borrowing Kernel.Path.View
     ) throws(Error) {
-        try unsafe oldPath.withUnsafeCString { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try newPath.withUnsafeCString { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
                 try move(from: oldPtr, to: newPtr)
             }
         }
@@ -118,7 +118,7 @@ extension ISO_9945.Kernel.File.Move {
     public typealias Error = Kernel.File.Move.Error
 }
 
-extension Kernel.File.Move.Error {
+extension ISO_9945.Kernel.File.Move.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()

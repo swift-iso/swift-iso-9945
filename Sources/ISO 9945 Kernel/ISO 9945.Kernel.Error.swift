@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.Error {
     }
 }
 
-extension Kernel.Error {
+extension ISO_9945.Kernel.Error {
     /// Captures current errno and creates a Kernel.Error with operation context.
     ///
     /// Must be called immediately after a failing syscall, before any other libc call.

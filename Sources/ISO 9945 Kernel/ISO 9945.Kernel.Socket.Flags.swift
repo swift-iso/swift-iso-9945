@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX socket flags
 
-extension Kernel.Socket.Flags {
+extension ISO_9945.Kernel.Socket.Flags {
     /// Set the socket to non-blocking mode.
     ///
     /// Equivalent to setting `O_NONBLOCK` after socket creation.

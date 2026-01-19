@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX mmap flags
 
-extension Kernel.Memory.Map.Flags {
+extension ISO_9945.Kernel.Memory.Map.Flags {
     /// Shares modifications with other processes mapping the same file.
     public static let shared = Self(rawValue: MAP_SHARED)
 

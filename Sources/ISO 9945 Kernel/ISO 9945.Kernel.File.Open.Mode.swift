@@ -12,29 +12,57 @@
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 
-#if canImport(Darwin)
-    internal import Darwin
-#elseif canImport(Glibc)
-    internal import Glibc
-#elseif canImport(Musl)
-    internal import Musl
-#endif
+// MARK: - File Open Mode
 
-// MARK: - POSIX file open mode conversion
+extension ISO_9945.Kernel.File.Open {
+    /// File access mode specifying read and/or write permissions.
+    ///
+    /// A simple struct with two boolean flags indicating the desired access.
+    /// Use the static conveniences for common cases.
+    ///
+    /// ## Usage
+    /// ```swift
+    /// // Read only
+    /// let fd = try Kernel.File.Open.open(path: view, mode: .read, ...)
+    ///
+    /// // Write only
+    /// let fd = try Kernel.File.Open.open(path: view, mode: .write, ...)
+    ///
+    /// // Read and write
+    /// let fd = try Kernel.File.Open.open(path: view, mode: .readWrite, ...)
+    ///
+    /// // Explicit construction
+    /// let fd = try Kernel.File.Open.open(path: view, mode: Mode(read: true, write: true), ...)
+    /// ```
+    public struct Mode: Sendable, Hashable {
+        /// Whether to open the file for reading.
+        public let read: Bool
 
-extension Kernel.File.Open.Mode {
-    /// Converts the mode to POSIX open flags.
-    @usableFromInline
-    internal var posixFlags: Int32 {
-        let hasRead = contains(.read)
-        let hasWrite = contains(.write)
+        /// Whether to open the file for writing.
+        public let write: Bool
 
-        if hasRead && hasWrite {
-            return O_RDWR
-        } else if hasWrite {
-            return O_WRONLY
-        } else {
-            return O_RDONLY
+        /// Creates a mode with explicit read/write permissions.
+        ///
+        /// - Parameters:
+        ///   - read: Whether to open for reading.
+        ///   - write: Whether to open for writing.
+        @inlinable
+        public init(read: Bool, write: Bool) {
+            self.read = read
+            self.write = write
         }
     }
+}
+
+// MARK: - Standard Modes
+
+extension ISO_9945.Kernel.File.Open.Mode {
+    /// Opens the file for reading only.
+    public static let read = Self(read: true, write: false)
+
+    /// Opens the file for writing only.
+    public static let write = Self(read: false, write: true)
+
+    /// Opens the file for reading and writing.
+    public static let readWrite = Self(read: true, write: true)
 }

@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX environment error mapping
 
-extension Kernel.Environment.Error {
+extension ISO_9945.Kernel.Environment.Error {
     public init(code: Kernel.Error.Code) {
         if let e = Kernel.Memory.Error(code: code) {
             self = .memory(e)

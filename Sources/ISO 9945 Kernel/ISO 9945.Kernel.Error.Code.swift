@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX errno capture
 
-extension Kernel.Error.Code {
+extension ISO_9945.Kernel.Error.Code {
     /// Captures current errno (POSIX only).
     ///
     /// Must be called immediately after a failing syscall, before any other libc call.
@@ -40,7 +40,7 @@ extension Kernel.Error.Code {
 
 // MARK: - POSIX errno constants
 
-extension Kernel.Error.Code {
+extension ISO_9945.Kernel.Error.Code {
     /// No error.
     public static let success = Self.posix(0)
 

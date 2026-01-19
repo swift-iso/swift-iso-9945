@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX msync flags
 
-extension Kernel.Memory.Map.Sync.Flags {
+extension ISO_9945.Kernel.Memory.Map.Sync.Flags {
     /// Synchronous sync - wait for I/O to complete.
     public static let sync = Self(rawValue: MS_SYNC)
 

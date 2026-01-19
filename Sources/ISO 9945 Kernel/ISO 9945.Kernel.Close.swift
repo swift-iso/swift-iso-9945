@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Close {
 
 // MARK: - Error Conversion
 
-extension Kernel.Close.Error {
+extension ISO_9945.Kernel.Close.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

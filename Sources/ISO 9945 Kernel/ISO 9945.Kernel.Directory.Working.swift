@@ -24,47 +24,6 @@ internal import ISO_9945_ABI
 // MARK: - POSIX getcwd() syscall
 
 extension ISO_9945.Kernel.Directory.Working {
-    /// Returns the current working directory as a `Kernel.String`.
-    ///
-    /// ## Errors
-    /// - `.path(.notFound)`: Directory has been deleted
-    /// - `.permission`: Search permission denied for a component
-    ///
-    /// - Returns: The absolute path of the current working directory.
-    /// - Throws: ``Error`` on failure.
-    public static func current() throws(Error) -> Kernel.String {
-        var out: Kernel.String? = nil
-        var thrown: Error? = nil
-
-        Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
-            guard let base = buffer.baseAddress, buffer.count > 0 else {
-                thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
-                return
-            }
-
-            #if canImport(Darwin)
-                let result = unsafe Darwin.getcwd(base, buffer.count)
-            #elseif canImport(Musl)
-                let result = unsafe Musl.getcwd(base, buffer.count)
-            #elseif canImport(Glibc)
-                let result = unsafe Glibc.getcwd(base, buffer.count)
-            #endif
-
-            guard result != nil else {
-                thrown = Kernel.Directory.Working.Error.current()
-                return
-            }
-
-            // getcwd NUL-terminates; project and copy
-            let u8Ptr = unsafe UnsafePointer<UInt8>(base)
-            let view = unsafe Kernel.String.View(u8Ptr)
-            out = unsafe Kernel.String(copying: view)
-        }
-
-        if let thrown { throw thrown }
-        return unsafe out!
-    }
-
     /// Fills the provided buffer with the current working directory path.
     ///
     /// Low-level variant for callers that want to manage their own buffer.
@@ -102,9 +61,125 @@ extension ISO_9945.Kernel.Directory.Working {
     }
 }
 
+// MARK: - Borrow-First APIs
+
+extension ISO_9945.Kernel.Directory.Working {
+
+    /// Canonical primitive: scoped access to current working directory bytes.
+    ///
+    /// This is the most primitive API. It provides zero-copy access to the
+    /// raw bytes returned by `getcwd(2)`. The closure receives a `Span`
+    /// that does NOT include the NUL terminator.
+    ///
+    /// - Parameter body: A closure that processes the path bytes. Non-throwing.
+    /// - Returns: The result of the closure.
+    /// - Throws: ``Error`` on syscall failure.
+    public static func withCurrentBytes<R: ~Copyable>(
+        _ body: (Span<Kernel.Path.Char>) -> R
+    ) throws(Error) -> R {
+        var result: R? = nil
+        var thrown: Error? = nil
+
+        Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
+            guard let base = buffer.baseAddress, buffer.count > 0 else {
+                thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
+                return
+            }
+
+            #if canImport(Darwin)
+                let cwdResult = unsafe Darwin.getcwd(base, buffer.count)
+            #elseif canImport(Musl)
+                let cwdResult = unsafe Musl.getcwd(base, buffer.count)
+            #elseif canImport(Glibc)
+                let cwdResult = unsafe Glibc.getcwd(base, buffer.count)
+            #endif
+
+            guard cwdResult != nil else {
+                thrown = Kernel.Directory.Working.Error.current()
+                return
+            }
+
+            // Find null terminator to get length
+            var length = 0
+            while length < buffer.count && (unsafe base[length]) != 0 {
+                length += 1
+            }
+
+            let u8Ptr = unsafe UnsafePointer<UInt8>(base)
+            let span = unsafe Span(_unsafeStart: u8Ptr, count: length)
+            result = body(span)
+        }
+
+        if let thrown { throw thrown }
+        return result!
+    }
+
+    /// Convenience: scoped access as NUL-terminated view.
+    ///
+    /// This API provides a `Kernel.String.View` for APIs that expect
+    /// NUL-terminated strings. The underlying buffer already includes
+    /// the NUL terminator from `getcwd(2)`.
+    ///
+    /// - Parameter body: A closure that processes the path view. Non-throwing.
+    /// - Returns: The result of the closure.
+    /// - Throws: ``Error`` on syscall failure.
+    public static func withCurrent<R: ~Copyable>(
+        _ body: (borrowing Kernel.String.View) -> R
+    ) throws(Error) -> R {
+        var result: R? = nil
+        var thrown: Error? = nil
+
+        Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
+            guard let base = buffer.baseAddress, buffer.count > 0 else {
+                thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
+                return
+            }
+
+            #if canImport(Darwin)
+                let cwdResult = unsafe Darwin.getcwd(base, buffer.count)
+            #elseif canImport(Musl)
+                let cwdResult = unsafe Musl.getcwd(base, buffer.count)
+            #elseif canImport(Glibc)
+                let cwdResult = unsafe Glibc.getcwd(base, buffer.count)
+            #endif
+
+            guard cwdResult != nil else {
+                thrown = Kernel.Directory.Working.Error.current()
+                return
+            }
+
+            // getcwd NUL-terminates; create view directly
+            let u8Ptr = unsafe UnsafePointer<UInt8>(base)
+            let view = unsafe Kernel.String.View(u8Ptr)
+            result = body(view)
+        }
+
+        if let thrown { throw thrown }
+        return result!
+    }
+
+    /// Owned convenience: returns allocated string.
+    ///
+    /// This is the simplest API but involves allocation. For callers that
+    /// need to transform the result (e.g., into a `File.Path`), prefer
+    /// `withCurrentBytes` or `withCurrent` to avoid intermediate allocations.
+    ///
+    /// ## Errors
+    /// - `.path(.notFound)`: Directory has been deleted
+    /// - `.permission`: Search permission denied for a component
+    ///
+    /// - Returns: The absolute path of the current working directory.
+    /// - Throws: ``Error`` on failure.
+    public static func current() throws(Error) -> Kernel.String {
+        try withCurrent { view in
+            Kernel.String(copying: view)
+        }
+    }
+}
+
 // MARK: - Error Conversion
 
-extension Kernel.Directory.Working.Error {
+extension ISO_9945.Kernel.Directory.Working.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         fromPosixErrno(.posix(errno))

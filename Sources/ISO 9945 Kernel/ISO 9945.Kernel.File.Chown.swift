@@ -33,11 +33,11 @@ extension ISO_9945.Kernel.File.Chown {
     /// - Throws: `Kernel.File.Chown.Error` on failure.
 
     public static func chown(
-        path: borrowing Kernel.Path,
+        path: borrowing Kernel.Path.View,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try _chown(path: cString, uid: uid, gid: gid)
         }
     }
@@ -103,11 +103,11 @@ extension ISO_9945.Kernel.File.Chown {
     /// - Throws: `Kernel.File.Chown.Error` on failure.
 
     public static func lchown(
-        path: borrowing Kernel.Path,
+        path: borrowing Kernel.Path.View,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try _lchown(path: cString, uid: uid, gid: gid)
         }
     }
@@ -142,7 +142,7 @@ extension ISO_9945.Kernel.File.Chown {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Chown.Error {
+extension ISO_9945.Kernel.File.Chown.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {

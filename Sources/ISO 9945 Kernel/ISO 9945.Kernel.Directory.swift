@@ -123,8 +123,8 @@ extension ISO_9945.Kernel.Directory {
     /// - Parameter path: The path to the directory.
     /// - Returns: A directory stream for iteration.
     /// - Throws: `Kernel.Directory.Error` on failure.
-    public static func open(at path: borrowing Kernel.Path) throws(Error) -> Stream {
-        try unsafe path.withUnsafeCString { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+    public static func open(at path: borrowing Kernel.Path.View) throws(Error) -> Stream {
+        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
             try open(at: ptr)
         }
     }
@@ -132,7 +132,7 @@ extension ISO_9945.Kernel.Directory {
 
 // MARK: - Error helpers
 
-extension Kernel.Directory.Error {
+extension ISO_9945.Kernel.Directory.Error {
     /// Creates an error from the current errno for open operations.
     internal static func currentOpen() -> Self {
         let code = Kernel.Error.Code.current()

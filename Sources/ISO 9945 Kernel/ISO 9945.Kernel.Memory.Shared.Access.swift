@@ -12,29 +12,54 @@
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 
-#if canImport(Darwin)
-    internal import Darwin
-#elseif canImport(Glibc)
-    internal import Glibc
-#elseif canImport(Musl)
-    internal import Musl
-#endif
+// MARK: - Shared Memory Access Mode
 
-// MARK: - POSIX Shared Memory Access Conversion
+extension ISO_9945.Kernel.Memory.Shared {
+    /// Access mode for shared memory objects.
+    ///
+    /// A simple struct with two boolean flags indicating the desired access.
+    /// Use the static conveniences for common cases.
+    ///
+    /// ## Usage
+    /// ```swift
+    /// // Read only
+    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .read, ...)
+    ///
+    /// // Write only
+    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .write, ...)
+    ///
+    /// // Read and write
+    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .readWrite, ...)
+    /// ```
+    public struct Access: Sendable, Hashable {
+        /// Whether to open for reading.
+        public let read: Bool
 
-extension Kernel.Memory.Shared.Access {
-    /// Converts the access mode to POSIX open flags.
-    @usableFromInline
-    internal var posixFlags: Int32 {
-        let hasRead = contains(.read)
-        let hasWrite = contains(.write)
+        /// Whether to open for writing.
+        public let write: Bool
 
-        if hasRead && hasWrite {
-            return O_RDWR
-        } else if hasWrite {
-            return O_WRONLY
-        } else {
-            return O_RDONLY
+        /// Creates an access mode with explicit read/write permissions.
+        ///
+        /// - Parameters:
+        ///   - read: Whether to open for reading.
+        ///   - write: Whether to open for writing.
+        @inlinable
+        public init(read: Bool, write: Bool) {
+            self.read = read
+            self.write = write
         }
     }
+}
+
+// MARK: - Standard Access Modes
+
+extension ISO_9945.Kernel.Memory.Shared.Access {
+    /// Opens the shared memory for reading only.
+    public static let read = Self(read: true, write: false)
+
+    /// Opens the shared memory for writing only.
+    public static let write = Self(read: false, write: true)
+
+    /// Opens the shared memory for reading and writing.
+    public static let readWrite = Self(read: true, write: true)
 }

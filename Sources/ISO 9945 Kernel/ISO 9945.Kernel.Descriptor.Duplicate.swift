@@ -118,7 +118,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     public typealias Error = Kernel.Descriptor.Duplicate.Error
 }
 
-extension Kernel.Descriptor.Duplicate.Error {
+extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno
@@ -133,7 +133,7 @@ extension Kernel.Descriptor.Duplicate.Error {
     }
 }
 
-extension Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .handle(let e):

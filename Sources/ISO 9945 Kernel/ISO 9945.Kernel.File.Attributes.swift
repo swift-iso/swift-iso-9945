@@ -32,10 +32,10 @@ extension ISO_9945.Kernel.File.Attributes {
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
 
     public static func setPermissions(
-        path: borrowing Kernel.Path,
+        path: borrowing Kernel.Path.View,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try _setPermissions(path: cString, permissions: permissions)
         }
     }
@@ -91,7 +91,7 @@ extension ISO_9945.Kernel.File.Attributes {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Attributes.Error {
+extension ISO_9945.Kernel.File.Attributes.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {

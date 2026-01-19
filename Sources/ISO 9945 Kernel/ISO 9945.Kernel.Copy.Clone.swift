@@ -98,11 +98,11 @@ extension ISO_9945.Kernel.Copy.Clone {
     /// - Throws: ``Kernel/Copy/Error`` on failure.
 
     public static func file(
-        from sourcePath: borrowing Kernel.Path,
-        to destPath: borrowing Kernel.Path
+        from sourcePath: borrowing Kernel.Path.View,
+        to destPath: borrowing Kernel.Path.View
     ) throws(Kernel.Copy.Error) {
-        try unsafe sourcePath.withUnsafeCString { srcCString throws(Kernel.Copy.Error) in
-            try destPath.withUnsafeCString { dstCString throws(Kernel.Copy.Error) in
+        try unsafe sourcePath.withUnsafePointer { srcCString throws(Kernel.Copy.Error) in
+            try destPath.withUnsafePointer { dstCString throws(Kernel.Copy.Error) in
                 let result = Darwin.clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
                 guard result == 0 else {
                     throw Kernel.Copy.Error(posixErrno: errno)

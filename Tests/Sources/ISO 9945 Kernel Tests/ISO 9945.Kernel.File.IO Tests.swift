@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
             // Create and open
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
-                mode: [.read, .write],
+                mode: .readWrite,
                 options: [.create, .truncate],
                 permissions: .standard
             )
@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
             try ISO_9945.Kernel.Path.scope(pathString) { path in
                 _ = try ISO_9945.Kernel.File.Open.open(
                     path: path,
-                    mode: [.read],
+                    mode: .read,
                     options: [],
                     permissions: 0
                 )
@@ -79,7 +79,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
             // Create file
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
-                mode: [.read, .write],
+                mode: .readWrite,
                 options: [.create, .truncate],
                 permissions: .standard
             )
@@ -114,7 +114,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
             // Create empty file
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
-                mode: [.read, .write],
+                mode: .readWrite,
                 options: [.create, .truncate],
                 permissions: .standard
             )

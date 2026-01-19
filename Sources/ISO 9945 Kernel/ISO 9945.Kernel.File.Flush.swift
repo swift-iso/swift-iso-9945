@@ -75,7 +75,7 @@ extension ISO_9945.Kernel.File.Flush {
     public typealias Error = Kernel.File.Flush.Error
 }
 
-extension Kernel.File.Flush.Error {
+extension ISO_9945.Kernel.File.Flush.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let e = errno

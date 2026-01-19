@@ -33,11 +33,11 @@ extension ISO_9945.Kernel.Link {
     ///   - existingPath: The path to the existing file.
     /// - Throws: `Kernel.Link.Error` on failure.
     public static func create(
-        at linkPath: borrowing Kernel.Path,
-        to existingPath: borrowing Kernel.Path
+        at linkPath: borrowing Kernel.Path.View,
+        to existingPath: borrowing Kernel.Path.View
     ) throws(Error) {
-        try unsafe linkPath.withUnsafeCString { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try existingPath.withUnsafeCString { (existingPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+            try existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
                 try _create(at: linkPtr, to: existingPtr)
             }
         }
@@ -109,7 +109,7 @@ extension ISO_9945.Kernel.Link {
     public typealias Error = Kernel.Link.Error
 }
 
-extension Kernel.Link.Error {
+extension ISO_9945.Kernel.Link.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Kernel.Error.Code.current()

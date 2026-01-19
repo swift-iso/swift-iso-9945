@@ -73,8 +73,8 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func get(path: borrowing Kernel.Path) throws(Error) -> Kernel.File.Stats {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+    public static func get(path: borrowing Kernel.Path.View) throws(Error) -> Kernel.File.Stats {
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try get(unsafePath: UnsafePointer<CChar>(cString))
         }
     }
@@ -113,8 +113,8 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func lget(path: borrowing Kernel.Path) throws(Error) -> Kernel.File.Stats {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+    public static func lget(path: borrowing Kernel.Path.View) throws(Error) -> Kernel.File.Stats {
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try lget(unsafePath: UnsafePointer<CChar>(cString))
         }
     }
@@ -147,7 +147,7 @@ extension ISO_9945.Kernel.File.Stats {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Stats.Error {
+extension ISO_9945.Kernel.File.Stats.Error {
     internal init(posixErrno code: Int32) {
         let errorCode = Kernel.Error.Code.posix(code)
         if let e = Kernel.Descriptor.Validity.Error(code: errorCode) {
@@ -165,7 +165,7 @@ extension Kernel.File.Stats.Error {
 // MARK: - Stats Construction from POSIX stat
 
 #if canImport(Darwin)
-extension Kernel.File.Stats {
+extension ISO_9945.Kernel.File.Stats {
     /// Creates a Kernel.File.Stats from a POSIX stat structure.
     internal init(from sb: Darwin.stat) {
         let atime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec), nanosecondFraction: Int32(sb.st_atimespec.tv_nsec))
@@ -188,7 +188,7 @@ extension Kernel.File.Stats {
     }
 }
 #elseif canImport(Glibc)
-extension Kernel.File.Stats {
+extension ISO_9945.Kernel.File.Stats {
     /// Creates a Kernel.File.Stats from a POSIX stat structure.
     internal init(from sb: Glibc.stat) {
         let atime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
@@ -211,7 +211,7 @@ extension Kernel.File.Stats {
     }
 }
 #elseif canImport(Musl)
-extension Kernel.File.Stats {
+extension ISO_9945.Kernel.File.Stats {
     /// Creates a Kernel.File.Stats from a POSIX stat structure.
     internal init(from sb: Musl.stat) {
         let atime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
@@ -237,7 +237,7 @@ extension Kernel.File.Stats {
 
 // MARK: - File Kind from POSIX mode
 
-extension Kernel.File.Stats.Kind {
+extension ISO_9945.Kernel.File.Stats.Kind {
     /// Creates a file type from POSIX st_mode.
     internal init(mode: mode_t) {
         let fileType = mode & S_IFMT

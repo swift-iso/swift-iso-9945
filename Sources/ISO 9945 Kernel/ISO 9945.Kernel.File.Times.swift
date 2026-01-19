@@ -34,12 +34,12 @@ extension ISO_9945.Kernel.File.Times {
     /// - Throws: `Kernel.File.Times.Error` on failure.
 
     public static func setTimes(
-        path: borrowing Kernel.Path,
+        path: borrowing Kernel.Path.View,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time,
         followSymlinks: Bool = true
     ) throws(Error) {
-        try unsafe path.withUnsafeCString { cString throws(Error) in
+        try unsafe path.withUnsafePointer { cString throws(Error) in
             try _setTimes(
                 path: cString,
                 accessTime: accessTime,
@@ -128,7 +128,7 @@ extension ISO_9945.Kernel.File.Times {
 
 // MARK: - Error Conversion
 
-extension Kernel.File.Times.Error {
+extension ISO_9945.Kernel.File.Times.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {

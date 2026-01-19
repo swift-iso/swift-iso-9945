@@ -75,11 +75,11 @@ extension ISO_9945.Kernel.File.Move {
 
     /// Atomically moves a file using `Kernel.Path`, failing if destination exists.
     public static func noClobber(
-        from oldPath: borrowing Kernel.Path,
-        to newPath: borrowing Kernel.Path
+        from oldPath: borrowing Kernel.Path.View,
+        to newPath: borrowing Kernel.Path.View
     ) throws(Extended.Error) {
-        try unsafe oldPath.withUnsafeCString { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
-            try newPath.withUnsafeCString { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+        try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
                 try noClobber(from: oldPtr, to: newPtr)
             }
         }
@@ -116,11 +116,11 @@ extension ISO_9945.Kernel.File.Move {
 
     /// Atomically exchanges two files using `Kernel.Path`.
     public static func exchange(
-        _ path1: borrowing Kernel.Path,
-        _ path2: borrowing Kernel.Path
+        _ path1: borrowing Kernel.Path.View,
+        _ path2: borrowing Kernel.Path.View
     ) throws(Extended.Error) {
-        try unsafe path1.withUnsafeCString { (ptr1: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
-            try path2.withUnsafeCString { (ptr2: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+        try unsafe path1.withUnsafePointer { (ptr1: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try path2.withUnsafePointer { (ptr2: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
                 try exchange(ptr1, ptr2)
             }
         }
@@ -192,11 +192,11 @@ extension ISO_9945.Kernel.File.Move {
 
     /// Atomically moves a file using `Kernel.Path`, failing if destination exists.
     public static func noClobber(
-        from oldPath: borrowing Kernel.Path,
-        to newPath: borrowing Kernel.Path
+        from oldPath: borrowing Kernel.Path.View,
+        to newPath: borrowing Kernel.Path.View
     ) throws(Extended.Error) {
-        try unsafe oldPath.withUnsafeCString { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
-            try newPath.withUnsafeCString { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+        try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
                 try noClobber(from: oldPtr, to: newPtr)
             }
         }
@@ -246,11 +246,11 @@ extension ISO_9945.Kernel.File.Move {
 
     /// Atomically exchanges two files using `Kernel.Path`.
     public static func exchange(
-        _ path1: borrowing Kernel.Path,
-        _ path2: borrowing Kernel.Path
+        _ path1: borrowing Kernel.Path.View,
+        _ path2: borrowing Kernel.Path.View
     ) throws(Extended.Error) {
-        try unsafe path1.withUnsafeCString { (ptr1: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
-            try path2.withUnsafeCString { (ptr2: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+        try unsafe path1.withUnsafePointer { (ptr1: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
+            try path2.withUnsafePointer { (ptr2: UnsafePointer<Kernel.Path.Char>) throws(Extended.Error) in
                 try exchange(ptr1, ptr2)
             }
         }

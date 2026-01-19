@@ -136,7 +136,7 @@ extension ISO_9945.Kernel.Lock {
 
 // MARK: - Error Mapping
 
-extension Kernel.Lock.Error {
+extension ISO_9945.Kernel.Lock.Error {
     /// Creates a lock error from a platform error code.
 
     init(_ code: Kernel.Error.Code) {

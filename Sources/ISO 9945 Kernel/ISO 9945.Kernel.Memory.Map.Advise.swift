@@ -24,7 +24,7 @@ public import ISO_9945
 
 // MARK: - madvise Syscall
 
-extension Kernel.Memory.Map {
+extension ISO_9945.Kernel.Memory.Map {
     /// Advises the kernel about expected memory access patterns.
     ///
     /// Uses `madvise(2)` to provide hints to the kernel about how

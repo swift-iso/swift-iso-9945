@@ -93,7 +93,7 @@ extension ISO_9945.Kernel.Thread {
 
 // MARK: - Thread Yield
 
-extension Kernel.Thread {
+extension ISO_9945.Kernel.Thread {
     /// Yields execution to the OS scheduler as a hint.
     ///
     /// This is a policy-free wrapper around platform yield primitives.

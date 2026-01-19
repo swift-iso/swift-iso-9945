@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.Process {
     public typealias ID = Kernel.Process.ID
 }
 
-extension Kernel.Process.ID {
+extension ISO_9945.Kernel.Process.ID {
     /// The current process.
 
     public static var current: Self {
