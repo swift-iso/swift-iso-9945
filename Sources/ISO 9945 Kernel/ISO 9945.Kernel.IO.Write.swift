@@ -25,6 +25,10 @@ public import ISO_9945
 extension ISO_9945.Kernel.IO.Write {
     /// Writes bytes to a file descriptor at the current file offset.
     ///
+    /// This is the raw POSIX `write(2)` syscall. It does NOT automatically retry
+    /// on EINTR - callers must handle signal interruption explicitly. For automatic
+    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    ///
     /// ## Threading
     /// This call blocks until at least one byte is written or an error occurs.
     /// The file offset is advanced by the number of bytes written. Concurrent
@@ -34,18 +38,16 @@ extension ISO_9945.Kernel.IO.Write {
     /// May return fewer bytes than `buffer.count`. This is not an error—loop until
     /// all data is written. Returns 0 only for zero-length buffers.
     ///
-    /// ## Errors
-    /// - ``Error/handle(_:)``: Invalid descriptor
-    /// - ``Error/io(_:)``: Physical I/O error
-    /// - ``Error/noSpace``: Filesystem full
-    /// - ``Error/pipe``: Write to pipe/socket with no readers (also raises SIGPIPE)
-    /// - ``Error/wouldBlock``: Non-blocking descriptor would block
+    /// ## EINTR
+    /// This function does NOT retry on EINTR. On signal interruption, throws
+    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `error.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to write to.
     ///   - buffer: The buffer to write from.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
-    /// - Throws: ``Kernel/IO/Write/Error`` on failure.
+    /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
     public static func write(
         _ descriptor: Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
@@ -56,28 +58,27 @@ extension ISO_9945.Kernel.IO.Write {
         guard descriptor.isValid else {
             throw .handle(.invalid)
         }
+
         #if canImport(Darwin)
-            return try Kernel.Syscall.require(
-                unsafe Darwin.write(descriptor._rawValue, baseAddress, buffer.count),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+            let result = unsafe Darwin.write(descriptor._rawValue, baseAddress, buffer.count)
         #elseif canImport(Musl)
-            return try Kernel.Syscall.require(
-                unsafe Musl.write(descriptor._rawValue, baseAddress, buffer.count),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+            let result = unsafe Musl.write(descriptor._rawValue, baseAddress, buffer.count)
         #elseif canImport(Glibc)
-            return try Kernel.Syscall.require(
-                unsafe Glibc.write(descriptor._rawValue, baseAddress, buffer.count),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+            let result = unsafe Glibc.write(descriptor._rawValue, baseAddress, buffer.count)
         #endif
+
+        if result >= 0 {
+            return result
+        }
+
+        throw Error.current()
     }
 
     /// Writes bytes to a file descriptor at a specific offset without changing the file position.
+    ///
+    /// This is the raw POSIX `pwrite(2)` syscall. It does NOT automatically retry
+    /// on EINTR - callers must handle signal interruption explicitly. For automatic
+    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
     ///
     /// ## Threading
     /// This call blocks until at least one byte is written or an error occurs.
@@ -88,18 +89,17 @@ extension ISO_9945.Kernel.IO.Write {
     /// May return fewer bytes than `buffer.count`. This is not an error—loop until
     /// all data is written, adjusting the offset accordingly.
     ///
-    /// ## Errors
-    /// - ``Error/handle(_:)``: Invalid descriptor
-    /// - ``Error/io(_:)``: Physical I/O error
-    /// - ``Error/noSpace``: Filesystem full
-    /// - ``Error/invalidSeek``: Descriptor does not support seeking (pipes, sockets)
+    /// ## EINTR
+    /// This function does NOT retry on EINTR. On signal interruption, throws
+    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `error.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to write to.
     ///   - buffer: The buffer to write from.
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
-    /// - Throws: ``Kernel/IO/Write/Error`` on failure.
+    /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
     public static func pwrite(
         _ descriptor: Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer,
@@ -111,25 +111,57 @@ extension ISO_9945.Kernel.IO.Write {
         guard descriptor.isValid else {
             throw .handle(.invalid)
         }
+
         #if canImport(Darwin)
-            return try Kernel.Syscall.require(
-                unsafe Darwin.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+            let result = unsafe Darwin.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue))
         #elseif canImport(Musl)
-            return try Kernel.Syscall.require(
-                unsafe Musl.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+            let result = unsafe Musl.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue))
         #elseif canImport(Glibc)
-            return try Kernel.Syscall.require(
-                unsafe Glibc.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+            let result = unsafe Glibc.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue))
         #endif
+
+        if result >= 0 {
+            return result
+        }
+
+        throw Error.current()
+    }
+}
+
+// MARK: - Write All
+
+extension ISO_9945.Kernel.IO.Write {
+    /// Writes all bytes to a file descriptor, handling partial writes and EINTR.
+    ///
+    /// This function loops until all bytes are written or an error occurs.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to write to.
+    ///   - buffer: The buffer to write from.
+    /// - Throws: ``Kernel/IO/Write/Error`` on failure.
+    public static func writeAll(
+        _ descriptor: Kernel.Descriptor,
+        from buffer: UnsafeRawBufferPointer
+    ) throws(Error) {
+        guard let baseAddress = buffer.baseAddress else {
+            return
+        }
+
+        var written = 0
+        let total = buffer.count
+
+        while written < total {
+            let remaining = UnsafeRawBufferPointer(
+                start: baseAddress.advanced(by: written),
+                count: total - written
+            )
+            let n = try write(descriptor, from: remaining)
+            if n == 0 {
+                // Should not happen for regular files, but handle gracefully
+                throw .io(.hardware)
+            }
+            written += n
+        }
     }
 }
 
@@ -169,6 +201,22 @@ extension ISO_9945.Kernel.IO.Write {
     ) throws(Error) -> Int {
         try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
             try pwrite(descriptor, from: buffer, at: offset)
+        }
+    }
+
+    /// Writes all bytes from a span to a file descriptor.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to write to.
+    ///   - span: The span containing bytes to write.
+    /// - Throws: `Kernel.IO.Write.Error` on failure.
+
+    public static func writeAll(
+        _ descriptor: Kernel.Descriptor,
+        from span: Span<UInt8>
+    ) throws(Error) {
+        try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) in
+            try writeAll(descriptor, from: buffer)
         }
     }
 }
