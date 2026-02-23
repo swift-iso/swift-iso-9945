@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.Signal {
         /// - Parameter signals: The signals to include.
         /// - Throws: `Error.set` on first invalid signal (deterministic failure point).
 
-        public init(_ signals: some Sequence<Number>) throws(Error) {
+        public init(_ signals: some Swift.Sequence<Number>) throws(Error) {
             self.init()
             for signal in signals {
                 guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {

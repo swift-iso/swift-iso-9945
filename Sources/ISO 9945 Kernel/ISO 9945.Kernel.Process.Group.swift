@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Process.Group {
 extension Tagged where Tag == POSIX.Kernel.Process.Group, RawValue == pid_t {
     /// The current process group.
 
-    public static var current: Self { Self(getpgrp()) }
+    public static var current: Self { Self(__unchecked: (), getpgrp()) }
 }
 
 // MARK: - Process Selector
@@ -168,6 +168,6 @@ extension ISO_9945.Kernel.Process.Group {
         guard result != -1 else {
             throw .group(POSIX.Kernel.Error.captureErrno())
         }
-        return ID(result)
+        return ID(__unchecked: (), result)
     }
 }

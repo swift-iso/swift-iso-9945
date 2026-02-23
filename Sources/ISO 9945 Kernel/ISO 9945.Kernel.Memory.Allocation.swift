@@ -32,6 +32,6 @@ extension ISO_9945.Kernel.Memory.Allocation {
     public static var system: Kernel.Memory.Allocation.Granularity {
         let pageSize = Int(sysconf(Int32(_SC_PAGESIZE)))
         // Safe: page size is always a power of 2
-        return Kernel.Memory.Allocation.Granularity(try! Binary.Alignment(pageSize))
+        return Kernel.Memory.Allocation.Granularity(__unchecked: (), try! Memory.Alignment(pageSize))
     }
 }

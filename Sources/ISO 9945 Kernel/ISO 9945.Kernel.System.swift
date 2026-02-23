@@ -30,9 +30,9 @@ extension ISO_9945.Kernel.System {
     /// Note: This is a conservative limit, not a universal truth.
     public static var pathMax: Kernel.System.Path.Length {
         #if canImport(Darwin)
-            return Kernel.System.Path.Length(Int(PATH_MAX))  // 1024
+            return Kernel.System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // 1024
         #else
-            return Kernel.System.Path.Length(Int(PATH_MAX))  // Usually 4096
+            return Kernel.System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // Usually 4096
         #endif
     }
 
@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.System {
     /// This is the fundamental unit of memory management.
     /// Typically 4096 bytes on most systems, 16384 on Apple Silicon.
     public static var pageSize: Kernel.Memory.Page.Size {
-        Kernel.Memory.Page.Size(Int(sysconf(Int32(_SC_PAGESIZE))))
+        Kernel.Memory.Page.Size(__unchecked: (), Cardinal(UInt(sysconf(Int32(_SC_PAGESIZE)))))
     }
 
     /// Number of active/online processors.
@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.System {
     /// Returns 1 as a fallback if the syscall fails.
     public static var processorCount: Kernel.System.Processor.Count {
         let count = sysconf(Int32(_SC_NPROCESSORS_ONLN))
-        return Kernel.System.Processor.Count(count > 0 ? Int(count) : 1)
+        return Kernel.System.Processor.Count(__unchecked: (), Cardinal(UInt(count > 0 ? count : 1)))
     }
 
     /// Sleeps for the specified number of nanoseconds.
