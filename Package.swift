@@ -92,6 +92,7 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Kernel",
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives")
             ],
             path: "Tests/Support",
