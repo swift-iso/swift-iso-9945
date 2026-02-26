@@ -34,6 +34,7 @@ extension Clock.Continuous: _Concurrency.Clock {
     ///   - deadline: The instant to sleep until.
     ///   - tolerance: Optional tolerance (currently unused).
     /// - Throws: `CancellationError` if the task is cancelled.
+    nonisolated(nonsending)
     public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws {
         let target = deadline.nanoseconds
         while Kernel.Clock.Continuous.now() < target {
@@ -61,6 +62,7 @@ extension Clock.Suspending: _Concurrency.Clock {
     ///   - deadline: The instant to sleep until.
     ///   - tolerance: Optional tolerance (currently unused).
     /// - Throws: `CancellationError` if the task is cancelled.
+    nonisolated(nonsending)
     public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws {
         let target = deadline.nanoseconds
         while Kernel.Clock.Suspending.now() < target {

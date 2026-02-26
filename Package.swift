@@ -97,7 +97,14 @@ let package = Package(
             ],
             path: "Tests/Support",
             exclude: ["Lock Helper"]
-        )
+        ),
+        .testTarget(
+            name: "ISO 9945 Kernel Tests",
+            dependencies: [
+                "ISO 9945 Kernel",
+                "ISO 9945 Kernel Test Support",
+            ]
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
@@ -108,6 +115,7 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableExperimentalFeature("Lifetimes"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
         .enableExperimentalFeature("SuppressedAssociatedTypesWithDefaults"),
