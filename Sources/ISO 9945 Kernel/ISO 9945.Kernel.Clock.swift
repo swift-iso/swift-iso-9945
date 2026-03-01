@@ -25,21 +25,24 @@ public import ISO_9945
 extension ISO_9945.Kernel.Clock.Continuous {
     /// Returns the current continuous time in nanoseconds since boot.
     ///
-    /// - Darwin: Uses `CLOCK_MONOTONIC` which advances during system sleep.
+    /// - Darwin: Uses `CLOCK_MONOTONIC_RAW` which advances during system sleep
+    ///   and is immune to NTP frequency adjustments. (`CLOCK_MONOTONIC` on Darwin
+    ///   can violate monotonicity on system time changes — the Swift stdlib and Rust
+    ///   both use `CLOCK_MONOTONIC_RAW` to avoid this.)
     /// - Linux: Uses `CLOCK_BOOTTIME` which advances during system sleep.
 
     public static func now() -> UInt64 {
         #if canImport(Darwin)
-        var ts = Darwin.timespec()
-        clock_gettime(CLOCK_MONOTONIC, &ts)
+        return clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)
         #elseif canImport(Musl)
         var ts = Musl.timespec()
         clock_gettime(CLOCK_BOOTTIME, &ts)
+        return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #elseif canImport(Glibc)
         var ts = Glibc.timespec()
         clock_gettime(CLOCK_BOOTTIME, &ts)
-        #endif
         return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+        #endif
     }
 }
 
@@ -51,15 +54,15 @@ extension ISO_9945.Kernel.Clock.Suspending {
 
     public static func now() -> UInt64 {
         #if canImport(Darwin)
-        var ts = Darwin.timespec()
-        clock_gettime(CLOCK_UPTIME_RAW, &ts)
+        return clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
         #elseif canImport(Musl)
         var ts = Musl.timespec()
         clock_gettime(CLOCK_MONOTONIC, &ts)
+        return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #elseif canImport(Glibc)
         var ts = Glibc.timespec()
         clock_gettime(CLOCK_MONOTONIC, &ts)
-        #endif
         return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+        #endif
     }
 }
