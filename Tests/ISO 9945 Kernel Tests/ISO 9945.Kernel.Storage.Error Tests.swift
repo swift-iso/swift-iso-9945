@@ -118,7 +118,7 @@ extension Kernel.Storage.Error.Test.EdgeCase {
     func customStringConvertibleAllCases() {
         let cases: [Kernel.Storage.Error] = [.exhausted, .quota]
         for error in cases {
-            let description = String(describing: error)
+            let description = Swift.String(describing: error)
             #expect(!description.isEmpty)
         }
     }

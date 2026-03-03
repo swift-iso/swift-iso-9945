@@ -27,8 +27,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// Internal implementation for creating a symbolic link.
     @usableFromInline
     internal static func _create(
-        target: UnsafePointer<Kernel.Path.Char>,
-        at linkPath: UnsafePointer<Kernel.Path.Char>
+        target: UnsafePointer<Path.Char>,
+        at linkPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cTarget = unsafe UnsafePointer<CChar>(target)
         let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
@@ -49,9 +49,9 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// Internal implementation for creating a symbolic link relative to a directory descriptor.
     @usableFromInline
     internal static func _create(
-        target: UnsafePointer<Kernel.Path.Char>,
+        target: UnsafePointer<Path.Char>,
         relativeTo descriptor: Kernel.Descriptor,
-        linkPath: UnsafePointer<Kernel.Path.Char>
+        linkPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cTarget = unsafe UnsafePointer<CChar>(target)
         let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// Internal implementation for reading the target into a provided buffer.
     @usableFromInline
     internal static func _readTarget(
-        at path: UnsafePointer<Kernel.Path.Char>,
+        at path: UnsafePointer<Path.Char>,
         into buffer: UnsafeMutableBufferPointer<CChar>
     ) throws(Error) -> Int {
         let cPath = unsafe UnsafePointer<CChar>(path)
@@ -106,8 +106,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
         target: borrowing Kernel.Path.View,
         at linkPath: borrowing Kernel.Path.View
     ) throws(Error) {
-        try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Path.Char>) throws(Error) in
+            try linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
                 try _create(target: targetPtr, at: linkPtr)
             }
         }
@@ -131,7 +131,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTargetBytes<R: ~Copyable>(
         at path: borrowing Kernel.Path.View,
-        _ body: (Span<Kernel.Path.Char>) -> R
+        _ body: (Span<Path.Char>) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
             var bufferSize = 256
@@ -202,7 +202,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
                 if count < bufferSize {
                     buffer[count] = 0  // NUL terminate
                     let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
-                    let view = unsafe Kernel.String.View(u8Ptr)
+                    let view = unsafe Kernel.String.View(u8Ptr, count: count)
                     return body(view)
                 }
 

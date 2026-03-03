@@ -13,7 +13,7 @@
 //
 // This module contains ONLY the ABI projection law for ISO_9945:
 //
-//   "In ISO_9945, our semantic code unit is UInt8 (via Kernel.Path.Char).
+//   "In ISO_9945, our semantic code unit is UInt8 (via Path.Char).
 //    When calling POSIX C APIs, we project UnsafePointer<UInt8> ↔ UnsafePointer<CChar>."
 //
 // This is not a utility module. It defines the formal boundary contract between

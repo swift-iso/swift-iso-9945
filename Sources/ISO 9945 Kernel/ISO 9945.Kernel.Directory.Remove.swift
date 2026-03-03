@@ -31,7 +31,7 @@ extension ISO_9945.Kernel.Directory.Remove {
     /// - Parameter path: The path to remove.
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
     public static func remove(_ path: borrowing Kernel.Path.View) throws(Error) {
-        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try _remove(ptr)
         }
     }
@@ -39,7 +39,7 @@ extension ISO_9945.Kernel.Directory.Remove {
     /// Internal implementation for removing an empty directory using an unsafe path pointer.
     @usableFromInline
     @unsafe
-    internal static func _remove(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
+    internal static func _remove(_ path: UnsafePointer<Path.Char>) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
 
 import ISO_9945
 import ISO_9945_Kernel_Test_Support
@@ -18,19 +17,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.File.Open {
-    @Suite
-    struct Test {
-        @Suite struct Unit {}
-        @Suite struct EdgeCase {}
-        @Suite struct Integration {}
-        @Suite(.serialized) struct Performance {}
-    }
-}
-
-// MARK: - Integration Tests (require full POSIX module for file I/O)
-
-extension ISO_9945.Kernel.File.Open.Test.Integration {
+@Suite("File I/O Integration")
+struct FileIOIntegrationTests {
     @Test("open and close file")
     func openAndClose() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test")
@@ -141,7 +129,7 @@ extension ISO_9945.Kernel.File.Open.Test.Integration {
 
 // MARK: - Edge Cases (Integration)
 
-extension ISO_9945.Kernel.File.Open.Test.EdgeCase {
+extension FileIOIntegrationTests {
     @Test("close invalid descriptor throws")
     func closeInvalid() {
         var threwError = false
@@ -182,4 +170,3 @@ extension ISO_9945.Kernel.File.Open.Test.EdgeCase {
     }
 }
 
-#endif

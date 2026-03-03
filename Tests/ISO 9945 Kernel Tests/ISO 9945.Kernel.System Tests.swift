@@ -103,7 +103,6 @@ extension Kernel.System.Test.Unit {
         #expect(size & (size - 1) == 0)
     }
 
-    #if !os(Windows)
         @Test("allocationGranularity equals pageSize on POSIX")
         func allocationGranularityEqualsPageSize() {
             let granularity = Kernel.Memory.Allocation.system
@@ -111,7 +110,6 @@ extension Kernel.System.Test.Unit {
             let size: Int = granularity.rawValue.magnitude()
             #expect(size == Int(Kernel.System.pageSize))
         }
-    #endif
 }
 
 // MARK: - Consistency Tests

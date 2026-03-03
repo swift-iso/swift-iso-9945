@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.Directory.Create {
         _ path: borrowing Kernel.Path.View,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
-        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try _create(ptr, permissions: permissions)
         }
     }
@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Directory.Create {
     /// Internal implementation for creating a directory using an unsafe path pointer.
     @usableFromInline
     internal static func _create(
-        _ path: UnsafePointer<Kernel.Path.Char>,
+        _ path: UnsafePointer<Path.Char>,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.Directory.Create {
     @usableFromInline
     internal static func _create(
         relativeTo descriptor: Kernel.Descriptor,
-        path: UnsafePointer<Kernel.Path.Char>,
+        path: UnsafePointer<Path.Char>,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)

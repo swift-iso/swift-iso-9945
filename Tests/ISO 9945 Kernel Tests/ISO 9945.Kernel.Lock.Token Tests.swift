@@ -88,14 +88,8 @@ extension Kernel.Lock.Token.Test.Unit {
     @Test("Token init accepts deadline acquisition")
     func initAcceptsDeadline() {
         // Verify the init accepts .deadline acquisition
-        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        let deadline = Clock.Continuous.now
         let _: Kernel.Lock.Acquire = .deadline(deadline)
-    }
-
-    @Test("Token init accepts timeout acquisition")
-    func initAcceptsTimeout() {
-        // Verify the init accepts .timeout acquisition
-        let _: Kernel.Lock.Acquire = .timeout(.seconds(1))
     }
 }
 
@@ -138,7 +132,6 @@ extension Kernel.Lock.Token.Test.EdgeCase {
         // Token accepts all acquisition strategies
         let _: Kernel.Lock.Acquire = .try
         let _: Kernel.Lock.Acquire = .wait
-        let _: Kernel.Lock.Acquire = .deadline(ContinuousClock.now)
-        let _: Kernel.Lock.Acquire = .timeout(.seconds(1))
+        let _: Kernel.Lock.Acquire = .deadline(Clock.Continuous.now)
     }
 }

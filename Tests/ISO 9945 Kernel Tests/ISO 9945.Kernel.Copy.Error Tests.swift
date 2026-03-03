@@ -13,7 +13,7 @@
 import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
-import Kernel_Primitives
+@_spi(Syscall) import Kernel_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -181,7 +181,6 @@ extension Kernel.Copy.Error.Test.EdgeCase {
 
 // MARK: - POSIX Error Mapping Tests
 
-#if !os(Windows)
     #if canImport(Darwin)
         import Darwin
     #elseif canImport(Glibc)
@@ -193,63 +192,62 @@ extension Kernel.Copy.Error.Test.EdgeCase {
     extension Kernel.Copy.Error.Test.Unit {
         @Test("EBADF maps to invalidDescriptor")
         func ebadfMapping() {
-            let error = Kernel.Copy.Error(posix: EBADF)
+            let error = Kernel.Copy.Error(posixErrno: EBADF)
             #expect(error == .invalidDescriptor)
         }
 
         @Test("EXDEV maps to crossDevice")
         func exdevMapping() {
-            let error = Kernel.Copy.Error(posix: EXDEV)
+            let error = Kernel.Copy.Error(posixErrno: EXDEV)
             #expect(error == .crossDevice)
         }
 
         @Test("EINVAL maps to unsupported")
         func einvalMapping() {
-            let error = Kernel.Copy.Error(posix: EINVAL)
+            let error = Kernel.Copy.Error(posixErrno: EINVAL)
             #expect(error == .unsupported)
         }
 
         @Test("ENOTSUP maps to unsupported")
         func enotsupMapping() {
-            let error = Kernel.Copy.Error(posix: ENOTSUP)
+            let error = Kernel.Copy.Error(posixErrno: ENOTSUP)
             #expect(error == .unsupported)
         }
 
         @Test("EOPNOTSUPP maps to unsupported")
         func eopnotsuppMapping() {
-            let error = Kernel.Copy.Error(posix: EOPNOTSUPP)
+            let error = Kernel.Copy.Error(posixErrno: EOPNOTSUPP)
             #expect(error == .unsupported)
         }
 
         @Test("ENOSPC maps to noSpace")
         func enospcMapping() {
-            let error = Kernel.Copy.Error(posix: ENOSPC)
+            let error = Kernel.Copy.Error(posixErrno: ENOSPC)
             #expect(error == .noSpace)
         }
 
         @Test("EIO maps to io")
         func eioMapping() {
-            let error = Kernel.Copy.Error(posix: EIO)
+            let error = Kernel.Copy.Error(posixErrno: EIO)
             #expect(error == .io)
         }
 
         @Test("EACCES maps to permissionDenied")
         func eaccesMapping() {
-            let error = Kernel.Copy.Error(posix: EACCES)
+            let error = Kernel.Copy.Error(posixErrno: EACCES)
             #expect(error == .permissionDenied)
         }
 
         @Test("EPERM maps to permissionDenied")
         func epermMapping() {
-            let error = Kernel.Copy.Error(posix: EPERM)
+            let error = Kernel.Copy.Error(posixErrno: EPERM)
             #expect(error == .permissionDenied)
         }
 
         @Test("unknown error maps to unsupported")
         func unknownMapping() {
             // Use an unlikely error code
-            let error = Kernel.Copy.Error(posix: 999)
+            let error = Kernel.Copy.Error(posixErrno: 999)
             #expect(error == .unsupported)
         }
     }
-#endif

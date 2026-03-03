@@ -17,7 +17,7 @@ import Kernel_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Seek.Origin {
+extension Kernel.File.Seek.Origin {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -27,10 +27,10 @@ extension Kernel.Seek.Origin {
 
 // MARK: - Unit Tests
 
-extension Kernel.Seek.Origin.Test.Unit {
+extension Kernel.File.Seek.Origin.Test.Unit {
     @Test("start case exists")
     func startCase() {
-        let origin = Kernel.Seek.Origin.start
+        let origin = Kernel.File.Seek.Origin.start
         if case .start = origin {
             // Expected
         } else {
@@ -40,7 +40,7 @@ extension Kernel.Seek.Origin.Test.Unit {
 
     @Test("current case exists")
     func currentCase() {
-        let origin = Kernel.Seek.Origin.current
+        let origin = Kernel.File.Seek.Origin.current
         if case .current = origin {
             // Expected
         } else {
@@ -50,7 +50,7 @@ extension Kernel.Seek.Origin.Test.Unit {
 
     @Test("end case exists")
     func endCase() {
-        let origin = Kernel.Seek.Origin.end
+        let origin = Kernel.File.Seek.Origin.end
         if case .end = origin {
             // Expected
         } else {
@@ -61,22 +61,22 @@ extension Kernel.Seek.Origin.Test.Unit {
 
 // MARK: - Conformances
 
-extension Kernel.Seek.Origin.Test.Unit {
+extension Kernel.File.Seek.Origin.Test.Unit {
     @Test("Origin is Sendable")
     func isSendable() {
-        let origin: any Sendable = Kernel.Seek.Origin.start
-        #expect(origin is Kernel.Seek.Origin)
+        let origin: any Sendable = Kernel.File.Seek.Origin.start
+        #expect(origin is Kernel.File.Seek.Origin)
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.Seek.Origin.Test.EdgeCase {
+extension Kernel.File.Seek.Origin.Test.EdgeCase {
     @Test("all cases are distinct")
     func allCasesDistinct() {
-        let start = Kernel.Seek.Origin.start
-        let current = Kernel.Seek.Origin.current
-        let end = Kernel.Seek.Origin.end
+        let start = Kernel.File.Seek.Origin.start
+        let current = Kernel.File.Seek.Origin.current
+        let end = Kernel.File.Seek.Origin.end
 
         // Pattern matching confirms distinctness
         switch start {
@@ -104,10 +104,10 @@ extension Kernel.Seek.Origin.Test.EdgeCase {
 
 // MARK: - Usage Patterns
 
-extension Kernel.Seek.Origin.Test.Unit {
+extension Kernel.File.Seek.Origin.Test.Unit {
     @Test("Origin can be used in switch")
     func switchUsage() {
-        func describe(_ origin: Kernel.Seek.Origin) -> String {
+        func describe(_ origin: Kernel.File.Seek.Origin) -> Swift.String {
             switch origin {
             case .start: return "beginning"
             case .current: return "current position"

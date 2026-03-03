@@ -36,8 +36,8 @@ extension ISO_9945.Kernel.Link {
         at linkPath: borrowing Kernel.Path.View,
         to existingPath: borrowing Kernel.Path.View
     ) throws(Error) {
-        try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
+            try existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Path.Char>) throws(Error) in
                 try _create(at: linkPtr, to: existingPtr)
             }
         }
@@ -46,8 +46,8 @@ extension ISO_9945.Kernel.Link {
     /// Internal implementation for creating a hard link using unsafe path pointers.
     @usableFromInline
     internal static func _create(
-        at linkPath: UnsafePointer<Kernel.Path.Char>,
-        to existingPath: UnsafePointer<Kernel.Path.Char>
+        at linkPath: UnsafePointer<Path.Char>,
+        to existingPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
         let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)
@@ -69,9 +69,9 @@ extension ISO_9945.Kernel.Link {
     @usableFromInline
     internal static func _create(
         from existingDescriptor: Kernel.Descriptor,
-        existingPath: UnsafePointer<Kernel.Path.Char>,
+        existingPath: UnsafePointer<Path.Char>,
         at linkDescriptor: Kernel.Descriptor,
-        linkPath: UnsafePointer<Kernel.Path.Char>,
+        linkPath: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
         let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)

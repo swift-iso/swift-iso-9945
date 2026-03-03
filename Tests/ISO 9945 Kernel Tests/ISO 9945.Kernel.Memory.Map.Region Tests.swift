@@ -42,11 +42,10 @@ extension Kernel.Memory.Map.Region.Test.Unit {
 
 // MARK: - Property Tests
 
-#if !os(Windows)
     extension Kernel.Memory.Map.Region.Test.Unit {
         @Test("Region stores base address")
         func storesBase() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -55,7 +54,7 @@ extension Kernel.Memory.Map.Region.Test.Unit {
 
         @Test("Region stores length")
         func storesLength() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -64,7 +63,7 @@ extension Kernel.Memory.Map.Region.Test.Unit {
 
         @Test("Region init sets values correctly")
         func initSetsValues() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -74,7 +73,6 @@ extension Kernel.Memory.Map.Region.Test.Unit {
             #expect(copy.length == region.length)
         }
     }
-#endif
 
 // MARK: - Windows Tests
 
@@ -82,7 +80,7 @@ extension Kernel.Memory.Map.Region.Test.Unit {
     extension Kernel.Memory.Map.Region.Test.Unit {
         @Test("Region stores mappingHandle on Windows")
         func storesMappingHandle() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 

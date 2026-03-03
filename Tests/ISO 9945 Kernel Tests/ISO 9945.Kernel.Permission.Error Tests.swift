@@ -130,7 +130,7 @@ extension Kernel.Permission.Error.Test.Unit {
         let cases: [Kernel.Permission.Error] = [.denied, .notPermitted, .readOnlyFilesystem]
 
         for error in cases {
-            let description = String(describing: error)
+            let description = Swift.String(describing: error)
             #expect(!description.isEmpty, "Description should not be empty for \(error)")
         }
     }

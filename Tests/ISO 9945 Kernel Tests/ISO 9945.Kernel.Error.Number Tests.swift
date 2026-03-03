@@ -27,7 +27,6 @@ extension Kernel.Error.Number {
 
 // MARK: - Error Number Tests
 
-#if !os(Windows)
 
     #if canImport(Darwin)
         import Darwin
@@ -40,77 +39,77 @@ extension Kernel.Error.Number {
     extension Kernel.Error.Number.Test.Unit {
         @Test("noEntry equals ENOENT")
         func noEntryEqualsENOENT() {
-            #expect(Kernel.Error.Number.noEntry == Kernel.Error.Number(ENOENT))
+            #expect(Kernel.Error.Number.noEntry == Kernel.Error.Number(__unchecked: (), ENOENT))
         }
 
         @Test("accessDenied equals EACCES")
         func accessDeniedEqualsEACCES() {
-            #expect(Kernel.Error.Number.accessDenied == Kernel.Error.Number(EACCES))
+            #expect(Kernel.Error.Number.accessDenied == Kernel.Error.Number(__unchecked: (), EACCES))
         }
 
         @Test("notPermitted equals EPERM")
         func notPermittedEqualsEPERM() {
-            #expect(Kernel.Error.Number.notPermitted == Kernel.Error.Number(EPERM))
+            #expect(Kernel.Error.Number.notPermitted == Kernel.Error.Number(__unchecked: (), EPERM))
         }
 
         @Test("exists equals EEXIST")
         func existsEqualsEEXIST() {
-            #expect(Kernel.Error.Number.exists == Kernel.Error.Number(EEXIST))
+            #expect(Kernel.Error.Number.exists == Kernel.Error.Number(__unchecked: (), EEXIST))
         }
 
         @Test("isDirectory equals EISDIR")
         func isDirectoryEqualsEISDIR() {
-            #expect(Kernel.Error.Number.isDirectory == Kernel.Error.Number(EISDIR))
+            #expect(Kernel.Error.Number.isDirectory == Kernel.Error.Number(__unchecked: (), EISDIR))
         }
 
         @Test("processLimit equals EMFILE")
         func processLimitEqualsEMFILE() {
-            #expect(Kernel.Error.Number.processLimit == Kernel.Error.Number(EMFILE))
+            #expect(Kernel.Error.Number.processLimit == Kernel.Error.Number(__unchecked: (), EMFILE))
         }
 
         @Test("systemLimit equals ENFILE")
         func systemLimitEqualsENFILE() {
-            #expect(Kernel.Error.Number.systemLimit == Kernel.Error.Number(ENFILE))
+            #expect(Kernel.Error.Number.systemLimit == Kernel.Error.Number(__unchecked: (), ENFILE))
         }
 
         @Test("invalid equals EINVAL")
         func invalidEqualsEINVAL() {
-            #expect(Kernel.Error.Number.invalid == Kernel.Error.Number(EINVAL))
+            #expect(Kernel.Error.Number.invalid == Kernel.Error.Number(__unchecked: (), EINVAL))
         }
 
         @Test("interrupted equals EINTR")
         func interruptedEqualsEINTR() {
-            #expect(Kernel.Error.Number.interrupted == Kernel.Error.Number(EINTR))
+            #expect(Kernel.Error.Number.interrupted == Kernel.Error.Number(__unchecked: (), EINTR))
         }
 
         @Test("wouldBlock equals EAGAIN")
         func wouldBlockEqualsEAGAIN() {
-            #expect(Kernel.Error.Number.wouldBlock == Kernel.Error.Number(EAGAIN))
+            #expect(Kernel.Error.Number.wouldBlock == Kernel.Error.Number(__unchecked: (), EAGAIN))
         }
 
         @Test("noDevice equals ENODEV")
         func noDeviceEqualsENODEV() {
-            #expect(Kernel.Error.Number.noDevice == Kernel.Error.Number(ENODEV))
+            #expect(Kernel.Error.Number.noDevice == Kernel.Error.Number(__unchecked: (), ENODEV))
         }
 
         @Test("notDirectory equals ENOTDIR")
         func notDirectoryEqualsENOTDIR() {
-            #expect(Kernel.Error.Number.notDirectory == Kernel.Error.Number(ENOTDIR))
+            #expect(Kernel.Error.Number.notDirectory == Kernel.Error.Number(__unchecked: (), ENOTDIR))
         }
 
         @Test("readOnlyFilesystem equals EROFS")
         func readOnlyFilesystemEqualsEROFS() {
-            #expect(Kernel.Error.Number.readOnlyFilesystem == Kernel.Error.Number(EROFS))
+            #expect(Kernel.Error.Number.readOnlyFilesystem == Kernel.Error.Number(__unchecked: (), EROFS))
         }
 
         @Test("noSpace equals ENOSPC")
         func noSpaceEqualsENOSPC() {
-            #expect(Kernel.Error.Number.noSpace == Kernel.Error.Number(ENOSPC))
+            #expect(Kernel.Error.Number.noSpace == Kernel.Error.Number(__unchecked: (), ENOSPC))
         }
 
         @Test("badDescriptor equals EBADF")
         func badDescriptorEqualsEBADF() {
-            #expect(Kernel.Error.Number.badDescriptor == Kernel.Error.Number(EBADF))
+            #expect(Kernel.Error.Number.badDescriptor == Kernel.Error.Number(__unchecked: (), EBADF))
         }
     }
 
@@ -149,4 +148,3 @@ extension Kernel.Error.Number {
         }
     }
 
-#endif

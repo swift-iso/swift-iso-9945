@@ -51,14 +51,12 @@
             let argv = [path]
             let envp: [Swift.String] = []
 
-            let child = try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
+            let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+                try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                    path: argvPtr[0]!,
+                    argv: argvPtr,
+                    envp: envpPtr
+                )
             }
 
             let result = try Kernel.Process.Wait.wait(.process(child))
@@ -74,8 +72,8 @@
 
             func doSpawn() throws(Kernel.Path.String.Error<POSIX.Kernel.Process.Error>) -> Kernel.Process.ID {
                 try Kernel.Path.scope.array(argv, envp) {
-                    (argvPtr: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>,
-                     envpPtr: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID in
+                    (argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
+                     envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID in
                     // argv[0] is already the path, use it directly
                     try unsafe POSIX.Kernel.Process.Spawn.spawn(
                         path: argvPtr[0]!,
@@ -103,14 +101,12 @@
             let argv = ["/bin/sh", "-c", "exit 42"]
             let envp: [Swift.String] = []
 
-            let child = try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
+            let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+                try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                    path: argvPtr[0]!,
+                    argv: argvPtr,
+                    envp: envpPtr
+                )
             }
 
             let result = try Kernel.Process.Wait.wait(.process(child))
@@ -125,14 +121,12 @@
             let argv = ["/bin/sh", "-c", "exit ${TEST_EXIT_CODE:-99}"]
             let envp = ["TEST_EXIT_CODE=77"]
 
-            let child = try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
+            let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+                try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                    path: argvPtr[0]!,
+                    argv: argvPtr,
+                    envp: envpPtr
+                )
             }
 
             let result = try Kernel.Process.Wait.wait(.process(child))

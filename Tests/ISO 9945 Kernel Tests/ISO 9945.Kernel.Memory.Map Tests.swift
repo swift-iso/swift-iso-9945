@@ -27,7 +27,6 @@ extension Kernel.Memory.Map {
 
 // MARK: - Map Tests
 
-#if !os(Windows)
 
     extension Kernel.Memory.Map.Test.Unit {
         @Test("anonymous map succeeds")
@@ -184,4 +183,3 @@ extension Kernel.Memory.Map {
         }
     }
 
-#endif

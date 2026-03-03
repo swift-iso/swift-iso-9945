@@ -1,8 +1,8 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-kernel open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -12,85 +12,79 @@
 #if os(macOS)
 
 import Testing
+import ISO_9945_Kernel_Test_Support
+import ISO_9945
+import Kernel_Primitives
+import Identity_Primitives_Test_Support
 
-    import Kernel_Primitives
-    @testable import ISO_9945_Kernel
+@testable import ISO_9945_Kernel
 
-    extension Kernel.Process.Group {
-        @Suite
-        struct Test {
-            @Suite struct Unit {}
-            @Suite struct EdgeCase {}
-            @Suite struct Integration {}
-            @Suite(.serialized) struct Performance {}
-        }
+extension Kernel.Process.Group {
+    @Suite
+    struct Test {
+        @Suite struct Unit {}
+        @Suite struct EdgeCase {}
+        @Suite struct Integration {}
+        @Suite(.serialized) struct Performance {}
+    }
+}
+
+// MARK: - Unit Tests
+
+extension Kernel.Process.Group.Test.Unit {
+    @Test("Group.ID is type alias for Tagged")
+    func groupIDIsTagged() {
+        let id = Kernel.Process.Group.ID(__unchecked: (), 123)
+        #expect(id.rawValue == 123)
     }
 
-    // MARK: - Unit Tests
-
-    extension Kernel.Process.Group.Test.Unit {
-        @Test("Group.ID is type alias for Tagged")
-        func groupIDIsTagged() {
-            let id = Kernel.Process.Group.ID(123)
-            #expect(id.rawValue == 123)
-        }
-
-        @Test("Group.Process cases are distinct")
-        func processCasesDistinct() {
-            let pid = Kernel.Process.ID(42)
-            #expect(Kernel.Process.Group.Process.current != Kernel.Process.Group.Process.id(pid))
-        }
-
-        @Test("Group.Target cases are distinct")
-        func targetCasesDistinct() {
-            let pgid = Kernel.Process.Group.ID(42)
-            #expect(Kernel.Process.Group.Target.same != Kernel.Process.Group.Target.id(pgid))
-        }
+    @Test("Group.Process cases are distinct")
+    func processCasesDistinct() {
+        let pid = Kernel.Process.ID(__unchecked: (), 42)
+        #expect(Kernel.Process.Group.Process.current != Kernel.Process.Group.Process.id(pid))
     }
 
-    // MARK: - Integration Tests
-    //
-    // NOTE: These tests use posix_spawn via POSIXTestHelper instead of fork() directly
-    // to avoid Swift runtime lock corruption in multithreaded test environments.
+    @Test("Group.Target cases are distinct")
+    func targetCasesDistinct() {
+        let pgid = Kernel.Process.Group.ID(__unchecked: (), 42)
+        #expect(Kernel.Process.Group.Target.same != Kernel.Process.Group.Target.id(pgid))
+    }
+}
 
-    extension Kernel.Process.Group.Test.Integration {
-        @Test("getpgid returns current process group")
-        func getpgidReturnsGroup() throws {
-            let currentPID = Kernel.Process.ID.current
-            let pgid = try Kernel.Process.Group.id(of: currentPID)
-            // Process group ID should be positive
-            #expect(pgid.rawValue > 0)
-        }
+// MARK: - Integration Tests
 
-        @Test("spawned child can create new process group with setpgid(0,0)")
-        func childCanCreateGroupWithSame() throws {
-            // Spawn helper that calls setpgid(0, 0) and verifies pgid == pid
-            let child = try POSIXTestHelper.spawn("become-group-leader")
+extension Kernel.Process.Group.Test.Integration {
+    @Test("getpgid returns current process group")
+    func getpgidReturnsGroup() throws {
+        let currentPID = Kernel.Process.ID.current
+        let pgid = try Kernel.Process.Group.id(of: currentPID)
+        #expect(pgid.rawValue > 0)
+    }
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
-            #expect(result?.status.exit.code == 0, "Child should become process group leader")
-        }
+    @Test("spawned child can create new process group with setpgid(0,0)")
+    func childCanCreateGroupWithSame() throws {
+        let child = try POSIXTestHelper.spawn("become-group-leader")
+        let result = try Kernel.Process.Wait.wait(.process(child))
+        #expect(result?.status.exit.code == 0, "Child should become process group leader")
+    }
 
-        @Test("setpgid with explicit IDs works")
-        func setpgidWithExplicitIDs() throws {
-            // Spawn helper that calls setpgid(pid, pid) explicitly
-            let child = try POSIXTestHelper.spawn("setpgid-explicit")
+    @Test("setpgid with explicit IDs works")
+    func setpgidWithExplicitIDs() throws {
+        let child = try POSIXTestHelper.spawn("setpgid-explicit")
+        let result = try Kernel.Process.Wait.wait(.process(child))
+        #expect(result?.status.exit.code == 0, "setpgid with explicit IDs should work")
+    }
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
-            #expect(result?.status.exit.code == 0, "setpgid with explicit IDs should work")
-        }
-
-        @Test("getpgid for nonexistent process throws ESRCH")
-        func getpgidNonexistentThrows() throws {
-            // Use a PID that's unlikely to exist
-            let unlikelyPID = Kernel.Process.ID(999999)
-            do {
-                _ = try Kernel.Process.Group.id(of: unlikelyPID)
-                Issue.record("Expected ESRCH error")
-            } catch {
-                #expect(error.semantic == .noSuchProcess)
-            }
+    @Test("getpgid for nonexistent process throws ESRCH")
+    func getpgidNonexistentThrows() throws {
+        let unlikelyPID = Kernel.Process.ID(__unchecked: (), 999999)
+        do {
+            _ = try Kernel.Process.Group.id(of: unlikelyPID)
+            Issue.record("Expected ESRCH error")
+        } catch {
+            #expect(error.semantic == .noSuchProcess)
         }
     }
+}
 
 #endif

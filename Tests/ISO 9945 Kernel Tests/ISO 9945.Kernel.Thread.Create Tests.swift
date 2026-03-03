@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
-
 import ISO_9945
 import Kernel_Primitives
 import Synchronization
@@ -109,5 +107,3 @@ extension ISO_9945.Kernel.Thread.Test.Integration {
         // Note: detached threads may not complete before test ends
     }
 }
-
-#endif

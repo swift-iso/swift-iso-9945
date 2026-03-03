@@ -27,7 +27,6 @@ extension Kernel.Memory.Map.Protection {
 
 // MARK: - Protection Tests
 
-#if !os(Windows)
 
     extension Kernel.Memory.Map.Protection.Test.Unit {
         @Test("none has zero raw value")
@@ -108,4 +107,3 @@ extension Kernel.Memory.Map.Protection {
         }
     }
 
-#endif

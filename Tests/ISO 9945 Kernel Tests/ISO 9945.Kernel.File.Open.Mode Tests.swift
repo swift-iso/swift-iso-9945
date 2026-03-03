@@ -81,7 +81,6 @@ extension Kernel.File.Open.Mode.Test.Unit {
 
 // MARK: - POSIX Conversion Tests
 
-#if !os(Windows)
     #if canImport(Darwin)
         import Darwin
     #elseif canImport(Glibc)
@@ -115,7 +114,6 @@ extension Kernel.File.Open.Mode.Test.Unit {
             #expect(mode.posixFlags == O_RDONLY)
         }
     }
-#endif
 
 // MARK: - Conformances
 

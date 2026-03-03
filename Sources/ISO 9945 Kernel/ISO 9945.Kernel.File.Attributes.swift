@@ -43,12 +43,12 @@ extension ISO_9945.Kernel.File.Attributes {
     /// Changes the permissions of a file using a path character pointer.
     ///
     /// - Parameters:
-    ///   - path: The path as a pointer to Kernel.Path.Char (UInt8).
+    ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - permissions: The new permissions.
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
     @usableFromInline
     internal static func _setPermissions(
-        path: UnsafePointer<Kernel.Path.Char>,
+        path: UnsafePointer<Path.Char>,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)

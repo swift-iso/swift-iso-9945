@@ -329,7 +329,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
                         for _ in 0..<ctx.iterations {
                             ctx.mutex.withLock {
-                                ctx.harness.withLocked { $0.counter += 1 }
+                                ctx.harness.update { $0.counter += 1 }
                             }
                         }
 

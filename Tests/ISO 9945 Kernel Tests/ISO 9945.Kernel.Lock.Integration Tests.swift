@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
 
 import ISO_9945
 import ISO_9945_Kernel_Test_Support
@@ -29,19 +28,19 @@ import Testing
 /// Utility for spawning the lock helper executable for multi-process lock tests.
 private enum LockTestHelper {
     /// Path to the lock helper executable.
-    static func executablePath(filePath: StaticString = #filePath) -> String {
+    static func executablePath(filePath: StaticString = #filePath) -> Swift.String {
         let helperName = "iso-9945-lock-helper"
 
         // 1. Prefer explicit env var (CI-friendly)
         if let envPath = getenv("ISO_9945_LOCK_HELPER") {
-            return String(cString: envPath)
+            return Swift.String(cString: envPath)
         }
 
         // 2. Use #filePath to find package root, then .build/debug/
         var path = filePath.description
         for _ in 0..<3 {
             if let lastSlash = path.lastIndex(of: "/") {
-                path = String(path[..<lastSlash])
+                path = Swift.String(path[..<lastSlash])
             }
         }
         let swiftPMPath = "\(path)/.build/debug/\(helperName)"
@@ -51,7 +50,7 @@ private enum LockTestHelper {
 
         // 3. Try Xcode paths
         if let xpcPath = getenv("__XPC_DYLD_FRAMEWORK_PATH") {
-            let candidate = "\(String(cString: xpcPath))/\(helperName)"
+            let candidate = "\(Swift.String(cString: xpcPath))/\(helperName)"
             if isExecutable(candidate) {
                 return candidate
             }
@@ -60,7 +59,7 @@ private enum LockTestHelper {
         return helperName
     }
 
-    private static func isExecutable(_ path: String) -> Bool {
+    private static func isExecutable(_ path: Swift.String) -> Bool {
         path.withCString { cPath in
             access(cPath, X_OK) == 0
         }
@@ -72,19 +71,17 @@ private enum LockTestHelper {
     ///   - filePath: Path to the file to lock.
     ///   - milliseconds: How long to hold the lock.
     /// - Returns: The process ID of the spawned helper.
-    static func spawn(lockingFile filePath: String, forMilliseconds milliseconds: Int) throws -> Kernel.Process.ID {
+    static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> Kernel.Process.ID {
         let helperPath = executablePath()
-        let allArgs = [helperPath, filePath, String(milliseconds)]
-        let envp: [String] = []
+        let allArgs = [helperPath, filePath, "\(milliseconds)"]
+        let envp: [Swift.String] = []
 
-        return try Kernel.Path.scope(helperPath) { pathPtr in
-            try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
-                try unsafe POSIX.Kernel.Process.Spawn.spawn(
-                    path: pathPtr.unsafeCString,
-                    argv: argvPtr,
-                    envp: envpPtr
-                )
-            }
+        return try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
+            try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                path: argvPtr[0]!,
+                argv: argvPtr,
+                envp: envpPtr
+            )
         }
     }
 
@@ -98,8 +95,8 @@ private enum LockTestHelper {
         on fd: Kernel.Descriptor,
         timeout: Duration = .milliseconds(2000)
     ) -> Bool {
-        let deadline = ContinuousClock.now + timeout
-        while ContinuousClock.now < deadline {
+        let deadline = Clock.Continuous.now + timeout
+        while Clock.Continuous.now < deadline {
             do {
                 // Try to acquire lock - if it fails with contention, the helper has it
                 try ISO_9945.Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
@@ -121,8 +118,8 @@ private enum LockTestHelper {
 /// Creates a temporary file and executes body with the path and descriptor.
 /// File is automatically cleaned up after body completes.
 private func withTempFile<R>(
-    prefix: String,
-    _ body: (borrowing ISO_9945.Kernel.Path, ISO_9945.Kernel.Descriptor) throws -> R
+    prefix: Swift.String,
+    _ body: (borrowing ISO_9945.Kernel.Path.View, ISO_9945.Kernel.Descriptor) throws -> R
 ) throws -> R {
     let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
     return try ISO_9945.Kernel.Path.scope(pathString) { path in
@@ -257,7 +254,7 @@ extension POSIXLockIntegration {
             #expect(detected, "Helper should have acquired the lock")
 
             // Now try to acquire with a short deadline - should fail due to contention
-            let deadline = ContinuousClock.now + .milliseconds(100)
+            let deadline = Clock.Continuous.now + .milliseconds(100)
             #expect(throws: ISO_9945.Kernel.Lock.Error.self) {
                 _ = try ISO_9945.Kernel.Lock.Token(
                     descriptor: fd,
@@ -355,4 +352,3 @@ extension POSIXLockIntegration {
     }
 }
 
-#endif

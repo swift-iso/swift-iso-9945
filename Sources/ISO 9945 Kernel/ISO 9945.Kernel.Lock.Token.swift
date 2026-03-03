@@ -137,14 +137,14 @@ extension ISO_9945.Kernel.Lock.Token {
         descriptor: Kernel.Descriptor,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind,
-        deadline: ContinuousClock.Instant
+        deadline: Clock.Continuous.Instant
     ) throws(Kernel.Lock.Error) {
         var backoff: Duration = .milliseconds(1)
         let maxBackoff: Duration = .milliseconds(100)
 
         while true {
             // Check deadline first
-            let now = ContinuousClock.now
+            let now = Clock.Continuous.now
             if now >= deadline {
                 throw .contention
             }
@@ -155,7 +155,7 @@ extension ISO_9945.Kernel.Lock.Token {
                 // Critical: re-check deadline after acquisition
                 // If deadline passed, unlock and throw to maintain invariant:
                 // "success means lock was acquired before deadline"
-                if ContinuousClock.now >= deadline {
+                if Clock.Continuous.now >= deadline {
                     try? ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
                     throw Kernel.Lock.Error.contention
                 }
@@ -170,7 +170,7 @@ extension ISO_9945.Kernel.Lock.Token {
             }
 
             // Calculate sleep time (don't overshoot deadline)
-            let remaining = deadline - ContinuousClock.now
+            let remaining = deadline - Clock.Continuous.now
             if remaining <= .zero {
                 throw .contention
             }

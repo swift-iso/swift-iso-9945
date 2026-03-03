@@ -11,7 +11,7 @@
 
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
-import Kernel_Primitives
+@_spi(Syscall) import Kernel_Primitives
 // Tests use Apple native Testing framework
 import Testing
 
@@ -27,7 +27,6 @@ extension Kernel.IO.Write {
 
 // MARK: - Write Tests
 
-#if !os(Windows)
 
     extension Kernel.IO.Write.Test.Unit {
         @Test("write writes bytes to file")
@@ -43,12 +42,12 @@ extension Kernel.IO.Write {
             #expect(bytesWritten == 13)
 
             // Verify by reading back
-            _ = try Kernel.Seek.toStart(fd)
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
             var buffer = [UInt8](repeating: 0, count: 13)
             _ = try buffer.withUnsafeMutableBytes { ptr in
                 try Kernel.IO.Read.read(fd, into: ptr)
             }
-            #expect(String(decoding: buffer, as: UTF8.self) == "Hello, World!")
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, World!")
         }
 
         @Test("write with empty buffer returns 0")
@@ -67,15 +66,15 @@ extension Kernel.IO.Write {
             let (path, fd) = try KernelIOTest.createTempFile(prefix: "write-test")
             defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
 
-            let initialPos = try Kernel.Seek.toCurrent(fd)
+            let initialPos = try Kernel.File.Seek.tell(fd)
 
             let content = Array("12345".utf8)
             _ = try content.withUnsafeBytes { ptr in
                 try Kernel.IO.Write.write(fd, from: ptr)
             }
 
-            let finalPos = try Kernel.Seek.toCurrent(fd)
-            #expect(finalPos == initialPos + Kernel.File.Size(5))
+            let finalPos = try Kernel.File.Seek.tell(fd)
+            #expect(finalPos == initialPos + 5)
         }
 
         @Test("multiple writes append correctly")
@@ -90,12 +89,12 @@ extension Kernel.IO.Write {
             _ = try second.withUnsafeBytes { try Kernel.IO.Write.write(fd, from: $0) }
 
             // Verify combined content
-            _ = try Kernel.Seek.toStart(fd)
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
             var buffer = [UInt8](repeating: 0, count: 11)
             _ = try buffer.withUnsafeMutableBytes { ptr in
                 try Kernel.IO.Read.read(fd, into: ptr)
             }
-            #expect(String(decoding: buffer, as: UTF8.self) == "FirstSecond")
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "FirstSecond")
         }
 
         @Test("pwrite writes at offset without changing position")
@@ -108,7 +107,7 @@ extension Kernel.IO.Write {
             _ = try initial.withUnsafeBytes { try Kernel.IO.Write.write(fd, from: $0) }
 
             // Record position after write
-            let posAfterWrite = try Kernel.Seek.toCurrent(fd)
+            let posAfterWrite = try Kernel.File.Seek.tell(fd)
 
             // pwrite "ABC" at offset 3
             let patch = Array("ABC".utf8)
@@ -119,16 +118,16 @@ extension Kernel.IO.Write {
             #expect(bytesWritten == 3)
 
             // Position should be unchanged
-            let posAfterPwrite = try Kernel.Seek.toCurrent(fd)
+            let posAfterPwrite = try Kernel.File.Seek.tell(fd)
             #expect(posAfterPwrite == posAfterWrite)
 
             // Verify content
-            _ = try Kernel.Seek.toStart(fd)
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
             var buffer = [UInt8](repeating: 0, count: 10)
             _ = try buffer.withUnsafeMutableBytes { ptr in
                 try Kernel.IO.Read.read(fd, into: ptr)
             }
-            #expect(String(decoding: buffer, as: UTF8.self) == "XXXABCXXXX")
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "XXXABCXXXX")
         }
 
         @Test("pwrite with empty buffer returns 0")
@@ -156,8 +155,8 @@ extension Kernel.IO.Write {
             #expect(bytesWritten == 3)
 
             // File should be 13 bytes (10 zeros + "End")
-            let size = try Kernel.Seek.toEnd(fd)
-            #expect(size == Kernel.File.Offset(13))
+            let size = try Kernel.File.Seek.seek(fd, offset: 0, whence: .end)
+            #expect(size == 13)
         }
     }
 
@@ -166,7 +165,7 @@ extension Kernel.IO.Write {
     extension Kernel.IO.Write.Test.EdgeCase {
         @Test("write throws on invalid descriptor")
         func writeThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_raw: -1)
+            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             let content = Array("test".utf8)
 
             #expect(throws: Kernel.IO.Write.Error.self) {
@@ -178,7 +177,7 @@ extension Kernel.IO.Write {
 
         @Test("pwrite throws on invalid descriptor")
         func pwriteThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_raw: -1)
+            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             let content = Array("test".utf8)
 
             #expect(throws: Kernel.IO.Write.Error.self) {
@@ -189,4 +188,3 @@ extension Kernel.IO.Write {
         }
     }
 
-#endif

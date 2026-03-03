@@ -1,15 +1,14 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-kernel open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
 //
 // ===----------------------------------------------------------------------===//
 
-// Tests use Apple native Testing framework
 import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
@@ -49,7 +48,7 @@ extension Kernel.User.Test.Unit {
 extension Kernel.User.Test.Unit {
     @Test("User.ID from UInt32")
     func idFromUInt32() {
-        let uid = Kernel.User.ID(501)
+        let uid: Kernel.User.ID = 501
         #expect(uid == 501)
     }
 
@@ -65,25 +64,27 @@ extension Kernel.User.Test.Unit {
 extension Kernel.User.Test.Unit {
     @Test("User.ID is Sendable")
     func idIsSendable() {
-        let value: any Sendable = Kernel.User.ID(0)
+        let value: any Sendable = Kernel.User.ID.root
         #expect(value is Kernel.User.ID)
     }
 
     @Test("User.ID is Equatable")
     func idIsEquatable() {
-        let a = Kernel.User.ID(501)
-        let b = Kernel.User.ID(501)
-        let c = Kernel.User.ID(502)
+        let a: Kernel.User.ID = 501
+        let b: Kernel.User.ID = 501
+        let c: Kernel.User.ID = 502
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test("User.ID is Hashable")
     func idIsHashable() {
+        let id501: Kernel.User.ID = 501
+        let id502: Kernel.User.ID = 502
         var set = Set<Kernel.User.ID>()
-        set.insert(Kernel.User.ID(501))
-        set.insert(Kernel.User.ID(502))
-        set.insert(Kernel.User.ID(501))  // duplicate
+        set.insert(id501)
+        set.insert(id502)
+        set.insert(id501)  // duplicate
         #expect(set.count == 2)
     }
 }
@@ -93,14 +94,14 @@ extension Kernel.User.Test.Unit {
 extension Kernel.User.Test.EdgeCase {
     @Test("User.ID zero is root")
     func zeroIsRoot() {
-        let uid = Kernel.User.ID(0)
+        let uid: Kernel.User.ID = 0
         #expect(uid == .root)
     }
 
     @Test("User.ID rawValue roundtrip")
     func rawValueRoundtrip() {
         for value: UInt32 in [0, 1, 501, 65534, UInt32.max] {
-            let uid = Kernel.User.ID(value)
+            let uid = Kernel.User.ID(__unchecked: (), value)
             #expect(uid.rawValue == value)
         }
     }

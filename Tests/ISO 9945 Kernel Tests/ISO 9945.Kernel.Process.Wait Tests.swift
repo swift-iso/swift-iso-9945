@@ -12,6 +12,7 @@
 #if os(macOS)
 
 import Testing
+import Identity_Primitives_Test_Support
 
     import Kernel_Primitives
     @testable import ISO_9945_Kernel

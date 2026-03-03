@@ -41,8 +41,8 @@ extension ISO_9945.Kernel.Environment {
     ///   - body: A closure that processes the value bytes. Non-throwing.
     /// - Returns: The result of the closure, or `nil` if the variable is not set.
     public static func withValueBytes<R: ~Copyable>(
-        _ name: UnsafePointer<Kernel.String.Char>,
-        _ body: (Span<Kernel.String.Char>) -> R
+        _ name: UnsafePointer<String.Char>,
+        _ body: (Span<String.Char>) -> R
     ) -> R? {
         let cName = unsafe UnsafePointer<CChar>(name)
         guard let valuePtr = unsafe getenv(cName) else {
@@ -74,7 +74,7 @@ extension ISO_9945.Kernel.Environment {
     ///   - body: A closure that processes the value view. Non-throwing.
     /// - Returns: The result of the closure, or `nil` if the variable is not set.
     public static func withValue<R: ~Copyable>(
-        _ name: UnsafePointer<Kernel.String.Char>,
+        _ name: UnsafePointer<String.Char>,
         _ body: (borrowing Kernel.String.View) -> R
     ) -> R? {
         let cName = unsafe UnsafePointer<CChar>(name)
@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.Environment {
         }
 
         let u8Ptr = unsafe UnsafePointer<UInt8>(valuePtr)
-        let view = unsafe Kernel.String.View(u8Ptr)
+        let view = unsafe Kernel.String.View(u8Ptr, count: Kernel.String.length(of: u8Ptr))
         return body(view)
     }
 
@@ -98,7 +98,7 @@ extension ISO_9945.Kernel.Environment {
     ///
     /// - Note: Returns an owned copy to avoid lifetime issues with
     ///   the internal storage which can be invalidated by setenv/unsetenv.
-    public static func get(_ name: UnsafePointer<Kernel.String.Char>) -> Kernel.String? {
+    public static func get(_ name: UnsafePointer<String.Char>) -> Kernel.String? {
         withValue(name) { view in
             Kernel.String(copying: view)
         }
@@ -113,8 +113,8 @@ extension ISO_9945.Kernel.Environment {
     /// - Throws: `Kernel.Environment.Error` on failure.
 
     public static func set(
-        _ name: UnsafePointer<Kernel.String.Char>,
-        to value: UnsafePointer<Kernel.String.Char>,
+        _ name: UnsafePointer<String.Char>,
+        to value: UnsafePointer<String.Char>,
         overwrite: Bool = true
     ) throws(Kernel.Environment.Error) {
         let cName = unsafe UnsafePointer<CChar>(name)
@@ -132,7 +132,7 @@ extension ISO_9945.Kernel.Environment {
     ///
     /// - Note: Does not fail if the variable does not exist.
 
-    public static func unset(_ name: UnsafePointer<Kernel.String.Char>) throws(Kernel.Environment.Error) {
+    public static func unset(_ name: UnsafePointer<String.Char>) throws(Kernel.Environment.Error) {
         let cName = unsafe UnsafePointer<CChar>(name)
         let result = unsafe unsetenv(cName)
         guard result == 0 else {

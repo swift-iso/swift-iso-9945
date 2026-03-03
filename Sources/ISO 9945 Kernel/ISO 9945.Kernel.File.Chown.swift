@@ -45,13 +45,13 @@ extension ISO_9945.Kernel.File.Chown {
     /// Changes the ownership of a file using a path character pointer.
     ///
     /// - Parameters:
-    ///   - path: The path as a pointer to Kernel.Path.Char (UInt8).
+    ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
     /// - Throws: `Kernel.File.Chown.Error` on failure.
     @usableFromInline
     internal static func _chown(
-        path: UnsafePointer<Kernel.Path.Char>,
+        path: UnsafePointer<Path.Char>,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
@@ -115,13 +115,13 @@ extension ISO_9945.Kernel.File.Chown {
     /// Changes the ownership of a symbolic link using a path character pointer.
     ///
     /// - Parameters:
-    ///   - path: The path as a pointer to Kernel.Path.Char (UInt8).
+    ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
     /// - Throws: `Kernel.File.Chown.Error` on failure.
     @usableFromInline
     internal static func _lchown(
-        path: UnsafePointer<Kernel.Path.Char>,
+        path: UnsafePointer<Path.Char>,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {

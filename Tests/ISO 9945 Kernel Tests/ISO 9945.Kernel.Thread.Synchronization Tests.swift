@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
 
 import ISO_9945
 import Kernel_Primitives
@@ -324,4 +323,3 @@ extension POSIXThreadSynchronizationTests.Integration {
     }
 }
 
-#endif

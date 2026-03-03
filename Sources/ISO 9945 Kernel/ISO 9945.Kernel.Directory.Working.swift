@@ -75,7 +75,7 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Returns: The result of the closure.
     /// - Throws: ``Error`` on syscall failure.
     public static func withCurrentBytes<R: ~Copyable>(
-        _ body: (Span<Kernel.Path.Char>) -> R
+        _ body: (Span<Path.Char>) -> R
     ) throws(Error) -> R {
         var result: R? = nil
         var thrown: Error? = nil
@@ -150,7 +150,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
             // getcwd NUL-terminates; create view directly
             let u8Ptr = unsafe UnsafePointer<UInt8>(base)
-            let view = unsafe Kernel.String.View(u8Ptr)
+            let view = unsafe Kernel.String.View(u8Ptr, count: Kernel.String.length(of: u8Ptr))
             result = body(view)
         }
 

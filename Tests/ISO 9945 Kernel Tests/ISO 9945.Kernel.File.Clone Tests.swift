@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
-
 import ISO_9945
 import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives
@@ -27,8 +25,8 @@ import Testing
 // MARK: - Cross-Platform Test Helpers
 
 /// Creates a temporary file with content and returns its path
-private func createTempFile(prefix: String, content: String) -> String {
-    let path = "/tmp/\(prefix)-\(getpid())-\(Int.random(in: 0..<Int.max))"
+private func createTempFile(prefix: Swift.String, content: Swift.String) -> Swift.String {
+    let path: Swift.String = "/tmp/\(prefix)-\(getpid())-\(Int.random(in: 0..<Int.max))"
     let fd = open(path, O_CREAT | O_WRONLY, 0o644)
     guard fd >= 0 else { return path }
     defer { close(fd) }
@@ -41,7 +39,7 @@ private func createTempFile(prefix: String, content: String) -> String {
 }
 
 /// Reads content from a file
-private func readFileContent(_ path: String) -> String? {
+private func readFileContent(_ path: Swift.String) -> String? {
     let fd = open(path, O_RDONLY)
     guard fd >= 0 else { return nil }
     defer { close(fd) }
@@ -50,11 +48,11 @@ private func readFileContent(_ path: String) -> String? {
     let bytesRead = read(fd, &buffer, buffer.count - 1)
     guard bytesRead > 0 else { return nil }
 
-    return String(cString: buffer)
+    return Swift.String(cString: buffer)
 }
 
 /// Cleans up a temp file
-private func cleanup(_ path: String) {
+private func cleanup(_ path: Swift.String) {
     _ = path.withCString { unlink($0) }
 }
 

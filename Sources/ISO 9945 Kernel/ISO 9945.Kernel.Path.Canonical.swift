@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Path.Canonical {
     /// - Throws: ``Kernel.Path.Canonical.Error`` on syscall failure.
     public static func withCanonicalBytes<R: ~Copyable>(
         _ path: borrowing Kernel.Path.View,
-        _ body: (Span<Kernel.Path.Char>) -> R
+        _ body: (Span<Path.Char>) -> R
     ) throws(Kernel.Path.Canonical.Error) -> R {
         try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
             let unsafePath = UnsafePointer<CChar>(cString)
@@ -102,7 +102,7 @@ extension ISO_9945.Kernel.Path.Canonical {
             defer { free(result) }
 
             let u8Ptr = unsafe UnsafePointer<UInt8>(result)
-            let view = unsafe Kernel.String.View(u8Ptr)
+            let view = unsafe Kernel.String.View(u8Ptr, count: Kernel.String.length(of: u8Ptr))
             return body(view)
         }
     }

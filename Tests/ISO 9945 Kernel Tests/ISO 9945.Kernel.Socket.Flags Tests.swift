@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
 
     #if canImport(Darwin)
         import Darwin
@@ -140,4 +139,3 @@ import Kernel_Primitives
         }
     }
 
-#endif

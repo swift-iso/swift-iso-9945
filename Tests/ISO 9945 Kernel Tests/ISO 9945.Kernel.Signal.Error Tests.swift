@@ -79,7 +79,7 @@ import Testing
         @Test("CustomStringConvertible conformance")
         func customStringConvertibleConformance() {
             let error = Kernel.Signal.Error.interrupted
-            let description = String(describing: error)
+            let description = Swift.String(describing: error)
             #expect(!description.isEmpty)
             #expect(description.contains("interrupt"))
         }

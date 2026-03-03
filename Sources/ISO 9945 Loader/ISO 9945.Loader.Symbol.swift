@@ -62,7 +62,7 @@ extension ISO_9945.Loader.Symbol {
         // Check for error (sym can legitimately be NULL for data symbols)
         if let errorCStr = unsafe dlerror() {
             let u8Ptr = unsafe UnsafePointer<UInt8>(errorCStr)
-            let view = unsafe String_Primitives.String.View(u8Ptr)
+            let view = unsafe String_Primitives.String.View(u8Ptr, count: String_Primitives.String.length(of: u8Ptr))
             throw .symbol(unsafe Loader.Message(copying: view))
         }
 

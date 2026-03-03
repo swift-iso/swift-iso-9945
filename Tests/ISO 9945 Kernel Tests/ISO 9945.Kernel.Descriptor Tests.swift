@@ -13,7 +13,7 @@
 import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
-import Kernel_Primitives
+@_spi(Syscall) import Kernel_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -30,9 +30,7 @@ extension Kernel.Descriptor {
 extension Kernel.Descriptor.Test.Unit {
     @Test("invalid descriptor has correct raw value on POSIX")
     func invalidDescriptorValue() {
-        #if !os(Windows)
-            #expect(Kernel.Descriptor.invalid._raw == -1)
-        #endif
+            #expect(Kernel.Descriptor.invalid == Kernel.Descriptor(_rawValue: -1))
     }
 
     @Test("isValid returns false for invalid descriptor")
@@ -42,69 +40,56 @@ extension Kernel.Descriptor.Test.Unit {
 
     @Test("isValid returns true for valid descriptor")
     func isValidTrueForValid() {
-        #if !os(Windows)
             // Standard input (0), stdout (1), stderr (2) are always valid
-            #expect(Kernel.Descriptor(_raw: 0).isValid)
-            #expect(Kernel.Descriptor(_raw: 1).isValid)
-            #expect(Kernel.Descriptor(_raw: 2).isValid)
-        #endif
+            #expect(Kernel.Descriptor(_rawValue: 0).isValid)
+            #expect(Kernel.Descriptor(_rawValue: 1).isValid)
+            #expect(Kernel.Descriptor(_rawValue: 2).isValid)
     }
 
     @Test("internal raw roundtrip preserves value")
     func internalRawRoundtrip() {
-        #if !os(Windows)
-            let original = Kernel.Descriptor(_raw: 42)
-            let reconstructed = Kernel.Descriptor(_raw: original._raw)
+            let original = Kernel.Descriptor(_rawValue: 42)
+            let reconstructed = Kernel.Descriptor(_rawValue: 42)
             #expect(original == reconstructed)
-            #expect(original._raw == 42)
-        #endif
     }
 
     @Test("Descriptor is Equatable")
     func descriptorIsEquatable() {
-        #if !os(Windows)
-            let a = Kernel.Descriptor(_raw: 5)
-            let b = Kernel.Descriptor(_raw: 5)
-            let c = Kernel.Descriptor(_raw: 10)
+            let a = Kernel.Descriptor(_rawValue: 5)
+            let b = Kernel.Descriptor(_rawValue: 5)
+            let c = Kernel.Descriptor(_rawValue: 10)
 
             #expect(a == b)
             #expect(a != c)
-        #endif
     }
 
     @Test("Descriptor is Hashable")
     func descriptorIsHashable() {
-        #if !os(Windows)
             var set = Set<Kernel.Descriptor>()
-            set.insert(Kernel.Descriptor(_raw: 1))
-            set.insert(Kernel.Descriptor(_raw: 2))
-            set.insert(Kernel.Descriptor(_raw: 1))  // duplicate
+            set.insert(Kernel.Descriptor(_rawValue: 1))
+            set.insert(Kernel.Descriptor(_rawValue: 2))
+            set.insert(Kernel.Descriptor(_rawValue: 1))  // duplicate
 
             #expect(set.count == 2)
-        #endif
     }
 
     @Test("Descriptor works in Dictionary")
     func descriptorInDictionary() {
-        #if !os(Windows)
-            var dict = [Kernel.Descriptor: String]()
-            dict[Kernel.Descriptor(_raw: 0)] = "stdin"
-            dict[Kernel.Descriptor(_raw: 1)] = "stdout"
-            dict[Kernel.Descriptor(_raw: 2)] = "stderr"
+            var dict = [Kernel.Descriptor: Swift.String]()
+            dict[Kernel.Descriptor(_rawValue: 0)] = "stdin"
+            dict[Kernel.Descriptor(_rawValue: 1)] = "stdout"
+            dict[Kernel.Descriptor(_rawValue: 2)] = "stderr"
 
-            #expect(dict[Kernel.Descriptor(_raw: 0)] == "stdin")
-            #expect(dict[Kernel.Descriptor(_raw: 1)] == "stdout")
-            #expect(dict[Kernel.Descriptor(_raw: 2)] == "stderr")
+            #expect(dict[Kernel.Descriptor(_rawValue: 0)] == "stdin")
+            #expect(dict[Kernel.Descriptor(_rawValue: 1)] == "stdout")
+            #expect(dict[Kernel.Descriptor(_rawValue: 2)] == "stderr")
             #expect(dict.count == 3)
-        #endif
     }
 
     @Test("negative descriptors are invalid on POSIX")
     func negativeDescriptorsInvalid() {
-        #if !os(Windows)
-            #expect(!Kernel.Descriptor(_raw: -1).isValid)
-            #expect(!Kernel.Descriptor(_raw: -100).isValid)
-            #expect(!Kernel.Descriptor(_raw: Int32.min).isValid)
-        #endif
+            #expect(!Kernel.Descriptor(_rawValue: -1).isValid)
+            #expect(!Kernel.Descriptor(_rawValue: -100).isValid)
+            #expect(!Kernel.Descriptor(_rawValue: Int32.min).isValid)
     }
 }

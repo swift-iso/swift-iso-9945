@@ -17,15 +17,10 @@ import Kernel_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Thread {
-    @Suite
-    struct Test {
-        @Suite struct Unit {}
-        @Suite struct EdgeCase {}
-    }
-}
+// Kernel.Thread.Test is defined in ISO 9945.Kernel.Thread.Create Tests.swift.
+// This file adds basic namespace existence tests to that suite.
 
-// MARK: - Unit Tests
+// MARK: - Namespace Existence
 
 extension Kernel.Thread.Test.Unit {
     @Test("Thread namespace exists")

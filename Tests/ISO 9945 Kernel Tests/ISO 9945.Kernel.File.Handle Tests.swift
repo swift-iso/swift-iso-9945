@@ -28,7 +28,6 @@ extension Kernel.File.Handle {
 
 // MARK: - Handle Tests
 
-#if !os(Windows)
 
     extension Kernel.File.Handle.Test.Unit {
         @Test("init stores descriptor and mode")
@@ -62,7 +61,7 @@ extension Kernel.File.Handle {
                 }
 
                 #expect(bytesRead == 8)
-                #expect(String(decoding: buffer, as: UTF8.self) == "TestData")
+                #expect(Swift.String(decoding: buffer, as: UTF8.self) == "TestData")
 
                 _ = consume handle
             }
@@ -89,7 +88,7 @@ extension Kernel.File.Handle {
                 _ = try buffer.withUnsafeMutableBytes { ptr in
                     try handle.read(into: ptr, at: Kernel.File.Offset(0))
                 }
-                #expect(String(decoding: buffer, as: UTF8.self) == "Written")
+                #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Written")
 
                 _ = consume handle
             }
@@ -195,4 +194,3 @@ extension Kernel.File.Handle {
         }
     }
 
-#endif

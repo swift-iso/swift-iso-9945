@@ -9,11 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Tests use Apple native Testing framework
 import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
-import Kernel_Primitives
+@_spi(Syscall) import Kernel_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -39,7 +38,7 @@ struct EventIDTests {
 
     @Test("ID max value")
     func maxValue() {
-        let id = Kernel.Event.ID(UInt.max)
+        let id = Kernel.Event.ID(__unchecked: (), UInt.max)
         #expect(id.rawValue == UInt.max)
     }
 
@@ -47,63 +46,25 @@ struct EventIDTests {
 
     @Test("ID from descriptor")
     func fromDescriptor() {
-        #if os(Windows)
-            // Windows uses HANDLE
-        #else
-            let descriptor = Kernel.Descriptor(_raw: 5)
-            let id = Kernel.Event.ID(descriptor: descriptor)
-            #expect(id == 5)
-        #endif
+        let descriptor = Kernel.Descriptor(_rawValue: 5)
+        let id = Kernel.Event.ID(descriptor: descriptor)
+        #expect(id == 5)
     }
 
     @Test("Descriptor from ID roundtrip")
     func descriptorRoundtrip() {
-        #if os(Windows)
-            // Windows uses HANDLE
-        #else
-            let descriptor = Kernel.Descriptor(_raw: 10)
-            let id = Kernel.Event.ID(descriptor: descriptor)
-            let recovered = Kernel.Descriptor(id)
-            #expect(recovered?._raw == 10)
-        #endif
+        let descriptor = Kernel.Descriptor(_rawValue: 10)
+        let id = Kernel.Event.ID(descriptor: descriptor)
+        let recovered = Kernel.Descriptor(id)
+        #expect(recovered == Kernel.Descriptor(_rawValue: 10))
     }
 
     @Test("Descriptor from ID fails for large values")
     func descriptorFromLargeIDFails() {
-        #if !os(Windows)
-            // Values larger than Int32.max cannot be converted to a descriptor
-            let largeID = Kernel.Event.ID(UInt(Int32.max) + 1)
-            let descriptor = Kernel.Descriptor(largeID)
-            #expect(descriptor == nil)
-        #endif
-    }
-
-    // MARK: - Int32 Conversion
-
-    @Test("ID from Int32")
-    func fromInt32() {
-        let id = Kernel.Event.ID(Int32(15))
-        #expect(id == 15)
-    }
-
-    @Test("ID from negative Int32")
-    func fromNegativeInt32() {
-        // Negative values wrap around as unsigned
-        let id = Kernel.Event.ID(Int32(-1))
-        #expect(id.rawValue == UInt(bitPattern: -1))
-    }
-
-    // MARK: - Socket Conversion
-
-    @Test("ID from socket descriptor")
-    func fromSocketDescriptor() {
-        #if os(Windows)
-            // Windows sockets use SOCKET type
-        #else
-            let socket = Kernel.Socket.Descriptor(rawValue: 7)
-            let id = Kernel.Event.ID(socket: socket)
-            #expect(id == 7)
-        #endif
+        // Values larger than Int32.max cannot be converted to a descriptor
+        let largeID = Kernel.Event.ID(__unchecked: (), UInt(Int32.max) + 1)
+        let descriptor = Kernel.Descriptor(largeID)
+        #expect(descriptor == nil)
     }
 
     // MARK: - Conformances
@@ -120,16 +81,17 @@ struct EventIDTests {
     @Test("ID is Hashable")
     func isHashable() {
         var set = Set<Kernel.Event.ID>()
-        set.insert(1)
-        set.insert(2)
-        set.insert(1)  // duplicate
+        set.insert(Kernel.Event.ID(__unchecked: (), 1))
+        set.insert(Kernel.Event.ID(__unchecked: (), 2))
+        set.insert(Kernel.Event.ID(__unchecked: (), 1))  // duplicate
         #expect(set.count == 2)
     }
 
     @Test("ID is Sendable")
     func isSendable() {
-        let id: any Sendable = Kernel.Event.ID(42)
-        #expect(id is Kernel.Event.ID)
+        let id: Kernel.Event.ID = 42
+        let sendable: any Sendable = id
+        #expect(sendable is Kernel.Event.ID)
     }
 
     @Test("ID is Comparable")

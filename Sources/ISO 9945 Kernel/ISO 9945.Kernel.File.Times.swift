@@ -52,14 +52,14 @@ extension ISO_9945.Kernel.File.Times {
     /// Sets the access and modification times of a file using a path character pointer.
     ///
     /// - Parameters:
-    ///   - path: The path as a pointer to Kernel.Path.Char (UInt8).
+    ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
     /// - Throws: `Kernel.File.Times.Error` on failure.
     @usableFromInline
     internal static func _setTimes(
-        path: UnsafePointer<Kernel.Path.Char>,
+        path: UnsafePointer<Path.Char>,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time,
         followSymlinks: Bool = true

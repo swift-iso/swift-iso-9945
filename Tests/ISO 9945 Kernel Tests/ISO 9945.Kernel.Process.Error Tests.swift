@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !os(Windows)
 
     #if canImport(Darwin)
         import Darwin
@@ -126,4 +125,3 @@ import Testing
         }
     }
 
-#endif

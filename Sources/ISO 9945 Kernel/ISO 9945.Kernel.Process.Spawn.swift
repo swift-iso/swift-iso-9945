@@ -13,6 +13,7 @@ public import Kernel_Primitives
 public import ISO_9945
 internal import ISO_9945_ABI
 
+
 #if canImport(Darwin)
     internal import Darwin
     internal import CPOSIXProcessShim
@@ -102,9 +103,9 @@ extension ISO_9945.Kernel.Process.Spawn {
         return Kernel.Process.ID(pid)
     }
 
-    /// Spawns a new process using `Kernel.Path.Char` pointers.
+    /// Spawns a new process using `Path.Char` pointers.
     ///
-    /// This overload bridges from `Kernel.Path.Char` (UInt8 on POSIX) to `CChar`
+    /// This overload bridges from `Path.Char` (UInt8 on POSIX) to `CChar`
     /// for syscall compatibility. Use this with `Kernel.Path.scope`.
     ///
     /// - Parameters:
@@ -115,9 +116,9 @@ extension ISO_9945.Kernel.Process.Spawn {
     /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
     @unsafe
     public static func spawn(
-        path: UnsafePointer<Kernel.Path.Char>,
-        argv: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>,
-        envp: UnsafePointer<UnsafePointer<Kernel.Path.Char>?>
+        path: UnsafePointer<Path.Char>,
+        argv: UnsafePointer<UnsafePointer<Path.Char>?>,
+        envp: UnsafePointer<UnsafePointer<Path.Char>?>
     ) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID {
         // Bridge UInt8 pointers to CChar pointers
         let pathCChar = unsafe UnsafePointer<CChar>(path)

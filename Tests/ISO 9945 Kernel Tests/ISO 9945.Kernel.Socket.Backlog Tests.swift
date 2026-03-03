@@ -64,13 +64,11 @@ extension Kernel.Socket.Backlog.Test.Unit {
         #expect(Kernel.Socket.Backlog.large.rawValue == 4096)
     }
 
-    #if !os(Windows)
         @Test("Backlog.max uses SOMAXCONN")
         func maxConstant() {
             let max = Kernel.Socket.Backlog.max
             #expect(max.rawValue > 0)
         }
-    #endif
 }
 
 // MARK: - ExpressibleByIntegerLiteral Tests

@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.File.Delete {
 
     /// Internal implementation for removing a file using an unsafe path pointer.
     @usableFromInline
-    internal static func _delete(_ path: UnsafePointer<Kernel.Path.Char>) throws(Error) {
+    internal static func _delete(_ path: UnsafePointer<Path.Char>) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
@@ -60,7 +60,7 @@ extension ISO_9945.Kernel.File.Delete {
     @usableFromInline
     internal static func _delete(
         relativeTo descriptor: Kernel.Descriptor,
-        path: UnsafePointer<Kernel.Path.Char>,
+        path: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)

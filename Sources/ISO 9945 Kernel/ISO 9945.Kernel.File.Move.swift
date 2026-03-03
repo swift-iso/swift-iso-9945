@@ -33,8 +33,8 @@ extension ISO_9945.Kernel.File.Move {
 
     @unsafe
     public static func move(
-        from oldPath: UnsafePointer<Kernel.Path.Char>,
-        to newPath: UnsafePointer<Kernel.Path.Char>
+        from oldPath: UnsafePointer<Path.Char>,
+        to newPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
         let cNewPath = unsafe UnsafePointer<CChar>(newPath)
@@ -64,8 +64,8 @@ extension ISO_9945.Kernel.File.Move {
         from oldPath: borrowing Kernel.Path.View,
         to newPath: borrowing Kernel.Path.View
     ) throws(Error) {
-        try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
-            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Kernel.Path.Char>) throws(Error) in
+        try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Path.Char>) throws(Error) in
+            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Error) in
                 try move(from: oldPtr, to: newPtr)
             }
         }
@@ -82,9 +82,9 @@ extension ISO_9945.Kernel.File.Move {
 
     public static func move(
         from oldDescriptor: Kernel.Descriptor,
-        oldPath: UnsafePointer<Kernel.Path.Char>,
+        oldPath: UnsafePointer<Path.Char>,
         to newDescriptor: Kernel.Descriptor,
-        newPath: UnsafePointer<Kernel.Path.Char>
+        newPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
         let cNewPath = unsafe UnsafePointer<CChar>(newPath)

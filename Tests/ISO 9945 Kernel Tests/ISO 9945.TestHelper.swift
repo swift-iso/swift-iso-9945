@@ -44,12 +44,12 @@ import ISO_9945
         /// 1. `POSIX_TEST_HELPER` environment variable (CI-friendly)
         /// 2. `.build/debug/` relative to package root via #filePath (SwiftPM)
         /// 3. Xcode DerivedData via environment variables
-        static func executablePath(filePath: StaticString = #filePath) -> String {
+        static func executablePath(filePath: StaticString = #filePath) -> Swift.String {
             let helperName = "posix-test-helper"
 
             // 1. Prefer explicit env var (CI-friendly)
             if let envPath = getenv("POSIX_TEST_HELPER") {
-                return String(cString: envPath)
+                return Swift.String(cString: envPath)
             }
 
             // 2. Use #filePath to find package root, then .build/debug/
@@ -60,7 +60,7 @@ import ISO_9945
             // Go up: POSIX.TestHelper.swift -> POSIX Kernel Primitives Tests -> Tests -> swift-posix-primitives
             for _ in 0..<3 {
                 if let lastSlash = path.lastIndex(of: "/") {
-                    path = String(path[..<lastSlash])
+                    path = Swift.String(path[..<lastSlash])
                 }
             }
             let swiftPMPath = "\(path)/.build/debug/\(helperName)"
@@ -70,7 +70,7 @@ import ISO_9945
 
             // 3. Try __XPC_DYLD_FRAMEWORK_PATH (set by Xcode test runner)
             if let xpcPath = getenv("__XPC_DYLD_FRAMEWORK_PATH") {
-                let candidate = "\(String(cString: xpcPath))/\(helperName)"
+                let candidate = "\(Swift.String(cString: xpcPath))/\(helperName)"
                 if isExecutable(candidate) {
                     return candidate
                 }
@@ -78,7 +78,7 @@ import ISO_9945
 
             // 4. Try DYLD_FRAMEWORK_PATH (also set by Xcode)
             if let dyldPath = getenv("DYLD_FRAMEWORK_PATH") {
-                let candidate = "\(String(cString: dyldPath))/\(helperName)"
+                let candidate = "\(Swift.String(cString: dyldPath))/\(helperName)"
                 if isExecutable(candidate) {
                     return candidate
                 }
@@ -89,7 +89,7 @@ import ISO_9945
         }
 
         /// Check if path is an executable file using withCString for proper C interop.
-        private static func isExecutable(_ path: String) -> Bool {
+        private static func isExecutable(_ path: Swift.String) -> Bool {
             path.withCString { cPath in
                 access(cPath, X_OK) == 0
             }
@@ -127,7 +127,7 @@ import ISO_9945
         /// let exited = try Kernel.Process.Wait.wait(.process(child))
         /// #expect(exited?.status.exit.code == 42)
         /// ```
-        static func spawn(_ args: String...) throws -> Kernel.Process.ID {
+        static func spawn(_ args: Swift.String...) throws -> Kernel.Process.ID {
             try spawn(args)
         }
 
@@ -141,14 +141,13 @@ import ISO_9945
             let allArgs = [path] + args
             let envp: [Swift.String] = []
 
-            return try Kernel.Path.scope(path) { pathPtr in
-                try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
-                    try unsafe POSIX.Kernel.Process.Spawn.spawn(
-                        path: pathPtr.unsafeCString,
-                        argv: argvPtr,
-                        envp: envpPtr
-                    )
-                }
+            return try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
+                // argv[0] is the path, use it directly
+                try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                    path: argvPtr[0]!,
+                    argv: argvPtr,
+                    envp: envpPtr
+                )
             }
         }
     }

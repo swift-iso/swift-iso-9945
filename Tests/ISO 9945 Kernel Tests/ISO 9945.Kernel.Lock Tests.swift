@@ -89,18 +89,13 @@ extension Kernel.Lock.Test.Unit {
         #expect(acquire == .wait)
     }
 
-    @Test("Acquire.timeout creates deadline from duration")
-    func acquireTimeout() {
-        let before = ContinuousClock.now
-        let acquire = Kernel.Lock.Acquire.timeout(.seconds(1))
+    @Test("Acquire.deadline case")
+    func acquireDeadline() {
+        let deadline = Clock.Continuous.now
+        let acquire = Kernel.Lock.Acquire.deadline(deadline)
 
-        if case .deadline(let deadline) = acquire {
-            // Deadline should be approximately now + 1 second
-            // Allow small tolerance for clock sampling
-            let expectedMin = before.advanced(by: .milliseconds(999))
-            let expectedMax = before.advanced(by: .milliseconds(1100))
-            #expect(deadline >= expectedMin, "Deadline should be at least 1 second from before")
-            #expect(deadline <= expectedMax, "Deadline should be close to 1 second from before")
+        if case .deadline(let d) = acquire {
+            #expect(d == deadline)
         } else {
             Issue.record("Expected .deadline case")
         }
@@ -145,7 +140,6 @@ extension Kernel.Lock.Test.Unit {
 // cannot verify contention semantics. Cross-process contention is tested in
 // Kernel Tests/Kernel.Lock.Integration Tests.swift using the _Lock Test Process helper.
 
-#if !os(Windows)
 
     extension Kernel.Lock.Test.Unit {
         @Test("lock and unlock on file succeeds")
@@ -170,7 +164,7 @@ extension Kernel.Lock.Test.Unit {
             // It is NOT testing that "shared allows multiple" in a meaningful way.
             // Cross-process contention is tested in the Integration Tests.
             try KernelIOTest.withTempFile(prefix: "lock-test") { path, fd1 in
-                let fd2 = try Kernel.File.Open.open(path: path, mode: [.read, .write], options: [], permissions: .privateFile)
+                let fd2 = try Kernel.File.Open.open(path: path, mode: .readWrite, options: [], permissions: .privateFile)
                 defer { try? Kernel.Close.close(fd2) }
 
                 try Kernel.Lock.lock(fd1, range: .file, kind: .shared)
@@ -332,4 +326,3 @@ extension Kernel.Lock.Test.Unit {
         }
     }
 
-#endif

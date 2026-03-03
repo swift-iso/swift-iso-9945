@@ -122,7 +122,6 @@ extension Kernel.File.Open.Test.EdgeCase {
 
 // MARK: - Actual File Open Tests
 
-#if !os(Windows)
 
     extension Kernel.File.Open.Test.Unit {
         @Test("open existing file for read succeeds")
@@ -210,7 +209,7 @@ extension Kernel.File.Open.Test.EdgeCase {
                 let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
                     try Kernel.IO.Read.read(readFd, into: ptr)
                 }
-                let content = String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
+                let content = Swift.String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
                 #expect(content == "initial_extra")
             }
         }
@@ -264,4 +263,3 @@ extension Kernel.File.Open.Test.EdgeCase {
         }
     }
 
-#endif

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Tests use Apple native Testing framework
 import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
@@ -63,24 +62,37 @@ extension Kernel.File.Direct.Test.Unit {
     }
 }
 
-// MARK: - Static Methods
+// MARK: - Resolved Mode Tests
 
 extension Kernel.File.Direct.Test.Unit {
-    #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
-    @Test("requirements(for:) returns Requirements")
-    func requirementsForPath() {
-        "/tmp".withCString { cString in
-            let path = Kernel.Path(unsafeCString: cString)
-            let requirements = Kernel.File.Direct.requirements(for: path)
-            switch requirements {
-            case .known:
-                // Windows may return known
-                break
-            case .unknown:
-                // macOS/Linux return unknown
-                break
-            }
+    @Test("direct mode resolved is equatable")
+    func directModeEquatable() {
+        #expect(Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
+        #expect(Kernel.File.Direct.Mode.Resolved.direct == .direct)
+        #expect(Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
+        #expect(Kernel.File.Direct.Mode.Resolved.buffered != .direct)
+    }
+
+    @Test("requirements known case")
+    func requirementsKnownCase() {
+        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let requirements = Kernel.File.Direct.Requirements.known(alignment)
+
+        if case .known(let a) = requirements {
+            #expect(a.bufferAlignment == .`4096`)
+        } else {
+            Issue.record("Expected .known case")
         }
     }
-    #endif
+
+    @Test("requirements unknown case")
+    func requirementsUnknownCase() {
+        let requirements = Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
+
+        if case .unknown(let reason) = requirements {
+            #expect(reason == .platformUnsupported)
+        } else {
+            Issue.record("Expected .unknown case")
+        }
+    }
 }

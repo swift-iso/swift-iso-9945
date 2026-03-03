@@ -33,7 +33,7 @@ extension ISO_9945.Loader.Error {
     internal static func captureError() -> Loader.Message {
         if let cstr = unsafe dlerror() {
             let u8Ptr = unsafe UnsafePointer<UInt8>(cstr)
-            let view = unsafe String_Primitives.String.View(u8Ptr)
+            let view = unsafe String_Primitives.String.View(u8Ptr, count: String_Primitives.String.length(of: u8Ptr))
             return unsafe Loader.Message(copying: view)
         }
         // Fallback: create message from literal

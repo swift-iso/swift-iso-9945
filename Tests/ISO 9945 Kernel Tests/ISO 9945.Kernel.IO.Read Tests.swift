@@ -11,7 +11,7 @@
 
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
-import Kernel_Primitives
+@_spi(Syscall) import Kernel_Primitives
 // Tests use Apple native Testing framework
 import Testing
 
@@ -27,7 +27,6 @@ extension Kernel.IO.Read {
 
 // MARK: - Read Tests
 
-#if !os(Windows)
 
     extension Kernel.IO.Read.Test.Unit {
         @Test("read returns bytes from file")
@@ -36,7 +35,7 @@ extension Kernel.IO.Read {
             defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
 
             // Seek to start
-            _ = try Kernel.Seek.toStart(fd)
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
             var buffer = [UInt8](repeating: 0, count: 13)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
@@ -44,7 +43,7 @@ extension Kernel.IO.Read {
             }
 
             #expect(bytesRead == 13)
-            #expect(String(decoding: buffer, as: UTF8.self) == "Hello, World!")
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, World!")
         }
 
         @Test("read returns 0 on EOF")
@@ -53,7 +52,7 @@ extension Kernel.IO.Read {
             defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
 
             // Seek to start and read all content
-            _ = try Kernel.Seek.toStart(fd)
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
             var buffer = [UInt8](repeating: 0, count: 10)
             _ = try buffer.withUnsafeMutableBytes { ptr in
                 try Kernel.IO.Read.read(fd, into: ptr)
@@ -83,7 +82,7 @@ extension Kernel.IO.Read {
             let (path, fd) = try KernelIOTest.createTempFileWithContent("Short", prefix: "read-test")
             defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
 
-            _ = try Kernel.Seek.toStart(fd)
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
             // Request more bytes than available
             var buffer = [UInt8](repeating: 0, count: 100)
@@ -92,7 +91,7 @@ extension Kernel.IO.Read {
             }
 
             #expect(bytesRead == 5)
-            #expect(String(decoding: buffer.prefix(5), as: UTF8.self) == "Short")
+            #expect(Swift.String(decoding: buffer.prefix(5), as: UTF8.self) == "Short")
         }
 
         @Test("pread reads at offset without changing position")
@@ -101,7 +100,7 @@ extension Kernel.IO.Read {
             defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
 
             // Record initial position
-            let initialPos = try Kernel.Seek.toCurrent(fd)
+            let initialPos = try Kernel.File.Seek.tell(fd)
 
             // Read 3 bytes starting at offset 5
             var buffer = [UInt8](repeating: 0, count: 3)
@@ -110,10 +109,10 @@ extension Kernel.IO.Read {
             }
 
             #expect(bytesRead == 3)
-            #expect(String(decoding: buffer, as: UTF8.self) == "567")
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "567")
 
             // Position should be unchanged
-            let finalPos = try Kernel.Seek.toCurrent(fd)
+            let finalPos = try Kernel.File.Seek.tell(fd)
             #expect(finalPos == initialPos)
         }
 
@@ -147,7 +146,7 @@ extension Kernel.IO.Read {
     extension Kernel.IO.Read.Test.EdgeCase {
         @Test("read throws on invalid descriptor")
         func readThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_raw: -1)
+            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             var buffer = [UInt8](repeating: 0, count: 10)
 
             #expect(throws: Kernel.IO.Read.Error.self) {
@@ -159,7 +158,7 @@ extension Kernel.IO.Read {
 
         @Test("pread throws on invalid descriptor")
         func preadThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_raw: -1)
+            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             var buffer = [UInt8](repeating: 0, count: 10)
 
             #expect(throws: Kernel.IO.Read.Error.self) {
@@ -170,4 +169,3 @@ extension Kernel.IO.Read {
         }
     }
 
-#endif

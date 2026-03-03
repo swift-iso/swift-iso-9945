@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.File.Open {
     /// Internal implementation using unsafe C string pointer.
     @usableFromInline
     internal static func _open(
-        unsafePath: UnsafePointer<Kernel.Path.Char>,
+        unsafePath: UnsafePointer<Path.Char>,
         mode: Kernel.File.Open.Mode,
         options: Kernel.File.Open.Options,
         permissions: Kernel.File.Permissions

@@ -27,7 +27,6 @@ extension Kernel.Memory.Map.Flags {
 
 // MARK: - Flags Tests
 
-#if !os(Windows)
 
     extension Kernel.Memory.Map.Flags.Test.Unit {
         @Test("shared and private are distinct")
@@ -97,4 +96,3 @@ extension Kernel.Memory.Map.Flags {
         }
     }
 
-#endif
