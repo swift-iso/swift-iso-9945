@@ -40,8 +40,8 @@ extension ISO_9945.Kernel.System {
     ///
     /// This is the fundamental unit of memory management.
     /// Typically 4096 bytes on most systems, 16384 on Apple Silicon.
-    public static var pageSize: Kernel.Memory.Page.Size {
-        Kernel.Memory.Page.Size(__unchecked: (), Cardinal(UInt(sysconf(Int32(_SC_PAGESIZE)))))
+    public static var pageSize: System.Page.Size {
+        System.Page.Size(__unchecked: (), Cardinal(UInt(sysconf(Int32(_SC_PAGESIZE)))))
     }
 
     /// Number of active/online processors.
@@ -50,9 +50,9 @@ extension ISO_9945.Kernel.System {
     /// processors currently online (not just configured).
     ///
     /// Returns 1 as a fallback if the syscall fails.
-    public static var processorCount: Kernel.System.Processor.Count {
+    public static var processorCount: System.Processor.Count {
         let count = sysconf(Int32(_SC_NPROCESSORS_ONLN))
-        return Kernel.System.Processor.Count(__unchecked: (), Cardinal(UInt(count > 0 ? count : 1)))
+        return System.Processor.Count(__unchecked: (), Cardinal(UInt(count > 0 ? count : 1)))
     }
 
     /// Sleeps for the specified number of nanoseconds.
