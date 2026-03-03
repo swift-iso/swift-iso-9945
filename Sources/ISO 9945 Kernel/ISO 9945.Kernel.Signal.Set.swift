@@ -153,13 +153,13 @@ extension ISO_9945.Kernel.Signal {
 extension ISO_9945.Kernel.Signal.Set {
     /// Provides read access to the underlying `sigset_t` for syscall interop.
     @unsafe
-    internal func withUnsafePointer<R>(_ body: (UnsafePointer<sigset_t>) throws -> R) rethrows -> R {
+    internal func withUnsafePointer<R, E: Swift.Error>(_ body: (UnsafePointer<sigset_t>) throws(E) -> R) throws(E) -> R {
         try unsafe Swift.withUnsafePointer(to: storage, body)
     }
 
     /// Provides mutable access to the underlying `sigset_t` for syscall interop.
     @unsafe
-    internal mutating func withUnsafeMutablePointer<R>(_ body: (UnsafeMutablePointer<sigset_t>) throws -> R) rethrows -> R {
+    internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(_ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R) throws(E) -> R {
         try unsafe Swift.withUnsafeMutablePointer(to: &storage, body)
     }
 
