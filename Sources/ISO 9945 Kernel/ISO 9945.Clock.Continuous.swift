@@ -38,11 +38,17 @@ extension Clock.Continuous: _Concurrency.Clock {
     ///   - tolerance: Optional tolerance (currently unused).
     /// - Throws: `CancellationError` if the task is cancelled.
     nonisolated(nonsending)
-    public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws {
+    public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError) {
         let target = deadline.nanoseconds
         while Kernel.Clock.Continuous.now() < target {
-            try Task.checkCancellation()
-            try await Task.sleep(for: .nanoseconds(1_000_000)) // 1ms granularity
+            do {
+                try Task.checkCancellation()
+                try await Task.sleep(for: .nanoseconds(1_000_000)) // 1ms granularity
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                preconditionFailure("Task.sleep/checkCancellation contract violation: \(type(of: error))")
+            }
         }
     }
 }
@@ -69,11 +75,17 @@ extension Clock.Suspending: _Concurrency.Clock {
     ///   - tolerance: Optional tolerance (currently unused).
     /// - Throws: `CancellationError` if the task is cancelled.
     nonisolated(nonsending)
-    public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws {
+    public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError) {
         let target = deadline.nanoseconds
         while Kernel.Clock.Suspending.now() < target {
-            try Task.checkCancellation()
-            try await Task.sleep(for: .nanoseconds(1_000_000)) // 1ms granularity
+            do {
+                try Task.checkCancellation()
+                try await Task.sleep(for: .nanoseconds(1_000_000)) // 1ms granularity
+            } catch is CancellationError {
+                throw CancellationError()
+            } catch {
+                preconditionFailure("Task.sleep/checkCancellation contract violation: \(type(of: error))")
+            }
         }
     }
 }
