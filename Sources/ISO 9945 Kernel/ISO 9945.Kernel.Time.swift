@@ -62,4 +62,23 @@ extension ISO_9945.Kernel.Time {
         clock_gettime(CLOCK_MONOTONIC, &ts)
         return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
     }
+
+    /// Gets the current wall-clock time as seconds since Unix epoch.
+    ///
+    /// Uses `CLOCK_REALTIME` which tracks real-world time. Subject to
+    /// NTP adjustments and manual clock changes — NOT suitable for
+    /// elapsed time measurement. Use for timestamps and record-keeping.
+    ///
+    /// - Returns: Seconds since 1970-01-01 00:00:00 UTC (with microsecond precision).
+    public static func realtimeEpochSeconds() -> Double {
+        #if canImport(Darwin)
+            var tv = Darwin.timeval()
+        #elseif canImport(Musl)
+            var tv = Musl.timeval()
+        #elseif canImport(Glibc)
+            var tv = Glibc.timeval()
+        #endif
+        gettimeofday(&tv, nil)
+        return Double(tv.tv_sec) + Double(tv.tv_usec) / 1_000_000.0
+    }
 }
