@@ -44,25 +44,6 @@ extension ISO_9945.Kernel.Time {
         #endif
     }
 
-    /// Gets the current monotonic time in nanoseconds.
-    ///
-    /// Uses `CLOCK_MONOTONIC` which is not affected by system time changes.
-    /// This is suitable for measuring elapsed time and deadlines.
-    ///
-    /// - Returns: Nanoseconds since an arbitrary fixed point in time.
-
-    public static func monotonicNanoseconds() -> UInt64 {
-        #if canImport(Darwin)
-            var ts = Darwin.timespec()
-        #elseif canImport(Musl)
-            var ts = Musl.timespec()
-        #elseif canImport(Glibc)
-            var ts = Glibc.timespec()
-        #endif
-        clock_gettime(CLOCK_MONOTONIC, &ts)
-        return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
-    }
-
     /// Gets the current wall-clock time as seconds since Unix epoch.
     ///
     /// Uses `CLOCK_REALTIME` which tracks real-world time. Subject to
