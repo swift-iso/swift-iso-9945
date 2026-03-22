@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.System {
     /// - Returns: System identification with name, release version, and hardware type.
     public static var name: Kernel.System.Name {
         var buf = utsname()
-        uname(&buf)
+        unsafe uname(&buf)
         let system = unsafe withUnsafePointer(to: &buf.sysname) {
             unsafe $0.withMemoryRebound(to: CChar.self, capacity: 256) {
                 unsafe Swift.String(cString: $0)

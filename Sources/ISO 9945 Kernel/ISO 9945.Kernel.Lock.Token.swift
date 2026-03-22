@@ -191,7 +191,7 @@ extension ISO_9945.Kernel.Lock.Token {
         var ts = timespec()
         ts.tv_sec = Int(nanoseconds / 1_000_000_000)
         ts.tv_nsec = Int(nanoseconds % 1_000_000_000)
-        nanosleep(&ts, nil)
+        unsafe nanosleep(&ts, nil)
     }
 }
 

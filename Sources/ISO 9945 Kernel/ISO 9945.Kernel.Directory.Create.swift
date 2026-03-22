@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Directory.Create {
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
-            try _create(ptr, permissions: permissions)
+            try unsafe _create(ptr, permissions: permissions)
         }
     }
 
@@ -50,7 +50,7 @@ extension ISO_9945.Kernel.Directory.Create {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let result = Darwin.mkdir(cPath, mode_t(permissions.rawValue))
+            let result = unsafe Darwin.mkdir(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
             let result = Musl.mkdir(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Directory.Create {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let result = Darwin.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+            let result = unsafe Darwin.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
             let result = Musl.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)

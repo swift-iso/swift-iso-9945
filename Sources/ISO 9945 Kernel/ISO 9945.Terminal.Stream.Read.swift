@@ -28,7 +28,7 @@ extension Terminal.Stream.Read {
         into buffer: UnsafeMutableRawBufferPointer
     ) throws(Kernel.IO.Read.Error) -> Int {
         let descriptor = Kernel.Descriptor(_rawValue: stream.rawValue)
-        return try Kernel.IO.Read.read(descriptor, into: buffer)
+        return try unsafe Kernel.IO.Read.read(descriptor, into: buffer)
     }
 }
 

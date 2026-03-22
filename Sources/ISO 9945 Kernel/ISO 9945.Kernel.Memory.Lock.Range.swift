@@ -46,7 +46,7 @@ extension ISO_9945.Kernel.Memory.Lock {
         address: UnsafeRawPointer,
         length: Kernel.File.Size
     ) throws(Error) {
-        guard mlock(address, Int(length.rawValue)) == 0 else {
+        guard unsafe (mlock(address, Int(length.rawValue)) == 0) else {
             throw .lock(.captureErrno())
         }
     }
@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.Memory.Lock {
         address: UnsafeRawPointer,
         length: Kernel.File.Size
     ) throws(Error) {
-        guard munlock(address, Int(length.rawValue)) == 0 else {
+        guard unsafe (munlock(address, Int(length.rawValue)) == 0) else {
             throw .unlock(.captureErrno())
         }
     }

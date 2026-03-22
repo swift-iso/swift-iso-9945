@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
         let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
 
         #if canImport(Darwin)
-            let result = Darwin.symlink(cTarget, cLinkPath)
+            let result = unsafe Darwin.symlink(cTarget, cLinkPath)
         #elseif canImport(Musl)
             let result = Musl.symlink(cTarget, cLinkPath)
         #elseif canImport(Glibc)
@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
         let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
 
         #if canImport(Darwin)
-            let result = Darwin.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
+            let result = unsafe Darwin.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
         #elseif canImport(Musl)
             let result = Musl.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
         #elseif canImport(Glibc)
@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let count = Darwin.readlink(cPath, buffer.baseAddress!, buffer.count)
+            let count = unsafe Darwin.readlink(cPath, buffer.baseAddress!, buffer.count)
         #elseif canImport(Musl)
             let count = Musl.readlink(cPath, buffer.baseAddress!, buffer.count)
         #elseif canImport(Glibc)
@@ -109,8 +109,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
         at linkPath: borrowing Kernel.Path.View
     ) throws(Error) {
         try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Path.Char>) throws(Error) in
-            try linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
-                try _create(target: targetPtr, at: linkPtr)
+            try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
+                try unsafe _create(target: targetPtr, at: linkPtr)
             }
         }
     }
@@ -140,14 +140,14 @@ extension ISO_9945.Kernel.Link.Symbolic {
 
             while bufferSize <= 65536 {
                 let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize)
-                defer { buffer.deallocate() }
+                defer { unsafe buffer.deallocate() }
 
                 #if canImport(Darwin)
-                    let count = Darwin.readlink(cPath, buffer, bufferSize)
+                    let count = unsafe Darwin.readlink(cPath, buffer, bufferSize)
                 #elseif canImport(Musl)
-                    let count = Musl.readlink(cPath, buffer, bufferSize)
+                    let count = unsafe Musl.readlink(cPath, buffer, bufferSize)
                 #elseif canImport(Glibc)
-                    let count = Glibc.readlink(cPath, buffer, bufferSize)
+                    let count = unsafe Glibc.readlink(cPath, buffer, bufferSize)
                 #endif
 
                 guard count >= 0 else {
@@ -187,14 +187,14 @@ extension ISO_9945.Kernel.Link.Symbolic {
             while bufferSize <= 65536 {
                 // Allocate extra byte for NUL terminator
                 let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize + 1)
-                defer { buffer.deallocate() }
+                defer { unsafe buffer.deallocate() }
 
                 #if canImport(Darwin)
-                    let count = Darwin.readlink(cPath, buffer, bufferSize)
+                    let count = unsafe Darwin.readlink(cPath, buffer, bufferSize)
                 #elseif canImport(Musl)
-                    let count = Musl.readlink(cPath, buffer, bufferSize)
+                    let count = unsafe Musl.readlink(cPath, buffer, bufferSize)
                 #elseif canImport(Glibc)
-                    let count = Glibc.readlink(cPath, buffer, bufferSize)
+                    let count = unsafe Glibc.readlink(cPath, buffer, bufferSize)
                 #endif
 
                 guard count >= 0 else {
@@ -202,7 +202,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
                 }
 
                 if count < bufferSize {
-                    buffer[count] = 0  // NUL terminate
+                    unsafe (buffer[count] = 0)  // NUL terminate
                     let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
                     let view = unsafe Kernel.String.View(u8Ptr, count: count)
                     return body(view)

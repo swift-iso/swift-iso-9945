@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Lock {
     ) throws(Kernel.Lock.Error) {
         var fl = makeFlock(range: range, kind: kind)
 
-        let result = fcntl(descriptor._rawValue, F_SETLKW, &fl)
+        let result = unsafe fcntl(descriptor._rawValue, F_SETLKW, &fl)
         guard result != -1 else {
             throw Kernel.Lock.Error(Kernel.Error.Code.captureErrno())
         }
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Lock {
             fl.l_len = off_t((end - start).rawValue)
         }
 
-        let result = fcntl(descriptor._rawValue, F_SETLK, &fl)
+        let result = unsafe fcntl(descriptor._rawValue, F_SETLK, &fl)
         guard result != -1 else {
             throw Kernel.Lock.Error(Kernel.Error.Code.captureErrno())
         }
@@ -122,7 +122,7 @@ extension ISO_9945.Kernel.Lock {
         ) throws(Kernel.Lock.Error) {
             var fl = ISO_9945.Kernel.Lock.makeFlock(range: range, kind: kind)
 
-            let result = fcntl(descriptor._rawValue, F_SETLK, &fl)
+            let result = unsafe fcntl(descriptor._rawValue, F_SETLK, &fl)
             if result == -1 {
                 // EAGAIN or EACCES means the lock is held by another process
                 if errno == EAGAIN || errno == EACCES {

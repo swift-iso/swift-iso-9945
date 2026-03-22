@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.File.Attributes {
         permissions: Kernel.File.Permissions
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try _setPermissions(path: cString, permissions: permissions)
+            try unsafe _setPermissions(path: cString, permissions: permissions)
         }
     }
 
@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.File.Attributes {
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
-            let result = Darwin.chmod(cPath, mode_t(permissions.rawValue))
+            let result = unsafe Darwin.chmod(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
             let result = Musl.chmod(cPath, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)

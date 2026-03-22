@@ -77,13 +77,13 @@ extension ISO_9945.Kernel.Thread {
         public init() {
             self.mutex = pthread_mutex_t()
             var attr = pthread_mutexattr_t()
-            pthread_mutexattr_init(&attr)
-            pthread_mutex_init(&self.mutex, &attr)
-            pthread_mutexattr_destroy(&attr)
+            unsafe pthread_mutexattr_init(&attr)
+            unsafe pthread_mutex_init(&self.mutex, &attr)
+            unsafe pthread_mutexattr_destroy(&attr)
         }
 
         deinit {
-            pthread_mutex_destroy(&mutex)
+            unsafe pthread_mutex_destroy(&mutex)
         }
     }
 }
@@ -100,7 +100,7 @@ extension ISO_9945.Kernel.Thread.Mutex {
     /// - May cause other threads to deadlock or crash
     /// - Behavior is platform-specific and unpredictable
     public func unlock() {
-        pthread_mutex_unlock(&mutex)
+        unsafe pthread_mutex_unlock(&mutex)
     }
 
     /// Accessor for lock operation variants.
@@ -146,7 +146,7 @@ extension ISO_9945.Kernel.Thread.Mutex {
         ///
         /// - Throws: `Error.contention` if the mutex is held by another thread.
         public func immediate() throws(Error) {
-            guard pthread_mutex_trylock(&mutex.mutex) == 0 else {
+            guard unsafe (pthread_mutex_trylock(&mutex.mutex) == 0) else {
                 throw .contention
             }
         }
@@ -154,7 +154,7 @@ extension ISO_9945.Kernel.Thread.Mutex {
 
     /// Internal blocking lock implementation.
     fileprivate func acquireBlocking() {
-        pthread_mutex_lock(&mutex)
+        unsafe pthread_mutex_lock(&mutex)
     }
 
     /// Executes a closure while holding the mutex.
@@ -180,6 +180,6 @@ extension ISO_9945.Kernel.Thread.Mutex {
     /// - Parameter body: A closure that receives the pointer.
     /// - Returns: The value returned by `body`.
     func withUnsafeMutablePointer<T>(_ body: (UnsafeMutablePointer<pthread_mutex_t>) -> T) -> T {
-        Swift.withUnsafeMutablePointer(to: &mutex, body)
+        unsafe Swift.withUnsafeMutablePointer(to: &mutex, body)
     }
 }

@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.File.Stats {
     public static func get(descriptor: Kernel.Descriptor) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
-            guard Darwin.fstat(descriptor._rawValue, &sb) == 0 else {
+            guard unsafe (Darwin.fstat(descriptor._rawValue, &sb) == 0) else {
                 throw Error(posixErrno: errno)
             }
         #elseif canImport(Musl)
@@ -75,7 +75,7 @@ extension ISO_9945.Kernel.File.Stats {
 
     public static func get(path: borrowing Kernel.Path.View) throws(Error) -> Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try get(unsafePath: UnsafePointer<CChar>(cString))
+            try unsafe get(unsafePath: UnsafePointer<CChar>(cString))
         }
     }
 
@@ -87,7 +87,7 @@ extension ISO_9945.Kernel.File.Stats {
     internal static func get(unsafePath path: UnsafePointer<CChar>) throws(Error) -> Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
-            guard stat(path, &sb) == 0 else {
+            guard unsafe (stat(path, &sb) == 0) else {
                 throw Error(posixErrno: errno)
             }
         #elseif canImport(Musl)
@@ -115,7 +115,7 @@ extension ISO_9945.Kernel.File.Stats {
 
     public static func lget(path: borrowing Kernel.Path.View) throws(Error) -> Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try lget(unsafePath: UnsafePointer<CChar>(cString))
+            try unsafe lget(unsafePath: UnsafePointer<CChar>(cString))
         }
     }
 
@@ -127,7 +127,7 @@ extension ISO_9945.Kernel.File.Stats {
     internal static func lget(unsafePath path: UnsafePointer<CChar>) throws(Error) -> Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
-            guard Darwin.lstat(path, &sb) == 0 else {
+            guard unsafe (Darwin.lstat(path, &sb) == 0) else {
                 throw Error(posixErrno: errno)
             }
         #elseif canImport(Musl)

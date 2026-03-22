@@ -102,8 +102,8 @@ extension ISO_9945.Kernel.Copy.Clone {
         to destPath: borrowing Kernel.Path.View
     ) throws(Kernel.Copy.Error) {
         try unsafe sourcePath.withUnsafePointer { srcCString throws(Kernel.Copy.Error) in
-            try destPath.withUnsafePointer { dstCString throws(Kernel.Copy.Error) in
-                let result = Darwin.clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
+            try unsafe destPath.withUnsafePointer { dstCString throws(Kernel.Copy.Error) in
+                let result = unsafe Darwin.clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
                 guard result == 0 else {
                     throw Kernel.Copy.Error(posixErrno: errno)
                 }

@@ -117,8 +117,8 @@ extension ISO_9945.Kernel.IO.Read {
         _ descriptor: Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>
     ) throws(Error) -> Int {
-        try span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
-            try read(descriptor, into: buffer)
+        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
+            try unsafe read(descriptor, into: buffer)
         }
     }
 
@@ -136,8 +136,8 @@ extension ISO_9945.Kernel.IO.Read {
         into span: inout MutableSpan<UInt8>,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
-        try span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
-            try pread(descriptor, into: buffer, at: offset)
+        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
+            try unsafe pread(descriptor, into: buffer, at: offset)
         }
     }
 }

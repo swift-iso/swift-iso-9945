@@ -45,7 +45,7 @@ extension ISO_9945.Kernel.Memory.Map {
         advice: Kernel.Memory.Map.Advice
     ) {
         // madvise returns -1 on error, but we ignore errors since advice is optional
-        _ = madvise(addr, Int(length.rawValue), advice.rawValue)
+        _ = unsafe madvise(addr, Int(length.rawValue), advice.rawValue)
     }
 
     /// Advises the kernel about expected memory access patterns.
@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Memory.Map {
         length: Kernel.File.Size,
         advice: Kernel.Memory.Map.Advice
     ) {
-        _ = madvise(UnsafeMutableRawPointer(mutating: addr), Int(length.rawValue), advice.rawValue)
+        _ = unsafe madvise(UnsafeMutableRawPointer(mutating: addr), Int(length.rawValue), advice.rawValue)
     }
 }
 

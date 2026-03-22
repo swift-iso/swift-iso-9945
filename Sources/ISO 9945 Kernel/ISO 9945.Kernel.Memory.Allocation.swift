@@ -11,7 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
-public import Binary_Primitives
+internal import Binary_Primitives
 
 #if canImport(Darwin)
     internal import Darwin

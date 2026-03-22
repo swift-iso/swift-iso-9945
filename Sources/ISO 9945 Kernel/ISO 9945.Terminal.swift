@@ -14,7 +14,7 @@
 #if !os(Windows)
 
 public import Terminal_Primitives
-public import Kernel_Primitives
+internal import Kernel_Primitives
 
 // MARK: - Interactivity
 

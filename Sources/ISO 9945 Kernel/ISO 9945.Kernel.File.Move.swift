@@ -65,8 +65,8 @@ extension ISO_9945.Kernel.File.Move {
         to newPath: borrowing Kernel.Path.View
     ) throws(Error) {
         try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Path.Char>) throws(Error) in
-            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Error) in
-                try move(from: oldPtr, to: newPtr)
+            try unsafe newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Error) in
+                try unsafe move(from: oldPtr, to: newPtr)
             }
         }
     }
@@ -90,7 +90,7 @@ extension ISO_9945.Kernel.File.Move {
         let cNewPath = unsafe UnsafePointer<CChar>(newPath)
 
         #if canImport(Darwin)
-            let result = Darwin.renameat(
+            let result = unsafe Darwin.renameat(
                 oldDescriptor._rawValue, cOldPath,
                 newDescriptor._rawValue, cNewPath
             )

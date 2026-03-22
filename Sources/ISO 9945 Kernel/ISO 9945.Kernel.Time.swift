@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.Time {
         #elseif canImport(Glibc)
             var tv = Glibc.timeval()
         #endif
-        gettimeofday(&tv, nil)
+        unsafe gettimeofday(&tv, nil)
         return Double(tv.tv_sec) + Double(tv.tv_usec) / 1_000_000.0
     }
 }

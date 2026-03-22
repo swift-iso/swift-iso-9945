@@ -35,14 +35,14 @@ extension ISO_9945.Kernel.File.Clone.Capability {
     public static func probe(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Kernel.File.Clone.Capability {
         try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statfsBuf = Darwin.statfs()
-            let result = statfs(UnsafePointer<CChar>(cString), &statfsBuf)
+            let result = unsafe statfs(UnsafePointer<CChar>(cString), &statfsBuf)
 
             guard result == 0 else {
                 throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(errno), operation: .statfs)
             }
 
             // APFS supports cloning
-            let isAPFS = withUnsafeBytes(of: statfsBuf.f_fstypename) { buf in
+            let isAPFS = unsafe withUnsafeBytes(of: statfsBuf.f_fstypename) { buf in
                 unsafe Binary.ASCII.equals.nulTerminated(
                     buf.baseAddress!.assumingMemoryBound(to: UInt8.self),
                     "apfs"
@@ -94,7 +94,7 @@ extension ISO_9945.Kernel.File.Clone.Metadata {
     public static func size(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Int {
         try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statBuf = Darwin.stat()
-            let result = stat(UnsafePointer<CChar>(cString), &statBuf)
+            let result = unsafe stat(UnsafePointer<CChar>(cString), &statBuf)
 
             guard result == 0 else {
                 throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(errno), operation: .stat)
@@ -144,8 +144,8 @@ extension ISO_9945.Kernel.File.Clone {
             destination: borrowing Kernel.Path.View
         ) throws(Kernel.File.Clone.Error.Syscall) -> Bool {
             try unsafe source.withUnsafePointer { srcCString throws(Kernel.File.Clone.Error.Syscall) in
-                try destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
-                    let result = clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
+                try unsafe destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
+                    let result = unsafe clonefile(UnsafePointer<CChar>(srcCString), UnsafePointer<CChar>(dstCString), 0)
 
                     if result == 0 {
                         return true
@@ -173,18 +173,18 @@ extension ISO_9945.Kernel.File.Clone {
             destination: borrowing Kernel.Path.View
         ) throws(Kernel.File.Clone.Error.Syscall) {
             try unsafe source.withUnsafePointer { srcCString throws(Kernel.File.Clone.Error.Syscall) in
-                try destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
-                    let srcPtr = UnsafePointer<CChar>(srcCString)
-                    let dstPtr = UnsafePointer<CChar>(dstCString)
+                try unsafe destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
+                    let srcPtr = unsafe UnsafePointer<CChar>(srcCString)
+                    let dstPtr = unsafe UnsafePointer<CChar>(dstCString)
 
                     // Check if destination exists first (copyfile doesn't fail by default)
                     var statBuf = Darwin.stat()
-                    let destExists = stat(dstPtr, &statBuf) == 0
+                    let destExists = unsafe (stat(dstPtr, &statBuf) == 0)
                     if destExists {
                         throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(EEXIST), operation: .copyfile)
                     }
 
-                    let result = copyfile(srcPtr, dstPtr, nil, copyfile_flags_t(COPYFILE_CLONE | COPYFILE_ALL))
+                    let result = unsafe copyfile(srcPtr, dstPtr, nil, copyfile_flags_t(COPYFILE_CLONE | COPYFILE_ALL))
 
                     guard result == 0 else {
                         throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(errno), operation: .copyfile)
@@ -199,18 +199,18 @@ extension ISO_9945.Kernel.File.Clone {
             destination: borrowing Kernel.Path.View
         ) throws(Kernel.File.Clone.Error.Syscall) {
             try unsafe source.withUnsafePointer { srcCString throws(Kernel.File.Clone.Error.Syscall) in
-                try destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
-                    let srcPtr = UnsafePointer<CChar>(srcCString)
-                    let dstPtr = UnsafePointer<CChar>(dstCString)
+                try unsafe destination.withUnsafePointer { dstCString throws(Kernel.File.Clone.Error.Syscall) in
+                    let srcPtr = unsafe UnsafePointer<CChar>(srcCString)
+                    let dstPtr = unsafe UnsafePointer<CChar>(dstCString)
 
                     // Check if destination exists first (copyfile doesn't fail by default)
                     var statBuf = Darwin.stat()
-                    let destExists = stat(dstPtr, &statBuf) == 0
+                    let destExists = unsafe (stat(dstPtr, &statBuf) == 0)
                     if destExists {
                         throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(EEXIST), operation: .copyfile)
                     }
 
-                    let result = copyfile(srcPtr, dstPtr, nil, copyfile_flags_t(COPYFILE_DATA))
+                    let result = unsafe copyfile(srcPtr, dstPtr, nil, copyfile_flags_t(COPYFILE_DATA))
 
                     guard result == 0 else {
                         throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(errno), operation: .copyfile)

@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Socket {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
-        let rc = getsockopt(
+        let rc = unsafe getsockopt(
             descriptor.rawValue,
             SOL_SOCKET,
             SO_ERROR,

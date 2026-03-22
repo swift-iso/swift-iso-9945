@@ -48,10 +48,10 @@ extension ISO_9945.Kernel.Pipe {
     public static func pipe() throws(Error) -> Descriptors {
         var fds: (Int32, Int32) = (0, 0)
 
-        let result = withUnsafeMutablePointer(to: &fds) { ptr in
-            ptr.withMemoryRebound(to: Int32.self, capacity: 2) { fdPtr in
+        let result = unsafe withUnsafeMutablePointer(to: &fds) { ptr in
+            unsafe ptr.withMemoryRebound(to: Int32.self, capacity: 2) { fdPtr in
                 #if canImport(Darwin)
-                    Darwin.pipe(fdPtr)
+                    unsafe Darwin.pipe(fdPtr)
                 #elseif canImport(Musl)
                     Musl.pipe(fdPtr)
                 #elseif canImport(Glibc)

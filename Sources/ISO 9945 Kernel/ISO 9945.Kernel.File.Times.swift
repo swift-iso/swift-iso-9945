@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.File.Times {
         followSymlinks: Bool = true
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try _setTimes(
+            try unsafe _setTimes(
                 path: cString,
                 accessTime: accessTime,
                 modificationTime: modificationTime,
@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.File.Times {
         let flags: Int32 = followSymlinks ? 0 : AT_SYMLINK_NOFOLLOW
 
         #if canImport(Darwin)
-            let result = Darwin.utimensat(AT_FDCWD, cPath, &times, flags)
+            let result = unsafe Darwin.utimensat(AT_FDCWD, cPath, &times, flags)
         #elseif canImport(Musl)
             let result = Musl.utimensat(AT_FDCWD, cPath, &times, flags)
         #elseif canImport(Glibc)
@@ -113,7 +113,7 @@ extension ISO_9945.Kernel.File.Times {
         times[1].tv_nsec = Int(modificationTime.nanosecondFraction)
 
         #if canImport(Darwin)
-            let result = Darwin.futimens(descriptor._rawValue, &times)
+            let result = unsafe Darwin.futimens(descriptor._rawValue, &times)
         #elseif canImport(Musl)
             let result = Musl.futimens(descriptor._rawValue, &times)
         #elseif canImport(Glibc)

@@ -68,8 +68,8 @@ extension ISO_9945.Kernel.Atomic {
         /// writes that happened before `set()` was called.
 
         public var isSet: Bool {
-            withUnsafeMutablePointer(to: &_value) { ptr in
-                ISO_9945.Kernel.Atomic.load(ptr, ordering: .acquiring) != 0
+            unsafe withUnsafeMutablePointer(to: &_value) { ptr in
+                unsafe (ISO_9945.Kernel.Atomic.load(ptr, ordering: .acquiring) != 0)
             }
         }
 
@@ -82,8 +82,8 @@ extension ISO_9945.Kernel.Atomic {
         /// has the same effect as calling it once.
 
         public func set() {
-            withUnsafeMutablePointer(to: &_value) { ptr in
-                ISO_9945.Kernel.Atomic.store(ptr, 1, ordering: .releasing)
+            unsafe withUnsafeMutablePointer(to: &_value) { ptr in
+                unsafe ISO_9945.Kernel.Atomic.store(ptr, 1, ordering: .releasing)
             }
         }
     }

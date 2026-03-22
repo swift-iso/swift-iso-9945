@@ -37,8 +37,8 @@ extension ISO_9945.Kernel.Link {
         to existingPath: borrowing Kernel.Path.View
     ) throws(Error) {
         try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
-            try existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Path.Char>) throws(Error) in
-                try _create(at: linkPtr, to: existingPtr)
+            try unsafe existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Path.Char>) throws(Error) in
+                try unsafe _create(at: linkPtr, to: existingPtr)
             }
         }
     }
@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.Link {
         let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)
 
         #if canImport(Darwin)
-            let result = Darwin.link(cExistingPath, cLinkPath)
+            let result = unsafe Darwin.link(cExistingPath, cLinkPath)
         #elseif canImport(Musl)
             let result = Musl.link(cExistingPath, cLinkPath)
         #elseif canImport(Glibc)
@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.Link {
         let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
 
         #if canImport(Darwin)
-            let result = Darwin.linkat(
+            let result = unsafe Darwin.linkat(
                 existingDescriptor._rawValue, cExistingPath,
                 linkDescriptor._rawValue, cLinkPath,
                 flags

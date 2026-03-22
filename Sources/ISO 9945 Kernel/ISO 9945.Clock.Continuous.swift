@@ -14,7 +14,7 @@
 #if !os(Windows)
 
 public import Clock_Primitives
-public import Kernel_Primitives
+internal import Kernel_Primitives
 
 // MARK: - Clock.Continuous POSIX Implementation
 

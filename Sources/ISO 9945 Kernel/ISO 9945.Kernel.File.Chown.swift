@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.File.Chown {
         gid: Kernel.Group.ID
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try _chown(path: cString, uid: uid, gid: gid)
+            try unsafe _chown(path: cString, uid: uid, gid: gid)
         }
     }
 
@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.File.Chown {
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
-            let result = Darwin.chown(cPath, uid.rawValue, gid.rawValue)
+            let result = unsafe Darwin.chown(cPath, uid.rawValue, gid.rawValue)
         #elseif canImport(Musl)
             let result = Musl.chown(cPath, uid.rawValue, gid.rawValue)
         #elseif canImport(Glibc)
@@ -108,7 +108,7 @@ extension ISO_9945.Kernel.File.Chown {
         gid: Kernel.Group.ID
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try _lchown(path: cString, uid: uid, gid: gid)
+            try unsafe _lchown(path: cString, uid: uid, gid: gid)
         }
     }
 
@@ -127,7 +127,7 @@ extension ISO_9945.Kernel.File.Chown {
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
-            let result = Darwin.lchown(cPath, uid.rawValue, gid.rawValue)
+            let result = unsafe Darwin.lchown(cPath, uid.rawValue, gid.rawValue)
         #elseif canImport(Musl)
             let result = Musl.lchown(cPath, uid.rawValue, gid.rawValue)
         #elseif canImport(Glibc)

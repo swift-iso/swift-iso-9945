@@ -55,7 +55,7 @@ extension ISO_9945.Kernel.TTY.Size {
     /// - Throws: ``Kernel.Error`` if the ioctl call fails (e.g., not a terminal)
     public static func query(fd: Int32) throws(Kernel.Error) -> Self {
         var ws = winsize()
-        let result = swift_ioctl_tiocgwinsz(fd, &ws)
+        let result = unsafe swift_ioctl_tiocgwinsz(fd, &ws)
         guard result == 0 else {
             throw Kernel.Error.current(operation: "ioctl(TIOCGWINSZ)")
         }

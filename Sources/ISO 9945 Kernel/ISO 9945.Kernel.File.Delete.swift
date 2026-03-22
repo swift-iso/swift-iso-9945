@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.File.Delete {
     /// - Throws: `Kernel.File.Delete.Error` on failure.
     public static func delete(_ path: borrowing Kernel.Path.View) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try _delete(cString)
+            try unsafe _delete(cString)
         }
     }
 
@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.File.Delete {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let result = Darwin.unlink(cPath)
+            let result = unsafe Darwin.unlink(cPath)
         #elseif canImport(Musl)
             let result = Musl.unlink(cPath)
         #elseif canImport(Glibc)
@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.File.Delete {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let result = Darwin.unlinkat(descriptor._rawValue, cPath, flags)
+            let result = unsafe Darwin.unlinkat(descriptor._rawValue, cPath, flags)
         #elseif canImport(Musl)
             let result = Musl.unlinkat(descriptor._rawValue, cPath, flags)
         #elseif canImport(Glibc)

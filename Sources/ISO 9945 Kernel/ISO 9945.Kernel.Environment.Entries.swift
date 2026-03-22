@@ -11,7 +11,7 @@
 
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
-public import String_Primitives
+internal import String_Primitives
 internal import ISO_9945_ABI
 
 #if canImport(Darwin)
@@ -68,7 +68,7 @@ extension ISO_9945.Kernel.Environment {
         internal init() {
             self.index = 0
             self.savedSeparator = 0
-            self.separatorPtr = nil
+            unsafe (self.separatorPtr = nil)
         }
     }
 }
@@ -100,33 +100,33 @@ extension ISO_9945.Kernel.Environment.Entries {
     @_lifetime(copy self)
     public mutating func next() -> Kernel.Environment.Entry? {
         // Restore previous separator if we modified it
-        if let ptr = separatorPtr {
-            ptr.pointee = savedSeparator
-            separatorPtr = nil
+        if let ptr = unsafe separatorPtr {
+            unsafe (ptr.pointee = savedSeparator)
+            unsafe (separatorPtr = nil)
         }
 
         // Get next entry from environ
-        guard let entry = environ[index] else {
+        guard let entry = unsafe environ[index] else {
             return nil
         }
         index += 1
 
         // Find '=' separator (0x3D)
         var j = 0
-        while entry[j] != 0 && entry[j] != 0x3D {
+        while unsafe (entry[j] != 0 && entry[j] != 0x3D) {
             j += 1
         }
 
-        guard entry[j] == 0x3D else {
+        guard unsafe (entry[j] == 0x3D) else {
             // Malformed entry (no '='), skip it
             return next()
         }
 
         // Save and replace '=' with null terminator
-        let sepPtr = entry + j
-        savedSeparator = sepPtr.pointee
-        separatorPtr = sepPtr
-        sepPtr.pointee = 0
+        let sepPtr = unsafe entry + j
+        unsafe (savedSeparator = sepPtr.pointee)
+        unsafe (separatorPtr = sepPtr)
+        unsafe (sepPtr.pointee = 0)
 
         // Convert CChar pointers to UInt8 pointers at the boundary
         let namePtr = unsafe UnsafePointer<UInt8>(UnsafePointer(entry))

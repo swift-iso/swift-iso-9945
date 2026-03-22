@@ -151,11 +151,11 @@ extension ISO_9945.Kernel.IO.Write {
         let total = buffer.count
 
         while written < total {
-            let remaining = UnsafeRawBufferPointer(
+            let remaining = unsafe UnsafeRawBufferPointer(
                 start: baseAddress.advanced(by: written),
                 count: total - written
             )
-            let n = try write(descriptor, from: remaining)
+            let n = try unsafe write(descriptor, from: remaining)
             if n == 0 {
                 // Should not happen for regular files, but handle gracefully
                 throw .io(.hardware)
@@ -180,8 +180,8 @@ extension ISO_9945.Kernel.IO.Write {
         _ descriptor: Kernel.Descriptor,
         from span: Span<UInt8>
     ) throws(Error) -> Int {
-        try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
-            try write(descriptor, from: buffer)
+        try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
+            try unsafe write(descriptor, from: buffer)
         }
     }
 
@@ -199,8 +199,8 @@ extension ISO_9945.Kernel.IO.Write {
         from span: Span<UInt8>,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
-        try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
-            try pwrite(descriptor, from: buffer, at: offset)
+        try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
+            try unsafe pwrite(descriptor, from: buffer, at: offset)
         }
     }
 
@@ -215,8 +215,8 @@ extension ISO_9945.Kernel.IO.Write {
         _ descriptor: Kernel.Descriptor,
         from span: Span<UInt8>
     ) throws(Error) {
-        try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) in
-            try writeAll(descriptor, from: buffer)
+        try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) in
+            try unsafe writeAll(descriptor, from: buffer)
         }
     }
 }

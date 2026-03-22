@@ -34,7 +34,7 @@ extension UnsafePointer where Pointee == CChar {
     @inlinable
     @unsafe
     package init(_ pointer: UnsafePointer<UInt8>) {
-        self = unsafe UnsafeRawPointer(pointer).assumingMemoryBound(to: CChar.self)
+        unsafe (self = UnsafeRawPointer(pointer).assumingMemoryBound(to: CChar.self))
     }
 }
 
@@ -43,7 +43,7 @@ extension UnsafeMutablePointer where Pointee == CChar {
     @inlinable
     @unsafe
     package init(_ pointer: UnsafeMutablePointer<UInt8>) {
-        self = unsafe UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: CChar.self)
+        unsafe (self = UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: CChar.self))
     }
 }
 
@@ -57,7 +57,7 @@ extension UnsafePointer where Pointee == UInt8 {
     @inlinable
     @unsafe
     package init(_ pointer: UnsafePointer<CChar>) {
-        self = unsafe UnsafeRawPointer(pointer).assumingMemoryBound(to: UInt8.self)
+        unsafe (self = UnsafeRawPointer(pointer).assumingMemoryBound(to: UInt8.self))
     }
 }
 
@@ -66,7 +66,7 @@ extension UnsafeMutablePointer where Pointee == UInt8 {
     @inlinable
     @unsafe
     package init(_ pointer: UnsafeMutablePointer<CChar>) {
-        self = unsafe UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: UInt8.self)
+        unsafe (self = UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: UInt8.self))
     }
 }
 

@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Directory.Remove {
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
     public static func remove(_ path: borrowing Kernel.Path.View) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
-            try _remove(ptr)
+            try unsafe _remove(ptr)
         }
     }
 

@@ -43,21 +43,21 @@ extension ISO_9945.Kernel.Path.Canonical {
         _ body: (Span<Path.Char>) -> R
     ) throws(Kernel.Path.Canonical.Error) -> R {
         try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
-            let unsafePath = UnsafePointer<CChar>(cString)
+            let unsafePath = unsafe UnsafePointer<CChar>(cString)
 
             #if canImport(Darwin)
-                let result = Darwin.realpath(unsafePath, nil)
+                let result = unsafe Darwin.realpath(unsafePath, nil)
             #elseif canImport(Musl)
                 let result = Musl.realpath(unsafePath, nil)
             #elseif canImport(Glibc)
                 let result = Glibc.realpath(unsafePath, nil)
             #endif
 
-            guard let result else {
+            guard let result = unsafe result else {
                 throw .current()
             }
 
-            defer { free(result) }
+            defer { unsafe free(result) }
 
             // Find length (realpath NUL-terminates)
             var length = 0
@@ -87,21 +87,21 @@ extension ISO_9945.Kernel.Path.Canonical {
         _ body: (borrowing Kernel.String.View) -> R
     ) throws(Kernel.Path.Canonical.Error) -> R {
         try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
-            let unsafePath = UnsafePointer<CChar>(cString)
+            let unsafePath = unsafe UnsafePointer<CChar>(cString)
 
             #if canImport(Darwin)
-                let result = Darwin.realpath(unsafePath, nil)
+                let result = unsafe Darwin.realpath(unsafePath, nil)
             #elseif canImport(Musl)
-                let result = Musl.realpath(unsafePath, nil)
+                let result = unsafe Musl.realpath(unsafePath, nil)
             #elseif canImport(Glibc)
-                let result = Glibc.realpath(unsafePath, nil)
+                let result = unsafe Glibc.realpath(unsafePath, nil)
             #endif
 
-            guard let result else {
+            guard let result = unsafe result else {
                 throw .current()
             }
 
-            defer { free(result) }
+            defer { unsafe free(result) }
 
             let u8Ptr = unsafe UnsafePointer<UInt8>(result)
             let view = unsafe Kernel.String.View(u8Ptr, count: Kernel.String.length(of: u8Ptr))

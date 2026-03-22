@@ -63,7 +63,7 @@ extension ISO_9945.Kernel.System {
         var ts = timespec()
         ts.tv_sec = Int(nanoseconds / 1_000_000_000)
         ts.tv_nsec = Int(nanoseconds % 1_000_000_000)
-        nanosleep(&ts, nil)
+        unsafe nanosleep(&ts, nil)
     }
 
     /// Sleeps for the specified duration.
@@ -75,6 +75,6 @@ extension ISO_9945.Kernel.System {
         var ts = timespec()
         ts.tv_sec = Int(seconds)
         ts.tv_nsec = Int(attoseconds / 1_000_000_000)
-        nanosleep(&ts, nil)
+        unsafe nanosleep(&ts, nil)
     }
 }

@@ -79,8 +79,8 @@ extension ISO_9945.Kernel.File.Move {
         to newPath: borrowing Kernel.Path.View
     ) throws(Extended.Error) {
         try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Path.Char>) throws(Extended.Error) in
-            try newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Extended.Error) in
-                try noClobber(from: oldPtr, to: newPtr)
+            try unsafe newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Extended.Error) in
+                try unsafe noClobber(from: oldPtr, to: newPtr)
             }
         }
     }
@@ -120,8 +120,8 @@ extension ISO_9945.Kernel.File.Move {
         _ path2: borrowing Kernel.Path.View
     ) throws(Extended.Error) {
         try unsafe path1.withUnsafePointer { (ptr1: UnsafePointer<Path.Char>) throws(Extended.Error) in
-            try path2.withUnsafePointer { (ptr2: UnsafePointer<Path.Char>) throws(Extended.Error) in
-                try exchange(ptr1, ptr2)
+            try unsafe path2.withUnsafePointer { (ptr2: UnsafePointer<Path.Char>) throws(Extended.Error) in
+                try unsafe exchange(ptr1, ptr2)
             }
         }
     }

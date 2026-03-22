@@ -38,16 +38,16 @@ extension ISO_9945.Kernel.Termios.Attributes {
     /// - Throws: ``Kernel.Error`` if the syscall fails
     public static func get(fd: Int32) throws(Kernel.Error) -> Self {
         var t = termios()
-        let result = swift_tcgetattr(fd, &t)
+        let result = unsafe swift_tcgetattr(fd, &t)
         guard result == 0 else {
             throw Kernel.Error.current(operation: "tcgetattr")
         }
 
         // Copy termios to opaque storage
         var attrs = Kernel.Termios.Attributes(_storage: .init())
-        attrs.withUnsafeMutableStorageBytes { buffer in
-            withUnsafeBytes(of: t) { src in
-                buffer.copyMemory(from: src)
+        unsafe attrs.withUnsafeMutableStorageBytes { buffer in
+            unsafe withUnsafeBytes(of: t) { src in
+                unsafe buffer.copyMemory(from: src)
             }
         }
         return attrs
@@ -72,12 +72,12 @@ extension ISO_9945.Kernel.Termios.Attributes {
         action: Action = .now
     ) throws(Kernel.Error) {
         var t = termios()
-        attributes.withUnsafeStorageBytes { buffer in
-            withUnsafeMutableBytes(of: &t) { dest in
-                dest.copyMemory(from: buffer)
+        unsafe attributes.withUnsafeStorageBytes { buffer in
+            unsafe withUnsafeMutableBytes(of: &t) { dest in
+                unsafe dest.copyMemory(from: buffer)
             }
         }
-        let result = swift_tcsetattr(fd, action.rawValue, &t)
+        let result = unsafe swift_tcsetattr(fd, action.rawValue, &t)
         guard result == 0 else {
             throw Kernel.Error.current(operation: "tcsetattr")
         }
@@ -118,9 +118,9 @@ extension ISO_9945.Kernel.Termios.Attributes {
     /// This is equivalent to `cfmakeraw()` on systems that support it.
     public func withRaw() -> Self {
         var t = termios()
-        self.withUnsafeStorageBytes { buffer in
-            withUnsafeMutableBytes(of: &t) { dest in
-                dest.copyMemory(from: buffer)
+        unsafe self.withUnsafeStorageBytes { buffer in
+            unsafe withUnsafeMutableBytes(of: &t) { dest in
+                unsafe dest.copyMemory(from: buffer)
             }
         }
 
@@ -139,17 +139,17 @@ extension ISO_9945.Kernel.Termios.Attributes {
 
         // Control characters: read returns immediately with 1+ bytes
         // c_cc is a tuple on Darwin, need to use withUnsafeMutablePointer
-        withUnsafeMutablePointer(to: &t.c_cc) { ptr in
-            ptr.withMemoryRebound(to: cc_t.self, capacity: Int(NCCS)) { cc in
-                cc[Int(VMIN)] = 1
-                cc[Int(VTIME)] = 0
+        unsafe withUnsafeMutablePointer(to: &t.c_cc) { ptr in
+            unsafe ptr.withMemoryRebound(to: cc_t.self, capacity: Int(NCCS)) { cc in
+                unsafe (cc[Int(VMIN)] = 1)
+                unsafe (cc[Int(VTIME)] = 0)
             }
         }
 
         var result = Kernel.Termios.Attributes(_storage: .init())
-        result.withUnsafeMutableStorageBytes { buffer in
-            withUnsafeBytes(of: t) { src in
-                buffer.copyMemory(from: src)
+        unsafe result.withUnsafeMutableStorageBytes { buffer in
+            unsafe withUnsafeBytes(of: t) { src in
+                unsafe buffer.copyMemory(from: src)
             }
         }
         return result

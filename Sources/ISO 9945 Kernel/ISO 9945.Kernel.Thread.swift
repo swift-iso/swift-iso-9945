@@ -36,31 +36,31 @@ extension ISO_9945.Kernel.Thread {
         _ body: @escaping @Sendable () -> Void
     ) throws(Kernel.Thread.Error) -> Kernel.Thread.Handle {
         let context = UnsafeMutablePointer<(@Sendable () -> Void)>.allocate(capacity: 1)
-        context.initialize(to: body)
+        unsafe context.initialize(to: body)
 
         #if canImport(Darwin)
         var thread: pthread_t?
 
-        let result = pthread_create(
+        let result = unsafe pthread_create(
             &thread,
             nil,
             { ctx in
-                let bodyPtr = ctx.assumingMemoryBound(to: (@Sendable () -> Void).self)
-                let work = bodyPtr.move()
-                bodyPtr.deallocate()
+                let bodyPtr = unsafe ctx.assumingMemoryBound(to: (@Sendable () -> Void).self)
+                let work = unsafe bodyPtr.move()
+                unsafe bodyPtr.deallocate()
                 work()
                 return nil
             },
             context
         )
 
-        guard result == 0, let thread else {
-            context.deinitialize(count: 1)
-            context.deallocate()
+        guard result == 0, let thread = unsafe thread else {
+            unsafe context.deinitialize(count: 1)
+            unsafe context.deallocate()
             throw .create(.posix(result))
         }
 
-        return Kernel.Thread.Handle(rawValue: thread)
+        return unsafe Kernel.Thread.Handle(rawValue: thread)
 
         #else
         // Linux: pthread_t is non-optional

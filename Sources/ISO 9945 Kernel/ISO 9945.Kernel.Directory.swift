@@ -112,7 +112,7 @@ extension ISO_9945.Kernel.Directory {
         guard let dir = unsafe opendir(cPath) else {
             throw Error.currentOpen()
         }
-        return Stream(dir: unsafe dir)
+        return unsafe Stream(dir: dir)
     }
 
     /// Opens a directory for iteration using a `Kernel.Path`.
@@ -125,7 +125,7 @@ extension ISO_9945.Kernel.Directory {
     /// - Throws: `Kernel.Directory.Error` on failure.
     public static func open(at path: borrowing Kernel.Path.View) throws(Error) -> Stream {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
-            try open(at: ptr)
+            try unsafe open(at: ptr)
         }
     }
 }

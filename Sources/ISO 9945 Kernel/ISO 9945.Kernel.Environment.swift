@@ -100,7 +100,7 @@ extension ISO_9945.Kernel.Environment {
     /// - Note: Returns an owned copy to avoid lifetime issues with
     ///   the internal storage which can be invalidated by setenv/unsetenv.
     public static func get(_ name: UnsafePointer<String.Char>) -> Kernel.String? {
-        withValue(name) { view in
+        unsafe withValue(name) { view in
             Kernel.String(copying: view)
         }
     }

@@ -60,16 +60,16 @@ extension ISO_9945.Kernel.Thread {
         public init() {
             self.cond = pthread_cond_t()
             var attr = pthread_condattr_t()
-            pthread_condattr_init(&attr)
+            unsafe pthread_condattr_init(&attr)
             #if !os(macOS) && !os(iOS) && !os(tvOS) && !os(watchOS)
-                pthread_condattr_setclock(&attr, CLOCK_MONOTONIC)
+                unsafe pthread_condattr_setclock(&attr, CLOCK_MONOTONIC)
             #endif
-            pthread_cond_init(&self.cond, &attr)
-            pthread_condattr_destroy(&attr)
+            unsafe pthread_cond_init(&self.cond, &attr)
+            unsafe pthread_condattr_destroy(&attr)
         }
 
         deinit {
-            pthread_cond_destroy(&cond)
+            unsafe pthread_cond_destroy(&cond)
         }
     }
 }
@@ -84,8 +84,8 @@ extension ISO_9945.Kernel.Thread.Condition {
     /// - Parameter mutex: The mutex to release while waiting.
     /// - Precondition: The mutex must be held by the current thread.
     public func wait(mutex: ISO_9945.Kernel.Thread.Mutex) {
-        _ = mutex.withUnsafeMutablePointer { mutexPtr in
-            pthread_cond_wait(&cond, mutexPtr)
+        _ = unsafe mutex.withUnsafeMutablePointer { mutexPtr in
+            unsafe pthread_cond_wait(&cond, mutexPtr)
         }
     }
 
@@ -99,12 +99,12 @@ extension ISO_9945.Kernel.Thread.Condition {
     /// - Returns: `true` if signaled, `false` if timed out.
     /// - Precondition: The mutex must be held by the current thread.
     public func wait(mutex: ISO_9945.Kernel.Thread.Mutex, timeout: Duration) -> Bool {
-        mutex.withUnsafeMutablePointer { mutexPtr in
+        unsafe mutex.withUnsafeMutablePointer { mutexPtr in
             var ts = timespec()
             #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
                 // macOS uses absolute time from gettimeofday
                 var tv = timeval()
-                gettimeofday(&tv, nil)
+                unsafe gettimeofday(&tv, nil)
                 let (seconds, attoseconds) = timeout.components
                 ts.tv_sec = tv.tv_sec + Int(seconds)
                 ts.tv_nsec = Int(tv.tv_usec) * 1000 + Int(attoseconds / 1_000_000_000)
@@ -123,7 +123,7 @@ extension ISO_9945.Kernel.Thread.Condition {
                     ts.tv_nsec -= 1_000_000_000
                 }
             #endif
-            let result = pthread_cond_timedwait(&cond, mutexPtr, &ts)
+            let result = unsafe pthread_cond_timedwait(&cond, mutexPtr, &ts)
             return result == 0
         }
     }
@@ -136,13 +136,13 @@ extension ISO_9945.Kernel.Thread.Condition {
     ///
     /// If multiple threads are waiting, one is unblocked (which one is unspecified).
     public func signal() {
-        pthread_cond_signal(&cond)
+        unsafe pthread_cond_signal(&cond)
     }
 
     /// Signals all waiting threads.
     ///
     /// All threads waiting on this condition variable are unblocked.
     public func broadcast() {
-        pthread_cond_broadcast(&cond)
+        unsafe pthread_cond_broadcast(&cond)
     }
 }

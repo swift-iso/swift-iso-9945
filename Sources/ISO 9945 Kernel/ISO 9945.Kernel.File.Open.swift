@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.File.Open {
         permissions: Kernel.File.Permissions
     ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
         try unsafe path.withUnsafePointer { cString throws(Kernel.File.Open.Error) in
-            try _open(unsafePath: cString, mode: mode, options: options, permissions: permissions)
+            try unsafe _open(unsafePath: cString, mode: mode, options: options, permissions: permissions)
         }
     }
 
@@ -92,7 +92,7 @@ extension ISO_9945.Kernel.File.Open {
 
             // Apply F_NOCACHE if requested
             if options.needsNoCache {
-                _ = unsafe fcntl(fd, F_NOCACHE, 1)
+                _ = fcntl(fd, F_NOCACHE, 1)
             }
         #elseif canImport(Musl)
             let flags = accessMode | options.rawValue

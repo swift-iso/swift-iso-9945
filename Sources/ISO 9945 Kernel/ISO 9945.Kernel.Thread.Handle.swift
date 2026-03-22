@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Thread {
 
         /// Creates a handle from a pthread_t.
         internal init(rawValue: pthread_t) {
-            self.rawValue = rawValue
+            unsafe (self.rawValue = rawValue)
         }
     }
 }
@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Thread.Handle {
     /// - Note: Must be called exactly once. The `~Copyable` constraint enforces this.
 
     public consuming func join() {
-        _ = pthread_join(rawValue, nil)
+        _ = unsafe pthread_join(rawValue, nil)
     }
 
     /// Detaches the thread, allowing it to run independently.
@@ -67,7 +67,7 @@ extension ISO_9945.Kernel.Thread.Handle {
     /// Calls `pthread_detach`.
 
     public consuming func detach() {
-        _ = pthread_detach(rawValue)
+        _ = unsafe pthread_detach(rawValue)
     }
 
     /// Check if this handle refers to the current thread.
@@ -75,6 +75,6 @@ extension ISO_9945.Kernel.Thread.Handle {
     /// Used for shutdown safety to prevent join-on-self deadlock.
 
     public var isCurrent: Bool {
-        pthread_equal(pthread_self(), rawValue) != 0
+        unsafe (pthread_equal(pthread_self(), rawValue) != 0)
     }
 }
