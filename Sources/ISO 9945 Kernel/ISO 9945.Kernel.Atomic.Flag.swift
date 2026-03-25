@@ -22,7 +22,7 @@ public import ISO_9945
 
 // MARK: - POSIX Atomic Flag
 
-extension ISO_9945.Kernel.Atomic {
+extension CPU.Atomic {
     /// A one-way atomic boolean flag for cross-thread signaling.
     ///
     /// Flag provides a minimal, policy-free primitive for signaling between
@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.Atomic {
     ///
     /// ## Usage
     /// ```swift
-    /// let shutdown = POSIX.Kernel.Atomic.Flag()
+    /// let shutdown = CPU.Atomic.Flag()
     ///
     /// // Thread A: signal shutdown
     /// shutdown.set()
@@ -69,7 +69,7 @@ extension ISO_9945.Kernel.Atomic {
 
         public var isSet: Bool {
             unsafe withUnsafeMutablePointer(to: &_value) { ptr in
-                unsafe (ISO_9945.Kernel.Atomic.load(ptr, ordering: .acquiring) != 0)
+                unsafe (CPU.Atomic.load(ptr, ordering: .acquiring) != 0)
             }
         }
 
@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.Atomic {
 
         public func set() {
             unsafe withUnsafeMutablePointer(to: &_value) { ptr in
-                unsafe ISO_9945.Kernel.Atomic.store(ptr, 1, ordering: .releasing)
+                unsafe CPU.Atomic.store(ptr, 1, ordering: .releasing)
             }
         }
     }
