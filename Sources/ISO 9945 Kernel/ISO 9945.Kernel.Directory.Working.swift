@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.Directory.Working {
         var thrown: Error? = nil
 
         unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
-            guard let base = unsafe buffer.baseAddress, buffer.count > 0 else {
+            guard let base = buffer.baseAddress, buffer.count > 0 else {
                 thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
                 return
             }
@@ -132,7 +132,7 @@ extension ISO_9945.Kernel.Directory.Working {
         var thrown: Error? = nil
 
         unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
-            guard let base = unsafe buffer.baseAddress, buffer.count > 0 else {
+            guard let base = buffer.baseAddress, buffer.count > 0 else {
                 thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
                 return
             }

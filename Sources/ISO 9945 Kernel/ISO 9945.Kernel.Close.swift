@@ -46,7 +46,7 @@ extension ISO_9945.Kernel.Close {
             throw .handle(.invalid)
         }
         #if canImport(Darwin)
-            try Kernel.Syscall.require(unsafe Darwin.close(descriptor._rawValue), .equals(0), orThrow: Error.current())
+            try Kernel.Syscall.require(Darwin.close(descriptor._rawValue), .equals(0), orThrow: Error.current())
         #elseif canImport(Glibc)
             try Kernel.Syscall.require(unsafe Glibc.close(descriptor._rawValue), .equals(0), orThrow: Error.current())
         #elseif canImport(Musl)
