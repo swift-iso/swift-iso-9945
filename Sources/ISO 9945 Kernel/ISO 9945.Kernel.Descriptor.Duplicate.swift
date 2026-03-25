@@ -133,7 +133,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
     }
 }
 
-extension ISO_9945.Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Descriptor.Duplicate.Error: @retroactive CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .handle(let e):

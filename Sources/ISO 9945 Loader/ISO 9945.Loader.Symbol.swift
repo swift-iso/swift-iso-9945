@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Loader_Primitives
-public import String_Primitives
+import String_Primitives
 public import ISO_9945  // For ISO_9945.Loader typealias
 internal import ISO_9945_ABI
 

@@ -41,10 +41,8 @@ extension Terminal.Size {
         do {
             let kernelSize = try Kernel.TTY.Size.query(fd: stream.rawValue)
             return Terminal.Size(rows: kernelSize.rows, columns: kernelSize.columns)
-        } catch let error as Kernel.Error {
+        } catch let error {
             throw Terminal.Error(operation: .querySize, underlying: .kernel(error))
-        } catch {
-            throw Terminal.Error(operation: .querySize, underlying: .unsupported)
         }
     }
 }
@@ -67,10 +65,8 @@ extension Terminal.Mode.Raw {
             let raw = original.withRaw()
             try Kernel.Termios.Attributes.set(raw, fd: stream.rawValue)
             return Token(stream: stream, previous: .posix(original))
-        } catch let error as Kernel.Error {
+        } catch let error {
             throw Terminal.Error(operation: .enterRaw, underlying: .kernel(error))
-        } catch {
-            throw Terminal.Error(operation: .enterRaw, underlying: .unsupported)
         }
     }
 }
@@ -87,10 +83,8 @@ extension Terminal.Mode.Raw.Token {
         do {
             try Kernel.Termios.Attributes.set(attrs, fd: stream.rawValue)
             restored = true
-        } catch let error as Kernel.Error {
+        } catch let error {
             throw Terminal.Error(operation: .exitRaw, underlying: .kernel(error))
-        } catch {
-            throw Terminal.Error(operation: .exitRaw, underlying: .unsupported)
         }
     }
 }
