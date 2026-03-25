@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) public import Kernel_Primitives
-public import ISO_9945
+internal import ISO_9945
 
 #if canImport(Darwin)
     internal import Darwin
