@@ -98,7 +98,7 @@ extension ISO_9945.Kernel.File.Times {
     ///   - modificationTime: The new modification time.
     /// - Throws: `Kernel.File.Times.Error` on failure.
     public static func setTimes(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         accessTime: Kernel.Time,
         modificationTime: Kernel.Time
     ) throws(Error) {

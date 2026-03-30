@@ -59,9 +59,9 @@ extension ISO_9945.Kernel.Copy.Range {
     /// - Throws: ``Kernel/Copy/Error`` on failure.
 
     public static func copy(
-        from source: Kernel.Descriptor,
+        from source: borrowing Kernel.Descriptor,
         sourceOffset: inout Kernel.File.Offset,
-        to destination: Kernel.Descriptor,
+        to destination: borrowing Kernel.Descriptor,
         destOffset: inout Kernel.File.Offset,
         length: Kernel.File.Size
     ) throws(Kernel.Copy.Error) -> Kernel.File.Size {

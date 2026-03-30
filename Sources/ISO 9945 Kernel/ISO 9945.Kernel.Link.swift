@@ -68,9 +68,9 @@ extension ISO_9945.Kernel.Link {
     /// Internal implementation for creating a hard link relative to directory descriptors.
     @usableFromInline
     internal static func _create(
-        from existingDescriptor: Kernel.Descriptor,
+        from existingDescriptor: borrowing Kernel.Descriptor,
         existingPath: UnsafePointer<Path.Char>,
-        at linkDescriptor: Kernel.Descriptor,
+        at linkDescriptor: borrowing Kernel.Descriptor,
         linkPath: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {

@@ -115,31 +115,17 @@ private enum LockTestHelper {
 
 // MARK: - Cross-Platform Test Helpers
 
-/// Creates a temporary file and executes body with the path and descriptor.
-/// File is automatically cleaned up after body completes.
-private func withTempFile<R>(
-    prefix: Swift.String,
-    _ body: (borrowing ISO_9945.Kernel.Path.View, ISO_9945.Kernel.Descriptor) throws -> R
-) throws -> R {
-    let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
-    return try ISO_9945.Kernel.Path.scope(pathString) { path in
-        let fd = try ISO_9945.Kernel.File.Open.open(
-            path: path,
-            mode: .readWrite,
-            options: [.create, .truncate],
-            permissions: .ownerReadWrite
-        )
-        // Write some data so the file isn't empty (needed for byte-range locking)
-        let data = [UInt8](repeating: 0x78, count: 1024)  // 'x' repeated
-        _ = try data.withUnsafeBytes { buffer in
-            try ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
-        }
-        defer {
-            try? ISO_9945.Kernel.Close.close(fd)
-            try? ISO_9945.Kernel.File.Delete.delete(path)
-        }
-        return try body(path, fd)
+/// Creates a temporary file with 1024 bytes of data (needed for byte-range locking)
+/// and returns the path and descriptor. Caller uses defer for cleanup.
+private func makeLockTestFile(prefix: Swift.String) throws -> (path: Swift.String, fd: ISO_9945.Kernel.Descriptor) {
+    let path = KernelIOTest.makeTempPath(prefix: prefix)
+    let fd = try KernelIOTest.open(at: path)
+    // Write some data so the file isn't empty (needed for byte-range locking)
+    let data = [UInt8](repeating: 0x78, count: 1024)  // 'x' repeated
+    _ = try data.withUnsafeBytes { buffer in
+        try ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
     }
+    return (path, fd)
 }
 
 // MARK: - Integration Suite
@@ -152,121 +138,105 @@ struct POSIXLockIntegration {}
 extension POSIXLockIntegration {
     @Test("Token acquires and releases lock")
     func tokenAcquiresAndReleasesLock() throws {
-        try withTempFile(prefix: "posix-lock-token") { _, fd in
-            #expect(fd.isValid, "Failed to create test file")
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-token")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            // Acquire exclusive lock
-            var token = try ISO_9945.Kernel.Lock.Token(
-                descriptor: fd,
-                range: .file,
-                kind: .exclusive,
-                acquire: .wait
-            )
+        #expect(fd.isValid, "Failed to create test file")
 
-            // Release the lock
-            try token.release()
-        }
+        // Acquire exclusive lock
+        var token = try ISO_9945.Kernel.Lock.Token(
+            descriptor: fd,
+            range: .file,
+            kind: .exclusive,
+            acquire: .wait
+        )
+
+        // Release the lock
+        try token.release()
     }
 
     @Test("Try lock returns immediately when uncontested")
     func tryLockUncontested() throws {
-        try withTempFile(prefix: "posix-lock-try") { _, fd in
-            #expect(fd.isValid, "Failed to create test file")
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-try")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            // Try to acquire lock without blocking - should succeed
-            var token = try ISO_9945.Kernel.Lock.Token(
-                descriptor: fd,
-                range: .file,
-                kind: .exclusive,
-                acquire: .try
-            )
+        #expect(fd.isValid, "Failed to create test file")
 
-            try token.release()
-        }
+        // Try to acquire lock without blocking - should succeed
+        var token = try ISO_9945.Kernel.Lock.Token(
+            descriptor: fd,
+            range: .file,
+            kind: .exclusive,
+            acquire: .try
+        )
+
+        try token.release()
     }
 
     @Test("Shared lock can be acquired")
     func sharedLockAcquired() throws {
-        try withTempFile(prefix: "posix-lock-shared") { _, fd in
-            #expect(fd.isValid, "Failed to create test file")
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-shared")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            var token = try ISO_9945.Kernel.Lock.Token(
-                descriptor: fd,
-                range: .file,
-                kind: .shared,
-                acquire: .wait
-            )
+        #expect(fd.isValid, "Failed to create test file")
 
-            try token.release()
-        }
+        var token = try ISO_9945.Kernel.Lock.Token(
+            descriptor: fd,
+            range: .file,
+            kind: .shared,
+            acquire: .wait
+        )
+
+        try token.release()
     }
 
     @Test("Byte-range lock on specific range")
     func byteRangeLock() throws {
-        try withTempFile(prefix: "posix-lock-range") { _, fd in
-            #expect(fd.isValid, "Failed to create test file")
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-range")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            // Lock bytes 100-200
-            var token = try ISO_9945.Kernel.Lock.Token(
-                descriptor: fd,
-                range: .bytes(start: ISO_9945.Kernel.File.Offset(100), end: ISO_9945.Kernel.File.Offset(200)),
-                kind: .exclusive,
-                acquire: .wait
-            )
+        #expect(fd.isValid, "Failed to create test file")
 
-            try token.release()
-        }
+        // Lock bytes 100-200
+        var token = try ISO_9945.Kernel.Lock.Token(
+            descriptor: fd,
+            range: .bytes(start: ISO_9945.Kernel.File.Offset(100), end: ISO_9945.Kernel.File.Offset(200)),
+            kind: .exclusive,
+            acquire: .wait
+        )
+
+        try token.release()
     }
 
     @Test("Lock with deadline times out when contested by another process")
     func lockWithDeadlineTimesOut() throws {
         // Create a temp file path that both processes can access
-        let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-lock-deadline")
+        let (pathString, fd) = try makeLockTestFile(prefix: "posix-lock-deadline")
+        defer { KernelIOTest.cleanup(path: pathString, fd: fd) }
 
-        try ISO_9945.Kernel.Path.scope(pathString) { path in
-            // Create and prepare the file
-            let fd = try ISO_9945.Kernel.File.Open.open(
-                path: path,
-                mode: .readWrite,
-                options: [.create, .truncate],
-                permissions: .ownerReadWrite
+        // Spawn helper to hold the lock for 1000ms
+        let helper = try LockTestHelper.spawn(
+            lockingFile: pathString,
+            forMilliseconds: 1000
+        )
+
+        // Wait for the helper to acquire the lock
+        let detected = LockTestHelper.waitForContention(on: fd, timeout: .milliseconds(2000))
+        #expect(detected, "Helper should have acquired the lock")
+
+        // Now try to acquire with a short deadline - should fail due to contention
+        let deadline = Clock.Continuous.now + .milliseconds(100)
+        #expect(throws: ISO_9945.Kernel.Lock.Error.self) {
+            _ = try ISO_9945.Kernel.Lock.Token(
+                descriptor: fd,
+                range: .file,
+                kind: .exclusive,
+                acquire: .deadline(deadline)
             )
-
-            // Write some data so the file isn't empty
-            let data = [UInt8](repeating: 0x78, count: 1024)
-            _ = try data.withUnsafeBytes { buffer in
-                try ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
-            }
-
-            defer {
-                try? ISO_9945.Kernel.Close.close(fd)
-                try? ISO_9945.Kernel.File.Delete.delete(path)
-            }
-
-            // Spawn helper to hold the lock for 1000ms
-            let helper = try LockTestHelper.spawn(
-                lockingFile: pathString,
-                forMilliseconds: 1000
-            )
-
-            // Wait for the helper to acquire the lock
-            let detected = LockTestHelper.waitForContention(on: fd, timeout: .milliseconds(2000))
-            #expect(detected, "Helper should have acquired the lock")
-
-            // Now try to acquire with a short deadline - should fail due to contention
-            let deadline = Clock.Continuous.now + .milliseconds(100)
-            #expect(throws: ISO_9945.Kernel.Lock.Error.self) {
-                _ = try ISO_9945.Kernel.Lock.Token(
-                    descriptor: fd,
-                    range: .file,
-                    kind: .exclusive,
-                    acquire: .deadline(deadline)
-                )
-            }
-
-            // Wait for helper to exit
-            _ = try? POSIX.Kernel.Process.Wait.wait(.process(helper))
         }
+
+        // Wait for helper to exit
+        _ = try? POSIX.Kernel.Process.Wait.wait(.process(helper))
     }
 }
 
@@ -275,39 +245,42 @@ extension POSIXLockIntegration {
 extension POSIXLockIntegration {
     @Test("Direct lock and unlock API")
     func directLockUnlock() throws {
-        try withTempFile(prefix: "posix-lock-direct") { _, fd in
-            // Lock directly
-            try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-direct")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            // Unlock directly
-            try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
-        }
+        // Lock directly
+        try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+
+        // Unlock directly
+        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
     }
 
     @Test("Immediate lock succeeds when uncontested")
     func immediateLockSucceeds() throws {
-        try withTempFile(prefix: "posix-lock-immediate") { _, fd in
-            // Try immediate lock - should succeed
-            try ISO_9945.Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-immediate")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            // Cleanup
-            try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
-        }
+        // Try immediate lock - should succeed
+        try ISO_9945.Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+
+        // Cleanup
+        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
     }
 
     @Test("Immediate lock throws contention when held")
     func immediateLockThrowsContention() throws {
-        try withTempFile(prefix: "posix-lock-contend") { _, fd in
-            // Acquire exclusive lock
-            try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-contend")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            // Try immediate lock on same descriptor (same process, same thread)
-            // Note: POSIX allows same-process relock, so this tests API not contention
-            // For true contention testing, need multi-process tests
+        // Acquire exclusive lock
+        try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
 
-            // Cleanup
-            try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
-        }
+        // Try immediate lock on same descriptor (same process, same thread)
+        // Note: POSIX allows same-process relock, so this tests API not contention
+        // For true contention testing, need multi-process tests
+
+        // Cleanup
+        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
     }
 }
 
@@ -316,39 +289,42 @@ extension POSIXLockIntegration {
 extension POSIXLockIntegration {
     @Test("withExclusive executes body under lock")
     func withExclusiveExecutesBody() throws {
-        try withTempFile(prefix: "posix-lock-with") { _, fd in
-            var executed = false
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-with")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            try ISO_9945.Kernel.Lock.withExclusive(fd) {
-                executed = true
-            }
+        var executed = false
 
-            #expect(executed == true)
+        try ISO_9945.Kernel.Lock.withExclusive(fd) {
+            executed = true
         }
+
+        #expect(executed == true)
     }
 
     @Test("withShared allows concurrent reads")
     func withSharedExecutes() throws {
-        try withTempFile(prefix: "posix-lock-with-shared") { _, fd in
-            var executed = false
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-with-shared")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            try ISO_9945.Kernel.Lock.withShared(fd) {
-                executed = true
-            }
+        var executed = false
 
-            #expect(executed == true)
+        try ISO_9945.Kernel.Lock.withShared(fd) {
+            executed = true
         }
+
+        #expect(executed == true)
     }
 
     @Test("withExclusive returns value from body")
     func withExclusiveReturnsValue() throws {
-        try withTempFile(prefix: "posix-lock-with-return") { _, fd in
-            let result = try ISO_9945.Kernel.Lock.withExclusive(fd) {
-                42
-            }
+        let (path, fd) = try makeLockTestFile(prefix: "posix-lock-with-return")
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-            #expect(result == 42)
+        let result = try ISO_9945.Kernel.Lock.withExclusive(fd) {
+            42
         }
+
+        #expect(result == 42)
     }
 }
 

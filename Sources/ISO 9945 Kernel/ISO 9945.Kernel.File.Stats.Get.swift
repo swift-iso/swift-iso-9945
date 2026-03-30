@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter descriptor: The file descriptor to stat.
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    public static func get(descriptor: Kernel.Descriptor) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
+    public static func get(descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (Darwin.fstat(descriptor._rawValue, &sb) == 0) else {

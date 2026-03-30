@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.File.Control {
     ///
     /// - Parameter descriptor: The file descriptor to modify.
     /// - Throws: `Error` if fcntl fails.
-    public static func setNonBlocking(_ descriptor: Kernel.Descriptor) throws(Kernel.File.Control.Error) {
+    public static func setNonBlocking(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Control.Error) {
         #if canImport(Darwin)
             var flags = Darwin.fcntl(descriptor._rawValue, F_GETFL)
             guard flags >= 0 else {
@@ -62,7 +62,7 @@ extension ISO_9945.Kernel.File.Control {
     ///
     /// - Parameter descriptor: The file descriptor to modify.
     /// - Throws: `Error` if fcntl fails.
-    public static func setBlocking(_ descriptor: Kernel.Descriptor) throws(Kernel.File.Control.Error) {
+    public static func setBlocking(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Control.Error) {
         #if canImport(Darwin)
             var flags = Darwin.fcntl(descriptor._rawValue, F_GETFL)
             guard flags >= 0 else {

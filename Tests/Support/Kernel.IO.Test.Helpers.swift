@@ -16,150 +16,45 @@
     public import ISO_9945_Kernel
 
     /// Test utilities for I/O operations.
+    ///
+    /// With borrowing `close()`, tests manage descriptors directly:
+    /// ```swift
+    /// let path = KernelIOTest.makeTempPath()
+    /// let fd = try KernelIOTest.open(at: path)
+    /// defer { KernelIOTest.cleanup(path: path, fd: fd) }
+    /// // ... use fd ...
+    /// ```
     public enum KernelIOTest {
-        /// Error thrown when temp file creation fails.
-        public struct TempFileError: Swift.Error, Sendable {
-            public init() {}
+        /// Generates a unique temporary file path.
+        public static func makeTempPath(prefix: Swift.String = "io-test") -> Swift.String {
+            ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
         }
 
-        // MARK: - Legacy tuple-returning helpers (for existing tests)
-
-        /// Creates a temporary file and returns its path string and descriptor.
-        /// Caller is responsible for cleanup via `cleanupTempFile`.
-        public static func createTempFile(prefix: Swift.String = "io-test") throws -> (path: Swift.String, fd: Kernel.Descriptor) {
-            let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
-            let fd = try ISO_9945.Kernel.Path.scope(pathString) { path in
+        /// Opens a new file at the given path for read/write.
+        public static func open(at path: Swift.String) throws -> Kernel.Descriptor {
+            try ISO_9945.Kernel.Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Open.open(
-                    path: path,
+                    path: p,
                     mode: .readWrite,
                     options: [.create, .truncate, .exclusive],
                     permissions: .ownerReadWrite
                 )
             }
-            return (pathString, fd)
         }
 
-        /// Creates a temporary file with content and returns its path string and descriptor.
-        /// Caller is responsible for cleanup via `cleanupTempFile`.
-        public static func createTempFileWithContent(_ content: Swift.String, prefix: Swift.String = "io-test") throws -> (path: Swift.String, fd: Kernel.Descriptor) {
-            let (pathString, fd) = try createTempFile(prefix: prefix)
-            var contentBytes = Array(content.utf8)
-            _ = try? contentBytes.withUnsafeMutableBytes { ptr in
+        /// Writes string content to a descriptor.
+        public static func write(_ content: Swift.String, to fd: borrowing Kernel.Descriptor) {
+            var bytes = Array(content.utf8)
+            _ = try? bytes.withUnsafeMutableBytes { ptr in
                 try ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))
             }
-            return (pathString, fd)
         }
 
-        /// Cleans up a temporary file created by `createTempFile` or `createTempFileWithContent`.
-        public static func cleanupTempFile(path: Swift.String, fd: Kernel.Descriptor) {
+        /// Closes a descriptor and deletes the file. Safe for defer blocks.
+        public static func cleanup(path: Swift.String, fd: borrowing Kernel.Descriptor) {
             try? ISO_9945.Kernel.Close.close(fd)
             try? ISO_9945.Kernel.Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Delete.delete(p)
-            }
-        }
-
-        // MARK: - Closure-based helpers (preferred)
-
-        /// Creates a temporary file and executes the body with path and descriptor.
-        ///
-        /// The file is automatically cleaned up after the body completes.
-        ///
-        /// - Parameters:
-        ///   - prefix: Prefix for the temp file name (default: "io-test")
-        ///   - body: Closure receiving the path and descriptor
-        /// - Returns: The value returned by the body
-        /// - Throws: `TempFileError` if creation fails, or rethrows from body
-        public static func withTempFile<R>(
-            prefix: Swift.String = "io-test",
-            _ body: (borrowing Kernel.Path.View, Kernel.Descriptor) throws -> R
-        ) throws -> R {
-            let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
-            return try ISO_9945.Kernel.Path.scope(pathString) { path in
-                let fd: Kernel.Descriptor
-                do {
-                    fd = try ISO_9945.Kernel.File.Open.open(
-                        path: path,
-                        mode: .readWrite,
-                        options: [.create, .truncate, .exclusive],
-                        permissions: .ownerReadWrite
-                    )
-                } catch {
-                    throw TempFileError()
-                }
-                defer {
-                    try? ISO_9945.Kernel.Close.close(fd)
-                    try? ISO_9945.Kernel.File.Delete.delete(path)
-                }
-                return try body(path, fd)
-            }
-        }
-
-        /// Creates a temporary file with initial content and executes the body.
-        ///
-        /// The file is automatically cleaned up after the body completes.
-        ///
-        /// - Parameters:
-        ///   - content: The string content to write
-        ///   - prefix: Prefix for the temp file name (default: "io-test")
-        ///   - body: Closure receiving the path and descriptor
-        /// - Returns: The value returned by the body
-        /// - Throws: `TempFileError` if creation fails, or rethrows from body
-        public static func withTempFile<R>(
-            content: Swift.String,
-            prefix: Swift.String = "io-test",
-            _ body: (borrowing Kernel.Path.View, Kernel.Descriptor) throws -> R
-        ) throws -> R {
-            try withTempFile(prefix: prefix) { path, fd in
-                var contentBytes = Array(content.utf8)
-                _ = try? contentBytes.withUnsafeMutableBytes { ptr in
-                    try ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))
-                }
-                return try body(path, fd)
-            }
-        }
-
-        /// Creates a temporary file for Handle tests and executes the body.
-        ///
-        /// The file is automatically cleaned up after the body completes.
-        ///
-        /// - Parameters:
-        ///   - content: Optional string content to write
-        ///   - prefix: Prefix for the temp file name (default: "handle-test")
-        ///   - body: Closure receiving the path and File.Descriptor
-        /// - Returns: The value returned by the body
-        /// - Throws: `TempFileError` if creation fails, or rethrows from body
-        public static func withTempFileForHandle<R>(
-            content: Swift.String? = nil,
-            prefix: Swift.String = "handle-test",
-            _ body: (borrowing Kernel.Path.View, Kernel.File.Descriptor) throws -> R
-        ) throws -> R {
-            let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
-            return try ISO_9945.Kernel.Path.scope(pathString) { path in
-                let fd: Kernel.Descriptor
-                do {
-                    fd = try ISO_9945.Kernel.File.Open.open(
-                        path: path,
-                        mode: .readWrite,
-                        options: [.create, .truncate, .exclusive],
-                        permissions: .ownerReadWrite
-                    )
-                } catch {
-                    throw TempFileError()
-                }
-
-                if let content = content {
-                    var contentBytes = Array(content.utf8)
-                    _ = try? contentBytes.withUnsafeMutableBytes { ptr in
-                        try ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))
-                    }
-                }
-
-                defer {
-                    try? ISO_9945.Kernel.Close.close(fd)
-                    try? ISO_9945.Kernel.File.Delete.delete(path)
-                }
-
-                return try body(path, fd)
             }
         }
     }

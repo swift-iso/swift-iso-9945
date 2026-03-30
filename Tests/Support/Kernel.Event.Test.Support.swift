@@ -25,28 +25,21 @@ extension Kernel.Event {
         ///
         /// - Returns: Tuple of (read descriptor, write descriptor)
         /// - Throws: `PipeError` if pipe creation fails
-        public static func makePipe() throws -> (read: Kernel.Descriptor, write: Kernel.Descriptor) {
+        public static func makePipe() throws -> ISO_9945.Kernel.Pipe.Descriptors {
             do {
-                let descriptors = try ISO_9945.Kernel.Pipe.pipe()
-                return (read: descriptors.read, write: descriptors.write)
+                return try ISO_9945.Kernel.Pipe.pipe()
             } catch {
                 throw PipeError()
             }
         }
 
         /// Closes a descriptor without throwing (safe for defer blocks).
-        ///
-        /// - Parameter fd: The descriptor to close
-        public static func closeNoThrow(_ fd: Kernel.Descriptor) {
+        public static func closeNoThrow(_ fd: borrowing Kernel.Descriptor) {
             try? ISO_9945.Kernel.Close.close(fd)
         }
 
         /// Writes one byte to a descriptor.
-        ///
-        /// - Parameters:
-        ///   - fd: The descriptor to write to
-        ///   - value: The byte value to write (default: 1)
-        public static func writeByte(_ fd: Kernel.Descriptor, value: UInt8 = 1) {
+        public static func writeByte(_ fd: borrowing Kernel.Descriptor, value: UInt8 = 1) {
             var byte = value
             _ = withUnsafeBytes(of: &byte) { buffer in
                 try? ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
@@ -54,9 +47,7 @@ extension Kernel.Event {
         }
 
         /// Drains one byte from a descriptor.
-        ///
-        /// - Parameter fd: The descriptor to read from
-        public static func readDrain(_ fd: Kernel.Descriptor) {
+        public static func readDrain(_ fd: borrowing Kernel.Descriptor) {
             var byte: UInt8 = 0
             _ = withUnsafeMutableBytes(of: &byte) { buffer in
                 try? ISO_9945.Kernel.IO.Read.read(fd, into: buffer)

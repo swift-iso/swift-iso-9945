@@ -144,18 +144,22 @@ extension Kernel.Lock.Test.Unit {
     extension Kernel.Lock.Test.Unit {
         @Test("lock and unlock on file succeeds")
         func lockAndUnlockSucceeds() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-test") { _, fd in
-                try Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-                try Kernel.Lock.unlock(fd, range: .file)
-            }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+
+            try Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd, range: .file)
         }
 
         @Test("Immediate.lock succeeds on uncontested file")
         func immediateLockSucceedsUncontested() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-test") { _, fd in
-                try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-                try Kernel.Lock.unlock(fd, range: .file)
-            }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+
+            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd, range: .file)
         }
 
         @Test("multiple descriptors can lock same file within process")
@@ -163,39 +167,47 @@ extension Kernel.Lock.Test.Unit {
             // NOTE: This demonstrates POSIX behavior where same-process locks don't contend.
             // It is NOT testing that "shared allows multiple" in a meaningful way.
             // Cross-process contention is tested in the Integration Tests.
-            try KernelIOTest.withTempFile(prefix: "lock-test") { path, fd1 in
-                let fd2 = try Kernel.File.Open.open(path: path, mode: .readWrite, options: [], permissions: .privateFile)
-                defer { try? Kernel.Close.close(fd2) }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-test")
+            let fd1 = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd1) }
 
-                try Kernel.Lock.lock(fd1, range: .file, kind: .shared)
-                try Kernel.Lock.Immediate.lock(fd2, range: .file, kind: .shared)
-
-                try Kernel.Lock.unlock(fd1, range: .file)
-                try Kernel.Lock.unlock(fd2, range: .file)
+            let fd2 = try ISO_9945.Kernel.Path.scope(path) { p in
+                try Kernel.File.Open.open(path: p, mode: .readWrite, options: [], permissions: .privateFile)
             }
+            defer { try? Kernel.Close.close(fd2) }
+
+            try Kernel.Lock.lock(fd1, range: .file, kind: .shared)
+            try Kernel.Lock.Immediate.lock(fd2, range: .file, kind: .shared)
+
+            try Kernel.Lock.unlock(fd1, range: .file)
+            try Kernel.Lock.unlock(fd2, range: .file)
         }
 
         @Test("byte range locks on non-overlapping regions")
         func nonOverlappingByteRanges() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-test") { _, fd in
-                let range1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(100))
-                let range2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(200), end: Kernel.File.Offset(300))
+            let path = KernelIOTest.makeTempPath(prefix: "lock-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                try Kernel.Lock.lock(fd, range: range1, kind: .exclusive)
-                try Kernel.Lock.Immediate.lock(fd, range: range2, kind: .exclusive)
+            let range1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(100))
+            let range2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(200), end: Kernel.File.Offset(300))
 
-                try Kernel.Lock.unlock(fd, range: range1)
-                try Kernel.Lock.unlock(fd, range: range2)
-            }
+            try Kernel.Lock.lock(fd, range: range1, kind: .exclusive)
+            try Kernel.Lock.Immediate.lock(fd, range: range2, kind: .exclusive)
+
+            try Kernel.Lock.unlock(fd, range: range1)
+            try Kernel.Lock.unlock(fd, range: range2)
         }
 
         @Test("unlock on non-locked region is no-op on POSIX")
         func unlockNonLockedRegion() throws {
             // POSIX: unlocking a region not locked by the process is a no-op, not an error
-            try KernelIOTest.withTempFile(prefix: "lock-test") { _, fd in
-                // Should not throw
-                try Kernel.Lock.unlock(fd, range: .file)
-            }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+
+            // Should not throw
+            try Kernel.Lock.unlock(fd, range: .file)
         }
     }
 
@@ -204,63 +216,71 @@ extension Kernel.Lock.Test.Unit {
     extension Kernel.Lock.Test.Unit {
         @Test("Token acquires and releases lock")
         func tokenAcquiresAndReleases() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-token") { _, fd in
-                var token = try Kernel.Lock.Token(
-                    descriptor: fd,
-                    range: .file,
-                    kind: .exclusive,
-                    acquire: .wait
-                )
+            let path = KernelIOTest.makeTempPath(prefix: "lock-token")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                try token.release()
+            var token = try Kernel.Lock.Token(
+                descriptor: fd,
+                range: .file,
+                kind: .exclusive,
+                acquire: .wait
+            )
 
-                // Should be able to acquire again after release
-                try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-                try Kernel.Lock.unlock(fd, range: .file)
-            }
+            try token.release()
+
+            // Should be able to acquire again after release
+            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd, range: .file)
         }
 
         @Test("Token with try acquire succeeds when uncontested")
         func tokenTryAcquireSucceeds() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-token") { _, fd in
-                var token = try Kernel.Lock.Token(
-                    descriptor: fd,
-                    range: .file,
-                    kind: .exclusive,
-                    acquire: .try
-                )
+            let path = KernelIOTest.makeTempPath(prefix: "lock-token")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                try token.release()
-            }
+            var token = try Kernel.Lock.Token(
+                descriptor: fd,
+                range: .file,
+                kind: .exclusive,
+                acquire: .try
+            )
+
+            try token.release()
         }
 
         @Test("Token release is idempotent")
         func tokenReleaseIdempotent() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-token") { _, fd in
-                var token = try Kernel.Lock.Token(
-                    descriptor: fd,
-                    range: .file,
-                    kind: .exclusive
-                )
+            let path = KernelIOTest.makeTempPath(prefix: "lock-token")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                try token.release()
-                try token.release()  // Should be no-op
-            }
+            var token = try Kernel.Lock.Token(
+                descriptor: fd,
+                range: .file,
+                kind: .exclusive
+            )
+
+            try token.release()
+            try token.release()  // Should be no-op
         }
 
         @Test("Token with byte range lock")
         func tokenByteRangeLock() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-token") { _, fd in
-                let range = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(512))
+            let path = KernelIOTest.makeTempPath(prefix: "lock-token")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                var token = try Kernel.Lock.Token(
-                    descriptor: fd,
-                    range: range,
-                    kind: .shared
-                )
+            let range = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(512))
 
-                try token.release()
-            }
+            var token = try Kernel.Lock.Token(
+                descriptor: fd,
+                range: range,
+                kind: .shared
+            )
+
+            try token.release()
         }
     }
 
@@ -269,60 +289,68 @@ extension Kernel.Lock.Test.Unit {
     extension Kernel.Lock.Test.Unit {
         @Test("withExclusive executes body and releases lock")
         func withExclusiveExecutesBody() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-with") { _, fd in
-                var executed = false
-                try Kernel.Lock.withExclusive(fd) {
-                    executed = true
-                }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-with")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                #expect(executed == true)
-
-                // Lock should be released
-                try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-                try Kernel.Lock.unlock(fd, range: .file)
+            var executed = false
+            try Kernel.Lock.withExclusive(fd) {
+                executed = true
             }
+
+            #expect(executed == true)
+
+            // Lock should be released
+            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd, range: .file)
         }
 
         @Test("withExclusive returns value from body")
         func withExclusiveReturnsValue() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-with") { _, fd in
-                let result = try Kernel.Lock.withExclusive(fd) {
-                    return 42
-                }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-with")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                #expect(result == 42)
+            let result = try Kernel.Lock.withExclusive(fd) {
+                return 42
             }
+
+            #expect(result == 42)
         }
 
         @Test("withShared executes body and releases lock")
         func withSharedExecutesBody() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-with") { _, fd in
-                var executed = false
-                try Kernel.Lock.withShared(fd) {
-                    executed = true
-                }
+            let path = KernelIOTest.makeTempPath(prefix: "lock-with")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                #expect(executed == true)
+            var executed = false
+            try Kernel.Lock.withShared(fd) {
+                executed = true
             }
+
+            #expect(executed == true)
         }
 
         @Test("withExclusive releases lock on throw")
         func withExclusiveReleasesOnThrow() throws {
-            try KernelIOTest.withTempFile(prefix: "lock-with") { _, fd in
-                struct TestError: Swift.Error {}
+            let path = KernelIOTest.makeTempPath(prefix: "lock-with")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                do {
-                    try Kernel.Lock.withExclusive(fd) { () throws(TestError) in
-                        throw TestError()
-                    }
-                } catch {
-                    // Expected - body threw TestError, wrapped in WithLockError.body
+            struct TestError: Swift.Error {}
+
+            do {
+                try Kernel.Lock.withExclusive(fd) { () throws(TestError) in
+                    throw TestError()
                 }
-
-                // Lock should be released
-                try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-                try Kernel.Lock.unlock(fd, range: .file)
+            } catch {
+                // Expected - body threw TestError, wrapped in WithLockError.body
             }
+
+            // Lock should be released
+            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd, range: .file)
         }
     }
 

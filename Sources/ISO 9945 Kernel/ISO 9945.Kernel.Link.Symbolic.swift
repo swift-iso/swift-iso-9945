@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     @usableFromInline
     internal static func _create(
         target: UnsafePointer<Path.Char>,
-        relativeTo descriptor: Kernel.Descriptor,
+        relativeTo descriptor: borrowing Kernel.Descriptor,
         linkPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cTarget = unsafe UnsafePointer<CChar>(target)

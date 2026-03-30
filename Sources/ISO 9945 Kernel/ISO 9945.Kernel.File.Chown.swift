@@ -77,7 +77,7 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - gid: The new group ID.
     /// - Throws: `Kernel.File.Chown.Error` on failure.
     public static func fchown(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {

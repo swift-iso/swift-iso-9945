@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.File.Delete {
     /// - Throws: `Kernel.File.Delete.Error` on failure.
     @usableFromInline
     internal static func _delete(
-        relativeTo descriptor: Kernel.Descriptor,
+        relativeTo descriptor: borrowing Kernel.Descriptor,
         path: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {

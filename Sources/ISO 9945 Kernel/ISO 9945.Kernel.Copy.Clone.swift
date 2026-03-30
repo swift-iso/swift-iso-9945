@@ -55,8 +55,8 @@ extension ISO_9945.Kernel.Copy.Clone {
     /// - Throws: ``Kernel/Copy/Error`` on failure.
 
     public static func perform(
-        from source: Kernel.Descriptor,
-        to destination: Kernel.Descriptor
+        from source: borrowing Kernel.Descriptor,
+        to destination: borrowing Kernel.Descriptor
     ) throws(Kernel.Copy.Error) {
         guard source.isValid else { throw .invalid }
         guard destination.isValid else { throw .invalid }

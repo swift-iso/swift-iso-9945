@@ -66,17 +66,17 @@ extension ISO_9945.Kernel.Lock {
         ///   - acquire: The acquisition strategy (default: `.wait`).
         /// - Throws: `Kernel.Lock.Error` if locking fails.
         public init(
-            descriptor: Kernel.Descriptor,
+            descriptor: borrowing Kernel.Descriptor,
             range: Kernel.Lock.Range = .file,
             kind: Kernel.Lock.Kind,
             acquire: Kernel.Lock.Acquire = .wait
         ) throws(Kernel.Lock.Error) {
-            self.descriptor = descriptor
+            self.descriptor = Kernel.Descriptor(_rawValue: descriptor._rawValue)
             self.range = range
             self.isReleased = false
 
             try Self.acquireLock(
-                descriptor: descriptor,
+                descriptor: self.descriptor,
                 range: range,
                 kind: kind,
                 acquire: acquire
@@ -108,7 +108,7 @@ extension ISO_9945.Kernel.Lock {
 extension ISO_9945.Kernel.Lock.Token {
     /// Acquires a lock using the specified strategy.
     private static func acquireLock(
-        descriptor: Kernel.Descriptor,
+        descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind,
         acquire: Kernel.Lock.Acquire
@@ -134,7 +134,7 @@ extension ISO_9945.Kernel.Lock.Token {
     ///
     /// Uses exponential backoff starting at 1ms, capped at 100ms.
     private static func acquireWithDeadline(
-        descriptor: Kernel.Descriptor,
+        descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind,
         deadline: Clock.Continuous.Instant
@@ -218,7 +218,7 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: The result of the closure.
     /// - Throws: `WithLockError` if locking fails or the closure throws.
     public static func withExclusive<T, E: Swift.Error & Sendable>(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
@@ -249,7 +249,7 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: The result of the closure.
     /// - Throws: `WithLockError` if locking fails or the closure throws.
     public static func withShared<T, E: Swift.Error & Sendable>(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T

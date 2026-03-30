@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.File.Attributes {
     ///   - permissions: The new permissions.
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
     public static func setPermissions(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         permissions: Kernel.File.Permissions
     ) throws(Error) {
         #if canImport(Darwin)

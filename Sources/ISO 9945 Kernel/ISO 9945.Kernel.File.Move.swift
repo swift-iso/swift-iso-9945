@@ -81,9 +81,9 @@ extension ISO_9945.Kernel.File.Move {
     /// - Throws: `Kernel.File.Move.Error` on failure.
 
     public static func move(
-        from oldDescriptor: Kernel.Descriptor,
+        from oldDescriptor: borrowing Kernel.Descriptor,
         oldPath: UnsafePointer<Path.Char>,
-        to newDescriptor: Kernel.Descriptor,
+        to newDescriptor: borrowing Kernel.Descriptor,
         newPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cOldPath = unsafe UnsafePointer<CChar>(oldPath)

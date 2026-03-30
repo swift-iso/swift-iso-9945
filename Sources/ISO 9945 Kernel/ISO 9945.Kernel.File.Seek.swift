@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.File.Seek {
     /// - Throws: `Kernel.File.Seek.Error` on failure.
     @discardableResult
     public static func seek(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         offset: Int64,
         whence: Whence
     ) throws(Error) -> Int64 {
@@ -56,7 +56,7 @@ extension ISO_9945.Kernel.File.Seek {
     /// - Parameter descriptor: The file descriptor.
     /// - Returns: The current offset from the beginning of the file.
     /// - Throws: `Kernel.File.Seek.Error` on failure.
-    public static func tell(_ descriptor: Kernel.Descriptor) throws(Error) -> Int64 {
+    public static func tell(_ descriptor: borrowing Kernel.Descriptor) throws(Error) -> Int64 {
         try seek(descriptor, offset: 0, whence: .current)
     }
 }

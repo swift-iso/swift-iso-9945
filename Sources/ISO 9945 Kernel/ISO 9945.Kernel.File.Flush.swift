@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func flush(_ descriptor: Kernel.Descriptor) throws(Error) {
+    public static func flush(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         #if canImport(Darwin)
             let result = Darwin.fsync(descriptor._rawValue)
         #elseif canImport(Musl)
@@ -69,7 +69,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func data(_ descriptor: Kernel.Descriptor) throws(Error) {
+    public static func data(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         #if canImport(Musl)
             let result = Musl.fdatasync(descriptor._rawValue)
         #elseif canImport(Glibc)
@@ -101,7 +101,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func full(_ descriptor: Kernel.Descriptor) throws(Error) {
+    public static func full(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         let result = Darwin.fcntl(descriptor._rawValue, F_FULLFSYNC)
 
         if result != -1 {
@@ -128,7 +128,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func barrier(_ descriptor: Kernel.Descriptor) throws(Error) {
+    public static func barrier(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         let result = Darwin.fcntl(descriptor._rawValue, F_BARRIERFSYNC)
 
         if result != -1 {

@@ -241,8 +241,8 @@ extension ISO_9945.Kernel.File.Clone {
         /// - Returns: `true` if cloned, `false` if not supported.
         /// - Throws: `Kernel.File.Clone.Error.Syscall` for other errors.
         public static func attempt(
-            source: Kernel.Descriptor,
-            destination: Kernel.Descriptor
+            source: borrowing Kernel.Descriptor,
+            destination: borrowing Kernel.Descriptor
         ) throws(Kernel.File.Clone.Error.Syscall) -> Bool {
             let result = ioctl(destination._rawValue, FICLONE, source._rawValue)
 
@@ -266,8 +266,8 @@ extension ISO_9945.Kernel.File.Clone {
         ///
         /// This may use server-side copy or reflink on supported filesystems.
         public static func copy(
-            source: Kernel.Descriptor,
-            destination: Kernel.Descriptor,
+            source: borrowing Kernel.Descriptor,
+            destination: borrowing Kernel.Descriptor,
             length: Int
         ) throws(Kernel.File.Clone.Error.Syscall) {
             var remaining = Kernel.File.Size(length)

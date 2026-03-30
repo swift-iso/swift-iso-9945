@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Memory.Map {
         length: Kernel.File.Size,
         protection: Protection,
         flags: Flags,
-        fd: Kernel.Descriptor = .invalid,
+        fd: borrowing Kernel.Descriptor = .invalid,
         offset: Kernel.File.Offset = .zero
     ) throws(Error) -> Kernel.Memory.Address {
         guard length.isPositive else {

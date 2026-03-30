@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.Lock {
     ///           `Error.unavailable` if the system lock table is exhausted.
 
     public static func lock(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind
     ) throws(Kernel.Lock.Error) {
@@ -56,7 +56,7 @@ extension ISO_9945.Kernel.Lock {
     /// - Throws: `Error` if unlocking fails.
 
     public static func unlock(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range
     ) throws(Kernel.Lock.Error) {
         var fl = flock()
@@ -116,7 +116,7 @@ extension ISO_9945.Kernel.Lock {
         ///           `Error.unavailable` if the system lock table is exhausted.
 
         public static func lock(
-            _ descriptor: Kernel.Descriptor,
+            _ descriptor: borrowing Kernel.Descriptor,
             range: Kernel.Lock.Range,
             kind: Kernel.Lock.Kind
         ) throws(Kernel.Lock.Error) {

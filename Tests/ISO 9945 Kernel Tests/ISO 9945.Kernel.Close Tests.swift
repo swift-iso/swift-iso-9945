@@ -30,9 +30,11 @@ extension Kernel.Close {
 extension Kernel.Close.Test.Unit {
     @Test("close succeeds on valid descriptor")
     func closeSucceedsOnValidDescriptor() throws {
-        try KernelIOTest.withTempFile(prefix: "close-test") { _, fd in
-            try Kernel.Close.close(fd)
-        }
+        let path = KernelIOTest.makeTempPath(prefix: "close-test")
+        let fd = try KernelIOTest.open(at: path)
+        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+
+        try Kernel.Close.close(fd)
     }
 
     @Test("close throws on invalid descriptor")

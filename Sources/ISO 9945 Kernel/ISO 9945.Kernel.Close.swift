@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.Close {
     ///
     /// - Parameter descriptor: The file descriptor to close.
     /// - Throws: ``Kernel/Close/Error`` on failure.
-    public static func close(_ descriptor: Kernel.Descriptor) throws(Kernel.Close.Error) {
+    public static func close(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Close.Error) {
         guard descriptor.isValid else {
             throw .handle(.invalid)
         }

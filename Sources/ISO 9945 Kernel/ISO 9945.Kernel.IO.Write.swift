@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
     public static func write(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
@@ -101,7 +101,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
     public static func pwrite(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
@@ -140,7 +140,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - buffer: The buffer to write from.
     /// - Throws: ``Kernel/IO/Write/Error`` on failure.
     public static func writeAll(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
     ) throws(Error) {
         guard let baseAddress = buffer.baseAddress else {
@@ -177,7 +177,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Throws: `Kernel.IO.Write.Error` on failure.
 
     public static func write(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>
     ) throws(Error) -> Int {
         try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
@@ -195,7 +195,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Throws: `Kernel.IO.Write.Error` on failure.
 
     public static func pwrite(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
@@ -212,7 +212,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Throws: `Kernel.IO.Write.Error` on failure.
 
     public static func writeAll(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>
     ) throws(Error) {
         try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) in

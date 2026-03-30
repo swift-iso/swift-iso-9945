@@ -31,7 +31,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
     public static func read(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
@@ -70,7 +70,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
     public static func pread(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
@@ -114,7 +114,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// - Throws: `Kernel.IO.Read.Error` on failure.
 
     public static func read(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>
     ) throws(Error) -> Int {
         try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
@@ -132,7 +132,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// - Throws: `Kernel.IO.Read.Error` on failure.
 
     public static func pread(
-        _ descriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {

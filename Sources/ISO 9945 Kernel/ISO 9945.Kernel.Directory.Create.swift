@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Directory.Create {
     /// Internal implementation for creating a directory relative to a descriptor.
     @usableFromInline
     internal static func _create(
-        relativeTo descriptor: Kernel.Descriptor,
+        relativeTo descriptor: borrowing Kernel.Descriptor,
         path: UnsafePointer<Path.Char>,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {

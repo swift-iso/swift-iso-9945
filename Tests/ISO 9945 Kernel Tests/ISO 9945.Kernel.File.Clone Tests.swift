@@ -14,46 +14,51 @@ import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives
 import Testing
 
-@testable import ISO_9945_Kernel
-
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
     import Glibc
 #endif
 
+@testable import ISO_9945_Kernel
+
 // MARK: - Cross-Platform Test Helpers
 
-/// Creates a temporary file with content and returns its path
-private func createTempFile(prefix: Swift.String, content: Swift.String) -> Swift.String {
-    let path: Swift.String = "/tmp/\(prefix)-\(getpid())-\(Int.random(in: 0..<Int.max))"
-    let fd = open(path, O_CREAT | O_WRONLY, 0o644)
-    guard fd >= 0 else { return path }
-    defer { close(fd) }
-
-    _ = content.withCString { ptr in
-        write(fd, ptr, content.count)
+/// Creates a temporary file with content and returns its path.
+private func createTempFileWithContent(prefix: Swift.String, content: Swift.String) -> Swift.String {
+    let path = KernelIOTest.makeTempPath(prefix: prefix)
+    if let fd = try? KernelIOTest.open(at: path) {
+        KernelIOTest.write(content, to: fd)
+        try? ISO_9945.Kernel.Close.close(fd)
     }
-
     return path
 }
 
-/// Reads content from a file
-private func readFileContent(_ path: Swift.String) -> String? {
-    let fd = open(path, O_RDONLY)
-    guard fd >= 0 else { return nil }
-    defer { close(fd) }
+/// Reads content from a file using the Kernel API.
+private func readFileContent(_ path: Swift.String) -> Swift.String? {
+    guard let fd = try? ISO_9945.Kernel.Path.scope(path, { p in
+        try ISO_9945.Kernel.File.Open.open(
+            path: p,
+            mode: .read,
+            options: [],
+            permissions: .ownerReadWrite
+        )
+    }) else { return nil }
+    defer { try? ISO_9945.Kernel.Close.close(fd) }
 
-    var buffer = [CChar](repeating: 0, count: 4096)
-    let bytesRead = read(fd, &buffer, buffer.count - 1)
-    guard bytesRead > 0 else { return nil }
+    var buffer = [UInt8](repeating: 0, count: 4096)
+    guard let bytesRead = try? buffer.withUnsafeMutableBytes({ ptr in
+        try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+    }), bytesRead > 0 else { return nil }
 
-    return Swift.String(cString: buffer)
+    return Swift.String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
 }
 
-/// Cleans up a temp file
+/// Cleans up a temp file.
 private func cleanup(_ path: Swift.String) {
-    _ = path.withCString { unlink($0) }
+    try? ISO_9945.Kernel.Path.scope(path) { p in
+        try ISO_9945.Kernel.File.Delete.delete(p)
+    }
 }
 
 @Suite("POSIX.Kernel.File.Clone")
@@ -192,7 +197,7 @@ struct POSIXKernelFileCloneTests {
         @Test("copyfile creates file copy")
         func copyfileCreatesFileCopy() throws {
             let content = "Hello, World! This is test content for cloning."
-            let source = createTempFile(prefix: "clone-src", content: content)
+            let source = createTempFileWithContent(prefix: "clone-src", content: content)
             let dest = "/tmp/clone-dst-\(getpid())-\(Int.random(in: 0..<Int.max))"
 
             defer {
@@ -217,7 +222,7 @@ struct POSIXKernelFileCloneTests {
         @Test("clonefile with clone flag attempts reflink")
         func clonefileWithCloneFlag() throws {
             let content = "Test content for reflink or copy"
-            let source = createTempFile(prefix: "clone-src", content: content)
+            let source = createTempFileWithContent(prefix: "clone-src", content: content)
             let dest = "/tmp/clone-dst-\(getpid())-\(Int.random(in: 0..<Int.max))"
 
             defer {
@@ -242,8 +247,8 @@ struct POSIXKernelFileCloneTests {
         @Test("clonefile to existing destination fails")
         func cloneToExistingFails() throws {
             let content = "Source content"
-            let source = createTempFile(prefix: "clone-src", content: content)
-            let dest = createTempFile(prefix: "clone-dst", content: "Existing")
+            let source = createTempFileWithContent(prefix: "clone-src", content: content)
+            let dest = createTempFileWithContent(prefix: "clone-dst", content: "Existing")
 
             defer {
                 cleanup(source)
@@ -266,7 +271,7 @@ struct POSIXKernelFileCloneTests {
 
         @Test("clone empty file")
         func cloneEmptyFile() throws {
-            let source = createTempFile(prefix: "clone-empty-src", content: "")
+            let source = createTempFileWithContent(prefix: "clone-empty-src", content: "")
             let dest = "/tmp/clone-empty-dst-\(getpid())-\(Int.random(in: 0..<Int.max))"
 
             defer {
@@ -284,10 +289,10 @@ struct POSIXKernelFileCloneTests {
             }
 
             // Verify destination exists and is empty
-            var statBuf = stat()
-            let statResult = dest.withCString { stat($0, &statBuf) }
-            #expect(statResult == 0)
-            #expect(statBuf.st_size == 0)
+            let destSize = try ISO_9945.Kernel.Path.scope(dest) { dstPath in
+                try ISO_9945.Kernel.File.Clone.Metadata.size(at: dstPath)
+            }
+            #expect(destSize == 0)
         }
         #endif
 
@@ -295,8 +300,8 @@ struct POSIXKernelFileCloneTests {
         @Test("copy_file_range copies data")
         func copyFileRangeCopiesData() throws {
             let content = "Test content for copy_file_range"
-            let source = createTempFile(prefix: "clone-src", content: content)
-            let dest = "/tmp/clone-dst-\(getpid())-\(Int.random(in: 0..<Int.max))"
+            let source = createTempFileWithContent(prefix: "clone-src", content: content)
+            let dest = KernelIOTest.makeTempPath(prefix: "clone-dst")
 
             defer {
                 cleanup(source)
@@ -304,19 +309,24 @@ struct POSIXKernelFileCloneTests {
             }
 
             // Open source for reading
-            let srcFd = open(source, O_RDONLY)
-            guard srcFd >= 0 else { throw POSIXError(.ENOENT) }
-            defer { close(srcFd) }
+            let srcFd = try ISO_9945.Kernel.Path.scope(source) { p in
+                try ISO_9945.Kernel.File.Open.open(
+                    path: p,
+                    mode: .read,
+                    options: [],
+                    permissions: .ownerReadWrite
+                )
+            }
+            defer { try? ISO_9945.Kernel.Close.close(srcFd) }
 
             // Create destination
-            let dstFd = open(dest, O_CREAT | O_WRONLY | O_TRUNC, 0o644)
-            guard dstFd >= 0 else { throw POSIXError(.EACCES) }
-            defer { close(dstFd) }
+            let dstFd = try KernelIOTest.open(at: dest)
+            defer { try? ISO_9945.Kernel.Close.close(dstFd) }
 
             // Copy using copy_file_range
             try ISO_9945.Kernel.File.Clone.CopyRange.copy(
-                source: ISO_9945.Kernel.Descriptor(_rawValue: srcFd),
-                destination: ISO_9945.Kernel.Descriptor(_rawValue: dstFd),
+                source: srcFd,
+                destination: dstFd,
                 length: content.count
             )
 
@@ -335,7 +345,7 @@ struct POSIXKernelFileCloneTests {
         @Test("size returns correct file size")
         func sizeReturnsCorrectSize() throws {
             let content = "12345"  // 5 bytes
-            let source = createTempFile(prefix: "size-test", content: content)
+            let source = createTempFileWithContent(prefix: "size-test", content: content)
 
             defer {
                 cleanup(source)

@@ -126,17 +126,22 @@ extension Kernel.File.Open.Test.EdgeCase {
     extension Kernel.File.Open.Test.Unit {
         @Test("open existing file for read succeeds")
         func openExistingFileForRead() throws {
-            try KernelIOTest.withTempFile(content: "test", prefix: "open-test") { path, _ in
-                let readFd = try Kernel.File.Open.open(
-                    path: path,
+            let path = KernelIOTest.makeTempPath(prefix: "open-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("test", to: fd)
+
+            let readFd = try ISO_9945.Kernel.Path.scope(path) { p in
+                try Kernel.File.Open.open(
+                    path: p,
                     mode: .read,
                     options: [],
                     permissions: .standard
                 )
-                defer { try? Kernel.Close.close(readFd) }
-
-                #expect(readFd.isValid)
             }
+            defer { try? Kernel.Close.close(readFd) }
+
+            #expect(readFd.isValid)
         }
 
         @Test("open with create creates new file")
@@ -164,64 +169,80 @@ extension Kernel.File.Open.Test.EdgeCase {
 
         @Test("open with truncate truncates existing file")
         func openWithTruncateTruncatesFile() throws {
-            try KernelIOTest.withTempFile(content: "original content", prefix: "open-test") { path, fd in
-                try? Kernel.Close.close(fd)
+            let path = KernelIOTest.makeTempPath(prefix: "open-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("original content", to: fd)
 
-                // Re-open with truncate
-                let truncFd = try Kernel.File.Open.open(
-                    path: path,
+            try Kernel.Close.close(fd)
+
+            // Re-open with truncate
+            let truncFd = try ISO_9945.Kernel.Path.scope(path) { p in
+                try Kernel.File.Open.open(
+                    path: p,
                     mode: [.read, .write],
                     options: .truncate,
                     permissions: .standard
                 )
-                defer { try? Kernel.Close.close(truncFd) }
-
-                // Check file size is 0 using stats
-                let stats = try Kernel.File.Stats.get(descriptor: truncFd)
-                #expect(stats.size == 0, "File should be truncated to 0 bytes")
             }
+            defer { try? Kernel.Close.close(truncFd) }
+
+            // Check file size is 0 using stats
+            let stats = try Kernel.File.Stats.get(descriptor: truncFd)
+            #expect(stats.size == 0, "File should be truncated to 0 bytes")
         }
 
         @Test("open with append positions at end")
         func openWithAppendPositionsAtEnd() throws {
-            try KernelIOTest.withTempFile(content: "initial", prefix: "open-test") { path, fd in
-                try? Kernel.Close.close(fd)
+            let path = KernelIOTest.makeTempPath(prefix: "open-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("initial", to: fd)
 
-                // Re-open with append
-                let appendFd = try Kernel.File.Open.open(
-                    path: path,
+            try Kernel.Close.close(fd)
+
+            // Re-open with append
+            let appendFd = try ISO_9945.Kernel.Path.scope(path) { p in
+                try Kernel.File.Open.open(
+                    path: p,
                     mode: .write,
                     options: .append,
                     permissions: .standard
                 )
-                defer { try? Kernel.Close.close(appendFd) }
-
-                // Write more data
-                var extra = Array("_extra".utf8)
-                _ = try? extra.withUnsafeMutableBytes { ptr in
-                    try Kernel.IO.Write.write(appendFd, from: UnsafeRawBufferPointer(ptr))
-                }
-
-                // Verify total content by re-reading
-                let readFd = try Kernel.File.Open.open(path: path, mode: .read, options: [], permissions: .privateFile)
-                defer { try? Kernel.Close.close(readFd) }
-                var buffer = [UInt8](repeating: 0, count: 20)
-                let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-                    try Kernel.IO.Read.read(readFd, into: ptr)
-                }
-                let content = Swift.String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
-                #expect(content == "initial_extra")
             }
+            defer { try? Kernel.Close.close(appendFd) }
+
+            // Write more data
+            var extra = Array("_extra".utf8)
+            _ = try? extra.withUnsafeMutableBytes { ptr in
+                try Kernel.IO.Write.write(appendFd, from: UnsafeRawBufferPointer(ptr))
+            }
+
+            // Verify total content by re-reading
+            let readFd = try ISO_9945.Kernel.Path.scope(path) { p in
+                try Kernel.File.Open.open(path: p, mode: .read, options: [], permissions: .privateFile)
+            }
+            defer { try? Kernel.Close.close(readFd) }
+            var buffer = [UInt8](repeating: 0, count: 20)
+            let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
+                try Kernel.IO.Read.read(readFd, into: ptr)
+            }
+            let content = Swift.String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
+            #expect(content == "initial_extra")
         }
 
         @Test("open with exclusive fails if file exists")
         func openWithExclusiveFailsIfExists() throws {
-            try KernelIOTest.withTempFile(prefix: "open-test") { path, fd in
-                try? Kernel.Close.close(fd)
+            let path = KernelIOTest.makeTempPath(prefix: "open-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
-                #expect(throws: Kernel.File.Open.Error.self) {
-                    _ = try Kernel.File.Open.open(
-                        path: path,
+            try Kernel.Close.close(fd)
+
+            #expect(throws: Kernel.File.Open.Error.self) {
+                _ = try ISO_9945.Kernel.Path.scope(path) { p in
+                    try Kernel.File.Open.open(
+                        path: p,
                         mode: [.read, .write],
                         options: [.create, .exclusive],
                         permissions: .standard

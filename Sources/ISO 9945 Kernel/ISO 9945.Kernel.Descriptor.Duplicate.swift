@@ -31,7 +31,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// - Parameter descriptor: The file descriptor to duplicate.
     /// - Returns: The new file descriptor.
     /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
-    public static func duplicate(_ descriptor: Kernel.Descriptor) throws(Error) -> Kernel.Descriptor {
+    public static func duplicate(_ descriptor: borrowing Kernel.Descriptor) throws(Error) -> Kernel.Descriptor {
         #if canImport(Darwin)
             let result = Darwin.dup(descriptor._rawValue)
         #elseif canImport(Musl)
@@ -58,8 +58,8 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
     @discardableResult
     public static func duplicate(
-        _ descriptor: Kernel.Descriptor,
-        to newDescriptor: Kernel.Descriptor
+        _ descriptor: borrowing Kernel.Descriptor,
+        to newDescriptor: borrowing Kernel.Descriptor
     ) throws(Error) -> Kernel.Descriptor {
         #if canImport(Darwin)
             let result = Darwin.dup2(descriptor._rawValue, newDescriptor._rawValue)
@@ -86,8 +86,8 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
     @discardableResult
     public static func duplicate(
-        _ descriptor: Kernel.Descriptor,
-        to newDescriptor: Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
+        to newDescriptor: borrowing Kernel.Descriptor,
         flags: Flags
     ) throws(Error) -> Kernel.Descriptor {
         let result = Glibc.dup3(descriptor._rawValue, newDescriptor._rawValue, flags.rawValue)

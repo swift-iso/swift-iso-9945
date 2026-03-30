@@ -31,8 +31,10 @@ extension Kernel.IO.Read {
     extension Kernel.IO.Read.Test.Unit {
         @Test("read returns bytes from file")
         func readReturnsBytesFromFile() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("Hello, World!", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("Hello, World!", to: fd)
 
             // Seek to start
             _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
@@ -48,8 +50,10 @@ extension Kernel.IO.Read {
 
         @Test("read returns 0 on EOF")
         func readReturnsZeroOnEOF() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("Hi", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("Hi", to: fd)
 
             // Seek to start and read all content
             _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
@@ -68,8 +72,10 @@ extension Kernel.IO.Read {
 
         @Test("read with empty buffer returns 0")
         func readWithEmptyBufferReturnsZero() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("content", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("content", to: fd)
 
             let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
             let bytesRead = try Kernel.IO.Read.read(fd, into: emptyBuffer)
@@ -79,8 +85,10 @@ extension Kernel.IO.Read {
 
         @Test("read partial buffer")
         func readPartialBuffer() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("Short", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("Short", to: fd)
 
             _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
@@ -96,8 +104,10 @@ extension Kernel.IO.Read {
 
         @Test("pread reads at offset without changing position")
         func preadReadsAtOffset() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("0123456789", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("0123456789", to: fd)
 
             // Record initial position
             let initialPos = try Kernel.File.Seek.tell(fd)
@@ -118,8 +128,10 @@ extension Kernel.IO.Read {
 
         @Test("pread at end of file returns 0")
         func preadAtEOFReturnsZero() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("data", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("data", to: fd)
 
             var buffer = [UInt8](repeating: 0, count: 10)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
@@ -131,8 +143,10 @@ extension Kernel.IO.Read {
 
         @Test("pread with empty buffer returns 0")
         func preadWithEmptyBufferReturnsZero() throws {
-            let (path, fd) = try KernelIOTest.createTempFileWithContent("content", prefix: "read-test")
-            defer { KernelIOTest.cleanupTempFile(path: path, fd: fd) }
+            let path = KernelIOTest.makeTempPath(prefix: "read-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            KernelIOTest.write("content", to: fd)
 
             let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
             let bytesRead = try Kernel.IO.Read.pread(fd, into: emptyBuffer, at: Kernel.File.Offset(0))
