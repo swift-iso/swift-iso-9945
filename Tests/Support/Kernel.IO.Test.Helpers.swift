@@ -17,12 +17,14 @@
 
     /// Test utilities for I/O operations.
     ///
-    /// With borrowing `close()`, tests manage descriptors directly:
+    /// `Kernel.Descriptor` has a `deinit` that closes the fd automatically.
+    /// Tests just let descriptors go out of scope — no explicit close needed.
     /// ```swift
     /// let path = KernelIOTest.makeTempPath()
+    /// defer { KernelIOTest.cleanup(path: path) }
     /// let fd = try KernelIOTest.open(at: path)
-    /// defer { KernelIOTest.cleanup(path: path, fd: fd) }
     /// // ... use fd ...
+    /// // fd drops at end of scope → deinit closes
     /// ```
     public enum KernelIOTest {
         /// Generates a unique temporary file path.
@@ -50,9 +52,8 @@
             }
         }
 
-        /// Closes a descriptor and deletes the file. Safe for defer blocks.
-        public static func cleanup(path: Swift.String, fd: borrowing Kernel.Descriptor) {
-            try? ISO_9945.Kernel.Close.close(fd)
+        /// Deletes the file at the given path. Safe for defer blocks.
+        public static func cleanup(path: Swift.String) {
             try? ISO_9945.Kernel.Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Delete.delete(p)
             }

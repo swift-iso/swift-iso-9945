@@ -139,7 +139,7 @@ extension POSIXLockIntegration {
     @Test("Token acquires and releases lock")
     func tokenAcquiresAndReleasesLock() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-token")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         #expect(fd.isValid, "Failed to create test file")
 
@@ -158,7 +158,7 @@ extension POSIXLockIntegration {
     @Test("Try lock returns immediately when uncontested")
     func tryLockUncontested() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-try")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         #expect(fd.isValid, "Failed to create test file")
 
@@ -176,7 +176,7 @@ extension POSIXLockIntegration {
     @Test("Shared lock can be acquired")
     func sharedLockAcquired() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-shared")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         #expect(fd.isValid, "Failed to create test file")
 
@@ -193,7 +193,7 @@ extension POSIXLockIntegration {
     @Test("Byte-range lock on specific range")
     func byteRangeLock() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-range")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         #expect(fd.isValid, "Failed to create test file")
 
@@ -212,7 +212,7 @@ extension POSIXLockIntegration {
     func lockWithDeadlineTimesOut() throws {
         // Create a temp file path that both processes can access
         let (pathString, fd) = try makeLockTestFile(prefix: "posix-lock-deadline")
-        defer { KernelIOTest.cleanup(path: pathString, fd: fd) }
+        defer { KernelIOTest.cleanup(path: pathString) }
 
         // Spawn helper to hold the lock for 1000ms
         let helper = try LockTestHelper.spawn(
@@ -246,7 +246,7 @@ extension POSIXLockIntegration {
     @Test("Direct lock and unlock API")
     func directLockUnlock() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-direct")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         // Lock directly
         try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
@@ -258,7 +258,7 @@ extension POSIXLockIntegration {
     @Test("Immediate lock succeeds when uncontested")
     func immediateLockSucceeds() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-immediate")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         // Try immediate lock - should succeed
         try ISO_9945.Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
@@ -270,7 +270,7 @@ extension POSIXLockIntegration {
     @Test("Immediate lock throws contention when held")
     func immediateLockThrowsContention() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-contend")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         // Acquire exclusive lock
         try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
@@ -290,7 +290,7 @@ extension POSIXLockIntegration {
     @Test("withExclusive executes body under lock")
     func withExclusiveExecutesBody() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-with")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         var executed = false
 
@@ -304,7 +304,7 @@ extension POSIXLockIntegration {
     @Test("withShared allows concurrent reads")
     func withSharedExecutes() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-with-shared")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         var executed = false
 
@@ -318,7 +318,7 @@ extension POSIXLockIntegration {
     @Test("withExclusive returns value from body")
     func withExclusiveReturnsValue() throws {
         let (path, fd) = try makeLockTestFile(prefix: "posix-lock-with-return")
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
+        defer { KernelIOTest.cleanup(path: path) }
 
         let result = try ISO_9945.Kernel.Lock.withExclusive(fd) {
             42

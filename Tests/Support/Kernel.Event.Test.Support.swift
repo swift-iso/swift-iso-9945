@@ -33,11 +33,6 @@ extension Kernel.Event {
             }
         }
 
-        /// Closes a descriptor without throwing (safe for defer blocks).
-        public static func closeNoThrow(_ fd: borrowing Kernel.Descriptor) {
-            try? ISO_9945.Kernel.Close.close(fd)
-        }
-
         /// Writes one byte to a descriptor.
         public static func writeByte(_ fd: borrowing Kernel.Descriptor, value: UInt8 = 1) {
             var byte = value

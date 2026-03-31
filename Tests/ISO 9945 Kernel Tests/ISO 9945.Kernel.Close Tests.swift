@@ -31,8 +31,8 @@ extension Kernel.Close.Test.Unit {
     @Test("close succeeds on valid descriptor")
     func closeSucceedsOnValidDescriptor() throws {
         let path = KernelIOTest.makeTempPath(prefix: "close-test")
+        defer { KernelIOTest.cleanup(path: path) }
         let fd = try KernelIOTest.open(at: path)
-        defer { KernelIOTest.cleanup(path: path, fd: fd) }
 
         try Kernel.Close.close(fd)
     }

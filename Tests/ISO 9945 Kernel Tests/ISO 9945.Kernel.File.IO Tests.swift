@@ -77,7 +77,6 @@ struct FileIOIntegrationTests {
             )
 
             defer {
-                try? ISO_9945.Kernel.Close.close(fd)
                 try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 
@@ -112,7 +111,6 @@ struct FileIOIntegrationTests {
             )
 
             defer {
-                try? ISO_9945.Kernel.Close.close(fd)
                 try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 

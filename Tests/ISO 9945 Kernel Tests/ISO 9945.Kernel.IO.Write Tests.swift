@@ -33,7 +33,7 @@ extension Kernel.IO.Write {
         func writeWritesBytesToFile() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let content = Array("Hello, World!".utf8)
             let bytesWritten = try content.withUnsafeBytes { ptr in
@@ -55,7 +55,7 @@ extension Kernel.IO.Write {
         func writeWithEmptyBufferReturnsZero() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let emptyBuffer = UnsafeRawBufferPointer(start: nil, count: 0)
             let bytesWritten = try Kernel.IO.Write.write(fd, from: emptyBuffer)
@@ -67,7 +67,7 @@ extension Kernel.IO.Write {
         func writeAdvancesFilePosition() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let initialPos = try Kernel.File.Seek.tell(fd)
 
@@ -84,7 +84,7 @@ extension Kernel.IO.Write {
         func multipleWritesAppend() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let first = Array("First".utf8)
             let second = Array("Second".utf8)
@@ -105,7 +105,7 @@ extension Kernel.IO.Write {
         func pwriteWritesAtOffset() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             // Write initial content
             let initial = Array("XXXXXXXXXX".utf8)
@@ -139,7 +139,7 @@ extension Kernel.IO.Write {
         func pwriteWithEmptyBufferReturnsZero() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let emptyBuffer = UnsafeRawBufferPointer(start: nil, count: 0)
             let bytesWritten = try Kernel.IO.Write.pwrite(fd, from: emptyBuffer, at: Kernel.File.Offset(0))
@@ -151,7 +151,7 @@ extension Kernel.IO.Write {
         func pwriteCanExtendFile() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             // Write at offset 10 in empty file
             let content = Array("End".utf8)

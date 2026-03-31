@@ -57,7 +57,6 @@ struct LockHelper {
                     options: [],
                     permissions: 0
                 )
-                defer { try? ISO_9945.Kernel.Close.close(fd) }
 
                 // Acquire exclusive lock
                 try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)

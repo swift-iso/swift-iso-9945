@@ -178,7 +178,6 @@ private func cleanup(path: Swift.String) {
                     permissions: .ownerReadWrite
                 )
             }
-            defer { try? Kernel.Close.close(fd2) }
             #expect(fd2.isValid)
         }
     }

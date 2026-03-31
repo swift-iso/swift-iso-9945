@@ -33,7 +33,7 @@ extension Kernel.IO.Read {
         func readReturnsBytesFromFile() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("Hello, World!", to: fd)
 
             // Seek to start
@@ -52,7 +52,7 @@ extension Kernel.IO.Read {
         func readReturnsZeroOnEOF() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("Hi", to: fd)
 
             // Seek to start and read all content
@@ -74,7 +74,7 @@ extension Kernel.IO.Read {
         func readWithEmptyBufferReturnsZero() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("content", to: fd)
 
             let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
@@ -87,7 +87,7 @@ extension Kernel.IO.Read {
         func readPartialBuffer() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("Short", to: fd)
 
             _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
@@ -106,7 +106,7 @@ extension Kernel.IO.Read {
         func preadReadsAtOffset() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("0123456789", to: fd)
 
             // Record initial position
@@ -130,7 +130,7 @@ extension Kernel.IO.Read {
         func preadAtEOFReturnsZero() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("data", to: fd)
 
             var buffer = [UInt8](repeating: 0, count: 10)
@@ -145,7 +145,7 @@ extension Kernel.IO.Read {
         func preadWithEmptyBufferReturnsZero() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("content", to: fd)
 
             let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)

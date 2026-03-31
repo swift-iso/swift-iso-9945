@@ -30,16 +30,11 @@ extension Terminal.Stream.Read.Test.Integration {
     @Test
     func `Read bytes from pipe via stdin redirect`() throws {
         let pipe = try Kernel.Event.Test.makePipe()
-        defer {
-            Kernel.Event.Test.closeNoThrow(pipe.read)
-            Kernel.Event.Test.closeNoThrow(pipe.write)
-        }
 
         let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
         let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
         defer {
             try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-            Kernel.Event.Test.closeNoThrow(savedStdin)
         }
 
         try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)
@@ -62,21 +57,17 @@ extension Terminal.Stream.Read.Test.Integration {
     @Test
     func `Read returns 0 on EOF when write end closed`() throws {
         let pipe = try Kernel.Event.Test.makePipe()
-        defer {
-            Kernel.Event.Test.closeNoThrow(pipe.read)
-        }
 
         let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
         let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
         defer {
             try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-            Kernel.Event.Test.closeNoThrow(savedStdin)
         }
 
         try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)
 
         // Close write end to signal EOF
-        Kernel.Event.Test.closeNoThrow(pipe.write)
+        try? Kernel.Close.close(pipe.write)
 
         var buffer = [UInt8](repeating: 0, count: 64)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
@@ -89,16 +80,11 @@ extension Terminal.Stream.Read.Test.Integration {
     @Test
     func `Read escape sequence bytes from pipe`() throws {
         let pipe = try Kernel.Event.Test.makePipe()
-        defer {
-            Kernel.Event.Test.closeNoThrow(pipe.read)
-            Kernel.Event.Test.closeNoThrow(pipe.write)
-        }
 
         let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
         let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
         defer {
             try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-            Kernel.Event.Test.closeNoThrow(savedStdin)
         }
 
         try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)
@@ -121,16 +107,11 @@ extension Terminal.Stream.Read.Test.Integration {
     @Test
     func `Read multiple bytes preserves order`() throws {
         let pipe = try Kernel.Event.Test.makePipe()
-        defer {
-            Kernel.Event.Test.closeNoThrow(pipe.read)
-            Kernel.Event.Test.closeNoThrow(pipe.write)
-        }
 
         let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
         let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
         defer {
             try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-            Kernel.Event.Test.closeNoThrow(savedStdin)
         }
 
         try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)

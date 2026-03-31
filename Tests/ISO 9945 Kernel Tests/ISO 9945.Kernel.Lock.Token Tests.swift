@@ -48,7 +48,7 @@ extension Kernel.Lock.Token.Test.Unit {
     func withExclusiveExists() {
         // Verify the static method signature exists
         typealias WithExclusiveType = (
-            Kernel.Descriptor,
+            borrowing Kernel.Descriptor,
             Kernel.Lock.Range,
             Kernel.Lock.Acquire,
             () throws -> Void
@@ -60,7 +60,7 @@ extension Kernel.Lock.Token.Test.Unit {
     func withSharedExists() {
         // Verify the static method signature exists
         typealias WithSharedType = (
-            Kernel.Descriptor,
+            borrowing Kernel.Descriptor,
             Kernel.Lock.Range,
             Kernel.Lock.Acquire,
             () throws -> Void

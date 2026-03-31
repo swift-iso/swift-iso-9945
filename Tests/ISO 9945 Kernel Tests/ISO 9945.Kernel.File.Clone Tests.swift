@@ -29,7 +29,7 @@ private func createTempFileWithContent(prefix: Swift.String, content: Swift.Stri
     let path = KernelIOTest.makeTempPath(prefix: prefix)
     if let fd = try? KernelIOTest.open(at: path) {
         KernelIOTest.write(content, to: fd)
-        try? ISO_9945.Kernel.Close.close(fd)
+        // fd closes via deinit
     }
     return path
 }
@@ -44,7 +44,6 @@ private func readFileContent(_ path: Swift.String) -> Swift.String? {
             permissions: .ownerReadWrite
         )
     }) else { return nil }
-    defer { try? ISO_9945.Kernel.Close.close(fd) }
 
     var buffer = [UInt8](repeating: 0, count: 4096)
     guard let bytesRead = try? buffer.withUnsafeMutableBytes({ ptr in
@@ -317,11 +316,9 @@ struct POSIXKernelFileCloneTests {
                     permissions: .ownerReadWrite
                 )
             }
-            defer { try? ISO_9945.Kernel.Close.close(srcFd) }
 
             // Create destination
             let dstFd = try KernelIOTest.open(at: dest)
-            defer { try? ISO_9945.Kernel.Close.close(dstFd) }
 
             // Copy using copy_file_range
             try ISO_9945.Kernel.File.Clone.CopyRange.copy(
@@ -359,5 +356,3 @@ struct POSIXKernelFileCloneTests {
         }
     }
 }
-
-#endif

@@ -146,7 +146,7 @@ extension Kernel.Lock.Test.Unit {
         func lockAndUnlockSucceeds() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             try Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
             try Kernel.Lock.unlock(fd, range: .file)
@@ -156,7 +156,7 @@ extension Kernel.Lock.Test.Unit {
         func immediateLockSucceedsUncontested() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
             try Kernel.Lock.unlock(fd, range: .file)
@@ -169,12 +169,11 @@ extension Kernel.Lock.Test.Unit {
             // Cross-process contention is tested in the Integration Tests.
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd1 = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd1) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let fd2 = try ISO_9945.Kernel.Path.scope(path) { p in
                 try Kernel.File.Open.open(path: p, mode: .readWrite, options: [], permissions: .privateFile)
             }
-            defer { try? Kernel.Close.close(fd2) }
 
             try Kernel.Lock.lock(fd1, range: .file, kind: .shared)
             try Kernel.Lock.Immediate.lock(fd2, range: .file, kind: .shared)
@@ -187,7 +186,7 @@ extension Kernel.Lock.Test.Unit {
         func nonOverlappingByteRanges() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let range1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(100))
             let range2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(200), end: Kernel.File.Offset(300))
@@ -204,7 +203,7 @@ extension Kernel.Lock.Test.Unit {
             // POSIX: unlocking a region not locked by the process is a no-op, not an error
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             // Should not throw
             try Kernel.Lock.unlock(fd, range: .file)
@@ -218,7 +217,7 @@ extension Kernel.Lock.Test.Unit {
         func tokenAcquiresAndReleases() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             var token = try Kernel.Lock.Token(
                 descriptor: fd,
@@ -238,7 +237,7 @@ extension Kernel.Lock.Test.Unit {
         func tokenTryAcquireSucceeds() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             var token = try Kernel.Lock.Token(
                 descriptor: fd,
@@ -254,7 +253,7 @@ extension Kernel.Lock.Test.Unit {
         func tokenReleaseIdempotent() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             var token = try Kernel.Lock.Token(
                 descriptor: fd,
@@ -270,7 +269,7 @@ extension Kernel.Lock.Test.Unit {
         func tokenByteRangeLock() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let range = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(512))
 
@@ -291,7 +290,7 @@ extension Kernel.Lock.Test.Unit {
         func withExclusiveExecutesBody() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             var executed = false
             try Kernel.Lock.withExclusive(fd) {
@@ -309,7 +308,7 @@ extension Kernel.Lock.Test.Unit {
         func withExclusiveReturnsValue() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             let result = try Kernel.Lock.withExclusive(fd) {
                 return 42
@@ -322,7 +321,7 @@ extension Kernel.Lock.Test.Unit {
         func withSharedExecutesBody() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             var executed = false
             try Kernel.Lock.withShared(fd) {
@@ -336,7 +335,7 @@ extension Kernel.Lock.Test.Unit {
         func withExclusiveReleasesOnThrow() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             let fd = try KernelIOTest.open(at: path)
-            defer { KernelIOTest.cleanup(path: path, fd: fd) }
+            defer { KernelIOTest.cleanup(path: path) }
 
             struct TestError: Swift.Error {}
 
