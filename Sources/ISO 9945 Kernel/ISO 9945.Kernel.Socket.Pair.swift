@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives
+@_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 
 #if canImport(Darwin)
@@ -88,9 +88,22 @@ extension ISO_9945.Kernel.Socket.Pair {
     /// ## Errors
     /// - ``Error/platform(_:)``: socketpair syscall failed
     ///
-    /// - Returns: A tuple containing two connected socket descriptors.
+    /// A pair of connected socket descriptors.
+    ///
+    /// ~Copyable bundle per [IMPL-072] — Swift does not support ~Copyable tuples.
+    @frozen public struct Descriptors: ~Copyable, Sendable {
+        public var first: Kernel.Socket.Descriptor
+        public var second: Kernel.Socket.Descriptor
+
+        internal init(first: consuming Kernel.Socket.Descriptor, second: consuming Kernel.Socket.Descriptor) {
+            self.first = first
+            self.second = second
+        }
+    }
+
+    /// - Returns: A pair of connected socket descriptors.
     /// - Throws: ``Error`` on failure.
-    public static func create() throws(Error) -> (Kernel.Socket.Descriptor, Kernel.Socket.Descriptor) {
+    public static func create() throws(Error) -> Descriptors {
         var fds: [Int32] = [0, 0]
         #if canImport(Darwin)
             let result = unsafe Darwin.socketpair(AF_UNIX, SOCK_STREAM, 0, &fds)
@@ -102,6 +115,9 @@ extension ISO_9945.Kernel.Socket.Pair {
         guard result == 0 else {
             throw currentError()
         }
-        return (Kernel.Socket.Descriptor(rawValue: fds[0]), Kernel.Socket.Descriptor(rawValue: fds[1]))
+        return Descriptors(
+            first: Kernel.Socket.Descriptor(_rawValue: fds[0]),
+            second: Kernel.Socket.Descriptor(_rawValue: fds[1])
+        )
     }
 }

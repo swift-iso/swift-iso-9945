@@ -33,12 +33,12 @@ extension ISO_9945.Kernel.Socket {
     /// - Returns: The error code (`.posix(0)` if no pending error).
     /// - Throws: `Kernel.Socket.Error` if getsockopt fails.
 
-    public static func getError(_ descriptor: Kernel.Socket.Descriptor) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
+    public static func getError(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
         let rc = unsafe getsockopt(
-            descriptor.rawValue,
+            descriptor._rawValue,
             SOL_SOCKET,
             SO_ERROR,
             &err,

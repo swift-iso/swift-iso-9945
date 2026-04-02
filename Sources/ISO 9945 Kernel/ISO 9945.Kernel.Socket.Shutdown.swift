@@ -30,15 +30,15 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     ///   - how: Which half of the connection to shut down.
     /// - Throws: `Kernel.Socket.Shutdown.Error` on failure.
     public static func shutdown(
-        _ descriptor: Kernel.Socket.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         how: How
     ) throws(Error) {
         #if canImport(Darwin)
-            let result = Darwin.shutdown(descriptor.rawValue, how.rawValue)
+            let result = Darwin.shutdown(descriptor._rawValue, how.rawValue)
         #elseif canImport(Musl)
-            let result = Musl.shutdown(descriptor.rawValue, how.rawValue)
+            let result = Musl.shutdown(descriptor._rawValue, how.rawValue)
         #elseif canImport(Glibc)
-            let result = Glibc.shutdown(descriptor.rawValue, how.rawValue)
+            let result = Glibc.shutdown(descriptor._rawValue, how.rawValue)
         #endif
 
         guard result == 0 else {
