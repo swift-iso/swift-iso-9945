@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import Algebra_Primitives
+public import Identity_Primitives
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 
@@ -24,18 +26,28 @@ public import ISO_9945
 
 extension ISO_9945.Kernel.Pipe {
     /// The result of creating a pipe, containing read and write descriptors.
-    public struct Descriptors: ~Copyable, Sendable {
-        /// The read end of the pipe.
-        public let read: Kernel.Descriptor
+    public typealias Descriptors = Tagged<Kernel.Pipe, Pair<Kernel.Descriptor, Kernel.Descriptor>>
+}
 
-        /// The write end of the pipe.
-        public let write: Kernel.Descriptor
-
-        internal init(read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) {
-            self.read = read
-            self.write = write
-        }
+extension Tagged where Tag == Kernel.Pipe, RawValue == Pair<Kernel.Descriptor, Kernel.Descriptor> {
+    /// The read end of the pipe.
+    public var read: Kernel.Descriptor {
+        @inlinable _read { yield rawValue.first }
     }
+
+    /// The write end of the pipe.
+    public var write: Kernel.Descriptor {
+        @inlinable _read { yield rawValue.second }
+    }
+
+    /// Creates pipe descriptors from read and write ends.
+    @inlinable
+    internal init(read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) {
+        self.init(__unchecked: (), Pair(read, write))
+    }
+}
+
+extension ISO_9945.Kernel.Pipe {
 
     /// Creates an anonymous pipe.
     ///

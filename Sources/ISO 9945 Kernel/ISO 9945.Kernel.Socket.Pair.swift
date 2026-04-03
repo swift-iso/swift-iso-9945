@@ -9,6 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import Algebra_Primitives
 @_spi(Syscall) public import Kernel_Primitives
 public import ISO_9945
 
@@ -89,17 +90,7 @@ extension ISO_9945.Kernel.Socket.Pair {
     /// - ``Error/platform(_:)``: socketpair syscall failed
     ///
     /// A pair of connected socket descriptors.
-    ///
-    /// ~Copyable bundle per [IMPL-072] — Swift does not support ~Copyable tuples.
-    @frozen public struct Descriptors: ~Copyable, Sendable {
-        public var first: Kernel.Socket.Descriptor
-        public var second: Kernel.Socket.Descriptor
-
-        internal init(first: consuming Kernel.Socket.Descriptor, second: consuming Kernel.Socket.Descriptor) {
-            self.first = first
-            self.second = second
-        }
-    }
+    public typealias Descriptors = Pair<Kernel.Socket.Descriptor, Kernel.Socket.Descriptor>
 
     /// - Returns: A pair of connected socket descriptors.
     /// - Throws: ``Error`` on failure.
@@ -116,8 +107,8 @@ extension ISO_9945.Kernel.Socket.Pair {
             throw currentError()
         }
         return Descriptors(
-            first: Kernel.Socket.Descriptor(_rawValue: fds[0]),
-            second: Kernel.Socket.Descriptor(_rawValue: fds[1])
+            Kernel.Socket.Descriptor(_rawValue: fds[0]),
+            Kernel.Socket.Descriptor(_rawValue: fds[1])
         )
     }
 }
