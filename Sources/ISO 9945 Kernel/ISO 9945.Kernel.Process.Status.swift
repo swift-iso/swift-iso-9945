@@ -79,16 +79,7 @@ extension ISO_9945.Kernel.Process.Status {
     /// Exit code accessor (Nest.Name pattern).
     public struct Exit: Sendable {
         let status: POSIX.Kernel.Process.Status
-
         init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
-
-        /// The exit code (WEXITSTATUS).
-        ///
-        /// Returns `nil` if process did not exit normally.
-        public var code: Int32? {
-            guard status.exited else { return nil }
-            return swift_WEXITSTATUS(status.rawValue)
-        }
     }
 
     /// Nested accessor for terminating signal info.
@@ -97,16 +88,7 @@ extension ISO_9945.Kernel.Process.Status {
     /// Terminating signal accessor (Nest.Name pattern).
     public struct Terminating: Sendable {
         let status: POSIX.Kernel.Process.Status
-
         init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
-
-        /// The terminating signal (WTERMSIG).
-        ///
-        /// Returns `nil` if process was not terminated by signal.
-        public var signal: POSIX.Kernel.Signal.Number? {
-            guard status.signaled else { return nil }
-            return POSIX.Kernel.Signal.Number(rawValue: swift_WTERMSIG(status.rawValue))
-        }
     }
 
     /// Nested accessor for stop signal info.
@@ -115,16 +97,7 @@ extension ISO_9945.Kernel.Process.Status {
     /// Stop signal accessor (Nest.Name pattern).
     public struct Stop: Sendable {
         let status: POSIX.Kernel.Process.Status
-
         init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
-
-        /// The stop signal (WSTOPSIG).
-        ///
-        /// Returns `nil` if process was not stopped.
-        public var signal: POSIX.Kernel.Signal.Number? {
-            guard status.stopped else { return nil }
-            return POSIX.Kernel.Signal.Number(rawValue: swift_WSTOPSIG(status.rawValue))
-        }
     }
 
     /// Nested accessor for core dump info.
@@ -133,28 +106,66 @@ extension ISO_9945.Kernel.Process.Status {
     /// Core dump accessor (Nest.Name pattern).
     public struct Core: Sendable {
         let status: POSIX.Kernel.Process.Status
-
         init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
+    }
+}
 
-        /// Whether core dump was produced (WCOREDUMP).
-        ///
-        /// Returns `false` on platforms where WCOREDUMP is unavailable.
-        public var dumped: Bool {
-            #if canImport(Darwin)
-                guard status.signaled else { return false }
+// MARK: - Exit Accessor
+
+extension ISO_9945.Kernel.Process.Status.Exit {
+    /// The exit code (WEXITSTATUS).
+    ///
+    /// Returns `nil` if process did not exit normally.
+    public var code: Int32? {
+        guard status.exited else { return nil }
+        return swift_WEXITSTATUS(status.rawValue)
+    }
+}
+
+// MARK: - Terminating Accessor
+
+extension ISO_9945.Kernel.Process.Status.Terminating {
+    /// The terminating signal (WTERMSIG).
+    ///
+    /// Returns `nil` if process was not terminated by signal.
+    public var signal: POSIX.Kernel.Signal.Number? {
+        guard status.signaled else { return nil }
+        return POSIX.Kernel.Signal.Number(rawValue: swift_WTERMSIG(status.rawValue))
+    }
+}
+
+// MARK: - Stop Accessor
+
+extension ISO_9945.Kernel.Process.Status.Stop {
+    /// The stop signal (WSTOPSIG).
+    ///
+    /// Returns `nil` if process was not stopped.
+    public var signal: POSIX.Kernel.Signal.Number? {
+        guard status.stopped else { return nil }
+        return POSIX.Kernel.Signal.Number(rawValue: swift_WSTOPSIG(status.rawValue))
+    }
+}
+
+// MARK: - Core Accessor
+
+extension ISO_9945.Kernel.Process.Status.Core {
+    /// Whether core dump was produced (WCOREDUMP).
+    ///
+    /// Returns `false` on platforms where WCOREDUMP is unavailable.
+    public var dumped: Bool {
+        #if canImport(Darwin)
+            guard status.signaled else { return false }
+            return swift_WCOREDUMP(status.rawValue) != 0
+        #elseif canImport(Glibc)
+            guard status.signaled else { return false }
+            #if _GNU_SOURCE
                 return swift_WCOREDUMP(status.rawValue) != 0
-            #elseif canImport(Glibc)
-                // WCOREDUMP may not be available on all Linux configurations
-                guard status.signaled else { return false }
-                #if _GNU_SOURCE
-                    return swift_WCOREDUMP(status.rawValue) != 0
-                #else
-                    return false
-                #endif
             #else
                 return false
             #endif
-        }
+        #else
+            return false
+        #endif
     }
 }
 
