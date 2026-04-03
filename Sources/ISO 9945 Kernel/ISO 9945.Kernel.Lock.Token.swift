@@ -198,14 +198,6 @@ extension ISO_9945.Kernel.Lock.Token {
 // MARK: - Scoped Locking Helpers
 
 extension ISO_9945.Kernel.Lock {
-    /// Error thrown by scoped locking helpers.
-    public enum WithLockError<E: Swift.Error & Sendable>: Swift.Error, Sendable {
-        /// Lock acquisition or release failed.
-        case lock(Kernel.Lock.Error)
-        /// The body closure threw an error.
-        case body(E)
-    }
-
     /// Executes a closure while holding an exclusive lock.
     ///
     /// The lock is automatically released when the closure completes.
@@ -216,13 +208,13 @@ extension ISO_9945.Kernel.Lock {
     ///   - acquire: The acquisition strategy (default: `.wait`).
     ///   - body: The closure to execute while holding the lock.
     /// - Returns: The result of the closure.
-    /// - Throws: `WithLockError` if locking fails or the closure throws.
+    /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
     public static func withExclusive<T, E: Swift.Error & Sendable>(
         _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
-    ) throws(WithLockError<E>) -> T {
+    ) throws(ISO_9945.Kernel.Lock.WithLockError<E>) -> T {
         var token: Token
         do {
             token = try Token(descriptor: descriptor, range: range, kind: .exclusive, acquire: acquire)
@@ -247,13 +239,13 @@ extension ISO_9945.Kernel.Lock {
     ///   - acquire: The acquisition strategy (default: `.wait`).
     ///   - body: The closure to execute while holding the lock.
     /// - Returns: The result of the closure.
-    /// - Throws: `WithLockError` if locking fails or the closure throws.
+    /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
     public static func withShared<T, E: Swift.Error & Sendable>(
         _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
-    ) throws(WithLockError<E>) -> T {
+    ) throws(ISO_9945.Kernel.Lock.WithLockError<E>) -> T {
         var token: Token
         do {
             token = try Token(descriptor: descriptor, range: range, kind: .shared, acquire: acquire)
