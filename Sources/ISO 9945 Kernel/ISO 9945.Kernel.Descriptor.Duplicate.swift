@@ -75,41 +75,6 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         return Kernel.Descriptor(_rawValue: result)
     }
 
-    #if os(Linux)
-    /// Duplicates a file descriptor with flags (Linux).
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to duplicate.
-    ///   - newDescriptor: The target descriptor number.
-    ///   - flags: Flags to apply (currently only O_CLOEXEC).
-    /// - Returns: The new file descriptor.
-    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
-    @discardableResult
-    public static func duplicate(
-        _ descriptor: borrowing Kernel.Descriptor,
-        to newDescriptor: borrowing Kernel.Descriptor,
-        flags: Flags
-    ) throws(Error) -> Kernel.Descriptor {
-        let result = dup3(descriptor._rawValue, newDescriptor._rawValue, flags.rawValue)
-
-        guard result >= 0 else {
-            throw Error.current()
-        }
-        return Kernel.Descriptor(_rawValue: result)
-    }
-
-    /// Flags for duplicate with flags (Linux).
-    public struct Flags: OptionSet, Sendable {
-        public let rawValue: Int32
-
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-
-        /// Set the close-on-exec flag on the new file descriptor.
-        public static let closeOnExec = Flags(rawValue: O_CLOEXEC)
-    }
-    #endif
 }
 
 // MARK: - Error

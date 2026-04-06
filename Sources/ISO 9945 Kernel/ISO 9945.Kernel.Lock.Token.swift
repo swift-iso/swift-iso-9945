@@ -209,7 +209,7 @@ extension ISO_9945.Kernel.Lock {
     ///   - body: The closure to execute while holding the lock.
     /// - Returns: The result of the closure.
     /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
-    public static func withExclusive<T, E: Swift.Error & Sendable>(
+    public static func withExclusive<T, E: Swift.Error>(
         _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
@@ -240,7 +240,7 @@ extension ISO_9945.Kernel.Lock {
     ///   - body: The closure to execute while holding the lock.
     /// - Returns: The result of the closure.
     /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
-    public static func withShared<T, E: Swift.Error & Sendable>(
+    public static func withShared<T, E: Swift.Error>(
         _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,

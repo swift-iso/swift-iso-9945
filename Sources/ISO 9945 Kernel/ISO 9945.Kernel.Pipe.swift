@@ -94,7 +94,7 @@ extension ISO_9945.Kernel.Pipe {
 
         let result = withUnsafeMutablePointer(to: &fds) { ptr in
             ptr.withMemoryRebound(to: Int32.self, capacity: 2) { fdPtr in
-                pipe2(fdPtr, flags.rawValue)
+                swift_pipe2(fdPtr, flags.rawValue)
             }
         }
 

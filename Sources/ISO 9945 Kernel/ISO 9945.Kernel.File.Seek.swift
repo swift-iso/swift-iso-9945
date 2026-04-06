@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.File.Seek {
         guard result >= 0 else {
             throw Error.current()
         }
-        return result
+        return Int64(result)
     }
 
     /// Gets the current file offset.
