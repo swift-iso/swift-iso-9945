@@ -90,7 +90,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         to newDescriptor: borrowing Kernel.Descriptor,
         flags: Flags
     ) throws(Error) -> Kernel.Descriptor {
-        let result = Glibc.dup3(descriptor._rawValue, newDescriptor._rawValue, flags.rawValue)
+        let result = dup3(descriptor._rawValue, newDescriptor._rawValue, flags.rawValue)
 
         guard result >= 0 else {
             throw Error.current()

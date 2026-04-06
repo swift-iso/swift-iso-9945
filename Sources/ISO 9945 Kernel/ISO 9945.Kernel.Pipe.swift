@@ -18,6 +18,7 @@ public import ISO_9945
     internal import Darwin
 #elseif canImport(Glibc)
     internal import Glibc
+    internal import CLinuxShim
 #elseif canImport(Musl)
     internal import Musl
 #endif
@@ -93,7 +94,7 @@ extension ISO_9945.Kernel.Pipe {
 
         let result = withUnsafeMutablePointer(to: &fds) { ptr in
             ptr.withMemoryRebound(to: Int32.self, capacity: 2) { fdPtr in
-                Glibc.pipe2(fdPtr, flags.rawValue)
+                pipe2(fdPtr, flags.rawValue)
             }
         }
 

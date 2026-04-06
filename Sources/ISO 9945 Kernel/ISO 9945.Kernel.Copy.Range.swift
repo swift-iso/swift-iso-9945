@@ -65,8 +65,8 @@ extension ISO_9945.Kernel.Copy.Range {
         destOffset: inout Kernel.File.Offset,
         length: Kernel.File.Size
     ) throws(Kernel.Copy.Error) -> Kernel.File.Size {
-        guard source.isValid else { throw .invalid }
-        guard destination.isValid else { throw .invalid }
+        guard source.isValid else { throw .invalidDescriptor }
+        guard destination.isValid else { throw .invalidDescriptor }
 
         var srcOff = off_t(sourceOffset.rawValue)
         var dstOff = off_t(destOffset.rawValue)

@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.File.Clone.Capability {
     public static func probe(at path: borrowing Kernel.Path.View) throws(Kernel.File.Clone.Error.Syscall) -> Kernel.File.Clone.Capability {
         try unsafe path.withUnsafePointer { cString throws(Kernel.File.Clone.Error.Syscall) in
             var statfsBuf = statfs()
-            let result = Glibc.statfs(UnsafePointer<CChar>(cString), &statfsBuf)
+            let result = statfs(UnsafePointer<CChar>(cString), &statfsBuf)
 
             guard result == 0 else {
                 throw Kernel.File.Clone.Error.Syscall.platform(code: .posix(errno), operation: .statfs)

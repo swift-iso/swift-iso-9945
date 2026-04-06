@@ -30,11 +30,19 @@ extension ISO_9945.Kernel.Directory {
     /// A directory stream for iterating over directory entries.
     @safe
     public final class Stream: @unchecked Sendable {
+        #if canImport(Darwin)
         private var dir: UnsafeMutablePointer<DIR>?
 
         fileprivate init(dir: UnsafeMutablePointer<DIR>) {
             unsafe self.dir = dir
         }
+        #else
+        private var dir: OpaquePointer?
+
+        fileprivate init(dir: OpaquePointer) {
+            unsafe self.dir = dir
+        }
+        #endif
 
         deinit {
             if let d = unsafe dir {
@@ -80,14 +88,14 @@ extension ISO_9945.Kernel.Directory {
 
             // Map d_type to file type
             let type: Kernel.File.Stats.Kind? = {
-                switch Int32(unsafe entry.pointee.d_type) {
-                case DT_REG: return .regular
-                case DT_DIR: return .directory
-                case DT_LNK: return .link(.symbolic)
-                case DT_CHR: return .device(.character)
-                case DT_BLK: return .device(.block)
-                case DT_FIFO: return .fifo
-                case DT_SOCK: return .socket
+                switch Int(unsafe entry.pointee.d_type) {
+                case Int(DT_REG): return .regular
+                case Int(DT_DIR): return .directory
+                case Int(DT_LNK): return .link(.symbolic)
+                case Int(DT_CHR): return .device(.character)
+                case Int(DT_BLK): return .device(.block)
+                case Int(DT_FIFO): return .fifo
+                case Int(DT_SOCK): return .socket
                 default: return nil // DT_UNKNOWN
                 }
             }()

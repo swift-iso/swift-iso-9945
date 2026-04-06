@@ -16,6 +16,7 @@ public import ISO_9945
     internal import Darwin
 #elseif canImport(Glibc)
     internal import Glibc
+    internal import CLinuxShim
 #elseif canImport(Musl)
     internal import Musl
 #endif
@@ -42,7 +43,7 @@ extension ISO_9945.Kernel.File.Seek {
         #elseif canImport(Musl)
             let result = Musl.lseek(descriptor._rawValue, offset, whence.rawValue)
         #elseif canImport(Glibc)
-            let result = Glibc.lseek(descriptor._rawValue, offset, whence.rawValue)
+            let result = Glibc.lseek(descriptor._rawValue, off_t(offset), whence.rawValue)
         #endif
 
         guard result >= 0 else {

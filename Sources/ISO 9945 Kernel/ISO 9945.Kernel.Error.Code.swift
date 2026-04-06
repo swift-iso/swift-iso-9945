@@ -39,104 +39,117 @@ extension ISO_9945.Kernel.Error.Code {
 }
 
 // MARK: - POSIX errno constants
+//
+// Property names mirror POSIX specification terminology per [API-NAME-003].
+// Module-qualification is required because property names shadow the global
+// errno constants from the platform module.
 
+#if canImport(Darwin)
 extension ISO_9945.Kernel.Error.Code {
-    /// No error.
     public static let success = Self.posix(0)
-
-    /// No such file or directory (ENOENT).
     public static let ENOENT = Self.posix(Darwin.ENOENT)
-
-    /// Permission denied (EACCES).
     public static let EACCES = Self.posix(Darwin.EACCES)
-
-    /// Operation not permitted (EPERM).
     public static let EPERM = Self.posix(Darwin.EPERM)
-
-    /// File exists (EEXIST).
     public static let EEXIST = Self.posix(Darwin.EEXIST)
-
-    /// Is a directory (EISDIR).
     public static let EISDIR = Self.posix(Darwin.EISDIR)
-
-    /// Not a directory (ENOTDIR).
     public static let ENOTDIR = Self.posix(Darwin.ENOTDIR)
-
-    /// Directory not empty (ENOTEMPTY).
     public static let ENOTEMPTY = Self.posix(Darwin.ENOTEMPTY)
-
-    /// Bad file descriptor (EBADF).
     public static let EBADF = Self.posix(Darwin.EBADF)
-
-    /// Invalid argument (EINVAL).
     public static let EINVAL = Self.posix(Darwin.EINVAL)
-
-    /// Interrupted system call (EINTR).
     public static let EINTR = Self.posix(Darwin.EINTR)
-
-    /// Too many open files (EMFILE).
     public static let EMFILE = Self.posix(Darwin.EMFILE)
-
-    /// Too many open files in system (ENFILE).
     public static let ENFILE = Self.posix(Darwin.ENFILE)
-
-    /// I/O error (EIO).
     public static let EIO = Self.posix(Darwin.EIO)
-
-    /// No space left on device (ENOSPC).
     public static let ENOSPC = Self.posix(Darwin.ENOSPC)
-
-    /// Read-only file system (EROFS).
     public static let EROFS = Self.posix(Darwin.EROFS)
-
-    /// Resource temporarily unavailable (EAGAIN).
     public static let EAGAIN = Self.posix(Darwin.EAGAIN)
-
-    /// Operation would block (EWOULDBLOCK).
     public static let EWOULDBLOCK = Self.posix(Darwin.EWOULDBLOCK)
-
-    /// Cross-device link (EXDEV).
     public static let EXDEV = Self.posix(Darwin.EXDEV)
-
-    /// Too many symbolic links (ELOOP).
     public static let ELOOP = Self.posix(Darwin.ELOOP)
-
-    /// File name too long (ENAMETOOLONG).
     public static let ENAMETOOLONG = Self.posix(Darwin.ENAMETOOLONG)
-
-    /// Not enough memory (ENOMEM).
     public static let ENOMEM = Self.posix(Darwin.ENOMEM)
-
-    /// Broken pipe (EPIPE).
     public static let EPIPE = Self.posix(Darwin.EPIPE)
-
-    /// Connection reset by peer (ECONNRESET).
     public static let ECONNRESET = Self.posix(Darwin.ECONNRESET)
-
-    /// Illegal seek (ESPIPE).
     public static let ESPIPE = Self.posix(Darwin.ESPIPE)
-
-    /// Device or resource busy (EBUSY).
     public static let EBUSY = Self.posix(Darwin.EBUSY)
-
-    /// Too many links (EMLINK).
     public static let EMLINK = Self.posix(Darwin.EMLINK)
-
-    /// Disc quota exceeded (EDQUOT).
     public static let EDQUOT = Self.posix(Darwin.EDQUOT)
-
-    /// Result too large (EOVERFLOW).
     public static let EOVERFLOW = Self.posix(Darwin.EOVERFLOW)
-
-    /// Bad address (EFAULT).
     public static let EFAULT = Self.posix(Darwin.EFAULT)
-
-    /// No locks available (ENOLCK).
     public static let ENOLCK = Self.posix(Darwin.ENOLCK)
-
-    /// Resource deadlock avoided (EDEADLK).
     public static let EDEADLK = Self.posix(Darwin.EDEADLK)
-
-    /// Operation not supported (ENOTSUP).
     public static let ENOTSUP = Self.posix(Darwin.ENOTSUP)
 }
+#elseif canImport(Glibc)
+extension ISO_9945.Kernel.Error.Code {
+    public static let success = Self.posix(0)
+    public static let ENOENT = Self.posix(Glibc.ENOENT)
+    public static let EACCES = Self.posix(Glibc.EACCES)
+    public static let EPERM = Self.posix(Glibc.EPERM)
+    public static let EEXIST = Self.posix(Glibc.EEXIST)
+    public static let EISDIR = Self.posix(Glibc.EISDIR)
+    public static let ENOTDIR = Self.posix(Glibc.ENOTDIR)
+    public static let ENOTEMPTY = Self.posix(Glibc.ENOTEMPTY)
+    public static let EBADF = Self.posix(Glibc.EBADF)
+    public static let EINVAL = Self.posix(Glibc.EINVAL)
+    public static let EINTR = Self.posix(Glibc.EINTR)
+    public static let EMFILE = Self.posix(Glibc.EMFILE)
+    public static let ENFILE = Self.posix(Glibc.ENFILE)
+    public static let EIO = Self.posix(Glibc.EIO)
+    public static let ENOSPC = Self.posix(Glibc.ENOSPC)
+    public static let EROFS = Self.posix(Glibc.EROFS)
+    public static let EAGAIN = Self.posix(Glibc.EAGAIN)
+    public static let EWOULDBLOCK = Self.posix(Glibc.EWOULDBLOCK)
+    public static let EXDEV = Self.posix(Glibc.EXDEV)
+    public static let ELOOP = Self.posix(Glibc.ELOOP)
+    public static let ENAMETOOLONG = Self.posix(Glibc.ENAMETOOLONG)
+    public static let ENOMEM = Self.posix(Glibc.ENOMEM)
+    public static let EPIPE = Self.posix(Glibc.EPIPE)
+    public static let ECONNRESET = Self.posix(Glibc.ECONNRESET)
+    public static let ESPIPE = Self.posix(Glibc.ESPIPE)
+    public static let EBUSY = Self.posix(Glibc.EBUSY)
+    public static let EMLINK = Self.posix(Glibc.EMLINK)
+    public static let EDQUOT = Self.posix(Glibc.EDQUOT)
+    public static let EOVERFLOW = Self.posix(Glibc.EOVERFLOW)
+    public static let EFAULT = Self.posix(Glibc.EFAULT)
+    public static let ENOLCK = Self.posix(Glibc.ENOLCK)
+    public static let EDEADLK = Self.posix(Glibc.EDEADLK)
+    public static let ENOTSUP = Self.posix(Glibc.ENOTSUP)
+}
+#elseif canImport(Musl)
+extension ISO_9945.Kernel.Error.Code {
+    public static let success = Self.posix(0)
+    public static let ENOENT = Self.posix(Musl.ENOENT)
+    public static let EACCES = Self.posix(Musl.EACCES)
+    public static let EPERM = Self.posix(Musl.EPERM)
+    public static let EEXIST = Self.posix(Musl.EEXIST)
+    public static let EISDIR = Self.posix(Musl.EISDIR)
+    public static let ENOTDIR = Self.posix(Musl.ENOTDIR)
+    public static let ENOTEMPTY = Self.posix(Musl.ENOTEMPTY)
+    public static let EBADF = Self.posix(Musl.EBADF)
+    public static let EINVAL = Self.posix(Musl.EINVAL)
+    public static let EINTR = Self.posix(Musl.EINTR)
+    public static let EMFILE = Self.posix(Musl.EMFILE)
+    public static let ENFILE = Self.posix(Musl.ENFILE)
+    public static let EIO = Self.posix(Musl.EIO)
+    public static let ENOSPC = Self.posix(Musl.ENOSPC)
+    public static let EROFS = Self.posix(Musl.EROFS)
+    public static let EAGAIN = Self.posix(Musl.EAGAIN)
+    public static let EWOULDBLOCK = Self.posix(Musl.EWOULDBLOCK)
+    public static let EXDEV = Self.posix(Musl.EXDEV)
+    public static let ELOOP = Self.posix(Musl.ELOOP)
+    public static let ENAMETOOLONG = Self.posix(Musl.ENAMETOOLONG)
+    public static let ENOMEM = Self.posix(Musl.ENOMEM)
+    public static let EPIPE = Self.posix(Musl.EPIPE)
+    public static let ECONNRESET = Self.posix(Musl.ECONNRESET)
+    public static let ESPIPE = Self.posix(Musl.ESPIPE)
+    public static let EBUSY = Self.posix(Musl.EBUSY)
+    public static let EMLINK = Self.posix(Musl.EMLINK)
+    public static let EDQUOT = Self.posix(Musl.EDQUOT)
+    public static let EOVERFLOW = Self.posix(Musl.EOVERFLOW)
+    public static let EFAULT = Self.posix(Musl.EFAULT)
+    public static let ENOLCK = Self.posix(Musl.ENOLCK)
+    public static let EDEADLK = Self.posix(Musl.EDEADLK)
+    public static let ENOTSUP = Self.posix(Musl.ENOTSUP)
+}
+#endif

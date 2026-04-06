@@ -58,8 +58,8 @@ extension ISO_9945.Kernel.Copy.Clone {
         from source: borrowing Kernel.Descriptor,
         to destination: borrowing Kernel.Descriptor
     ) throws(Kernel.Copy.Error) {
-        guard source.isValid else { throw .invalid }
-        guard destination.isValid else { throw .invalid }
+        guard source.isValid else { throw .invalidDescriptor }
+        guard destination.isValid else { throw .invalidDescriptor }
 
         let result = swift_ficlone(destination._rawValue, source._rawValue)
         guard result == 0 else {
