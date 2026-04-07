@@ -40,7 +40,7 @@ extension Kernel.Process.Group.Test.Unit {
 
     @Test("Group.Process cases are distinct")
     func processCasesDistinct() {
-        let pid = Kernel.Process.ID(__unchecked: (), 42)
+        let pid = Kernel.Process.ID(42)
         #expect(Kernel.Process.Group.Process.current != Kernel.Process.Group.Process.id(pid))
     }
 
@@ -77,8 +77,8 @@ extension Kernel.Process.Group.Test.Integration {
 
     @Test("getpgid for nonexistent process throws ESRCH")
     func getpgidNonexistentThrows() throws {
-        let unlikelyPID = Kernel.Process.ID(__unchecked: (), 999999)
-        do {
+        let unlikelyPID = Kernel.Process.ID(999999)
+        do throws(POSIX.Kernel.Process.Error) {
             _ = try Kernel.Process.Group.id(of: unlikelyPID)
             Issue.record("Expected ESRCH error")
         } catch {

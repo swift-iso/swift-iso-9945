@@ -50,10 +50,8 @@ extension Kernel.Close.Test.Unit {
 extension Kernel.Close.Test.EdgeCase {
     @Test("close throws on negative descriptor")
     func closeThrowsOnNegativeDescriptor() {
-        let negativeFd = Kernel.Descriptor(_rawValue: -100)
-
         #expect(throws: Kernel.Close.Error.self) {
-            try Kernel.Close.close(negativeFd)
+            try Kernel.Close.close(Kernel.Descriptor(_rawValue: -100))
         }
     }
 }

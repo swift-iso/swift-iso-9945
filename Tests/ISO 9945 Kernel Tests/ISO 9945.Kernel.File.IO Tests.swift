@@ -32,7 +32,8 @@ struct FileIOIntegrationTests {
                 permissions: .standard
             )
 
-            #expect(fd.isValid)
+            let fdIsValid = fd.isValid
+            #expect(fdIsValid)
 
             // Close
             try ISO_9945.Kernel.Close.close(fd)

@@ -26,37 +26,8 @@ extension Kernel.File.Open {
 }
 
 // MARK: - Mode Unit Tests
-
-extension Kernel.File.Open.Test.Unit {
-    @Test("Mode is OptionSet")
-    func modeIsOptionSet() {
-        let mode: Kernel.File.Open.Mode = [.read, .write]
-        #expect(mode.contains(.read))
-        #expect(mode.contains(.write))
-    }
-
-    @Test("Mode options are distinct")
-    func modeOptionsDistinct() {
-        let read = Kernel.File.Open.Mode.read
-        let write = Kernel.File.Open.Mode.write
-
-        #expect(read != write)
-        #expect(!read.intersection(write).contains(.read))
-    }
-
-    @Test("Mode is Sendable")
-    func modeIsSendable() {
-        let mode: any Sendable = Kernel.File.Open.Mode.read
-        #expect(mode is Kernel.File.Open.Mode)
-    }
-
-    @Test("Mode can combine read and write")
-    func modeCombine() {
-        let combined: Kernel.File.Open.Mode = [.read, .write]
-        #expect(combined.contains(.read))
-        #expect(combined.contains(.write))
-    }
-}
+// (Mode is no longer an OptionSet — see File.Open.Mode Tests.swift for
+// current struct-based API tests.)
 
 // MARK: - Options Unit Tests
 
@@ -89,7 +60,6 @@ extension Kernel.File.Open.Test.Unit {
             .truncate,
             .append,
             .exclusive,
-            .direct,
         ]
 
         for (i, a) in options.enumerated() {
@@ -140,29 +110,29 @@ extension Kernel.File.Open.Test.EdgeCase {
                 )
             }
 
-            #expect(readFd.isValid)
+            let isValid = readFd.isValid
+            #expect(isValid)
         }
 
         @Test("open with create creates new file")
         func openWithCreateCreatesFile() throws {
             let pathString = Kernel.Temporary.filePath(prefix: "open-create-test")
-            try pathString.withCString { cString in
-                let path = Kernel.Path(unsafeCString: cString)
-                defer { try? Kernel.Unlink.unlink(path) }
-
-                let fd = try Kernel.File.Open.open(
+            let fd = try ISO_9945.Kernel.Path.scope(pathString) { path in
+                try Kernel.File.Open.open(
                     path: path,
-                    mode: [.read, .write],
+                    mode: .readWrite,
                     options: .create,
                     permissions: .standard
                 )
-
-                #expect(fd.isValid)
-
-                // Verify file exists by checking stats
-                let stats = try Kernel.File.Stats.get(descriptor: fd)
-                #expect(stats.type == .regular, "File should exist after create")
             }
+            defer { KernelIOTest.cleanup(path: pathString) }
+
+            let fdIsValid = fd.isValid
+            #expect(fdIsValid)
+
+            // Verify file exists by checking stats
+            let stats = try Kernel.File.Stats.get(descriptor: fd)
+            #expect(stats.type == .regular, "File should exist after create")
         }
 
         @Test("open with truncate truncates existing file")
@@ -180,7 +150,7 @@ extension Kernel.File.Open.Test.EdgeCase {
             let truncFd = try ISO_9945.Kernel.Path.scope(path) { p in
                 try Kernel.File.Open.open(
                     path: p,
-                    mode: [.read, .write],
+                    mode: .readWrite,
                     options: .truncate,
                     permissions: .standard
                 )
@@ -244,7 +214,7 @@ extension Kernel.File.Open.Test.EdgeCase {
                 _ = try ISO_9945.Kernel.Path.scope(path) { p in
                     try Kernel.File.Open.open(
                         path: p,
-                        mode: [.read, .write],
+                        mode: .readWrite,
                         options: [.create, .exclusive],
                         permissions: .standard
                     )
@@ -255,9 +225,8 @@ extension Kernel.File.Open.Test.EdgeCase {
 
     extension Kernel.File.Open.Test.EdgeCase {
         @Test("open nonexistent file without create throws")
-        func openNonexistentFileThrows() {
-            "/nonexistent/path/to/file".withCString { cString in
-                let path = Kernel.Path(unsafeCString: cString)
+        func openNonexistentFileThrows() throws {
+            try ISO_9945.Kernel.Path.scope("/nonexistent/path/to/file") { path in
                 #expect(throws: Kernel.File.Open.Error.self) {
                     _ = try Kernel.File.Open.open(
                         path: path,
@@ -270,9 +239,8 @@ extension Kernel.File.Open.Test.EdgeCase {
         }
 
         @Test("open directory for write throws")
-        func openDirectoryForWriteThrows() {
-            "/tmp".withCString { cString in
-                let path = Kernel.Path(unsafeCString: cString)
+        func openDirectoryForWriteThrows() throws {
+            try ISO_9945.Kernel.Path.scope("/tmp") { path in
                 #expect(throws: Kernel.File.Open.Error.self) {
                     _ = try Kernel.File.Open.open(
                         path: path,

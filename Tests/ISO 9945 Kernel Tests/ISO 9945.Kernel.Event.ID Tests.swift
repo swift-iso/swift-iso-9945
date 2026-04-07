@@ -56,7 +56,7 @@ struct EventIDTests {
         let descriptor = Kernel.Descriptor(_rawValue: 10)
         let id = Kernel.Event.ID(descriptor: descriptor)
         let recovered = Kernel.Descriptor(id)
-        #expect(recovered == Kernel.Descriptor(_rawValue: 10))
+        #expect(recovered?.fileDescriptor == 10)
     }
 
     @Test("Descriptor from ID fails for large values")
@@ -64,7 +64,8 @@ struct EventIDTests {
         // Values larger than Int32.max cannot be converted to a descriptor
         let largeID = Kernel.Event.ID(__unchecked: (), UInt(Int32.max) + 1)
         let descriptor = Kernel.Descriptor(largeID)
-        #expect(descriptor == nil)
+        let isNil = (descriptor == nil)
+        #expect(isNil)
     }
 
     // MARK: - Conformances

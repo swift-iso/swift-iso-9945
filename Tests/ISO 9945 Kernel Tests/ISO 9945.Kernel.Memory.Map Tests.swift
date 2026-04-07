@@ -31,7 +31,7 @@ extension Kernel.Memory.Map {
     extension Kernel.Memory.Map.Test.Unit {
         @Test("anonymous map succeeds")
         func anonymousMapSucceeds() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -41,7 +41,7 @@ extension Kernel.Memory.Map {
 
         @Test("map and unmap cycle works")
         func mapAndUnmapCycleWorks() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
 
             // Unmap should succeed
@@ -53,29 +53,26 @@ extension Kernel.Memory.Map {
 
         @Test("mapped memory is readable and writable")
         func mappedMemoryReadableWritable() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .readWrite
             )
             defer { try? Kernel.Memory.Map.unmap(region) }
 
-            // Write to the mapped memory
-            region.withUnsafeMutableBytes { buffer in
-                buffer[0] = 42
-                buffer[1] = 123
-            }
+            // Write to the mapped memory via mutableSpan
+            var mutableSpan = region.mutableSpan
+            mutableSpan[0] = 42
+            mutableSpan[1] = 123
 
-            // Read back
-            region.withUnsafeBytes { buffer in
-                #expect(buffer[0] == 42)
-                #expect(buffer[1] == 123)
-            }
+            // Read back via span
+            #expect(region.span[0] == 42)
+            #expect(region.span[1] == 123)
         }
 
         @Test("sync succeeds on mapped region")
         func syncSucceeds() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -85,7 +82,7 @@ extension Kernel.Memory.Map {
 
         @Test("protect changes memory protection")
         func protectChangesProtection() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .readWrite
@@ -93,9 +90,8 @@ extension Kernel.Memory.Map {
             defer { try? Kernel.Memory.Map.unmap(region) }
 
             // Write some data first
-            region.withUnsafeMutableBytes { buffer in
-                buffer[0] = 99
-            }
+            var mutableSpan = region.mutableSpan
+            mutableSpan[0] = 99
 
             // Change to read-only (should succeed)
             try Kernel.Memory.Map.protect(
@@ -105,16 +101,14 @@ extension Kernel.Memory.Map {
             )
 
             // Reading should still work
-            region.withUnsafeBytes { buffer in
-                #expect(buffer[0] == 99)
-            }
+            #expect(region.span[0] == 99)
 
             // Note: Writing would now cause SIGBUS/SIGSEGV, which we can't test safely
         }
 
         @Test("advise does not throw")
         func adviseDoesNotThrow() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -128,27 +122,25 @@ extension Kernel.Memory.Map {
 
         @Test("multi-page mapping works")
         func multiPageMappingWorks() throws {
-            let multiPageSize = Kernel.File.Size(pages: 4)
+            let multiPageSize = Kernel.File.Size(pages: 4, pageSize: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: multiPageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
             #expect(region.length == multiPageSize)
 
             // Write to first and last page
-            region.withUnsafeMutableBytes { buffer in
-                buffer[0] = 1
-                buffer[buffer.count - 1] = 255
-            }
+            var mutableSpan = region.mutableSpan
+            mutableSpan[0] = 1
+            let lastIndex = mutableSpan.count - 1
+            mutableSpan[lastIndex] = 255
 
-            region.withUnsafeBytes { buffer in
-                #expect(buffer[0] == 1)
-                #expect(buffer[buffer.count - 1] == 255)
-            }
+            #expect(region.span[0] == 1)
+            #expect(region.span[region.span.count - 1] == 255)
         }
 
         @Test("Region struct stores base and length")
         func regionStructStoresValues() throws {
-            let pageSize = Kernel.File.Size.page
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 

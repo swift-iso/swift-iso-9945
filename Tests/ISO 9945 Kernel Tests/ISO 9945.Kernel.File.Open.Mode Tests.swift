@@ -28,92 +28,34 @@ extension Kernel.File.Open.Mode {
 // MARK: - Unit Tests
 
 extension Kernel.File.Open.Mode.Test.Unit {
-    @Test("Mode from rawValue")
-    func rawValueInit() {
-        let mode = Kernel.File.Open.Mode(rawValue: 1)
-        #expect(mode.rawValue == 1)
+    @Test("explicit init sets read/write fields")
+    func explicitInit() {
+        let mode = Kernel.File.Open.Mode(read: true, write: false)
+        #expect(mode.read == true)
+        #expect(mode.write == false)
     }
 
-    @Test("read constant")
+    @Test(".read constant is read-only")
     func readConstant() {
         let mode = Kernel.File.Open.Mode.read
-        #expect(mode.rawValue == 1 << 0)
+        #expect(mode.read == true)
+        #expect(mode.write == false)
     }
 
-    @Test("write constant")
+    @Test(".write constant is write-only")
     func writeConstant() {
         let mode = Kernel.File.Open.Mode.write
-        #expect(mode.rawValue == 1 << 1)
+        #expect(mode.read == false)
+        #expect(mode.write == true)
+    }
+
+    @Test(".readWrite constant is read+write")
+    func readWriteConstant() {
+        let mode = Kernel.File.Open.Mode.readWrite
+        #expect(mode.read == true)
+        #expect(mode.write == true)
     }
 }
-
-// MARK: - OptionSet Operations
-
-extension Kernel.File.Open.Mode.Test.Unit {
-    @Test("read and write can be combined")
-    func readWrite() {
-        let mode: Kernel.File.Open.Mode = [.read, .write]
-        #expect(mode.contains(.read))
-        #expect(mode.contains(.write))
-    }
-
-    @Test("contains check for read")
-    func containsRead() {
-        let mode: Kernel.File.Open.Mode = [.read]
-        #expect(mode.contains(.read))
-        #expect(!mode.contains(.write))
-    }
-
-    @Test("contains check for write")
-    func containsWrite() {
-        let mode: Kernel.File.Open.Mode = [.write]
-        #expect(!mode.contains(.read))
-        #expect(mode.contains(.write))
-    }
-
-    @Test("empty mode")
-    func emptyMode() {
-        let mode = Kernel.File.Open.Mode()
-        #expect(!mode.contains(.read))
-        #expect(!mode.contains(.write))
-    }
-}
-
-// MARK: - POSIX Conversion Tests
-
-    #if canImport(Darwin)
-        import Darwin
-    #elseif canImport(Glibc)
-        import Glibc
-    #elseif canImport(Musl)
-        import Musl
-    #endif
-
-    extension Kernel.File.Open.Mode.Test.Unit {
-        @Test("read mode converts to O_RDONLY")
-        func readPosixFlags() {
-            let mode: Kernel.File.Open.Mode = [.read]
-            #expect(mode.posixFlags == O_RDONLY)
-        }
-
-        @Test("write mode converts to O_WRONLY")
-        func writePosixFlags() {
-            let mode: Kernel.File.Open.Mode = [.write]
-            #expect(mode.posixFlags == O_WRONLY)
-        }
-
-        @Test("read/write mode converts to O_RDWR")
-        func readWritePosixFlags() {
-            let mode: Kernel.File.Open.Mode = [.read, .write]
-            #expect(mode.posixFlags == O_RDWR)
-        }
-
-        @Test("empty mode defaults to O_RDONLY")
-        func emptyPosixFlags() {
-            let mode = Kernel.File.Open.Mode()
-            #expect(mode.posixFlags == O_RDONLY)
-        }
-    }
 
 // MARK: - Conformances
 
@@ -126,9 +68,9 @@ extension Kernel.File.Open.Mode.Test.Unit {
 
     @Test("Mode is Equatable")
     func isEquatable() {
-        let a: Kernel.File.Open.Mode = [.read]
-        let b: Kernel.File.Open.Mode = [.read]
-        let c: Kernel.File.Open.Mode = [.write]
+        let a = Kernel.File.Open.Mode(read: true, write: false)
+        let b = Kernel.File.Open.Mode(read: true, write: false)
+        let c = Kernel.File.Open.Mode(read: false, write: true)
         #expect(a == b)
         #expect(a != c)
     }
@@ -136,9 +78,9 @@ extension Kernel.File.Open.Mode.Test.Unit {
     @Test("Mode is Hashable")
     func isHashable() {
         var set = Set<Kernel.File.Open.Mode>()
-        set.insert([.read])
-        set.insert([.write])
-        set.insert([.read])  // duplicate
+        set.insert(.read)
+        set.insert(.write)
+        set.insert(.read)  // duplicate
         #expect(set.count == 2)
     }
 }
@@ -146,16 +88,21 @@ extension Kernel.File.Open.Mode.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.File.Open.Mode.Test.EdgeCase {
-    @Test("read and write are distinct bits")
-    func distinctBits() {
-        let read = Kernel.File.Open.Mode.read
-        let write = Kernel.File.Open.Mode.write
-        #expect(read.rawValue & write.rawValue == 0)
+    @Test(".read and .write are distinct modes")
+    func distinctConstants() {
+        #expect(Kernel.File.Open.Mode.read != Kernel.File.Open.Mode.write)
     }
 
-    @Test("combined mode rawValue")
-    func combinedRawValue() {
-        let combined: Kernel.File.Open.Mode = [.read, .write]
-        #expect(combined.rawValue == (1 << 0) | (1 << 1))
+    @Test(".readWrite combines both flags")
+    func readWriteCombined() {
+        let rw = Kernel.File.Open.Mode.readWrite
+        #expect(rw.read && rw.write)
+    }
+
+    @Test("empty mode has neither flag set")
+    func emptyMode() {
+        let empty = Kernel.File.Open.Mode(read: false, write: false)
+        #expect(!empty.read)
+        #expect(!empty.write)
     }
 }

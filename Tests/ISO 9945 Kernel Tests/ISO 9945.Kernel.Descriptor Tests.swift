@@ -27,69 +27,50 @@ extension Kernel.Descriptor {
 
 // MARK: - Unit Tests
 
+// Kernel.Descriptor is ~Copyable, Sendable per [MEM-COPY-001] — resource types
+// are not Equatable/Hashable/Copyable. Test assertions use fileDescriptor raw
+// values for comparison and extract bool results to locals before #expect,
+// because swift-testing's #expect macro captures expressions (__checkPropertyAccess,
+// __checkBinaryOperation) which require Copyable.
+
 extension Kernel.Descriptor.Test.Unit {
     @Test("invalid descriptor has correct raw value on POSIX")
     func invalidDescriptorValue() {
-            #expect(Kernel.Descriptor.invalid == Kernel.Descriptor(_rawValue: -1))
+        let invalidFd = Kernel.Descriptor.invalid.fileDescriptor
+        #expect(invalidFd == -1)
     }
 
     @Test("isValid returns false for invalid descriptor")
     func isValidFalseForInvalid() {
-        #expect(!Kernel.Descriptor.invalid.isValid)
+        let isValid = Kernel.Descriptor.invalid.isValid
+        #expect(!isValid)
     }
 
     @Test("isValid returns true for valid descriptor")
     func isValidTrueForValid() {
-            // Standard input (0), stdout (1), stderr (2) are always valid
-            #expect(Kernel.Descriptor(_rawValue: 0).isValid)
-            #expect(Kernel.Descriptor(_rawValue: 1).isValid)
-            #expect(Kernel.Descriptor(_rawValue: 2).isValid)
+        // Standard input (0), stdout (1), stderr (2) are always valid
+        let stdinValid = Kernel.Descriptor(_rawValue: 0).isValid
+        let stdoutValid = Kernel.Descriptor(_rawValue: 1).isValid
+        let stderrValid = Kernel.Descriptor(_rawValue: 2).isValid
+        #expect(stdinValid)
+        #expect(stdoutValid)
+        #expect(stderrValid)
     }
 
     @Test("internal raw roundtrip preserves value")
     func internalRawRoundtrip() {
-            let original = Kernel.Descriptor(_rawValue: 42)
-            let reconstructed = Kernel.Descriptor(_rawValue: 42)
-            #expect(original == reconstructed)
-    }
-
-    @Test("Descriptor is Equatable")
-    func descriptorIsEquatable() {
-            let a = Kernel.Descriptor(_rawValue: 5)
-            let b = Kernel.Descriptor(_rawValue: 5)
-            let c = Kernel.Descriptor(_rawValue: 10)
-
-            #expect(a == b)
-            #expect(a != c)
-    }
-
-    @Test("Descriptor is Hashable")
-    func descriptorIsHashable() {
-            var set = Set<Kernel.Descriptor>()
-            set.insert(Kernel.Descriptor(_rawValue: 1))
-            set.insert(Kernel.Descriptor(_rawValue: 2))
-            set.insert(Kernel.Descriptor(_rawValue: 1))  // duplicate
-
-            #expect(set.count == 2)
-    }
-
-    @Test("Descriptor works in Dictionary")
-    func descriptorInDictionary() {
-            var dict = [Kernel.Descriptor: Swift.String]()
-            dict[Kernel.Descriptor(_rawValue: 0)] = "stdin"
-            dict[Kernel.Descriptor(_rawValue: 1)] = "stdout"
-            dict[Kernel.Descriptor(_rawValue: 2)] = "stderr"
-
-            #expect(dict[Kernel.Descriptor(_rawValue: 0)] == "stdin")
-            #expect(dict[Kernel.Descriptor(_rawValue: 1)] == "stdout")
-            #expect(dict[Kernel.Descriptor(_rawValue: 2)] == "stderr")
-            #expect(dict.count == 3)
+        let original = Kernel.Descriptor(_rawValue: 42).fileDescriptor
+        let reconstructed = Kernel.Descriptor(_rawValue: 42).fileDescriptor
+        #expect(original == reconstructed)
     }
 
     @Test("negative descriptors are invalid on POSIX")
     func negativeDescriptorsInvalid() {
-            #expect(!Kernel.Descriptor(_rawValue: -1).isValid)
-            #expect(!Kernel.Descriptor(_rawValue: -100).isValid)
-            #expect(!Kernel.Descriptor(_rawValue: Int32.min).isValid)
+        let minusOne = Kernel.Descriptor(_rawValue: -1).isValid
+        let minusHundred = Kernel.Descriptor(_rawValue: -100).isValid
+        let intMin = Kernel.Descriptor(_rawValue: Int32.min).isValid
+        #expect(!minusOne)
+        #expect(!minusHundred)
+        #expect(!intMin)
     }
 }

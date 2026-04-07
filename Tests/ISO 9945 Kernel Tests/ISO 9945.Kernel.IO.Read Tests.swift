@@ -160,24 +160,22 @@ extension Kernel.IO.Read {
     extension Kernel.IO.Read.Test.EdgeCase {
         @Test("read throws on invalid descriptor")
         func readThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             var buffer = [UInt8](repeating: 0, count: 10)
 
             #expect(throws: Kernel.IO.Read.Error.self) {
                 try buffer.withUnsafeMutableBytes { ptr in
-                    try Kernel.IO.Read.read(invalidFd, into: ptr)
+                    try Kernel.IO.Read.read(Kernel.Descriptor(_rawValue: -1), into: ptr)
                 }
             }
         }
 
         @Test("pread throws on invalid descriptor")
         func preadThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             var buffer = [UInt8](repeating: 0, count: 10)
 
             #expect(throws: Kernel.IO.Read.Error.self) {
                 try buffer.withUnsafeMutableBytes { ptr in
-                    try Kernel.IO.Read.pread(invalidFd, into: ptr, at: Kernel.File.Offset(0))
+                    try Kernel.IO.Read.pread(Kernel.Descriptor(_rawValue: -1), into: ptr, at: Kernel.File.Offset(0))
                 }
             }
         }

@@ -172,24 +172,22 @@ extension Kernel.IO.Write {
     extension Kernel.IO.Write.Test.EdgeCase {
         @Test("write throws on invalid descriptor")
         func writeThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             let content = Array("test".utf8)
 
             #expect(throws: Kernel.IO.Write.Error.self) {
                 try content.withUnsafeBytes { ptr in
-                    try Kernel.IO.Write.write(invalidFd, from: ptr)
+                    try Kernel.IO.Write.write(Kernel.Descriptor(_rawValue: -1), from: ptr)
                 }
             }
         }
 
         @Test("pwrite throws on invalid descriptor")
         func pwriteThrowsOnInvalidDescriptor() {
-            let invalidFd = Kernel.Descriptor(_rawValue: -1)
             let content = Array("test".utf8)
 
             #expect(throws: Kernel.IO.Write.Error.self) {
                 try content.withUnsafeBytes { ptr in
-                    try Kernel.IO.Write.pwrite(invalidFd, from: ptr, at: Kernel.File.Offset(0))
+                    try Kernel.IO.Write.pwrite(Kernel.Descriptor(_rawValue: -1), from: ptr, at: Kernel.File.Offset(0))
                 }
             }
         }
