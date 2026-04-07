@@ -25,96 +25,42 @@ extension Terminal.Stream.Read {
 }
 
 // MARK: - Integration
+//
+// The original tests in this file stubbed stdin redirection by
+// constructing `Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)`
+// — claiming ownership of fd 0. When the ~Copyable Descriptor went out
+// of scope, its deinit called close(0), which closed the test process's
+// own standard input. swift-testing (and any subsequent test) would then
+// fail because its I/O was broken.
+//
+// Proper stdin redirection testing requires either:
+//   1. A non-owning "borrowed descriptor" API for well-known fds, or
+//   2. A spawned child process whose stdin is the pipe under test, with
+//      the parent reading results back from the child.
+//
+// Neither is in place yet. The tests below are disabled until a correct
+// mechanism for testing Terminal.Stream.Read.read exists.
 
 extension Terminal.Stream.Read.Test.Integration {
-    @Test
+    @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
     func `Read bytes from pipe via stdin redirect`() throws {
-        let pipe = try Kernel.Event.Test.makePipe()
-
-        let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
-        let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
-        defer {
-            try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-        }
-
-        try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)
-
-        // Write "Hello" to pipe
-        let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
-        for byte in testData {
-            Kernel.Event.Test.writeByte(pipe.write, value: byte)
-        }
-
-        var buffer = [UInt8](repeating: 0, count: 64)
-        let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try Terminal.Stream.stdin.read(into: ptr)
-        }
-
-        #expect(bytesRead == 5)
-        #expect(Array(buffer.prefix(5)) == testData)
+        // Placeholder — re-enable when a non-destructive stdin redirection
+        // mechanism exists.
     }
 
-    // EOF test disabled: Kernel.Pipe.Descriptors exposes pipe.write via _read
-    // accessor (borrow), but Kernel.Close.close takes `consuming Kernel.Descriptor`.
-    // Closing only the write end of a pipe requires an owned descriptor,
-    // which the current Pipe.Descriptors API does not provide.
     @Test(.disabled("pending: Pipe API does not expose owned write-end for individual close"))
     func `Read returns 0 on EOF when write end closed`() throws {
         // Placeholder — re-enable when Pipe.Descriptors provides a consuming
-        // accessor for the write end (e.g., `consuming func takeWrite() -> Kernel.Descriptor`).
+        // accessor for the write end.
     }
 
-    @Test
+    @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
     func `Read escape sequence bytes from pipe`() throws {
-        let pipe = try Kernel.Event.Test.makePipe()
-
-        let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
-        let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
-        defer {
-            try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-        }
-
-        try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)
-
-        // Write ESC[A (up arrow escape sequence)
-        let escapeSequence: [UInt8] = [0x1B, 0x5B, 0x41]
-        for byte in escapeSequence {
-            Kernel.Event.Test.writeByte(pipe.write, value: byte)
-        }
-
-        var buffer = [UInt8](repeating: 0, count: 64)
-        let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try Terminal.Stream.stdin.read(into: ptr)
-        }
-
-        #expect(bytesRead == 3)
-        #expect(Array(buffer.prefix(3)) == escapeSequence)
+        // Placeholder.
     }
 
-    @Test
+    @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
     func `Read multiple bytes preserves order`() throws {
-        let pipe = try Kernel.Event.Test.makePipe()
-
-        let stdinDescriptor = Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)
-        let savedStdin = try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(stdinDescriptor)
-        defer {
-            try? ISO_9945.Kernel.Descriptor.Duplicate.duplicate(savedStdin, to: stdinDescriptor)
-        }
-
-        try ISO_9945.Kernel.Descriptor.Duplicate.duplicate(pipe.read, to: stdinDescriptor)
-
-        // Write bytes in specific order
-        let ordered: [UInt8] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
-        for byte in ordered {
-            Kernel.Event.Test.writeByte(pipe.write, value: byte)
-        }
-
-        var buffer = [UInt8](repeating: 0, count: 64)
-        let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try Terminal.Stream.stdin.read(into: ptr)
-        }
-
-        #expect(bytesRead == 8)
-        #expect(Array(buffer.prefix(8)) == ordered)
+        // Placeholder.
     }
 }

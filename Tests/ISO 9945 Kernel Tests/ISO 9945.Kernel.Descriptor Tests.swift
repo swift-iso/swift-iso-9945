@@ -47,21 +47,17 @@ extension Kernel.Descriptor.Test.Unit {
     }
 
     @Test("isValid returns true for valid descriptor")
-    func isValidTrueForValid() {
-        // Standard input (0), stdout (1), stderr (2) are always valid
-        let stdinValid = Kernel.Descriptor(_rawValue: 0).isValid
-        let stdoutValid = Kernel.Descriptor(_rawValue: 1).isValid
-        let stderrValid = Kernel.Descriptor(_rawValue: 2).isValid
-        #expect(stdinValid)
-        #expect(stdoutValid)
-        #expect(stderrValid)
-    }
-
-    @Test("internal raw roundtrip preserves value")
-    func internalRawRoundtrip() {
-        let original = Kernel.Descriptor(_rawValue: 42).fileDescriptor
-        let reconstructed = Kernel.Descriptor(_rawValue: 42).fileDescriptor
-        #expect(original == reconstructed)
+    func isValidTrueForValid() throws {
+        // Open a real file so we have a definitively valid fd without
+        // constructing Descriptor instances from well-known raw values
+        // (e.g., 0/1/2 for stdin/stdout/stderr). Constructing a
+        // ~Copyable Descriptor from such a raw value would cause its
+        // deinit to close() the test process's own standard streams.
+        let path = KernelIOTest.makeTempPath(prefix: "valid-fd-test")
+        defer { KernelIOTest.cleanup(path: path) }
+        let fd = try KernelIOTest.open(at: path)
+        let fdIsValid = fd.isValid
+        #expect(fdIsValid)
     }
 
     @Test("negative descriptors are invalid on POSIX")
