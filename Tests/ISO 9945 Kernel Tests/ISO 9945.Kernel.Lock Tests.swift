@@ -216,21 +216,17 @@ extension Kernel.Lock.Test.Unit {
         @Test("Token acquires and releases lock")
         func tokenAcquiresAndReleases() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
-            let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
+            // Token consumes the descriptor; `release()` unlocks the lock
+            // and the descriptor's deinit closes the fd at token destruction.
             var token = try Kernel.Lock.Token(
-                descriptor: fd,
+                descriptor: try KernelIOTest.open(at: path),
                 range: .file,
                 kind: .exclusive,
                 acquire: .wait
             )
-
             try token.release()
-
-            // Should be able to acquire again after release
-            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd, range: .file)
         }
 
         @Test("Token with try acquire succeeds when uncontested")
@@ -289,28 +285,26 @@ extension Kernel.Lock.Test.Unit {
         @Test("withExclusive executes body and releases lock")
         func withExclusiveExecutesBody() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
-            let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
             var executed = false
-            try Kernel.Lock.withExclusive(fd) {
+            try Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
                 executed = true
             }
 
             #expect(executed == true)
-
-            // Lock should be released
-            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd, range: .file)
+            // withExclusive consumed the fd. The lock was released via
+            // Token.release() in the defer, and the descriptor's deinit
+            // closed the fd — which also releases any POSIX advisory
+            // locks the process held on the inode.
         }
 
         @Test("withExclusive returns value from body")
         func withExclusiveReturnsValue() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
-            let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            let result = try Kernel.Lock.withExclusive(fd) {
+            let result = try Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
                 return 42
             }
 
@@ -320,11 +314,10 @@ extension Kernel.Lock.Test.Unit {
         @Test("withShared executes body and releases lock")
         func withSharedExecutesBody() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
-            let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
             var executed = false
-            try Kernel.Lock.withShared(fd) {
+            try Kernel.Lock.withShared(try KernelIOTest.open(at: path)) {
                 executed = true
             }
 
@@ -334,22 +327,20 @@ extension Kernel.Lock.Test.Unit {
         @Test("withExclusive releases lock on throw")
         func withExclusiveReleasesOnThrow() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
-            let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
             struct TestError: Swift.Error {}
 
             do {
-                try Kernel.Lock.withExclusive(fd) { () throws(TestError) in
+                try Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) { () throws(TestError) in
                     throw TestError()
                 }
+                Issue.record("Expected TestError")
             } catch {
-                // Expected - body threw TestError, wrapped in WithLockError.body
+                // Expected — body threw TestError, wrapped in WithLockError.body.
+                // The defer in withExclusive still runs, releasing the lock,
+                // and the fd is closed as the consumed descriptor is destroyed.
             }
-
-            // Lock should be released
-            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd, range: .file)
         }
     }
 

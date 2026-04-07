@@ -45,10 +45,10 @@ import ISO_9945
         /// 2. `.build/debug/` relative to package root via #filePath (SwiftPM)
         /// 3. Xcode DerivedData via environment variables
         static func executablePath(filePath: StaticString = #filePath) -> Swift.String {
-            let helperName = "posix-test-helper"
+            let helperName = "iso-9945-test-helper"
 
             // 1. Prefer explicit env var (CI-friendly)
-            if let envPath = getenv("POSIX_TEST_HELPER") {
+            if let envPath = getenv("ISO_9945_TEST_HELPER") ?? getenv("POSIX_TEST_HELPER") {
                 return Swift.String(cString: envPath)
             }
 

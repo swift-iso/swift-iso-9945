@@ -53,40 +53,65 @@ extension ISO_9945.Kernel.Lock {
     /// The mutable `isReleased` state is safe because `~Copyable` ensures
     /// single ownership - only one thread can own the token at a time.
     public struct Token: ~Copyable, Sendable {
-        private let descriptor: Kernel.Descriptor
-        private let range: Kernel.Lock.Range
-        private var isReleased: Bool
+        /// The descriptor whose lock this token represents.
+        ///
+        /// Token takes ownership via `consuming` in `init`. The caller
+        /// transfers the descriptor to Token when acquiring a lock, and
+        /// Token owns it until the token is destroyed — at which point
+        /// the descriptor's own `deinit` closes the fd.
+        ///
+        /// This prevents the double-close that would occur if Token
+        /// stored a new `Kernel.Descriptor` constructed from the caller's
+        /// raw value (both the caller's and Token's descriptors would
+        /// call `close()` on the same fd).
+        @usableFromInline internal let descriptor: Kernel.Descriptor
+        @usableFromInline internal let range: Kernel.Lock.Range
+        @usableFromInline internal var isReleased: Bool
 
         /// Creates a lock token by acquiring a lock.
         ///
+        /// Token takes ownership of `descriptor`. When the token is
+        /// destroyed (explicitly via `release()` followed by scope exit,
+        /// or implicitly via scope exit without an explicit release),
+        /// the descriptor's `deinit` closes the fd.
+        ///
         /// - Parameters:
-        ///   - descriptor: The file descriptor.
+        ///   - descriptor: The file descriptor. Ownership is transferred to the Token.
         ///   - range: The byte range to lock.
         ///   - kind: The lock kind (shared or exclusive).
         ///   - acquire: The acquisition strategy (default: `.wait`).
-        /// - Throws: `Kernel.Lock.Error` if locking fails.
+        /// - Throws: `Kernel.Lock.Error` if locking fails. On throw, the
+        ///   consumed descriptor is destroyed by init cleanup (its deinit
+        ///   closes the fd).
         public init(
-            descriptor: borrowing Kernel.Descriptor,
+            descriptor: consuming Kernel.Descriptor,
             range: Kernel.Lock.Range = .file,
             kind: Kernel.Lock.Kind,
             acquire: Kernel.Lock.Acquire = .wait
         ) throws(Kernel.Lock.Error) {
-            self.descriptor = Kernel.Descriptor(_rawValue: descriptor._rawValue)
-            self.range = range
-            self.isReleased = false
-
+            // Acquire the lock first, borrowing the consuming parameter
+            // without moving it. If acquireLock throws, the consuming
+            // parameter is destroyed on init cleanup.
             try Self.acquireLock(
-                descriptor: self.descriptor,
+                descriptor: descriptor,
                 range: range,
                 kind: kind,
                 acquire: acquire
             )
+            // Successful acquisition — transfer ownership into Token.
+            self.descriptor = descriptor
+            self.range = range
+            self.isReleased = false
         }
 
         /// Releases the lock.
         ///
-        /// On success, the token is marked released and subsequent calls are no-ops.
-        /// On failure, the token remains valid for retry - the lock is preserved.
+        /// On success, the token is marked released and subsequent calls
+        /// are no-ops. On failure, the token remains valid for retry —
+        /// the lock is preserved.
+        ///
+        /// The Token retains ownership of the descriptor after release;
+        /// the fd is closed when the Token goes out of scope.
         ///
         /// - Throws: `Kernel.Lock.Error` if the unlock syscall fails.
         public mutating func release() throws(Kernel.Lock.Error) {
@@ -96,7 +121,9 @@ extension ISO_9945.Kernel.Lock {
         }
 
         deinit {
-            // Backstop release - correctness should not depend on this
+            // Backstop release: if the token was dropped without calling
+            // release(), unlock via the owned descriptor. The descriptor's
+            // own deinit runs immediately after and closes the fd.
             guard !isReleased else { return }
             _ = Result { try ISO_9945.Kernel.Lock.unlock(descriptor, range: range) }
         }
@@ -210,17 +237,24 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: The result of the closure.
     /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
     public static func withExclusive<T, E: Swift.Error>(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: consuming Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
     ) throws(ISO_9945.Kernel.Lock.WithLockError<E>) -> T {
         var token: Token
         do {
-            token = try Token(descriptor: descriptor, range: range, kind: .exclusive, acquire: acquire)
+            token = try Token(
+                descriptor: consume descriptor,
+                range: range,
+                kind: .exclusive,
+                acquire: acquire
+            )
         } catch {
             throw .lock(error)
         }
+        // Token owns the descriptor. On scope exit, the token is destroyed
+        // and the descriptor's deinit closes the fd exactly once.
         defer { try? token.release() }
         do {
             return try body()
@@ -241,14 +275,19 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: The result of the closure.
     /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
     public static func withShared<T, E: Swift.Error>(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: consuming Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
     ) throws(ISO_9945.Kernel.Lock.WithLockError<E>) -> T {
         var token: Token
         do {
-            token = try Token(descriptor: descriptor, range: range, kind: .shared, acquire: acquire)
+            token = try Token(
+                descriptor: consume descriptor,
+                range: range,
+                kind: .shared,
+                acquire: acquire
+            )
         } catch {
             throw .lock(error)
         }
