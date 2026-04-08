@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Binary_Primitives
 import ISO_9945_Kernel_Test_Support
 import ISO_9945
 import Kernel_Primitives
