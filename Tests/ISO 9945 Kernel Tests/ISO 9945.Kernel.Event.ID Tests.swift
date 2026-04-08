@@ -44,24 +44,35 @@ struct EventIDTests {
 
     // MARK: - Descriptor Conversion
 
-    @Test("ID from descriptor")
-    func fromDescriptor() {
-        let descriptor = Kernel.Descriptor(_rawValue: 5)
-        let id = Kernel.Event.ID(descriptor: descriptor)
-        #expect(id == 5)
+    @Test("ID from descriptor reflects the fd raw value")
+    func fromDescriptor() throws {
+        // Use a real owned descriptor from pipe(2) so the borrow into
+        // Kernel.Event.ID(descriptor:) does not alias an unrelated fd.
+        // pipe goes out of scope at function exit; both ends close cleanly
+        // through their respective Kernel.Descriptor deinits.
+        let pipe = try ISO_9945.Kernel.Pipe.pipe()
+        let id = Kernel.Event.ID(descriptor: pipe.read)
+        #expect(id.rawValue == UInt(bitPattern: Int(pipe.read.fileDescriptor)))
     }
 
-    @Test("Descriptor from ID roundtrip")
-    func descriptorRoundtrip() {
-        let descriptor = Kernel.Descriptor(_rawValue: 10)
-        let id = Kernel.Event.ID(descriptor: descriptor)
-        let recovered = Kernel.Descriptor(id)
-        #expect(recovered?.fileDescriptor == 10)
+    @Test("Round-trip from descriptor through ID is symmetric")
+    func descriptorRoundtrip() throws {
+        // Verify the round-trip mathematically: the ID's raw value fits in
+        // Int32 (so Kernel.Descriptor.init?(_:) would succeed) and the bit
+        // pattern matches the original descriptor's fd. This avoids actually
+        // constructing the recovered Descriptor, which would alias pipe.read
+        // and double-close at scope exit.
+        let pipe = try ISO_9945.Kernel.Pipe.pipe()
+        let originalRaw = pipe.read.fileDescriptor
+        let id = Kernel.Event.ID(descriptor: pipe.read)
+        #expect(id.rawValue <= UInt(Int32.max))
+        #expect(Int32(id.rawValue) == originalRaw)
     }
 
     @Test("Descriptor from ID fails for large values")
     func descriptorFromLargeIDFails() {
-        // Values larger than Int32.max cannot be converted to a descriptor
+        // Values larger than Int32.max cannot be converted to a descriptor.
+        // No fd is constructed (init? returns nil), so no aliasing risk.
         let largeID = Kernel.Event.ID(__unchecked: (), UInt(Int32.max) + 1)
         let descriptor = Kernel.Descriptor(largeID)
         let isNil = (descriptor == nil)

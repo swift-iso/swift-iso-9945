@@ -46,21 +46,30 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         return Kernel.Descriptor(_rawValue: result)
     }
 
-    /// Duplicates a file descriptor to a specific descriptor number.
+    /// Duplicates a file descriptor into an existing descriptor slot, atomically
+    /// replacing the kernel resource at that slot.
     ///
-    /// If `newDescriptor` is already open, it is first closed. The new
-    /// descriptor is guaranteed to be `newDescriptor`.
+    /// `dup2(2)` semantics: the kernel resource previously held at `newDescriptor`'s
+    /// slot is closed atomically, and the slot is repointed to a duplicate of
+    /// `descriptor`'s resource. The slot number itself does not change — only
+    /// the resource it refers to.
+    ///
+    /// Because the slot number is unchanged, the `newDescriptor` wrapper needs
+    /// no state mutation: its `_raw` still holds the same fd number, which now
+    /// refers to the duplicate. The `inout` parameter expresses the exclusive
+    /// borrow required for the syscall and prevents aliasing constructions
+    /// (e.g., returning a second `Kernel.Descriptor` wrapping the same slot).
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to duplicate.
-    ///   - newDescriptor: The target descriptor number.
-    /// - Returns: The new file descriptor (same as `newDescriptor`).
-    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
-    @discardableResult
+    ///   - newDescriptor: The target slot. Mutated in place: on success, this
+    ///     wrapper now refers to the new (duplicated) kernel resource.
+    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure. On throw,
+    ///   `newDescriptor` is unchanged and still refers to its original resource.
     public static func duplicate(
         _ descriptor: borrowing Kernel.Descriptor,
-        to newDescriptor: borrowing Kernel.Descriptor
-    ) throws(Error) -> Kernel.Descriptor {
+        to newDescriptor: inout Kernel.Descriptor
+    ) throws(Error) {
         #if canImport(Darwin)
             let result = Darwin.dup2(descriptor._rawValue, newDescriptor._rawValue)
         #elseif canImport(Musl)
@@ -72,7 +81,10 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         guard result >= 0 else {
             throw Error.current()
         }
-        return Kernel.Descriptor(_rawValue: result)
+        // dup2 returns newDescriptor's slot — the wrapper's _raw is already
+        // correct. No state change. The kernel resource at that slot has been
+        // replaced atomically by the kernel; from Swift's view, newDescriptor
+        // simply refers to a different (duplicated) resource now.
     }
 
 }
