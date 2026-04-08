@@ -66,3 +66,74 @@ Session commits:
 - `1ed0c86` Fix pre-existing test-target compile errors
 - `b347108` Fix Kernel.Lock.Token double-close via consuming ownership transfer
 - `1c43b43` Remove test patterns that close well-known fds via Descriptor deinit
+
+---
+
+## Legacy — Consolidated 2026-04-08
+
+### From: swift-institute/Research/audit-standards-p2.md (2026-04-03)
+
+**Pre-publication audit — P0/P1/P2 checks**
+
+#### P0: Foundation Imports [PRIM-FOUND-001]
+
+**Result: PASS** — No `import Foundation` in any Sources/ directory.
+
+#### P1: Multi-Type Files [API-IMPL-005]
+
+**Result: FAIL — 7 files (4 actionable, 3 borderline)**
+
+| # | Severity | Rule | Location | Finding | Action |
+|---|----------|------|----------|---------|--------|
+| 1 | P1 | API-IMPL-005 | `Sources/.../ISO 9945.Kernel.Lock.Token.swift` | `WithLockError` is a generic error type alongside `Token`. Two sibling types. | Extract `WithLockError` to own file |
+| 2 | P1 | API-IMPL-005 | `Sources/.../ISO 9945.Kernel.Process.Group.swift` | `Process` and `Target` are sibling types. | Split to separate files |
+| 3 | P1 | API-IMPL-005 | `Sources/.../ISO 9945.Kernel.Device.swift` | `Major` and `Minor` are sibling types under `Device`. | Split to `ISO 9945.Kernel.Device.Major.swift` and `ISO 9945.Kernel.Device.Minor.swift` |
+| 4 | P1 | API-IMPL-005 | `Sources/.../ISO 9945.Kernel.Process.Wait.swift` | `Wait`, `Selector`, and `Result` are distinct types. `Selector` and `Result` are not nested in `Wait`. | Extract `Selector` and `Result` to own files |
+| 5 | P1 (borderline) | API-IMPL-005 | `Sources/.../ISO 9945.Kernel.File.Clone.swift` | 4 types: `Clonefile`, `Copyfile`, `Ficlone`, `CopyRange` — each behind `#if os(...)`. Platform-conditional. | Consider per-platform splitting |
+| 6 | P1 (borderline) | API-IMPL-005 | `Sources/.../ISO 9945.Kernel.Process.Status.swift` | 6 types: `Status`, `Exit`, `Terminating`, `Stop`, `Core`, `Classification`. Nest.Name accessor types tightly coupled to `Status`. | Borderline — tightly coupled accessors |
+| 7 | acceptable | API-IMPL-005 | Various files | `Fork`/`Result`, `Mask`/`How`, `Error`/`Semantic`, `Action`/`Handler`, `Options`/`No`, `Mutex`/`Error`, `Signal.Error`/`Semantic`, `Socket.Pair`/`Error`/`Platform`, `Kill`/`Signal` — all nested types. | No action needed |
+
+#### P1: Compound Type Names [API-NAME-001]
+
+**Result: PASS** — All types use the Nest.Name pattern correctly (e.g., `Signal.Number`, `Process.Status`, `File.Clone`).
+
+#### P2: Methods in Type Bodies [API-IMPL-008]
+
+**Result: FAIL — 4 Nest.Name accessor types**
+
+| # | Severity | Rule | Location | Finding | Action |
+|---|----------|------|----------|---------|--------|
+| 8 | P2 | API-IMPL-008 | `Sources/.../ISO 9945.Kernel.Process.Status.swift:80-92` | `Exit` — computed property `code` inside struct body | Move computed property to extension |
+| 9 | P2 | API-IMPL-008 | `Sources/.../ISO 9945.Kernel.Process.Status.swift:98-109` | `Terminating` — computed property `signal` inside struct body | Move computed property to extension |
+| 10 | P2 | API-IMPL-008 | `Sources/.../ISO 9945.Kernel.Process.Status.swift:116-128` | `Stop` — computed property `signal` inside struct body | Move computed property to extension |
+| 11 | P2 | API-IMPL-008 | `Sources/.../ISO 9945.Kernel.Process.Status.swift:134-158` | `Core` — computed property `dumped` inside struct body | Move computed property to extension |
+
+#### P3: Missing Doc Comments [DOC-001]
+
+**Result: FAIL — ~20 declarations (systemic pattern)**
+
+Systematic gaps in RawRepresentable boilerplate (`rawValue`, `init(rawValue:)`) and some typealiases. Representative:
+
+| # | Severity | Rule | Location | Finding |
+|---|----------|------|----------|---------|
+| 12 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.File.Seek.swift:597` | `public let rawValue: Int32` — missing doc comment |
+| 13 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Signal.Mask.How.swift:972` | `public let rawValue: Int32` — missing doc comment |
+| 14 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Signal.Number.swift:4700` | `public let rawValue: Int32` — missing doc comment |
+| 15 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Pipe.swift:2745` | `public let rawValue: Int32` — missing doc comment |
+| 16 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Device.swift:8772,8784` | `public let rawValue: UInt32` — missing doc comment |
+| 17 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Process.Status.swift:5743` | `public let rawValue: Int32` — missing doc comment |
+| 18 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Process.Kill.swift:9642` | `public let rawValue: Int32` — missing doc comment |
+| 19 | P3 | DOC-001 | `Sources/.../ISO 9945.Kernel.Memory.Lock.All.Flags.swift:10712` | `public let rawValue: Int32` — missing doc comment |
+| 20 | P3 | DOC-001 | Various files | ~10 `public typealias Error = ...` — missing doc comments |
+
+**Pattern**: Undocumented declarations are overwhelmingly RawRepresentable boilerplate. Systemic, not individual omissions.
+
+#### Summary
+
+| Check | Result | Count |
+|-------|--------|-------|
+| P0: Foundation imports | PASS | 0 |
+| P1: Multi-type files | FAIL | 7 files (4 actionable, 3 borderline) |
+| P1: Compound type names | PASS | 0 |
+| P2: Methods in type bodies | FAIL | 4 types |
+| P3: Missing doc comments | FAIL | ~20 declarations |
