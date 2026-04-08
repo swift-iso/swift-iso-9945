@@ -36,7 +36,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-string-primitives"),
         .package(path: "../../swift-primitives/swift-clock-primitives"),
         .package(path: "../../swift-primitives/swift-terminal-primitives"),
-        .package(path: "../../swift-foundations/swift-ascii")
+        .package(path: "../swift-iso-9899")
     ],
     targets: [
         .target(
@@ -63,7 +63,7 @@ let package = Package(
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
-                .product(name: "ASCII", package: "swift-ascii")
+                .product(name: "ISO 9899 Core", package: "swift-iso-9899")
             ],
             path: "Sources/ISO 9945 Kernel"
         ),

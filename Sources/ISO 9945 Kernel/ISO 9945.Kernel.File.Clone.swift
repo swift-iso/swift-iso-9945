@@ -24,7 +24,7 @@ internal import ISO_9945_ABI
     internal import Musl
 #endif
 
-internal import ASCII
+internal import ISO_9899_Core
 
 // MARK: - Capability Probing
 
@@ -43,8 +43,8 @@ extension ISO_9945.Kernel.File.Clone.Capability {
 
             // APFS supports cloning
             let isAPFS = unsafe withUnsafeBytes(of: statfsBuf.f_fstypename) { buf in
-                unsafe Binary.ASCII.equals.nulTerminated(
-                    buf.baseAddress!.assumingMemoryBound(to: UInt8.self),
+                unsafe ISO_9899.String.Comparison.equals(
+                    buf.baseAddress!.assumingMemoryBound(to: ISO_9899.String.Char.self),
                     "apfs"
                 )
             }
