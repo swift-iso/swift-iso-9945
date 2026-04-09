@@ -22,9 +22,6 @@ public import ISO_9945
     internal import Musl
 #endif
 
-#if canImport(CPosixShim)
-    internal import CPosixShim
-#endif
 
 // MARK: - Termios Attributes Get
 
@@ -38,7 +35,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
     /// - Throws: ``Kernel.Error`` if the syscall fails
     public static func get(fd: Int32) throws(Kernel.Error) -> Self {
         var t = termios()
-        let result = unsafe swift_tcgetattr(fd, &t)
+        let result = unsafe tcgetattr(fd, &t)
         guard result == 0 else {
             throw Kernel.Error.current(operation: "tcgetattr")
         }
@@ -77,7 +74,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
                 unsafe dest.copyMemory(from: buffer)
             }
         }
-        let result = unsafe swift_tcsetattr(fd, action.rawValue, &t)
+        let result = unsafe tcsetattr(fd, action.rawValue, &t)
         guard result == 0 else {
             throw Kernel.Error.current(operation: "tcsetattr")
         }

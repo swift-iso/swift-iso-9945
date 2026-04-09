@@ -16,7 +16,6 @@ public import ISO_9945
     internal import Darwin
 #elseif canImport(Glibc)
     internal import Glibc
-    internal import CLinuxShim
 #elseif canImport(Musl)
     internal import Musl
 #endif
@@ -62,40 +61,17 @@ extension ISO_9945.Kernel.File.Seek {
     }
 }
 
-// MARK: - Whence
+// MARK: - POSIX Whence Constants
 
-extension ISO_9945.Kernel.File.Seek {
-    /// The reference point for seek operations.
-    public struct Whence: RawRepresentable, Sendable, Hashable {
-        public let rawValue: Int32
+extension Kernel.File.Seek.Whence {
+    /// Seek from the beginning of the file (SEEK_SET).
+    public static let start = Self(rawValue: SEEK_SET)
 
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
+    /// Seek from the current position (SEEK_CUR).
+    public static let current = Self(rawValue: SEEK_CUR)
 
-        /// Seek from the beginning of the file.
-        public static let start = Whence(rawValue: SEEK_SET)
-
-        /// Seek from the current position.
-        public static let current = Whence(rawValue: SEEK_CUR)
-
-        /// Seek from the end of the file.
-        public static let end = Whence(rawValue: SEEK_END)
-
-        #if canImport(Darwin)
-        /// Seek to the next hole (Darwin).
-        public static let hole = Whence(rawValue: SEEK_HOLE)
-
-        /// Seek to the next data region (Darwin).
-        public static let data = Whence(rawValue: SEEK_DATA)
-        #elseif os(Linux)
-        /// Seek to the next hole (Linux).
-        public static let hole = Whence(rawValue: SEEK_HOLE)
-
-        /// Seek to the next data region (Linux).
-        public static let data = Whence(rawValue: SEEK_DATA)
-        #endif
-    }
+    /// Seek from the end of the file (SEEK_END).
+    public static let end = Self(rawValue: SEEK_END)
 }
 
 // MARK: - Error

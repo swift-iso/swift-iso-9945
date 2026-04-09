@@ -54,11 +54,16 @@ let package = Package(
             dependencies: []
         ),
         .target(
+            name: "CISO9945Shim",
+            dependencies: []
+        ),
+        .target(
             name: "ISO 9945 Kernel",
             dependencies: [
                 .target(name: "ISO 9945"),
                 .target(name: "ISO 9945 ABI"),
                 .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
@@ -72,6 +77,7 @@ let package = Package(
             dependencies: [
                 .target(name: "ISO 9945"),
                 .target(name: "ISO 9945 ABI"),
+                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Loader Primitives", package: "swift-loader-primitives"),
                 .product(name: "Kernel Primitives", package: "swift-kernel-primitives")
             ],

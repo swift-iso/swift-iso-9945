@@ -16,7 +16,6 @@ public import ISO_9945
     internal import Darwin
 #elseif canImport(Glibc)
     internal import Glibc
-    internal import CLinuxShim
 #elseif canImport(Musl)
     internal import Musl
 #endif

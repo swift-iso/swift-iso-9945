@@ -22,8 +22,8 @@ public import ISO_9945
     internal import Musl
 #endif
 
-#if canImport(CPosixShim)
-    internal import CPosixShim
+#if canImport(CISO9945Shim)
+    internal import CISO9945Shim
 #endif
 
 // MARK: - TTY Check
@@ -39,7 +39,7 @@ extension ISO_9945.Kernel.TTY {
     /// This is a pure observation - returns `false` on error rather than throwing.
 
     public static func isTTY(fd: Int32) -> Bool {
-        swift_isatty(fd) != 0
+        isatty(fd) != 0
     }
 }
 
@@ -55,7 +55,7 @@ extension ISO_9945.Kernel.TTY.Size {
     /// - Throws: ``Kernel.Error`` if the ioctl call fails (e.g., not a terminal)
     public static func query(fd: Int32) throws(Kernel.Error) -> Self {
         var ws = winsize()
-        let result = unsafe swift_ioctl_tiocgwinsz(fd, &ws)
+        let result = unsafe iso9945_ioctl_tiocgwinsz(fd, &ws)
         guard result == 0 else {
             throw Kernel.Error.current(operation: "ioctl(TIOCGWINSZ)")
         }

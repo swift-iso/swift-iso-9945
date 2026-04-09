@@ -20,10 +20,6 @@ public import ISO_9945
     internal import Musl
 #endif
 
-#if canImport(CLinuxShim)
-    internal import CLinuxShim
-#endif
-
 // MARK: - POSIX mmap() syscalls
 
 extension ISO_9945.Kernel.Memory.Map {

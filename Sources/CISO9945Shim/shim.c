@@ -9,11 +9,4 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives
-public import ISO_9945
-
-// MARK: - POSIX random generation
-
-extension ISO_9945.Kernel.Random {
-    public typealias Error = Kernel.Random.Error
-}
+// Empty C file required for SwiftPM to recognize as a C target

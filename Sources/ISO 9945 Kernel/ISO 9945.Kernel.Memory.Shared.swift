@@ -14,7 +14,7 @@ public import ISO_9945
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import CDarwinShim
+    internal import CISO9945Shim
 #elseif canImport(Glibc)
     internal import Glibc
 #elseif canImport(Musl)
@@ -70,7 +70,7 @@ extension ISO_9945.Kernel.Memory.Shared {
 
         #if canImport(Darwin)
             // Use shim because Darwin declares shm_open as variadic
-            let fd = unsafe swift_shm_open(name, flags, mode_t(permissions.rawValue))
+            let fd = unsafe iso9945_shm_open(name, flags, mode_t(permissions.rawValue))
         #else
             let fd = unsafe shm_open(name, flags, mode_t(permissions.rawValue))
         #endif

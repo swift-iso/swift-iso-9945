@@ -14,13 +14,14 @@ import ISO_9945  // For ISO_9945.Loader typealias
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import CPosixShim
 #elseif canImport(Glibc)
     internal import Glibc
-    internal import CPosixShim
 #elseif canImport(Musl)
     internal import Musl
-    internal import CPosixShim
+#endif
+
+#if canImport(CISO9945Shim)
+    internal import CISO9945Shim
 #endif
 
 // MARK: - dlsym Handle Conversion
@@ -38,9 +39,9 @@ extension ISO_9945.Loader.Symbol.Scope {
         case .handle(let h):
             return unsafe h.rawValue
         case .default:
-            return unsafe swift_RTLD_DEFAULT()
+            return unsafe iso9945_RTLD_DEFAULT()
         case .next:
-            return unsafe swift_RTLD_NEXT()
+            return unsafe iso9945_RTLD_NEXT()
         }
     }
 }

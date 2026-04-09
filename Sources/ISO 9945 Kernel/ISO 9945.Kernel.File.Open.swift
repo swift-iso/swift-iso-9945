@@ -82,17 +82,11 @@ extension ISO_9945.Kernel.File.Open {
         }
 
         #if canImport(Darwin)
-            // Darwin: exclude internal noCache flag from open(), apply via fcntl after
-            let flags = accessMode | options.openFlags
+            let flags = accessMode | options.rawValue
 
             let fd = unsafe Darwin.open(cPath, flags, mode_t(permissions.rawValue))
             guard fd >= 0 else {
                 throw Kernel.File.Open.Error.current()
-            }
-
-            // Apply F_NOCACHE if requested
-            if options.needsNoCache {
-                _ = fcntl(fd, F_NOCACHE, 1)
             }
         #elseif canImport(Musl)
             let flags = accessMode | options.rawValue

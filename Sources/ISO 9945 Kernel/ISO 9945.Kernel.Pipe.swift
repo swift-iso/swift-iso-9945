@@ -18,7 +18,6 @@ public import ISO_9945
     internal import Darwin
 #elseif canImport(Glibc)
     internal import Glibc
-    internal import CLinuxShim
 #elseif canImport(Musl)
     internal import Musl
 #endif
@@ -83,49 +82,6 @@ extension ISO_9945.Kernel.Pipe {
         )
     }
 
-    #if os(Linux)
-    /// Creates a pipe with the specified flags (Linux).
-    ///
-    /// - Parameter flags: Flags to apply to the pipe descriptors.
-    /// - Returns: The read and write descriptors for the pipe.
-    /// - Throws: `Kernel.Pipe.Error` on failure.
-    public static func pipe(flags: Flags) throws(Error) -> Descriptors {
-        var fds: (Int32, Int32) = (0, 0)
-
-        let result = withUnsafeMutablePointer(to: &fds) { ptr in
-            ptr.withMemoryRebound(to: Int32.self, capacity: 2) { fdPtr in
-                swift_pipe2(fdPtr, flags.rawValue)
-            }
-        }
-
-        guard result == 0 else {
-            throw Error.current()
-        }
-
-        return Descriptors(
-            read: Kernel.Descriptor(_rawValue: fds.0),
-            write: Kernel.Descriptor(_rawValue: fds.1)
-        )
-    }
-
-    /// Flags for pipe creation (Linux).
-    public struct Flags: OptionSet, Sendable {
-        public let rawValue: Int32
-
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-
-        /// Set the close-on-exec flag on the new file descriptors.
-        public static let closeOnExec = Flags(rawValue: O_CLOEXEC)
-
-        /// Set the non-blocking flag on the new file descriptors.
-        public static let nonBlock = Flags(rawValue: O_NONBLOCK)
-
-        /// Create a direct I/O pipe (Linux 3.4+).
-        public static let direct = Flags(rawValue: O_DIRECT)
-    }
-    #endif
 }
 
 // MARK: - Error Alias
