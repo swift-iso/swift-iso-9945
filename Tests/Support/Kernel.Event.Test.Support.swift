@@ -9,7 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives
+public import Kernel_Primitives_Core
+public import Kernel_Descriptor_Primitives
+public import Kernel_Event_Primitives
+public import Kernel_IO_Primitives
+public import Kernel_File_Primitives
+public import Kernel_Path_Primitives
+public import Kernel_Environment_Primitives
+public import Kernel_Process_Primitives
+public import Kernel_Thread_Primitives
+public import Kernel_Error_Primitives
 public import ISO_9945
 public import ISO_9945_Kernel
 
