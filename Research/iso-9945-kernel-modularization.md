@@ -251,10 +251,21 @@ process-lifecycle-related into Process (23 files), and miscellaneous into System
 
 ## Step 4: Recommendation
 
-**Recommended: Option A (Full Domain Split)**
+**Recommended: Option A (Full Domain Split) — 12 domain targets + umbrella**
 
 The analysis shows clean domain separation with minimal L2 cross-domain coupling
 (exactly one edge: Process → Signal, after promoting `Process.Group.ID` to L1).
+
+### Decisions Made
+
+| Item | Decision | Rationale |
+|------|----------|-----------|
+| Process ↔ Signal cycle | Promote `Process.Group.ID` to L1 | Kernel vocabulary, not POSIX-specific; L1 already has `Kernel.Group.swift` |
+| Directory | Separate target | Distinct POSIX subsystem; no L2 File dependency |
+| Lock | Separate target | File locking ≠ file I/O; no L2 File dependency |
+| Environment | Separate from System | Distinct POSIX concept with own error type |
+| ISO 9945 ABI | Absorbed into Core | CChar↔UInt8 projections used by 17 files across 6 domains; `package`-scoped, so Core (universal dep) is the natural home |
+| ISO 9945 Core | Internal target, not published | Per [MOD-001]: Core is scaffolding, not a consumer-facing product |
 
 ### Rationale
 
@@ -273,14 +284,18 @@ The analysis shows clean domain separation with minimal L2 cross-domain coupling
    `CISO9945Shim` is only needed by Memory (1 file) and Terminal (1 file). The
    monolith links both shims unconditionally.
 
-5. **Build parallelism**: 8 independent targets after Core. Brent's theorem:
-   with depth 2 and 9 non-umbrella targets, theoretical max parallelism ≈ 4.5x
-   over the sequential monolith. Actual gain depends on file distribution but
-   is significant given the 97-file / 11,834-line total.
+5. **Build parallelism**: 11 independent targets after Core (10 at depth 1, Process
+   at depth 2). Brent's theorem: with depth 2 and 12 non-umbrella targets, theoretical
+   max parallelism ≈ 6x over the sequential monolith.
 
 6. **Growth safety**: POSIX has many more syscalls that could be added (poll, select,
    epoll wrappers, additional ioctl operations, etc.). Domain targets prevent the
    monolith from growing unboundedly.
+
+7. **ABI absorption**: The `ISO 9945 ABI` target's CChar↔UInt8 projections are used
+   by 17 files across File, Directory, Link, Path, Environment, and Process. Absorbing
+   into Core eliminates a target and makes the projections universally available via
+   the transitive Core dependency.
 
 ### Prerequisite
 
@@ -291,104 +306,223 @@ to L1 (`Kernel Process Primitives`). This:
 - L1 already has `Kernel.Group.swift` in `Kernel Process Primitives` — natural home
 - Minimal change: move a `Tagged<..., pid_t>` typealias and its `.current` constant
 
-### Target Structure (proposed)
+### Target Structure
+
+#### Dependency Graph
+
+```
+                        ISO 9945 Core (internal, not published)
+                 /    /    |    |     |     \    \     \     \    \
+              File  Dir  Lock Socket Mem  Signal Thread Term  Env System
+                                           |
+                                        Process
+
+ISO 9945 Kernel (umbrella) — re-exports all above
+```
+
+Max depth: **2** (Core → Signal → Process). All other targets at depth 1.
+
+#### Target Inventory
+
+| # | Target | Files | ~Lines | L1 Deps | C Shims | Extra Deps |
+|---|--------|-------|--------|---------|---------|------------|
+| 1 | ISO 9945 Core | 8 | 516 | Kernel Primitives Core, Descriptor, Error | — | Path_Primitives |
+| 2 | ISO 9945 Kernel File | 20 | 2,317 | Kernel File, IO, Permission, Path | — | Algebra, Identity |
+| 3 | ISO 9945 Kernel Directory | 4 | 648 | Kernel File | — | String_Primitives |
+| 4 | ISO 9945 Kernel Lock | 3 | 524 | Kernel File | — | — |
+| 5 | ISO 9945 Kernel Socket | 5 | 409 | Kernel Socket | — | Algebra |
+| 6 | ISO 9945 Kernel Memory | 15 | 1,093 | Kernel Memory | CISO9945Shim | — |
+| 7 | ISO 9945 Kernel Signal | 11 | 1,496 | Kernel Process, Syscall | — | — |
+| 8 | ISO 9945 Kernel Process | 12 | 1,326 | Kernel Process, Syscall | CPOSIXProcessShim | — |
+| 9 | ISO 9945 Kernel Thread | 4 | 588 | Kernel Thread | — | — |
+| 10 | ISO 9945 Kernel Terminal | 4 | 372 | Kernel Terminal | CISO9945Shim | Terminal_Primitives |
+| 11 | ISO 9945 Kernel Environment | 3 | 380 | Kernel Environment | — | String_Primitives |
+| 12 | ISO 9945 Kernel System | 7 | 584 | Kernel System, Time, Clock, Random | — | Clock_Primitives |
+| 13 | ISO 9945 Kernel (umbrella) | 1 | ~25 | — | — | — |
+
+#### Core Contents
+
+`ISO 9945 Core` absorbs three current targets into one internal target:
+
+| Source | Files Absorbed | Content |
+|--------|---------------|---------|
+| `ISO 9945` (target) | `ISO 9945.swift` | Namespace enum, `POSIX` typealias |
+| `ISO 9945 ABI` (target) | `ISO 9945.ABI.CChar.swift` | `package`-scoped CChar↔UInt8 pointer projections |
+| `ISO 9945 Kernel` (partial) | `Kernel.swift`, `Error.swift`, `Error.Code.swift`, `Error.Number.swift`, `Error.Mapping.swift`, `exports.swift` | `ISO_9945.Kernel` typealias, Descriptor veneer, `Error.captureErrno()`, error code types, L1 re-exports |
+
+Core re-exports via `exports.swift`:
+```swift
+@_exported public import Kernel_Primitives_Core
+@_exported public import Kernel_Descriptor_Primitives
+@_exported public import Kernel_Error_Primitives
+```
+
+#### File Distribution
+
+After extracting Directory (4) and Lock (3), the File target contains 20 files:
+
+| Sub-domain | Files |
+|------------|-------|
+| File ops | `File.Open.swift`, `File.Open.Mode.swift`, `File.Open.Options.swift`, `File.Seek.swift`, `File.Stats.Get.swift`, `File.Flush.swift`, `File.Control.swift`, `File.Chown.swift`, `File.Delete.swift`, `File.Move.swift`, `File.Attributes.swift`, `File.Times.swift` |
+| IO | `IO.Read.swift`, `IO.Write.swift`, `IO.Read+Terminal.swift` |
+| Descriptor | `Close.swift`, `Descriptor.Duplicate.swift` |
+| Device | `Device.swift` |
+| Link | `Link.swift`, `Link.Symbolic.swift` |
+| Path | `Path.Canonical.swift`, `Path.View+Path.Protocol.swift` |
+| Pipe | `Pipe.swift` |
+
+> **Note**: File (20 files) remains the largest variant. Link (2 files) and Path (2 files)
+> could be further extracted if future growth warrants it, but per [MOD-008] criterion 3,
+> 2-file targets with no dependents are borderline. Pipe (1 file) should not be a separate
+> target.
+
+#### Package.swift Structure (proposed)
 
 ```swift
-// MARK: - Core
-.target(name: "ISO 9945 Kernel Core",
-    dependencies: [
-        .target(name: "ISO 9945"),
-        .product(name: "Kernel Primitives Core", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Error Primitives", package: "swift-kernel-primitives"),
-    ]),
+products: [
+    .library(name: "ISO 9945 Kernel", targets: ["ISO 9945 Kernel"]),
+    .library(name: "ISO 9945 Kernel File", targets: ["ISO 9945 Kernel File"]),
+    .library(name: "ISO 9945 Kernel Directory", targets: ["ISO 9945 Kernel Directory"]),
+    .library(name: "ISO 9945 Kernel Lock", targets: ["ISO 9945 Kernel Lock"]),
+    .library(name: "ISO 9945 Kernel Socket", targets: ["ISO 9945 Kernel Socket"]),
+    .library(name: "ISO 9945 Kernel Memory", targets: ["ISO 9945 Kernel Memory"]),
+    .library(name: "ISO 9945 Kernel Signal", targets: ["ISO 9945 Kernel Signal"]),
+    .library(name: "ISO 9945 Kernel Process", targets: ["ISO 9945 Kernel Process"]),
+    .library(name: "ISO 9945 Kernel Thread", targets: ["ISO 9945 Kernel Thread"]),
+    .library(name: "ISO 9945 Kernel Terminal", targets: ["ISO 9945 Kernel Terminal"]),
+    .library(name: "ISO 9945 Kernel Environment", targets: ["ISO 9945 Kernel Environment"]),
+    .library(name: "ISO 9945 Kernel System", targets: ["ISO 9945 Kernel System"]),
+    .library(name: "ISO 9945 Loader", targets: ["ISO 9945 Loader"]),
+    .library(name: "ISO 9945 Kernel Test Support", targets: ["ISO 9945 Kernel Test Support"]),
+],
+targets: [
+    // MARK: - Core (internal — not a published product)
+    .target(name: "ISO 9945 Core",
+        dependencies: [
+            .product(name: "Kernel Primitives Core", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Error Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Path Primitives", package: "swift-kernel-primitives"),
+        ]),
 
-// MARK: - File
-.target(name: "ISO 9945 Kernel File",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .target(name: "ISO 9945 ABI"),
-        .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel IO Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Path Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
-    ]),
+    // MARK: - File
+    .target(name: "ISO 9945 Kernel File",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel IO Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
+        ]),
 
-// MARK: - Socket
-.target(name: "ISO 9945 Kernel Socket",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
-    ]),
+    // MARK: - Directory
+    .target(name: "ISO 9945 Kernel Directory",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
+            .product(name: "String Primitives", package: "swift-string-primitives"),
+        ]),
 
-// MARK: - Memory
-.target(name: "ISO 9945 Kernel Memory",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .target(name: "CISO9945Shim", condition: .when(platforms: [...])),
-        .product(name: "Kernel Memory Primitives", package: "swift-kernel-primitives"),
-    ]),
+    // MARK: - Lock
+    .target(name: "ISO 9945 Kernel Lock",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
+        ]),
 
-// MARK: - Signal
-.target(name: "ISO 9945 Kernel Signal",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
-    ]),
+    // MARK: - Socket
+    .target(name: "ISO 9945 Kernel Socket",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
+        ]),
 
-// MARK: - Process
-.target(name: "ISO 9945 Kernel Process",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        "ISO 9945 Kernel Signal",
-        .target(name: "CPOSIXProcessShim", condition: .when(platforms: [...])),
-        .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
-    ]),
+    // MARK: - Memory
+    .target(name: "ISO 9945 Kernel Memory",
+        dependencies: [
+            "ISO 9945 Core",
+            .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+            .product(name: "Kernel Memory Primitives", package: "swift-kernel-primitives"),
+        ]),
 
-// MARK: - Thread
-.target(name: "ISO 9945 Kernel Thread",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .product(name: "Kernel Thread Primitives", package: "swift-kernel-primitives"),
-    ]),
+    // MARK: - Signal
+    .target(name: "ISO 9945 Kernel Signal",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
+        ]),
 
-// MARK: - Terminal
-.target(name: "ISO 9945 Kernel Terminal",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .target(name: "CISO9945Shim", condition: .when(platforms: [...])),
-        .product(name: "Kernel Terminal Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
-    ]),
+    // MARK: - Process (depends on Signal for Signal.Number)
+    .target(name: "ISO 9945 Kernel Process",
+        dependencies: [
+            "ISO 9945 Core",
+            "ISO 9945 Kernel Signal",
+            .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+            .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
+        ]),
 
-// MARK: - System
-.target(name: "ISO 9945 Kernel System",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        .product(name: "Kernel System Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Time Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Clock Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Random Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Kernel Environment Primitives", package: "swift-kernel-primitives"),
-        .product(name: "Clock Primitives", package: "swift-clock-primitives"),
-    ]),
+    // MARK: - Thread
+    .target(name: "ISO 9945 Kernel Thread",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel Thread Primitives", package: "swift-kernel-primitives"),
+        ]),
 
-// MARK: - Umbrella
-.target(name: "ISO 9945 Kernel",
-    dependencies: [
-        "ISO 9945 Kernel Core",
-        "ISO 9945 Kernel File",
-        "ISO 9945 Kernel Socket",
-        "ISO 9945 Kernel Memory",
-        "ISO 9945 Kernel Signal",
-        "ISO 9945 Kernel Process",
-        "ISO 9945 Kernel Thread",
-        "ISO 9945 Kernel Terminal",
-        "ISO 9945 Kernel System",
-    ]),
+    // MARK: - Terminal
+    .target(name: "ISO 9945 Kernel Terminal",
+        dependencies: [
+            "ISO 9945 Core",
+            .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+            .product(name: "Kernel Terminal Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
+        ]),
+
+    // MARK: - Environment
+    .target(name: "ISO 9945 Kernel Environment",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel Environment Primitives", package: "swift-kernel-primitives"),
+            .product(name: "String Primitives", package: "swift-string-primitives"),
+        ]),
+
+    // MARK: - System
+    .target(name: "ISO 9945 Kernel System",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Kernel System Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Time Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Clock Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Kernel Random Primitives", package: "swift-kernel-primitives"),
+            .product(name: "Clock Primitives", package: "swift-clock-primitives"),
+        ]),
+
+    // MARK: - Umbrella
+    .target(name: "ISO 9945 Kernel",
+        dependencies: [
+            "ISO 9945 Core",
+            "ISO 9945 Kernel File",
+            "ISO 9945 Kernel Directory",
+            "ISO 9945 Kernel Lock",
+            "ISO 9945 Kernel Socket",
+            "ISO 9945 Kernel Memory",
+            "ISO 9945 Kernel Signal",
+            "ISO 9945 Kernel Process",
+            "ISO 9945 Kernel Thread",
+            "ISO 9945 Kernel Terminal",
+            "ISO 9945 Kernel Environment",
+            "ISO 9945 Kernel System",
+        ]),
+
+    // MARK: - Loader (unchanged, now depends on Core instead of ISO 9945 + ISO 9945 ABI)
+    .target(name: "ISO 9945 Loader",
+        dependencies: [
+            "ISO 9945 Core",
+            .product(name: "Loader Primitives", package: "swift-loader-primitives"),
+        ]),
+]
 ```
 
 ### Naming (per [MOD-012])
@@ -397,65 +531,95 @@ L2 Standards naming drops the layer word:
 
 | Role | Name | Import |
 |------|------|--------|
-| Core | `ISO 9945 Kernel Core` | `ISO_9945_Kernel_Core` |
+| Core | `ISO 9945 Core` | `ISO_9945_Core` |
 | Variant | `ISO 9945 Kernel File` | `ISO_9945_Kernel_File` |
+| Variant | `ISO 9945 Kernel Directory` | `ISO_9945_Kernel_Directory` |
+| Variant | `ISO 9945 Kernel Lock` | `ISO_9945_Kernel_Lock` |
 | Variant | `ISO 9945 Kernel Socket` | `ISO_9945_Kernel_Socket` |
 | Variant | `ISO 9945 Kernel Memory` | `ISO_9945_Kernel_Memory` |
 | Variant | `ISO 9945 Kernel Signal` | `ISO_9945_Kernel_Signal` |
 | Variant | `ISO 9945 Kernel Process` | `ISO_9945_Kernel_Process` |
 | Variant | `ISO 9945 Kernel Thread` | `ISO_9945_Kernel_Thread` |
 | Variant | `ISO 9945 Kernel Terminal` | `ISO_9945_Kernel_Terminal` |
+| Variant | `ISO 9945 Kernel Environment` | `ISO_9945_Kernel_Environment` |
 | Variant | `ISO 9945 Kernel System` | `ISO_9945_Kernel_System` |
 | Umbrella | `ISO 9945 Kernel` | `ISO_9945_Kernel` |
 
 ### Consumer Import (per [MOD-015])
 
 This is a **primary decomposition** along the POSIX subsystem axis. Core is scaffolding
-(error capture, descriptor veneer); the variants are the product.
+(error capture, descriptor veneer, ABI projections); the variants are the product.
 
 - Platform packages (linux-standard, darwin-standard) that need everything: import the
   umbrella `ISO 9945 Kernel` — this is correct for full-platform consumers.
 - Future selective consumers (e.g., a socket library, a file I/O library): import
   specific variants like `ISO 9945 Kernel Socket`.
 
+### Targets Absorbed / Eliminated
+
+| Old Target | Disposition |
+|------------|-------------|
+| `ISO 9945` (target + product) | Absorbed into `ISO 9945 Core`. Product removed — namespace enum has no consumer value alone. |
+| `ISO 9945 ABI` (target) | Absorbed into `ISO 9945 Core`. CChar↔UInt8 projections become universally available via Core. |
+| `ISO 9945 Kernel` (monolith) | Becomes the umbrella — zero implementation, only `@_exported public import` statements. |
+
 ### Metrics (projected)
 
 | Metric | Current | After Split | Threshold |
 |--------|---------|-------------|-----------|
-| Target count | 1 | 10 (9 + umbrella) | — |
+| Target count | 1 | 14 (12 + umbrella + Core) | — |
 | Max depth | 1 | 2 | ≤ 3 ✓ |
-| Mean sibling deps | 0 | 0.11 (1/9) | ≤ 2.0 ✓ |
-| Largest target (files) | 97 | 30 (File) | — |
-| Largest target (lines) | 11,834 | ~3,489 (File) | — |
+| Mean sibling deps | 0 | 0.08 (1/12) | ≤ 2.0 ✓ |
+| Largest target (files) | 97 | 20 (File) | — |
+| Largest target (lines) | 11,834 | ~2,317 (File) | — |
 | Cross-domain edges | — | 1 (Process→Signal) | — |
 
 ---
 
 ## Open Items
 
-### Requiring Decision Before Implementation
+### Resolved
 
-1. **File target granularity**: File (30 files, ~3,489 lines) is the largest variant.
-   Should Directory (4 files, 648 lines) and/or Lock (3 files, 524 lines) be separate
-   targets? They are semantically distinct POSIX subsystems but always co-occur with
-   File operations in practice.
+1. ~~File target granularity~~ → Directory and Lock are separate targets.
+2. ~~System target composition~~ → Environment is a separate target.
+3. ~~ISO 9945 ABI disposition~~ → Absorbed into Core.
 
-2. **System target composition**: System groups 5 small L1 domains (System, Time,
-   Clock, Random, Environment) into one L2 target. Should any of these be independent?
-   Environment (3 files, 380 lines) has the strongest case for independence — it's a
-   distinct POSIX concept with its own error type.
+### Remaining (for implementation phase)
 
-3. **`ISO 9945 ABI` target disposition**: Currently `ISO 9945 Kernel` depends on
-   `ISO 9945 ABI` (CChar↔UInt8 pointer projections). After split, which variant(s)
-   need it? File target (for path-related syscalls) is the primary consumer. Should
-   it be a Core dependency (universal) or File-only?
+1. **`ISO 9945 Kernel Test Support` restructuring**: The current test support target
+   depends on the monolith. After split, it should either depend on the umbrella
+   (simplest) or be split per-domain (maximum precision). Umbrella dependency is
+   recommended for test support — test helpers routinely cross domain boundaries.
+
+2. **`ISO 9945` product removal**: External consumers (if any) that import `ISO 9945`
+   for just the namespace enum need to be identified and migrated. Grep for
+   `import ISO_9945` across the workspace before removing the product.
+
+3. **`Path_Primitives` in Core**: The current `exports.swift` has
+   `internal import Path_Primitives`. Verify whether Core genuinely needs this
+   or if it should move to a variant target (File or Directory).
 
 ### Implementation Notes (for future reference)
 
 - Each file's 18-line import block must be replaced with target-specific imports
-- `exports.swift` in Core should re-export the L1 modules that Core depends on
-- Each variant's `exports.swift` should re-export Core
+- Core's `exports.swift` should `@_exported public import` its L1 dependencies
+- Each variant's `exports.swift` should `@_exported public import ISO_9945_Core`
 - Process.Kill.swift defines its own `Process.Signal` (focused subset) independent
   of `Signal.Number` — no additional coupling
-- Pipe.swift imports `Algebra_Primitives` and `Identity_Primitives` beyond the
-  standard kernel imports — these go in File's dependency list
+- Pipe.swift imports `Algebra_Primitives` and `Identity_Primitives` — File target deps
+- Socket.Pair.swift imports `Algebra_Primitives` — Socket target dep
+- Directory.Working.swift and Environment.swift import `String_Primitives` and
+  `Kernel_String_Primitives` — target-specific deps
+- ISO 9945 ABI's `package`-scoped extensions remain accessible from all targets
+  via the transitive Core dependency (same Swift package)
+
+### ISO 9945 ABI Usage Map (for implementation)
+
+Files that currently `internal import ISO_9945_ABI` (17 files, by proposed target):
+
+| Target | Files using ABI |
+|--------|----------------|
+| File | `File.Chown`, `File.Open`, `File.Delete`, `File.Attributes`, `File.Stats.Get`, `File.Move`, `File.Times`, `Link.swift`, `Link.Symbolic`, `Path.Canonical` |
+| Directory | `Directory.swift`, `Directory.Create`, `Directory.Remove`, `Directory.Working` |
+| Environment | `Environment.swift`, `Environment.Entries` |
+| Process | `Process.Spawn` |

@@ -83,12 +83,12 @@ extension ISO_9945.Kernel.Process.Wait {
         ///
         /// Also report status for children that are stopped but not
         /// yet reported (traced children stop on any signal).
-        public static let untraced = Options(rawValue: WUNTRACED)
+        public static let untraced = Self(rawValue: WUNTRACED)
 
         /// Report continued children (WCONTINUED).
         ///
         /// Also report status for children that have been continued
         /// from a stopped state by delivery of SIGCONT.
-        public static let continued = Options(rawValue: WCONTINUED)
+        public static let continued = Self(rawValue: WCONTINUED)
     }
 }

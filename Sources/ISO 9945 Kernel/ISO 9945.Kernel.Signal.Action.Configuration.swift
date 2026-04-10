@@ -76,15 +76,15 @@ extension ISO_9945.Kernel.Signal.Action {
         /// unless `.noDefer` flag is set.
         public let mask: POSIX.Kernel.Signal.Set
 
-        /// Flags modifying signal handling behavior.
-        public let flags: Flags
+        /// Options modifying signal handling behavior.
+        public let flags: Options
 
         /// Creates a signal action configuration.
         ///
         /// - Parameters:
         ///   - handler: The handler disposition for the signal.
         ///   - mask: Signals to block while handler executes. Defaults to empty.
-        ///   - flags: Flags modifying signal behavior. Defaults to none.
+        ///   - flags: Options modifying signal behavior. Defaults to none.
         ///
         /// ## Invariant Enforcement
         ///
@@ -95,7 +95,7 @@ extension ISO_9945.Kernel.Signal.Action {
         public init(
             handler: Handler,
             mask: POSIX.Kernel.Signal.Set = POSIX.Kernel.Signal.Set(),
-            flags: Flags = []
+            flags: Options = []
         ) {
             unsafe (self.handler = handler)
             self.mask = mask
@@ -122,7 +122,7 @@ extension ISO_9945.Kernel.Signal.Action {
             __unchecked: Void,
             handler: Handler,
             mask: POSIX.Kernel.Signal.Set,
-            flags: Flags
+            flags: Options
         ) {
             unsafe (self.handler = handler)
             self.mask = mask

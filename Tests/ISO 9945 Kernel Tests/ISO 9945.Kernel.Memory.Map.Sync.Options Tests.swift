@@ -26,7 +26,7 @@ import Kernel_Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Memory.Map.Sync.Flags {
+extension Kernel.Memory.Map.Sync.Options {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -36,39 +36,39 @@ extension Kernel.Memory.Map.Sync.Flags {
 
 // MARK: - Unit Tests
 
-extension Kernel.Memory.Map.Sync.Flags.Test.Unit {
-    @Test("Flags from rawValue")
+extension Kernel.Memory.Map.Sync.Options.Test.Unit {
+    @Test("Options from rawValue")
     func rawValueInit() {
-        let flags = Kernel.Memory.Map.Sync.Flags(rawValue: 0)
+        let flags = Kernel.Memory.Map.Sync.Options(rawValue: 0)
         #expect(flags.rawValue == 0)
     }
 
     @Test("sync constant exists")
     func syncConstant() {
-        let flags = Kernel.Memory.Map.Sync.Flags.sync
+        let flags = Kernel.Memory.Map.Sync.Options.sync
         _ = flags.rawValue
     }
 
     @Test("async constant exists")
     func asyncConstant() {
-        let flags = Kernel.Memory.Map.Sync.Flags.async
+        let flags = Kernel.Memory.Map.Sync.Options.async
         _ = flags.rawValue
     }
 
     @Test("invalidate constant exists")
     func invalidateConstant() {
-        let flags = Kernel.Memory.Map.Sync.Flags.invalidate
+        let flags = Kernel.Memory.Map.Sync.Options.invalidate
         _ = flags.rawValue
     }
 }
 
 // MARK: - Operators
 
-extension Kernel.Memory.Map.Sync.Flags.Test.Unit {
+extension Kernel.Memory.Map.Sync.Options.Test.Unit {
     @Test("bitwise OR combines flags")
     func bitwiseOrCombines() {
-        let sync = Kernel.Memory.Map.Sync.Flags.sync
-        let invalidate = Kernel.Memory.Map.Sync.Flags.invalidate
+        let sync = Kernel.Memory.Map.Sync.Options.sync
+        let invalidate = Kernel.Memory.Map.Sync.Options.invalidate
         let combined = sync | invalidate
 
         #expect(combined.rawValue == (sync.rawValue | invalidate.rawValue))
@@ -77,25 +77,25 @@ extension Kernel.Memory.Map.Sync.Flags.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.Memory.Map.Sync.Flags.Test.Unit {
-    @Test("Flags is Sendable")
+extension Kernel.Memory.Map.Sync.Options.Test.Unit {
+    @Test("Options is Sendable")
     func isSendable() {
-        let flags: any Sendable = Kernel.Memory.Map.Sync.Flags.sync
-        #expect(flags is Kernel.Memory.Map.Sync.Flags)
+        let flags: any Sendable = Kernel.Memory.Map.Sync.Options.sync
+        #expect(flags is Kernel.Memory.Map.Sync.Options)
     }
 
-    @Test("Flags is Equatable")
+    @Test("Options is Equatable")
     func isEquatable() {
-        let a = Kernel.Memory.Map.Sync.Flags.sync
-        let b = Kernel.Memory.Map.Sync.Flags.sync
-        let c = Kernel.Memory.Map.Sync.Flags.async
+        let a = Kernel.Memory.Map.Sync.Options.sync
+        let b = Kernel.Memory.Map.Sync.Options.sync
+        let c = Kernel.Memory.Map.Sync.Options.async
         #expect(a == b)
         #expect(a != c)
     }
 
-    @Test("Flags is Hashable")
+    @Test("Options is Hashable")
     func isHashable() {
-        var set = Set<Kernel.Memory.Map.Sync.Flags>()
+        var set = Set<Kernel.Memory.Map.Sync.Options>()
         set.insert(.sync)
         set.insert(.async)
         set.insert(.sync)  // duplicate
@@ -105,17 +105,17 @@ extension Kernel.Memory.Map.Sync.Flags.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.Memory.Map.Sync.Flags.Test.EdgeCase {
+extension Kernel.Memory.Map.Sync.Options.Test.EdgeCase {
     @Test("sync and async are distinct")
     func syncAsyncDistinct() {
-        let sync = Kernel.Memory.Map.Sync.Flags.sync
-        let async = Kernel.Memory.Map.Sync.Flags.async
+        let sync = Kernel.Memory.Map.Sync.Options.sync
+        let async = Kernel.Memory.Map.Sync.Options.async
         #expect(sync != async)
     }
 
     @Test("all flags are distinct")
-    func allFlagsDistinct() {
-        let flags: [Kernel.Memory.Map.Sync.Flags] = [
+    func allOptionsDistinct() {
+        let flags: [Kernel.Memory.Map.Sync.Options] = [
             .sync,
             .async,
             .invalidate,

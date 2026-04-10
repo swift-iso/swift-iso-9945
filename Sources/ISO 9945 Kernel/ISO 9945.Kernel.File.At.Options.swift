@@ -58,14 +58,14 @@ extension Kernel.File.At {
 
 extension Kernel.File.At.Options {
     /// Do not follow symbolic links (AT_SYMLINK_NOFOLLOW).
-    public static let noFollow = Options(rawValue: Int32(AT_SYMLINK_NOFOLLOW))
+    public static let noFollow = Self(rawValue: Int32(AT_SYMLINK_NOFOLLOW))
 
     /// Allow operations on empty path with fd (AT_EMPTY_PATH).
-    public static let emptyPath = Options(rawValue: Int32(AT_EMPTY_PATH))
+    public static let emptyPath = Self(rawValue: Int32(AT_EMPTY_PATH))
 
     /// Follow symbolic links (AT_SYMLINK_FOLLOW).
-    public static let symlinkFollow = Options(rawValue: Int32(AT_SYMLINK_FOLLOW))
+    public static let symlinkFollow = Self(rawValue: Int32(AT_SYMLINK_FOLLOW))
 
     /// Remove directory instead of file (AT_REMOVEDIR).
-    public static let removeDirectory = Options(rawValue: Int32(AT_REMOVEDIR))
+    public static let removeDirectory = Self(rawValue: Int32(AT_REMOVEDIR))
 }

@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.File.Delete {
     /// - Parameters:
     ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
     ///   - path: The path to the file to remove.
-    ///   - flags: Flags to control the operation (e.g., AT_REMOVEDIR).
+    ///   - flags: Options to control the operation (e.g., AT_REMOVEDIR).
     /// - Throws: `Kernel.File.Delete.Error` on failure.
     @usableFromInline
     internal static func _delete(

@@ -26,7 +26,7 @@ import Kernel_Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Memory.Map.Flags {
+extension Kernel.Memory.Map.Options {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -34,14 +34,14 @@ extension Kernel.Memory.Map.Flags {
     }
 }
 
-// MARK: - Flags Tests
+// MARK: - Options Tests
 
 
-    extension Kernel.Memory.Map.Flags.Test.Unit {
+    extension Kernel.Memory.Map.Options.Test.Unit {
         @Test("shared and private are distinct")
         func sharedAndPrivateDistinct() {
-            let shared = Kernel.Memory.Map.Flags.shared
-            let priv = Kernel.Memory.Map.Flags.private
+            let shared = Kernel.Memory.Map.Options.shared
+            let priv = Kernel.Memory.Map.Options.private
 
             #expect(shared != priv)
             #expect(shared.rawValue != priv.rawValue)
@@ -49,38 +49,38 @@ extension Kernel.Memory.Map.Flags {
 
         @Test("anonymous flag exists")
         func anonymousFlagExists() {
-            let anon = Kernel.Memory.Map.Flags.anonymous
+            let anon = Kernel.Memory.Map.Options.anonymous
             #expect(anon.rawValue != 0)
         }
 
         @Test("fixed flag exists")
         func fixedFlagExists() {
-            let fixed = Kernel.Memory.Map.Flags.fixed
+            let fixed = Kernel.Memory.Map.Options.fixed
             #expect(fixed.rawValue != 0)
         }
 
         @Test("bitwise OR combines flags")
-        func bitwiseOrCombinesFlags() {
-            let priv = Kernel.Memory.Map.Flags.private
-            let anon = Kernel.Memory.Map.Flags.anonymous
+        func bitwiseOrCombinesOptions() {
+            let priv = Kernel.Memory.Map.Options.private
+            let anon = Kernel.Memory.Map.Options.anonymous
             let combined = priv | anon
 
             #expect(combined.rawValue == (priv.rawValue | anon.rawValue))
         }
 
-        @Test("Flags is Equatable")
+        @Test("Options is Equatable")
         func flagsIsEquatable() {
-            let a = Kernel.Memory.Map.Flags.shared
-            let b = Kernel.Memory.Map.Flags.shared
-            let c = Kernel.Memory.Map.Flags.private
+            let a = Kernel.Memory.Map.Options.shared
+            let b = Kernel.Memory.Map.Options.shared
+            let c = Kernel.Memory.Map.Options.private
 
             #expect(a == b)
             #expect(a != c)
         }
 
-        @Test("Flags is Hashable")
+        @Test("Options is Hashable")
         func flagsIsHashable() {
-            var set = Set<Kernel.Memory.Map.Flags>()
+            var set = Set<Kernel.Memory.Map.Options>()
             set.insert(.shared)
             set.insert(.private)
             set.insert(.shared)  // duplicate
@@ -91,11 +91,11 @@ extension Kernel.Memory.Map.Flags {
         }
 
         @Test("all flags are distinct")
-        func allFlagsDistinct() {
-            let shared = Kernel.Memory.Map.Flags.shared
-            let priv = Kernel.Memory.Map.Flags.private
-            let anon = Kernel.Memory.Map.Flags.anonymous
-            let fixed = Kernel.Memory.Map.Flags.fixed
+        func allOptionsDistinct() {
+            let shared = Kernel.Memory.Map.Options.shared
+            let priv = Kernel.Memory.Map.Options.private
+            let anon = Kernel.Memory.Map.Options.anonymous
+            let fixed = Kernel.Memory.Map.Options.fixed
 
             let flags = [shared, priv, anon, fixed]
             let rawValues = flags.map(\.rawValue)

@@ -116,7 +116,7 @@ extension ISO_9945.Kernel.Memory.Map {
     public static func sync(
         addr: Kernel.Memory.Address,
         length: Kernel.File.Size,
-        flags: Sync.Flags = .sync
+        flags: Sync.Options = .sync
     ) throws(Error) {
         guard unsafe msync(addr.mutablePointer, Int(length), flags.rawValue) == 0 else {
             throw .sync(.captureErrno())

@@ -35,7 +35,7 @@ import Kernel_Error_Primitives
 
     @testable import ISO_9945_Kernel
 
-    extension Kernel.Socket.Flags {
+    extension Kernel.Socket.Options {
         @Suite
     struct Test {
         @Suite struct Unit {}
@@ -45,44 +45,44 @@ import Kernel_Error_Primitives
 
     // MARK: - Unit Tests
 
-    extension Kernel.Socket.Flags.Test.Unit {
-        @Test("Flags type exists")
+    extension Kernel.Socket.Options.Test.Unit {
+        @Test("Options type exists")
         func typeExists() {
-            let _: Kernel.Socket.Flags.Type = Kernel.Socket.Flags.self
+            let _: Kernel.Socket.Options.Type = Kernel.Socket.Options.self
         }
 
-        @Test("Flags from rawValue")
+        @Test("Options from rawValue")
         func fromRawValue() {
-            let flags = Kernel.Socket.Flags(rawValue: O_NONBLOCK)
+            let flags = Kernel.Socket.Options(rawValue: O_NONBLOCK)
             #expect(flags.rawValue == O_NONBLOCK)
         }
     }
 
     // MARK: - Flag Constants Tests
 
-    extension Kernel.Socket.Flags.Test.Unit {
+    extension Kernel.Socket.Options.Test.Unit {
         @Test("nonBlock flag")
         func nonBlockFlag() {
-            let flags = Kernel.Socket.Flags.nonBlock
+            let flags = Kernel.Socket.Options.nonBlock
             #expect(flags.rawValue == O_NONBLOCK)
         }
 
         @Test("closeOnExec flag")
         func closeOnExecFlag() {
-            let flags = Kernel.Socket.Flags.closeOnExec
+            let flags = Kernel.Socket.Options.closeOnExec
             #expect(flags.rawValue == O_CLOEXEC)
         }
 
         @Test("none flag is empty")
         func noneFlag() {
-            let flags = Kernel.Socket.Flags.none
+            let flags = Kernel.Socket.Options.none
             #expect(flags.isEmpty)
             #expect(flags.rawValue == 0)
         }
 
         @Test("asyncDefault combines nonBlock and closeOnExec")
         func asyncDefaultFlag() {
-            let flags = Kernel.Socket.Flags.asyncDefault
+            let flags = Kernel.Socket.Options.asyncDefault
             #expect(flags.contains(.nonBlock))
             #expect(flags.contains(.closeOnExec))
         }
@@ -90,42 +90,42 @@ import Kernel_Error_Primitives
 
     // MARK: - OptionSet Tests
 
-    extension Kernel.Socket.Flags.Test.Unit {
-        @Test("Flags can be combined with array literal")
+    extension Kernel.Socket.Options.Test.Unit {
+        @Test("Options can be combined with array literal")
         func flagCombination() {
-            let combined: Kernel.Socket.Flags = [.nonBlock, .closeOnExec]
+            let combined: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
             #expect(combined.contains(.nonBlock))
             #expect(combined.contains(.closeOnExec))
         }
 
-        @Test("Flags contains check")
+        @Test("Options contains check")
         func containsCheck() {
-            let flags: Kernel.Socket.Flags = [.nonBlock, .closeOnExec]
+            let flags: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
             #expect(flags.contains(.nonBlock))
             #expect(flags.contains(.closeOnExec))
         }
 
-        @Test("Flags array literal initialization")
+        @Test("Options array literal initialization")
         func arrayLiteralInit() {
-            let flags: Kernel.Socket.Flags = [.nonBlock, .closeOnExec]
+            let flags: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
             #expect(flags == .asyncDefault)
         }
     }
 
     // MARK: - Conformance Tests
 
-    extension Kernel.Socket.Flags.Test.Unit {
-        @Test("Flags is Sendable")
+    extension Kernel.Socket.Options.Test.Unit {
+        @Test("Options is Sendable")
         func isSendable() {
-            let value: any Sendable = Kernel.Socket.Flags.none
-            #expect(value is Kernel.Socket.Flags)
+            let value: any Sendable = Kernel.Socket.Options.none
+            #expect(value is Kernel.Socket.Options)
         }
 
-        @Test("Flags is Equatable")
+        @Test("Options is Equatable")
         func isEquatable() {
-            let a = Kernel.Socket.Flags.nonBlock
-            let b = Kernel.Socket.Flags.nonBlock
-            let c = Kernel.Socket.Flags.closeOnExec
+            let a = Kernel.Socket.Options.nonBlock
+            let b = Kernel.Socket.Options.nonBlock
+            let c = Kernel.Socket.Options.closeOnExec
             #expect(a == b)
             #expect(a != c)
         }
@@ -133,17 +133,17 @@ import Kernel_Error_Primitives
 
     // MARK: - Edge Cases
 
-    extension Kernel.Socket.Flags.Test.EdgeCase {
+    extension Kernel.Socket.Options.Test.EdgeCase {
         @Test("Empty flags is none")
         func emptyIsNone() {
-            let empty: Kernel.Socket.Flags = []
+            let empty: Kernel.Socket.Options = []
             #expect(empty == .none)
         }
 
-        @Test("Flags rawValue roundtrip")
+        @Test("Options rawValue roundtrip")
         func rawValueRoundtrip() {
-            let original: Kernel.Socket.Flags = [.nonBlock, .closeOnExec]
-            let roundtrip = Kernel.Socket.Flags(rawValue: original.rawValue)
+            let original: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
+            let roundtrip = Kernel.Socket.Options(rawValue: original.rawValue)
             #expect(roundtrip == original)
         }
     }
