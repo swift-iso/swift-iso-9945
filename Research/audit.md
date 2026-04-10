@@ -56,7 +56,7 @@
 
 ### Summary
 
-26 findings (1 false positive withdrawn): 0 critical, 9 high, 13 medium, 4 low.
+27 findings: 25 RESOLVED, 1 DEFERRED, 1 FALSE_POSITIVE. Build verified clean.
 
 **Systemic patterns**:
 

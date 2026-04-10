@@ -61,7 +61,7 @@ struct EventIDTests {
         // through their respective Kernel.Descriptor deinits.
         let pipe = try ISO_9945.Kernel.Pipe.pipe()
         let id = Kernel.Event.ID(descriptor: pipe.read)
-        #expect(id.rawValue == UInt(bitPattern: Int(pipe.read.fileDescriptor)))
+        #expect(id.rawValue == UInt(bitPattern: Int(pipe.read._rawValue)))
     }
 
     @Test("Round-trip from descriptor through ID is symmetric")
@@ -72,7 +72,7 @@ struct EventIDTests {
         // constructing the recovered Descriptor, which would alias pipe.read
         // and double-close at scope exit.
         let pipe = try ISO_9945.Kernel.Pipe.pipe()
-        let originalRaw = pipe.read.fileDescriptor
+        let originalRaw = pipe.read._rawValue
         let id = Kernel.Event.ID(descriptor: pipe.read)
         #expect(id.rawValue <= UInt(Int32.max))
         #expect(Int32(id.rawValue) == originalRaw)

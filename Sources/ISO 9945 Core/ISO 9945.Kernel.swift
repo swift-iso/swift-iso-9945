@@ -25,18 +25,3 @@ extension ISO_9945 {
     /// - Dynamic library loading (dlopen, dlsym, dlclose)
     public typealias Kernel = Kernel_Primitives_Core.Kernel
 }
-
-// MARK: - ISO_9945.Kernel.Descriptor Veneer
-
-extension Kernel_Primitives_Core.Kernel.Descriptor {
-    /// Creates a descriptor by borrowing a POSIX file descriptor.
-    ///
-    /// - Parameter fd: The raw POSIX file descriptor (Int32).
-    /// - Returns: A `Kernel.Descriptor` wrapping the file descriptor.
-    public static func borrowing(_ fd: Int32) -> Self {
-        Self(_rawValue: fd)
-    }
-
-    /// The raw POSIX file descriptor value.
-    public var fileDescriptor: Int32 { _rawValue }
-}

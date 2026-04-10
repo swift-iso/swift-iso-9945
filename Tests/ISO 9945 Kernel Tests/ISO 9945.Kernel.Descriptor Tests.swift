@@ -45,7 +45,7 @@ extension Kernel.Descriptor {
 extension Kernel.Descriptor.Test.Unit {
     @Test("invalid descriptor has correct raw value on POSIX")
     func invalidDescriptorValue() {
-        let invalidFd = Kernel.Descriptor.invalid.fileDescriptor
+        let invalidFd = Kernel.Descriptor.invalid._rawValue
         #expect(invalidFd == -1)
     }
 
