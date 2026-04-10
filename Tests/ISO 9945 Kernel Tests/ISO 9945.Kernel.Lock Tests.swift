@@ -346,7 +346,7 @@ extension Kernel.Lock.Test.Unit {
                 }
                 Issue.record("Expected TestError")
             } catch {
-                // Expected — body threw TestError, wrapped in WithLockError.body.
+                // Expected — body threw TestError, wrapped in Scope.Error.body.
                 // The defer in withExclusive still runs, releasing the lock,
                 // and the fd is closed as the consumed descriptor is destroyed.
             }

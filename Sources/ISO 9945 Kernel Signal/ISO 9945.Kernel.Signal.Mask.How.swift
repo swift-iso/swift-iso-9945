@@ -19,20 +19,6 @@
     import Musl
 #endif
 
-extension ISO_9945.Kernel.Signal {
-    /// Signal mask operations namespace.
-    ///
-    /// ## Threading
-    ///
-    /// Signal masks are per-thread. `Mask.change` uses `pthread_sigmask`
-    /// which is thread-safe and affects only the calling thread.
-    ///
-    /// ## Blocking Behavior
-    ///
-    /// Operations are synchronous and non-blocking.
-    public enum Mask {}
-}
-
 extension ISO_9945.Kernel.Signal.Mask {
     /// Specifies how to modify the signal mask.
     ///
@@ -44,22 +30,21 @@ extension ISO_9945.Kernel.Signal.Mask {
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
-
-        /// Block the specified signals (add to current mask).
-        ///
-        /// - POSIX: `SIG_BLOCK`
-        public static let block = Self(rawValue: SIG_BLOCK)
-
-        /// Unblock the specified signals (remove from current mask).
-        ///
-        /// - POSIX: `SIG_UNBLOCK`
-        public static let unblock = Self(rawValue: SIG_UNBLOCK)
-
-        /// Replace the current mask with the specified signals.
-        ///
-        /// - POSIX: `SIG_SETMASK`
-        public static let set = Self(rawValue: SIG_SETMASK)
     }
+}
+
+extension ISO_9945.Kernel.Signal.Mask.How {
+    /// Block the specified signals (add to current mask).
+    /// - POSIX: `SIG_BLOCK`
+    public static let block = Self(rawValue: SIG_BLOCK)
+
+    /// Unblock the specified signals (remove from current mask).
+    /// - POSIX: `SIG_UNBLOCK`
+    public static let unblock = Self(rawValue: SIG_UNBLOCK)
+
+    /// Replace the current mask with the specified signals.
+    /// - POSIX: `SIG_SETMASK`
+    public static let set = Self(rawValue: SIG_SETMASK)
 }
 
 // MARK: - CustomStringConvertible

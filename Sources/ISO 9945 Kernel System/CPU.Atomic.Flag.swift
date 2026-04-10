@@ -60,30 +60,32 @@ extension CPU.Atomic {
         public init(_ initialValue: Bool = false) {
             self._value = initialValue ? 1 : 0
         }
+    }
+}
 
-        /// Whether the flag has been set.
-        ///
-        /// Uses acquiring memory ordering to ensure visibility of all
-        /// writes that happened before `set()` was called.
+extension CPU.Atomic.Flag {
+    /// Whether the flag has been set.
+    ///
+    /// Uses acquiring memory ordering to ensure visibility of all
+    /// writes that happened before `set()` was called.
 
-        public var isSet: Bool {
-            unsafe withUnsafeMutablePointer(to: &_value) { ptr in
-                unsafe (CPU.Atomic.load(ptr, ordering: .acquiring) != 0)
-            }
+    public var isSet: Bool {
+        unsafe withUnsafeMutablePointer(to: &_value) { ptr in
+            unsafe (CPU.Atomic.load(ptr, ordering: .acquiring) != 0)
         }
+    }
 
-        /// Sets the flag to `true`.
-        ///
-        /// Uses releasing memory ordering to ensure all prior writes
-        /// are visible to threads that observe `isSet == true`.
-        ///
-        /// This operation is idempotent - calling it multiple times
-        /// has the same effect as calling it once.
+    /// Sets the flag to `true`.
+    ///
+    /// Uses releasing memory ordering to ensure all prior writes
+    /// are visible to threads that observe `isSet == true`.
+    ///
+    /// This operation is idempotent - calling it multiple times
+    /// has the same effect as calling it once.
 
-        public func set() {
-            unsafe withUnsafeMutablePointer(to: &_value) { ptr in
-                unsafe CPU.Atomic.store(ptr, 1, ordering: .releasing)
-            }
+    public func set() {
+        unsafe withUnsafeMutablePointer(to: &_value) { ptr in
+            unsafe CPU.Atomic.store(ptr, 1, ordering: .releasing)
         }
     }
 }

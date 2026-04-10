@@ -26,29 +26,29 @@ extension ISO_9945.Kernel.File.Attributes {
     /// Changes the permissions of a file.
     ///
     /// - Parameters:
-    ///   - path: The path to the file.
     ///   - permissions: The new permissions.
+    ///   - path: The path to the file.
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
 
-    public static func setPermissions(
-        path: borrowing Kernel.Path.View,
-        permissions: Kernel.File.Permissions
+    public static func set(
+        _ permissions: Kernel.File.Permissions,
+        at path: borrowing Kernel.Path.View
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try unsafe _setPermissions(path: cString, permissions: permissions)
+            try unsafe _set(permissions, path: cString)
         }
     }
 
     /// Changes the permissions of a file using a path character pointer.
     ///
     /// - Parameters:
-    ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - permissions: The new permissions.
+    ///   - path: The path as a pointer to Path.Char (UInt8).
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
     @usableFromInline
-    internal static func _setPermissions(
-        path: UnsafePointer<Path.Char>,
-        permissions: Kernel.File.Permissions
+    internal static func _set(
+        _ permissions: Kernel.File.Permissions,
+        path: UnsafePointer<Path.Char>
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
@@ -67,12 +67,12 @@ extension ISO_9945.Kernel.File.Attributes {
     /// Changes the permissions of an open file descriptor.
     ///
     /// - Parameters:
-    ///   - descriptor: The file descriptor.
     ///   - permissions: The new permissions.
+    ///   - descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Attributes.Error` on failure.
-    public static func setPermissions(
-        _ descriptor: borrowing Kernel.Descriptor,
-        permissions: Kernel.File.Permissions
+    public static func set(
+        _ permissions: Kernel.File.Permissions,
+        on descriptor: borrowing Kernel.Descriptor
     ) throws(Error) {
         #if canImport(Darwin)
             let result = Darwin.fchmod(descriptor._rawValue, mode_t(permissions.rawValue))

@@ -48,8 +48,8 @@ import ISO_9945_Kernel
 
         @Test("Device major/minor roundtrip")
         func majorMinorRoundtrip() {
-            let major: UInt32 = 253
-            let minor: UInt32 = 42
+            let major: ISO_9945.Kernel.Device.Major = 253
+            let minor: ISO_9945.Kernel.Device.Minor = 42
             let device = ISO_9945.Kernel.Device(major: major, minor: minor)
             #expect(device.major == major)
             #expect(device.minor == minor)
@@ -62,10 +62,10 @@ import ISO_9945_Kernel
         @Test("Device typed major/minor")
         func typedMajorMinor() {
             let device = ISO_9945.Kernel.Device(major: 8, minor: 16)
-            let major = device.typedMajor
-            let minor = device.typedMinor
-            #expect(major.rawValue == 8)
-            #expect(minor.rawValue == 16)
+            let major = device.major
+            let minor = device.minor
+            #expect(major == 8)
+            #expect(minor == 16)
         }
 
         @Test("Device init from typed major/minor")

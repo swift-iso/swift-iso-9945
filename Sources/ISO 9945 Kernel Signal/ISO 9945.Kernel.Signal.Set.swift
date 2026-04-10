@@ -55,95 +55,97 @@ extension ISO_9945.Kernel.Signal {
             self.storage = sigset_t()
             unsafe sigemptyset(&self.storage)
         }
+    }
+}
 
-        /// Creates a set containing all signals.
-        ///
-        /// Equivalent to `sigfillset()`.
-        public static var all: Self {
-            var set = Self()
-            unsafe sigfillset(&set.storage)
-            return set
+extension ISO_9945.Kernel.Signal.Set {
+    /// Creates a set containing all signals.
+    ///
+    /// Equivalent to `sigfillset()`.
+    public static var all: Self {
+        var set = Self()
+        unsafe sigfillset(&set.storage)
+        return set
+    }
+
+    /// Creates a set containing a single signal.
+    ///
+    /// - Parameter signal: The signal to include.
+    /// - Throws: `Error.set` if the signal number is invalid.
+
+    public init(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
+        self.init()
+        guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
+            throw .set(ISO_9945.Kernel.Error.captureErrno())
         }
+    }
 
-        /// Creates a set containing a single signal.
-        ///
-        /// - Parameter signal: The signal to include.
-        /// - Throws: `Error.set` if the signal number is invalid.
+    /// Creates a set containing multiple signals.
+    ///
+    /// - Parameter signals: The signals to include.
+    /// - Throws: `Error.set` on first invalid signal (deterministic failure point).
 
-        public init(_ signal: Number) throws(Error) {
-            self.init()
+    public init(_ signals: some Swift.Sequence<ISO_9945.Kernel.Signal.Number>) throws(ISO_9945.Kernel.Signal.Error) {
+        self.init()
+        for signal in signals {
             guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
                 throw .set(ISO_9945.Kernel.Error.captureErrno())
             }
         }
+    }
 
-        /// Creates a set containing multiple signals.
-        ///
-        /// - Parameter signals: The signals to include.
-        /// - Throws: `Error.set` on first invalid signal (deterministic failure point).
+    /// Creates a set containing a single signal without validation.
+    ///
+    /// **Warning**: Bypasses signal number validation. Only use for:
+    /// - Static constants (`.user1`, `.terminate`)
+    /// - Pre-validated signal numbers
+    /// - Internal construction after validation
+    ///
+    /// For user-provided signal numbers, use the throwing `init(_:)`.
 
-        public init(_ signals: some Swift.Sequence<Number>) throws(Error) {
-            self.init()
-            for signal in signals {
-                guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-                    throw .set(ISO_9945.Kernel.Error.captureErrno())
-                }
-            }
+    public init(__unchecked: Void, _ signal: ISO_9945.Kernel.Signal.Number) {
+        self.init()
+        _ = unsafe sigaddset(&self.storage, signal.rawValue)
+    }
+
+    /// Adds a signal to the set.
+    ///
+    /// - Parameter signal: The signal to add.
+    /// - Throws: `Error.set` if the signal number is invalid.
+
+    public mutating func insert(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
+        guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
+            throw .set(ISO_9945.Kernel.Error.captureErrno())
         }
+    }
 
-        /// Creates a set containing a single signal without validation.
-        ///
-        /// **Warning**: Bypasses signal number validation. Only use for:
-        /// - Static constants (`.user1`, `.terminate`)
-        /// - Pre-validated signal numbers
-        /// - Internal construction after validation
-        ///
-        /// For user-provided signal numbers, use the throwing `init(_:)`.
+    /// Removes a signal from the set.
+    ///
+    /// - Parameter signal: The signal to remove.
+    /// - Throws: `Error.set` if the signal number is invalid.
 
-        public init(__unchecked: Void, _ signal: Number) {
-            self.init()
-            _ = unsafe sigaddset(&self.storage, signal.rawValue)
+    public mutating func remove(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
+        guard unsafe sigdelset(&self.storage, signal.rawValue) == 0 else {
+            throw .set(ISO_9945.Kernel.Error.captureErrno())
         }
+    }
 
-        /// Adds a signal to the set.
-        ///
-        /// - Parameter signal: The signal to add.
-        /// - Throws: `Error.set` if the signal number is invalid.
+    /// Returns whether the set contains the signal.
+    ///
+    /// - Parameter signal: The signal to check.
+    /// - Returns: `true` if the signal is in the set.
+    /// - Throws: `Error.set` if the signal number is invalid.
+    ///
+    /// **Design note:** Throwing on error rather than returning `false` prevents
+    /// silent failures when checking invalid signal numbers.
 
-        public mutating func insert(_ signal: Number) throws(Error) {
-            guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-                throw .set(ISO_9945.Kernel.Error.captureErrno())
-            }
+    public func contains(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) -> Bool {
+        var mutableStorage = storage
+        let result = unsafe sigismember(&mutableStorage, signal.rawValue)
+        guard result >= 0 else {
+            throw .set(ISO_9945.Kernel.Error.captureErrno())
         }
-
-        /// Removes a signal from the set.
-        ///
-        /// - Parameter signal: The signal to remove.
-        /// - Throws: `Error.set` if the signal number is invalid.
-
-        public mutating func remove(_ signal: Number) throws(Error) {
-            guard unsafe sigdelset(&self.storage, signal.rawValue) == 0 else {
-                throw .set(ISO_9945.Kernel.Error.captureErrno())
-            }
-        }
-
-        /// Returns whether the set contains the signal.
-        ///
-        /// - Parameter signal: The signal to check.
-        /// - Returns: `true` if the signal is in the set.
-        /// - Throws: `Error.set` if the signal number is invalid.
-        ///
-        /// **Design note:** Throwing on error rather than returning `false` prevents
-        /// silent failures when checking invalid signal numbers.
-
-        public func contains(_ signal: Number) throws(Error) -> Bool {
-            var mutableStorage = storage
-            let result = unsafe sigismember(&mutableStorage, signal.rawValue)
-            guard result >= 0 else {
-                throw .set(ISO_9945.Kernel.Error.captureErrno())
-            }
-            return result == 1
-        }
+        return result == 1
     }
 }
 

@@ -234,13 +234,13 @@ extension ISO_9945.Kernel.Lock {
     ///   - acquire: The acquisition strategy (default: `.wait`).
     ///   - body: The closure to execute while holding the lock.
     /// - Returns: The result of the closure.
-    /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
+    /// - Throws: `ISO_9945.Kernel.Lock.Scope.Error` if locking fails or the closure throws.
     public static func withExclusive<T, E: Swift.Error>(
         _ descriptor: consuming Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
-    ) throws(ISO_9945.Kernel.Lock.WithLockError<E>) -> T {
+    ) throws(ISO_9945.Kernel.Lock.Scope.Error<E>) -> T {
         var token: Token
         do {
             token = try Token(
@@ -272,13 +272,13 @@ extension ISO_9945.Kernel.Lock {
     ///   - acquire: The acquisition strategy (default: `.wait`).
     ///   - body: The closure to execute while holding the lock.
     /// - Returns: The result of the closure.
-    /// - Throws: `ISO_9945.Kernel.Lock.WithLockError` if locking fails or the closure throws.
+    /// - Throws: `ISO_9945.Kernel.Lock.Scope.Error` if locking fails or the closure throws.
     public static func withShared<T, E: Swift.Error>(
         _ descriptor: consuming Kernel.Descriptor,
         range: Kernel.Lock.Range = .file,
         acquire: Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
-    ) throws(ISO_9945.Kernel.Lock.WithLockError<E>) -> T {
+    ) throws(ISO_9945.Kernel.Lock.Scope.Error<E>) -> T {
         var token: Token
         do {
             token = try Token(

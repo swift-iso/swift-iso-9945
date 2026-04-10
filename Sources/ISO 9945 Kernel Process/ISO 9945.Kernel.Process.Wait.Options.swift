@@ -46,19 +46,6 @@ extension ISO_9945.Kernel.Process.Wait {
         /// Accessor for `no.hang` (WNOHANG).
         public static var no: No { No() }
 
-        /// No-hang option accessor (Nest.Name pattern).
-        public struct No: Sendable {
-
-            public init() {}
-
-            /// Don't block if no child has exited (WNOHANG).
-            ///
-            /// When specified, `wait` returns `nil` if no child has
-            /// changed state, instead of blocking.
-
-            public var hang: Options { Options(rawValue: WNOHANG) }
-        }
-
         // MARK: - Direct Options
 
         /// Report stopped children (WUNTRACED).

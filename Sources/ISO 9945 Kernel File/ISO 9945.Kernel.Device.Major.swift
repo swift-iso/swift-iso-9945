@@ -1,0 +1,36 @@
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-posix open source project
+//
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
+
+extension ISO_9945.Kernel.Device {
+    /// Type-safe wrapper for a major device number.
+    ///
+    /// This is a semantic wrapper only, not a validated range.
+    /// Construction does not enforce kernel limits.
+    public struct Major: RawRepresentable, Sendable, Equatable, Hashable {
+        public let rawValue: UInt32
+
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
+    }
+}
+
+extension ISO_9945.Kernel.Device.Major: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: UInt32) {
+        self.init(rawValue: value)
+    }
+}
+
+extension ISO_9945.Kernel.Device.Major: CustomStringConvertible {
+    public var description: Swift.String {
+        "\(rawValue)"
+    }
+}

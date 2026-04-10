@@ -20,6 +20,11 @@
     internal import Musl
 #endif
 
+extension Kernel.Memory.Lock {
+    /// Namespace for lock-all operations (mlockall).
+    public enum All {}
+}
+
 extension ISO_9945.Kernel.Memory.Lock {
     /// Locks all current and/or future pages in the process address space.
     ///

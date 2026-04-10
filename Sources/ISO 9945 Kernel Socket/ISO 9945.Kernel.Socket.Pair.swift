@@ -36,37 +36,6 @@ extension ISO_9945.Kernel.Socket {
 }
 
 extension ISO_9945.Kernel.Socket.Pair {
-    /// Errors from socket pair operations.
-    public enum Error: Swift.Error, Sendable, Equatable {
-        /// Platform-specific error.
-        case platform(Platform)
-
-        /// Platform-specific error details.
-        public enum Platform: Sendable, Equatable {
-            /// A POSIX errno value.
-            case posix(Int32)
-        }
-    }
-
-    /// Creates the current error from errno.
-    static func currentError() -> Error {
-        .platform(.posix(errno))
-    }
-}
-
-extension ISO_9945.Kernel.Socket.Pair.Error: CustomStringConvertible {
-    public var description: Swift.String {
-        switch self {
-        case .platform(let p):
-            switch p {
-            case .posix(let code):
-                return "socketpair failed: errno \(code)"
-            }
-        }
-    }
-}
-
-extension ISO_9945.Kernel.Socket.Pair {
     /// Creates a connected pair of Unix domain stream sockets.
     ///
     /// Both sockets are `AF_UNIX` / `SOCK_STREAM` and can be used for

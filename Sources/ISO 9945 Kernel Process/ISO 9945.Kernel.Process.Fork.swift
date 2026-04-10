@@ -25,21 +25,6 @@ extension ISO_9945.Kernel.Process {
     public enum Fork {}
 }
 
-// MARK: - Result
-
-extension ISO_9945.Kernel.Process.Fork {
-    /// Result of fork() indicating parent or child.
-    public enum Result: Sendable, Equatable {
-        /// In child process (fork returned 0).
-        case child
-
-        /// In parent process with child's PID.
-        ///
-        /// Label is `child:` not `childPID:` — type already encodes it.
-        case parent(child: Kernel.Process.ID)
-    }
-}
-
 // MARK: - Fork Operation
 
 extension ISO_9945.Kernel.Process.Fork {

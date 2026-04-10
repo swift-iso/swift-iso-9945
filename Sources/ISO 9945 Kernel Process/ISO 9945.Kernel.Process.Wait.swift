@@ -33,54 +33,6 @@ extension ISO_9945.Kernel.Process {
     public enum Wait {}
 }
 
-// MARK: - Selector
-
-extension ISO_9945.Kernel.Process.Wait {
-    /// Selector for which child(ren) to wait for.
-    ///
-    /// Replaces POSIX magic values (-1, 0, <-1) with explicit cases.
-    ///
-    /// ## Mapping to waitpid
-    ///
-    /// | Selector | waitpid pid argument |
-    /// |----------|----------------------|
-    /// | `.any` | -1 |
-    /// | `.process(id)` | id.rawValue |
-    /// | `.group(pgid)` | -pgid.rawValue |
-    /// | `.current` | 0 |
-    public enum Selector: Sendable, Equatable {
-        /// Wait for any child process (waitpid pid=-1).
-        case any
-
-        /// Wait for a specific child process.
-        case process(Kernel.Process.ID)
-
-        /// Wait for any child in a specific process group.
-        case group(ISO_9945.Kernel.Process.Group.ID)
-
-        /// Wait for any child in the calling process's group (waitpid pid=0).
-        case current
-    }
-}
-
-// MARK: - Result
-
-extension ISO_9945.Kernel.Process.Wait {
-    /// Result of a wait operation.
-    public struct Result: Sendable, Equatable {
-        /// The process ID that changed state.
-        public let pid: Kernel.Process.ID
-
-        /// The status of the process.
-        public let status: ISO_9945.Kernel.Process.Status
-
-        public init(pid: Kernel.Process.ID, status: ISO_9945.Kernel.Process.Status) {
-            self.pid = pid
-            self.status = status
-        }
-    }
-}
-
 // MARK: - Wait Operation
 
 extension ISO_9945.Kernel.Process.Wait {

@@ -47,63 +47,6 @@ extension ISO_9945.Kernel.Directory {
                 unsafe closedir(d)
             }
         }
-
-        /// Closes the directory stream.
-        public func close() {
-            if let d = unsafe dir {
-                unsafe closedir(d)
-                unsafe self.dir = nil
-            }
-        }
-
-        /// Returns the next entry, or nil if at end of directory.
-        public func next() throws(Error) -> Entry? {
-            guard let d = unsafe dir else {
-                return nil
-            }
-
-            // Reset errno before calling readdir
-            errno = 0
-            guard let entry = unsafe readdir(d) else {
-                // Check if this was an error or end of directory
-                if errno != 0 {
-                    throw Error.currentRead()
-                }
-                return nil
-            }
-
-            // Extract raw bytes from d_name tuple
-            let rawName: [UInt8] = unsafe withUnsafePointer(to: entry.pointee.d_name) { ptr in
-                let bufferSize = MemoryLayout.size(ofValue: unsafe entry.pointee.d_name)
-                return unsafe ptr.withMemoryRebound(to: UInt8.self, capacity: bufferSize) { bytes in
-                    var length = 0
-                    while length < bufferSize && (unsafe bytes[length]) != 0 {
-                        length += 1
-                    }
-                    return unsafe Array(UnsafeBufferPointer(start: bytes, count: length))
-                }
-            }
-
-            // Map d_type to file type
-            let type: Kernel.File.Stats.Kind? = {
-                switch Int(unsafe entry.pointee.d_type) {
-                case Int(DT_REG): return .regular
-                case Int(DT_DIR): return .directory
-                case Int(DT_LNK): return .link(.symbolic)
-                case Int(DT_CHR): return .device(.character)
-                case Int(DT_BLK): return .device(.block)
-                case Int(DT_FIFO): return .fifo
-                case Int(DT_SOCK): return .socket
-                default: return nil // DT_UNKNOWN
-                }
-            }()
-
-            return Entry(
-                rawName: rawName,
-                inode: Kernel.Inode(UInt64(unsafe entry.pointee.d_ino)),
-                type: type
-            )
-        }
     }
 
     /// Opens a directory for iteration.
@@ -133,6 +76,65 @@ extension ISO_9945.Kernel.Directory {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe open(at: ptr)
         }
+    }
+}
+
+extension ISO_9945.Kernel.Directory.Stream {
+    /// Closes the directory stream.
+    public func close() {
+        if let d = unsafe dir {
+            unsafe closedir(d)
+            unsafe self.dir = nil
+        }
+    }
+
+    /// Returns the next entry, or nil if at end of directory.
+    public func next() throws(Kernel.Directory.Error) -> Kernel.Directory.Entry? {
+        guard let d = unsafe dir else {
+            return nil
+        }
+
+        // Reset errno before calling readdir
+        errno = 0
+        guard let entry = unsafe readdir(d) else {
+            // Check if this was an error or end of directory
+            if errno != 0 {
+                throw Kernel.Directory.Error.currentRead()
+            }
+            return nil
+        }
+
+        // Extract raw bytes from d_name tuple
+        let rawName: [UInt8] = unsafe withUnsafePointer(to: entry.pointee.d_name) { ptr in
+            let bufferSize = MemoryLayout.size(ofValue: unsafe entry.pointee.d_name)
+            return unsafe ptr.withMemoryRebound(to: UInt8.self, capacity: bufferSize) { bytes in
+                var length = 0
+                while length < bufferSize && (unsafe bytes[length]) != 0 {
+                    length += 1
+                }
+                return unsafe Array(UnsafeBufferPointer(start: bytes, count: length))
+            }
+        }
+
+        // Map d_type to file type
+        let type: Kernel.File.Stats.Kind? = {
+            switch Int(unsafe entry.pointee.d_type) {
+            case Int(DT_REG): return .regular
+            case Int(DT_DIR): return .directory
+            case Int(DT_LNK): return .link(.symbolic)
+            case Int(DT_CHR): return .device(.character)
+            case Int(DT_BLK): return .device(.block)
+            case Int(DT_FIFO): return .fifo
+            case Int(DT_SOCK): return .socket
+            default: return nil // DT_UNKNOWN
+            }
+        }()
+
+        return Kernel.Directory.Entry(
+            rawName: rawName,
+            inode: Kernel.Inode(UInt64(unsafe entry.pointee.d_ino)),
+            type: type
+        )
     }
 }
 

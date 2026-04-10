@@ -67,24 +67,6 @@ extension ISO_9945.Kernel.Process.Error {
         code.posix == EINTR
     }
 
-    /// Semantic classification of process errors.
-    public enum Semantic: Sendable {
-        /// Resource limit reached (EAGAIN, ENOMEM).
-        case resourceLimit
-
-        /// Operation not permitted (EPERM).
-        case noPermission
-
-        /// No such process (ESRCH, ECHILD).
-        case noSuchProcess
-
-        /// Interrupted by signal (EINTR).
-        case interrupted
-
-        /// Invalid argument (EINVAL).
-        case invalidArgument
-    }
-
     /// Semantic meaning of the error, if mappable.
     ///
     /// Returns `nil` for unrecognized POSIX error codes.

@@ -20,15 +20,6 @@
     internal import Musl
 #endif
 
-// MARK: - Namespace
-
-extension Kernel.Memory.Map {
-    /// Flags for msync operation.
-    public enum Sync: Sendable, Equatable, Hashable {}
-}
-
-// MARK: - Options Shell
-
 extension Kernel.Memory.Map.Sync {
     /// Options for msync operation.
     public struct Options: Sendable, Equatable, Hashable {

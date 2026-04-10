@@ -84,21 +84,6 @@ extension ISO_9945.Kernel.Signal.Error {
         return false
     }
 
-    /// Semantic classification of signal errors.
-    public enum Semantic: Sendable {
-        /// Invalid signal number (EINVAL).
-        case invalidSignal
-
-        /// Operation not permitted (EPERM).
-        case noPermission
-
-        /// No such process (ESRCH).
-        case noSuchProcess
-
-        /// Interrupted by signal (EINTR).
-        case interrupted
-    }
-
     /// Semantic meaning of the error, if mappable.
     ///
     /// Returns `nil` for unrecognized POSIX error codes.

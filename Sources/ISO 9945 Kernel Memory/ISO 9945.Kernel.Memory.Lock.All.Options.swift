@@ -20,15 +20,6 @@
     internal import Musl
 #endif
 
-// MARK: - Namespace
-
-extension Kernel.Memory.Lock {
-    /// Namespace for lock-all operations (mlockall).
-    public enum All {}
-}
-
-// MARK: - Options Shell
-
 extension Kernel.Memory.Lock.All {
     /// Options for mlockall/munlockall.
     ///

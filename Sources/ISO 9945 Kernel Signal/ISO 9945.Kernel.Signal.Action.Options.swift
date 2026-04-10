@@ -45,43 +45,47 @@ extension ISO_9945.Kernel.Signal.Action {
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
-
-        /// Don't send `SIGCHLD` when children stop.
-        ///
-        /// - POSIX: `SA_NOCLDSTOP`
-        public static let noChildStop = Self(rawValue: Int32(truncatingIfNeeded: SA_NOCLDSTOP))
-
-        /// Don't create zombie on child death.
-        ///
-        /// - POSIX: `SA_NOCLDWAIT`
-        public static let noChildWait = Self(rawValue: Int32(truncatingIfNeeded: SA_NOCLDWAIT))
-
-        /// Reset handler to default after signal is caught.
-        ///
-        /// - POSIX: `SA_RESETHAND`
-        public static let resetHandler = Self(rawValue: Int32(truncatingIfNeeded: SA_RESETHAND))
-
-        /// Restart interrupted syscalls automatically.
-        ///
-        /// - POSIX: `SA_RESTART`
-        public static let restart = Self(rawValue: Int32(truncatingIfNeeded: SA_RESTART))
-
-        /// Use alternate signal stack (requires sigaltstack setup).
-        ///
-        /// - POSIX: `SA_ONSTACK`
-        public static let onStack = Self(rawValue: Int32(truncatingIfNeeded: SA_ONSTACK))
-
-        /// Don't block signal while handler executes.
-        ///
-        /// - POSIX: `SA_NODEFER`
-        public static let noDefer = Self(rawValue: Int32(truncatingIfNeeded: SA_NODEFER))
-
-        /// Use `sa_sigaction` handler instead of `sa_handler`.
-        ///
-        /// Required when using `.customInfo` handler. The `Configuration`
-        /// initializer enforces this automatically.
-        ///
-        /// - POSIX: `SA_SIGINFO`
-        public static let sigInfo = Self(rawValue: Int32(truncatingIfNeeded: SA_SIGINFO))
     }
+}
+
+// MARK: - POSIX Signal Action Flags
+
+extension ISO_9945.Kernel.Signal.Action.Options {
+    /// Don't send `SIGCHLD` when children stop.
+    ///
+    /// - POSIX: `SA_NOCLDSTOP`
+    public static let noChildStop = Self(rawValue: Int32(truncatingIfNeeded: SA_NOCLDSTOP))
+
+    /// Don't create zombie on child death.
+    ///
+    /// - POSIX: `SA_NOCLDWAIT`
+    public static let noChildWait = Self(rawValue: Int32(truncatingIfNeeded: SA_NOCLDWAIT))
+
+    /// Reset handler to default after signal is caught.
+    ///
+    /// - POSIX: `SA_RESETHAND`
+    public static let resetHandler = Self(rawValue: Int32(truncatingIfNeeded: SA_RESETHAND))
+
+    /// Restart interrupted syscalls automatically.
+    ///
+    /// - POSIX: `SA_RESTART`
+    public static let restart = Self(rawValue: Int32(truncatingIfNeeded: SA_RESTART))
+
+    /// Use alternate signal stack (requires sigaltstack setup).
+    ///
+    /// - POSIX: `SA_ONSTACK`
+    public static let onStack = Self(rawValue: Int32(truncatingIfNeeded: SA_ONSTACK))
+
+    /// Don't block signal while handler executes.
+    ///
+    /// - POSIX: `SA_NODEFER`
+    public static let noDefer = Self(rawValue: Int32(truncatingIfNeeded: SA_NODEFER))
+
+    /// Use `sa_sigaction` handler instead of `sa_handler`.
+    ///
+    /// Required when using `.customInfo` handler. The `Configuration`
+    /// initializer enforces this automatically.
+    ///
+    /// - POSIX: `SA_SIGINFO`
+    public static let sigInfo = Self(rawValue: Int32(truncatingIfNeeded: SA_SIGINFO))
 }

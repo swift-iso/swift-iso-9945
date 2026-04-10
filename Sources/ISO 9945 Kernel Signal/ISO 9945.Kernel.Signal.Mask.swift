@@ -19,6 +19,20 @@
     internal import Musl
 #endif
 
+extension ISO_9945.Kernel.Signal {
+    /// Signal mask operations namespace.
+    ///
+    /// ## Threading
+    ///
+    /// Signal masks are per-thread. `Mask.change` uses `pthread_sigmask`
+    /// which is thread-safe and affects only the calling thread.
+    ///
+    /// ## Blocking Behavior
+    ///
+    /// Operations are synchronous and non-blocking.
+    public enum Mask {}
+}
+
 extension ISO_9945.Kernel.Signal.Mask {
     /// Changes the signal mask for the calling thread.
     ///

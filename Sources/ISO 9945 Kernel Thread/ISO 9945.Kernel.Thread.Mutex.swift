@@ -109,51 +109,19 @@ extension ISO_9945.Kernel.Thread.Mutex {
     public var lock: Lock { Lock(mutex: self) }
 }
 
-// MARK: - Lock Accessor
+// MARK: - Scoped Locking
 
 extension ISO_9945.Kernel.Thread.Mutex {
-    /// Lock operation accessor with variants.
-    public struct Lock: Sendable {
-        let mutex: ISO_9945.Kernel.Thread.Mutex
-
-        init(mutex: ISO_9945.Kernel.Thread.Mutex) {
-            self.mutex = mutex
-        }
-
-        /// Error thrown when a non-blocking lock cannot be acquired.
-        public enum Error: Swift.Error, Sendable {
-            /// The mutex is held by another thread.
-            case contention
-        }
-
-        /// Acquires the mutex, blocking until available.
-        ///
-        /// ## Threading
-        /// Blocks the calling thread until the mutex becomes available.
-        ///
-        /// ## Deadlock
-        /// Calling `lock()` on a mutex already held by the current thread causes
-        /// **deadlock**. Use `lock.immediate()` to check ownership without blocking.
-        public func callAsFunction() {
-            mutex.acquireBlocking()
-        }
-
-        /// Attempts to acquire the mutex without blocking.
-        ///
-        /// ## Threading
-        /// Never blocks. Returns immediately regardless of mutex state.
-        ///
-        /// - Throws: `Error.contention` if the mutex is held by another thread.
-        public func immediate() throws(Error) {
-            guard unsafe (pthread_mutex_trylock(&mutex.mutex) == 0) else {
-                throw .contention
-            }
-        }
+    /// Internal blocking lock implementation.
+    func acquireBlocking() {
+        unsafe pthread_mutex_lock(&mutex)
     }
 
-    /// Internal blocking lock implementation.
-    fileprivate func acquireBlocking() {
-        unsafe pthread_mutex_lock(&mutex)
+    /// Internal non-blocking lock attempt.
+    ///
+    /// - Returns: `true` if the lock was acquired, `false` on contention.
+    func tryAcquire() -> Bool {
+        unsafe pthread_mutex_trylock(&mutex) == 0
     }
 
     /// Executes a closure while holding the mutex.

@@ -19,6 +19,20 @@
     internal import Musl
 #endif
 
+extension ISO_9945.Kernel.Signal {
+    /// Signal action operations namespace.
+    ///
+    /// ## Threading
+    ///
+    /// `sigaction` is thread-safe (kernel provides synchronization).
+    /// Signal actions are process-wide, not per-thread.
+    ///
+    /// ## Blocking Behavior
+    ///
+    /// Operations are synchronous and non-blocking.
+    public enum Action {}
+}
+
 extension ISO_9945.Kernel.Signal.Action {
     /// Sets the signal action, returning the previous configuration.
     ///
