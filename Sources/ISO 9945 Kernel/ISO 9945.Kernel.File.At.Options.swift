@@ -37,42 +37,35 @@ public import ISO_9945
     internal import Musl
 #endif
 
-// MARK: - Namespace
-
-extension Kernel.Memory.Map {
-    /// Flags for msync operation.
-    public enum Sync: Sendable, Equatable, Hashable {}
-}
-
-// MARK: - Options Shell
-
-extension Kernel.Memory.Map.Sync {
-    /// Options for msync operation.
-    public struct Options: Sendable, Equatable, Hashable {
+extension Kernel.File.At {
+    /// Path resolution flags (AT_* constants).
+    ///
+    /// Controls how *at() syscall variants resolve paths relative to
+    /// directory file descriptors.
+    public struct Options: OptionSet, Sendable {
+        /// The platform path resolution flags.
         public let rawValue: Int32
 
+        /// Creates options from raw platform flags.
         @inlinable
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
-
-        /// Combines multiple flags.
-        @inlinable
-        public static func | (lhs: Kernel.Memory.Map.Sync.Options, rhs: Kernel.Memory.Map.Sync.Options) -> Kernel.Memory.Map.Sync.Options {
-            Kernel.Memory.Map.Sync.Options(rawValue: lhs.rawValue | rhs.rawValue)
-        }
     }
 }
 
-// MARK: - POSIX msync flags
+// MARK: - POSIX AT_* Constants
 
-extension Kernel.Memory.Map.Sync.Options {
-    /// Synchronous sync - wait for I/O to complete.
-    public static let sync = Self(rawValue: MS_SYNC)
+extension Kernel.File.At.Options {
+    /// Do not follow symbolic links (AT_SYMLINK_NOFOLLOW).
+    public static let noFollow = Options(rawValue: Int32(AT_SYMLINK_NOFOLLOW))
 
-    /// Asynchronous sync - schedule I/O but don't wait.
-    public static let async = Self(rawValue: MS_ASYNC)
+    /// Allow operations on empty path with fd (AT_EMPTY_PATH).
+    public static let emptyPath = Options(rawValue: Int32(AT_EMPTY_PATH))
 
-    /// Invalidate cached copies.
-    public static let invalidate = Self(rawValue: MS_INVALIDATE)
+    /// Follow symbolic links (AT_SYMLINK_FOLLOW).
+    public static let symlinkFollow = Options(rawValue: Int32(AT_SYMLINK_FOLLOW))
+
+    /// Remove directory instead of file (AT_REMOVEDIR).
+    public static let removeDirectory = Options(rawValue: Int32(AT_REMOVEDIR))
 }

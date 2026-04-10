@@ -29,50 +29,13 @@
 @_spi(Syscall) public import Kernel_Terminal_Primitives
 public import ISO_9945
 
-#if canImport(Darwin)
-    internal import Darwin
-#elseif canImport(Glibc)
-    internal import Glibc
-#elseif canImport(Musl)
-    internal import Musl
-#endif
-
-// MARK: - Namespace
-
-extension Kernel.Memory.Map {
-    /// Flags for msync operation.
-    public enum Sync: Sendable, Equatable, Hashable {}
-}
-
-// MARK: - Options Shell
-
-extension Kernel.Memory.Map.Sync {
-    /// Options for msync operation.
-    public struct Options: Sendable, Equatable, Hashable {
-        public let rawValue: Int32
-
-        @inlinable
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-
-        /// Combines multiple flags.
-        @inlinable
-        public static func | (lhs: Kernel.Memory.Map.Sync.Options, rhs: Kernel.Memory.Map.Sync.Options) -> Kernel.Memory.Map.Sync.Options {
-            Kernel.Memory.Map.Sync.Options(rawValue: lhs.rawValue | rhs.rawValue)
-        }
-    }
-}
-
-// MARK: - POSIX msync flags
-
-extension Kernel.Memory.Map.Sync.Options {
-    /// Synchronous sync - wait for I/O to complete.
-    public static let sync = Self(rawValue: MS_SYNC)
-
-    /// Asynchronous sync - schedule I/O but don't wait.
-    public static let async = Self(rawValue: MS_ASYNC)
-
-    /// Invalidate cached copies.
-    public static let invalidate = Self(rawValue: MS_INVALIDATE)
+extension Kernel.File {
+    /// Path resolution operations for *at() syscall variants.
+    ///
+    /// ## Platform Implementation
+    ///
+    /// Syscall implementations are in platform-specific packages:
+    /// - Linux: `swift-linux-primitives` (`Linux.Kernel.File.At`)
+    /// - Darwin: `swift-darwin-primitives` (`Darwin.Kernel.File.At`)
+    public struct At: Sendable {}
 }
