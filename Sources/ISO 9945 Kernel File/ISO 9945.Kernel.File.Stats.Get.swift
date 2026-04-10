@@ -78,6 +78,20 @@ extension ISO_9945.Kernel.File.Stats {
         }
     }
 
+    /// Gets file metadata for a path using a raw pointer.
+    ///
+    /// This overload mirrors ``Directory/open(at:)-swift.type.method``'s
+    /// `UnsafePointer<Path.Char>` signature for consistency. The ``Path.View``
+    /// overload is preferred; use this when you already have a raw pointer.
+    ///
+    /// - Parameter path: Null-terminated path pointer.
+    /// - Returns: File metadata.
+    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
+    @unsafe
+    public static func get(at path: UnsafePointer<Path.Char>) throws(Error) -> Kernel.File.Stats {
+        try unsafe get(unsafePath: UnsafePointer<CChar>(path))
+    }
+
     /// Gets file metadata for a path using an unsafe C string pointer.
     ///
     /// - Parameter unsafePath: Null-terminated path string.
@@ -116,6 +130,19 @@ extension ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe lget(unsafePath: UnsafePointer<CChar>(cString))
         }
+    }
+
+    /// Gets file metadata for a path without following symlinks using a raw pointer.
+    ///
+    /// This overload mirrors ``Directory/open(at:)-swift.type.method``'s
+    /// `UnsafePointer<Path.Char>` signature for consistency.
+    ///
+    /// - Parameter path: Null-terminated path pointer.
+    /// - Returns: File metadata.
+    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
+    @unsafe
+    public static func lget(at path: UnsafePointer<Path.Char>) throws(Error) -> Kernel.File.Stats {
+        try unsafe lget(unsafePath: UnsafePointer<CChar>(path))
     }
 
     /// Gets file metadata for a path without following symlinks using an unsafe C string pointer.
