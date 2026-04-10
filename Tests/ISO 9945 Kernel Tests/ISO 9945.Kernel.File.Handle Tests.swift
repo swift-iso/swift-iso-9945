@@ -30,7 +30,9 @@ extension Kernel.File.Handle {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
+        @Suite(.serialized) struct Performance {}
     }
 }
 
@@ -47,8 +49,8 @@ private func cleanup(path: Swift.String) {
 
 
     extension Kernel.File.Handle.Test.Unit {
-        @Test("init stores descriptor and mode")
-        func initStoresDescriptorAndMode() throws {
+        @Test
+        func `init stores descriptor and mode`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "handle-test")
             let fd = try KernelIOTest.open(at: path)
             // Handle takes ownership of fd; only clean up the file path
@@ -66,14 +68,108 @@ private func cleanup(path: Swift.String) {
             _ = consume handle
         }
 
-        // Tests for handle.read/write/close/withDescriptor removed:
-        // these operations are declared as platform-provided on
-        // Kernel.File.Handle in swift-kernel-primitives but the POSIX
-        // implementations are not yet present in swift-iso-9945.
-        // Re-add when ISO_9945.Kernel.File.Handle provides these methods.
+        @Test
+        func `read returns bytes from file`() throws {
+            let path = KernelIOTest.makeTempPath(prefix: "handle-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { cleanup(path: path) }
+            KernelIOTest.write("Hello, Handle!", to: fd)
 
-        @Test("handle closes on deinit")
-        func handleClosesOnDeinit() throws {
+            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
+
+            let handle = Kernel.File.Handle(
+                descriptor: fd,
+                direct: .buffered,
+                requirements: .unknown(reason: .platformUnsupported)
+            )
+
+            var buffer = [UInt8](repeating: 0, count: 14)
+            let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
+                try handle.read(into: ptr)
+            }
+
+            #expect(bytesRead == 14)
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, Handle!")
+        }
+
+        @Test
+        func `write writes bytes to file`() throws {
+            let path = KernelIOTest.makeTempPath(prefix: "handle-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { cleanup(path: path) }
+
+            let handle = Kernel.File.Handle(
+                descriptor: fd,
+                direct: .buffered,
+                requirements: .unknown(reason: .platformUnsupported)
+            )
+
+            let content = Array("Handle write!".utf8)
+            let bytesWritten = try content.withUnsafeBytes { ptr in
+                try handle.write(from: ptr)
+            }
+
+            #expect(bytesWritten == 13)
+
+            // Verify by seeking back and reading via the handle
+            _ = try Kernel.File.Seek.seek(handle.descriptor, offset: 0, whence: .start)
+            var buffer = [UInt8](repeating: 0, count: 13)
+            let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
+                try handle.read(into: ptr)
+            }
+            #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Handle write!")
+        }
+
+        @Test
+        func `close explicitly closes handle`() throws {
+            let path = KernelIOTest.makeTempPath(prefix: "handle-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { cleanup(path: path) }
+
+            let handle = Kernel.File.Handle(
+                descriptor: fd,
+                direct: .buffered,
+                requirements: .unknown(reason: .platformUnsupported)
+            )
+
+            try handle.close()
+
+            // After explicit close, re-opening confirms the file still exists
+            // (close closed the fd, not the file).
+            let fd2 = try ISO_9945.Kernel.Path.scope(path) { p in
+                try Kernel.File.Open.open(
+                    path: p,
+                    mode: .read,
+                    options: [],
+                    permissions: .ownerReadWrite
+                )
+            }
+            let fd2IsValid = fd2.isValid
+            #expect(fd2IsValid)
+        }
+
+        @Test
+        func `descriptor property provides borrowing access`() throws {
+            let path = KernelIOTest.makeTempPath(prefix: "handle-test")
+            let fd = try KernelIOTest.open(at: path)
+            defer { cleanup(path: path) }
+
+            let handle = Kernel.File.Handle(
+                descriptor: fd,
+                direct: .buffered,
+                requirements: .unknown(reason: .platformUnsupported)
+            )
+
+            // ~Copyable property access is the borrowing mechanism;
+            // no withDescriptor closure needed.
+            let isValid = handle.descriptor.isValid
+            #expect(isValid)
+
+            _ = consume handle
+        }
+
+        @Test
+        func `handle closes on deinit`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "handle-test")
             let fd = try KernelIOTest.open(at: path)
             defer { cleanup(path: path) }
@@ -106,16 +202,16 @@ private func cleanup(path: Swift.String) {
     // MARK: - Direct Mode Tests
 
     extension Kernel.File.Handle.Test.Unit {
-        @Test("direct mode enum is equatable")
-        func directModeEquatable() {
+        @Test
+        func `direct mode enum is equatable`() {
             #expect(Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
             #expect(Kernel.File.Direct.Mode.Resolved.direct == .direct)
             #expect(Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
             #expect(Kernel.File.Direct.Mode.Resolved.buffered != .direct)
         }
 
-        @Test("requirements known case")
-        func requirementsKnownCase() {
+        @Test
+        func `requirements known case`() {
             let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
             let requirements = Kernel.File.Direct.Requirements.known(alignment)
 
@@ -126,8 +222,8 @@ private func cleanup(path: Swift.String) {
             }
         }
 
-        @Test("requirements unknown case")
-        func requirementsUnknownCase() {
+        @Test
+        func `requirements unknown case`() {
             let requirements = Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
 
             if case .unknown(let reason) = requirements {

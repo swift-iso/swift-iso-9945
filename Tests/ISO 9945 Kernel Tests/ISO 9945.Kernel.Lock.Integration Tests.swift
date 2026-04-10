@@ -363,3 +363,79 @@ extension POSIXLockIntegration {
     }
 }
 
+// MARK: - Lock Release Verification
+//
+// Tests #9-#11 from the testing audit: verify that lock release actually
+// allows a separate process to acquire the lock. POSIX advisory locks are
+// per-process, so same-process re-acquire always succeeds — cross-process
+// is the only meaningful verification.
+
+extension POSIXLockIntegration {
+    @Test
+    func `release allows cross-process acquisition`() throws {
+        let path = try makeLockTestFile(prefix: "posix-lock-release-verify")
+        defer { KernelIOTest.cleanup(path: path) }
+
+        // Acquire exclusive lock in this process.
+        let fd = try openLockTestFile(path)
+        try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+
+        // Spawn helper — it blocks on fcntl(F_SETLKW) because we hold the lock.
+        let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 100)
+
+        // Give helper time to start and block.
+        ISO_9945.Kernel.System.sleep(.milliseconds(50))
+
+        // Release our lock — helper should now acquire.
+        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
+
+        // If release worked, the helper acquires, holds for 100ms, exits 0.
+        // If release failed, the helper blocks indefinitely and wait hangs.
+        let status = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
+        let exitedCleanly = status.classification == .exited(code: 0)
+        #expect(exitedCleanly, "Helper should exit cleanly after acquiring released lock")
+    }
+
+    @Test
+    func `withExclusive releases lock visible to other process`() throws {
+        let path = try makeLockTestFile(prefix: "posix-lock-with-release-verify")
+        defer { KernelIOTest.cleanup(path: path) }
+
+        // withExclusive consumes fd, locks, runs body, releases via Token.release().
+        try ISO_9945.Kernel.Lock.withExclusive(try openLockTestFile(path)) {
+            // Lock is held here — nothing to do.
+        }
+        // Lock released. Token.release() unlocked, Descriptor deinit closed fd,
+        // which also releases any remaining POSIX advisory locks on the inode.
+
+        // Spawn helper to immediately try locking — should succeed without blocking.
+        let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 50)
+        let status = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
+        let exitedCleanly = status.classification == .exited(code: 0)
+        #expect(exitedCleanly, "Helper should acquire lock after withExclusive released it")
+    }
+
+    @Test
+    func `Token release allows cross-process acquisition`() throws {
+        let path = try makeLockTestFile(prefix: "posix-lock-token-release-verify")
+        defer { KernelIOTest.cleanup(path: path) }
+
+        // Acquire via Token.
+        var token = try ISO_9945.Kernel.Lock.Token(
+            descriptor: try openLockTestFile(path),
+            range: .file,
+            kind: .exclusive,
+            acquire: .wait
+        )
+
+        // Release explicitly.
+        try token.release()
+
+        // Spawn helper — should acquire immediately since we released.
+        let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 50)
+        let status = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
+        let exitedCleanly = status.classification == .exited(code: 0)
+        #expect(exitedCleanly, "Helper should acquire lock after Token.release()")
+    }
+}
+

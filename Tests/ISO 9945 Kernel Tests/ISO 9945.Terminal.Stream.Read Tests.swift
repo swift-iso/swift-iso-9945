@@ -29,7 +29,10 @@ import Terminal_Primitives
 extension Terminal.Stream.Read {
     @Suite
     struct Test {
+        @Suite struct Unit {}
+        @Suite struct `Edge Case` {}
         @Suite struct Integration {}
+        @Suite(.serialized) struct Performance {}
     }
 }
 
@@ -57,10 +60,21 @@ extension Terminal.Stream.Read.Test.Integration {
         // mechanism exists.
     }
 
-    @Test(.disabled("pending: Pipe API does not expose owned write-end for individual close"))
+    @Test
     func `Read returns 0 on EOF when write end closed`() throws {
-        // Placeholder — re-enable when Pipe.Descriptors provides a consuming
-        // accessor for the write end.
+        let descriptors = try ISO_9945.Kernel.Pipe.pipe()
+
+        // Close write end, keeping read end.
+        let readEnd = try ISO_9945.Kernel.Pipe.Close.write(descriptors)
+
+        // Read from the pipe with the write end closed — should get EOF (0 bytes).
+        var buffer = [UInt8](repeating: 0, count: 16)
+        let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
+            try Kernel.IO.Read.read(readEnd, into: ptr)
+        }
+
+        #expect(bytesRead == 0)
+        // readEnd deinit closes the read fd at scope exit.
     }
 
     @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
