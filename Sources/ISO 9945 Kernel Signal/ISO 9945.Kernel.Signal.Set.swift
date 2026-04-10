@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -54,13 +36,13 @@ extension ISO_9945.Kernel.Signal {
     ///
     /// ```swift
     /// // Create a set with specific signals
-    /// var signals = POSIX.Kernel.Signal.Set()
+    /// var signals = ISO_9945.Kernel.Signal.Set()
     /// try signals.insert(.user1)
     /// try signals.insert(.user2)
     ///
     /// // Block these signals
-    /// let previous = try POSIX.Kernel.Signal.Mask.change(.block, signals: signals)
-    /// defer { _ = try? POSIX.Kernel.Signal.Mask.change(.set, signals: previous) }
+    /// let previous = try ISO_9945.Kernel.Signal.Mask.change(.block, signals: signals)
+    /// defer { _ = try? ISO_9945.Kernel.Signal.Mask.change(.set, signals: previous) }
     /// ```
     public struct Set: Sendable {
         internal var storage: sigset_t
@@ -91,7 +73,7 @@ extension ISO_9945.Kernel.Signal {
         public init(_ signal: Number) throws(Error) {
             self.init()
             guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-                throw .set(POSIX.Kernel.Error.captureErrno())
+                throw .set(ISO_9945.Kernel.Error.captureErrno())
             }
         }
 
@@ -104,7 +86,7 @@ extension ISO_9945.Kernel.Signal {
             self.init()
             for signal in signals {
                 guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-                    throw .set(POSIX.Kernel.Error.captureErrno())
+                    throw .set(ISO_9945.Kernel.Error.captureErrno())
                 }
             }
         }
@@ -130,7 +112,7 @@ extension ISO_9945.Kernel.Signal {
 
         public mutating func insert(_ signal: Number) throws(Error) {
             guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-                throw .set(POSIX.Kernel.Error.captureErrno())
+                throw .set(ISO_9945.Kernel.Error.captureErrno())
             }
         }
 
@@ -141,7 +123,7 @@ extension ISO_9945.Kernel.Signal {
 
         public mutating func remove(_ signal: Number) throws(Error) {
             guard unsafe sigdelset(&self.storage, signal.rawValue) == 0 else {
-                throw .set(POSIX.Kernel.Error.captureErrno())
+                throw .set(ISO_9945.Kernel.Error.captureErrno())
             }
         }
 
@@ -158,7 +140,7 @@ extension ISO_9945.Kernel.Signal {
             var mutableStorage = storage
             let result = unsafe sigismember(&mutableStorage, signal.rawValue)
             guard result >= 0 else {
-                throw .set(POSIX.Kernel.Error.captureErrno())
+                throw .set(ISO_9945.Kernel.Error.captureErrno())
             }
             return result == 1
         }

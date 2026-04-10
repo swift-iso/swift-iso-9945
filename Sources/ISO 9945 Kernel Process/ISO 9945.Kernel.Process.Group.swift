@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     public import Darwin
@@ -36,33 +18,6 @@ public import ISO_9945
 #elseif canImport(Musl)
     public import Musl
 #endif
-
-// MARK: - Process.Group.ID
-
-extension ISO_9945.Kernel.Process.Group {
-    /// POSIX process group ID.
-    ///
-    /// A type-safe wrapper for process group identifiers used in signal sending.
-    ///
-    /// Distinct from `Process.ID` to prevent accidentally passing a PGID
-    /// where a PID is required (or vice versa).
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Send signal to a process group
-    /// try POSIX.Kernel.Signal.Send.toGroup(.terminate, pgid: .current)
-    /// ```
-    public typealias ID = Tagged<POSIX.Kernel.Process.Group, pid_t>
-}
-
-// MARK: - Process.Group.ID Constants
-
-extension Tagged where Tag == POSIX.Kernel.Process.Group, RawValue == pid_t {
-    /// The current process group.
-
-    public static var current: Self { Self(__unchecked: (), getpgrp()) }
-}
 
 // MARK: - Process Selector
 
@@ -92,7 +47,7 @@ extension ISO_9945.Kernel.Process.Group {
         case same
 
         /// A specific process group.
-        case id(POSIX.Kernel.Process.Group.ID)
+        case id(ISO_9945.Kernel.Process.Group.ID)
     }
 }
 
@@ -104,7 +59,7 @@ extension ISO_9945.Kernel.Process.Group {
     /// - Parameters:
     ///   - process: Which process to modify.
     ///   - target: Target process group.
-    /// - Throws: `POSIX.Kernel.Process.Error.group` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.group` on failure.
     ///
     /// ## Mapping to setpgid
     ///
@@ -125,19 +80,19 @@ extension ISO_9945.Kernel.Process.Group {
     ///
     /// ```swift
     /// // Create new process group with current process as leader
-    /// try POSIX.Kernel.Process.Group.set(.current, to: .same)
+    /// try ISO_9945.Kernel.Process.Group.set(.current, to: .same)
     ///
     /// // Move current process to existing group
-    /// try POSIX.Kernel.Process.Group.set(.current, to: .id(pgid))
+    /// try ISO_9945.Kernel.Process.Group.set(.current, to: .id(pgid))
     ///
     /// // Move specific process to new group with that process as leader
-    /// try POSIX.Kernel.Process.Group.set(.id(childPid), to: .same)
+    /// try ISO_9945.Kernel.Process.Group.set(.id(childPid), to: .same)
     /// ```
 
     public static func set(
         _ process: Process,
         to target: Target
-    ) throws(POSIX.Kernel.Process.Error) {
+    ) throws(ISO_9945.Kernel.Process.Error) {
         let pid: pid_t =
             switch process {
             case .current:
@@ -155,7 +110,7 @@ extension ISO_9945.Kernel.Process.Group {
             }
 
         guard setpgid(pid, pgid) == 0 else {
-            throw .group(POSIX.Kernel.Error.captureErrno())
+            throw .group(ISO_9945.Kernel.Error.captureErrno())
         }
     }
 
@@ -163,7 +118,7 @@ extension ISO_9945.Kernel.Process.Group {
     ///
     /// - Parameter pid: Process ID (use `.current` for calling process).
     /// - Returns: The process group ID.
-    /// - Throws: `POSIX.Kernel.Process.Error.group` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.group` on failure.
     ///
     /// ## Common Errors
     ///
@@ -174,16 +129,16 @@ extension ISO_9945.Kernel.Process.Group {
     ///
     /// ```swift
     /// // Get process group of current process
-    /// let pgid = try POSIX.Kernel.Process.Group.id(of: .current)
+    /// let pgid = try ISO_9945.Kernel.Process.Group.id(of: .current)
     ///
     /// // Get process group of another process
-    /// let pgid = try POSIX.Kernel.Process.Group.id(of: childPid)
+    /// let pgid = try ISO_9945.Kernel.Process.Group.id(of: childPid)
     /// ```
 
-    public static func id(of pid: Kernel.Process.ID) throws(POSIX.Kernel.Process.Error) -> ID {
+    public static func id(of pid: Kernel.Process.ID) throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = getpgid(pid.rawValue)
         guard result != -1 else {
-            throw .group(POSIX.Kernel.Error.captureErrno())
+            throw .group(ISO_9945.Kernel.Error.captureErrno())
         }
         return ID(__unchecked: (), result)
     }

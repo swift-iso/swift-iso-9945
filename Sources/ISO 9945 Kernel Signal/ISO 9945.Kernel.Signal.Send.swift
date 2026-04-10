@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -56,7 +38,7 @@ extension ISO_9945.Kernel.Signal.Send {
     /// - Parameters:
     ///   - signal: The signal to send.
     ///   - pid: The target process ID.
-    /// - Throws: `POSIX.Kernel.Signal.Error.send` on failure.
+    /// - Throws: `ISO_9945.Kernel.Signal.Error.send` on failure.
     ///
     /// ## Common Errors
     ///
@@ -68,35 +50,35 @@ extension ISO_9945.Kernel.Signal.Send {
     ///
     /// ```swift
     /// // Send SIGTERM to a process
-    /// try POSIX.Kernel.Signal.Send.toProcess(.terminate, pid: targetPid)
+    /// try ISO_9945.Kernel.Signal.Send.toProcess(.terminate, pid: targetPid)
     /// ```
 
     public static func toProcess(
-        _ signal: POSIX.Kernel.Signal.Number,
+        _ signal: ISO_9945.Kernel.Signal.Number,
         pid: Kernel.Process.ID
-    ) throws(POSIX.Kernel.Signal.Error) {
+    ) throws(ISO_9945.Kernel.Signal.Error) {
         guard kill(pid.rawValue, signal.rawValue) == 0 else {
-            throw .send(POSIX.Kernel.Error.captureErrno())
+            throw .send(ISO_9945.Kernel.Error.captureErrno())
         }
     }
 
     /// Sends a signal to the calling process.
     ///
     /// - Parameter signal: The signal to send.
-    /// - Throws: `POSIX.Kernel.Signal.Error.send` on failure.
+    /// - Throws: `ISO_9945.Kernel.Signal.Error.send` on failure.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// // Send SIGUSR1 to self
-    /// try POSIX.Kernel.Signal.Send.toSelf(.user1)
+    /// try ISO_9945.Kernel.Signal.Send.toSelf(.user1)
     /// ```
 
     public static func toSelf(
-        _ signal: POSIX.Kernel.Signal.Number
-    ) throws(POSIX.Kernel.Signal.Error) {
+        _ signal: ISO_9945.Kernel.Signal.Number
+    ) throws(ISO_9945.Kernel.Signal.Error) {
         guard raise(signal.rawValue) == 0 else {
-            throw .send(POSIX.Kernel.Error.captureErrno())
+            throw .send(ISO_9945.Kernel.Error.captureErrno())
         }
     }
 
@@ -105,7 +87,7 @@ extension ISO_9945.Kernel.Signal.Send {
     /// - Parameters:
     ///   - signal: The signal to send.
     ///   - pgid: The target process group ID.
-    /// - Throws: `POSIX.Kernel.Signal.Error.send` on failure.
+    /// - Throws: `ISO_9945.Kernel.Signal.Error.send` on failure.
     ///
     /// ## Implementation
     ///
@@ -120,16 +102,16 @@ extension ISO_9945.Kernel.Signal.Send {
     ///
     /// ```swift
     /// // Send SIGTERM to current process group
-    /// try POSIX.Kernel.Signal.Send.toGroup(.terminate, pgid: .current)
+    /// try ISO_9945.Kernel.Signal.Send.toGroup(.terminate, pgid: .current)
     /// ```
 
     public static func toGroup(
-        _ signal: POSIX.Kernel.Signal.Number,
-        pgid: POSIX.Kernel.Process.Group.ID
-    ) throws(POSIX.Kernel.Signal.Error) {
+        _ signal: ISO_9945.Kernel.Signal.Number,
+        pgid: ISO_9945.Kernel.Process.Group.ID
+    ) throws(ISO_9945.Kernel.Signal.Error) {
         // Negative PID means process group
         guard kill(-pgid.rawValue, signal.rawValue) == 0 else {
-            throw .send(POSIX.Kernel.Error.captureErrno())
+            throw .send(ISO_9945.Kernel.Error.captureErrno())
         }
     }
 }

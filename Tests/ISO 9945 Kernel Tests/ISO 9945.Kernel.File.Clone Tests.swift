@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import ISO_9945
+import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives_Core
 import Kernel_Descriptor_Primitives
@@ -69,7 +69,7 @@ private func cleanup(_ path: Swift.String) {
     }
 }
 
-@Suite("POSIX.Kernel.File.Clone")
+@Suite("ISO_9945.Kernel.File.Clone")
 struct POSIXKernelFileCloneTests {
 
     // MARK: - Type Tests

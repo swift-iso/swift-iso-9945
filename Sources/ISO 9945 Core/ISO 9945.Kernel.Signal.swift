@@ -9,26 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
-
 extension ISO_9945.Kernel {
     /// POSIX signal handling.
     ///
@@ -56,7 +36,7 @@ extension ISO_9945.Kernel {
     ///
     /// ## Design
     ///
-    /// POSIX.Kernel does NOT automatically retry on EINTR. Higher layers
+    /// ISO_9945.Kernel does NOT automatically retry on EINTR. Higher layers
     /// decide retry policy based on their semantics.
     public enum Signal: Sendable {}
 }

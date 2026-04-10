@@ -25,7 +25,7 @@ import Identity_Primitives_Test_Support
     import Kernel_Thread_Primitives
     import Kernel_Error_Primitives
     @testable import ISO_9945_Kernel
-import ISO_9945
+import ISO_9945_Kernel
 
     extension Kernel.Process.Wait {
         @Suite
@@ -183,7 +183,7 @@ import ISO_9945
             #expect(noHang == nil, "WNOHANG should return nil for stopped (non-reportable) child")
 
             // Resume child so it can exit
-            try POSIX.Kernel.Signal.Send.toProcess(.continue, pid: child)
+            try ISO_9945.Kernel.Signal.Send.toProcess(.continue, pid: child)
 
             // Reap exited child
             let exited = try Kernel.Process.Wait.wait(.process(child))

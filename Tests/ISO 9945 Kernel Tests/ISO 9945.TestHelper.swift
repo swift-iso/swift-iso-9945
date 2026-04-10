@@ -42,7 +42,7 @@
     import Kernel_Thread_Primitives
     import Kernel_Error_Primitives
     @testable import ISO_9945_Kernel
-import ISO_9945
+import ISO_9945_Kernel
 
     // MARK: - POSIXTestHelper
 
@@ -62,11 +62,11 @@ import ISO_9945
             }
 
             // 2. Use #filePath to find package root, then .build/debug/
-            //    filePath: .../swift-posix-primitives/Tests/POSIX Kernel Primitives Tests/POSIX.TestHelper.swift
+            //    filePath: .../swift-posix-primitives/Tests/POSIX Kernel Primitives Tests/ISO_9945.TestHelper.swift
             //    package root: .../swift-posix-primitives/
             //    helper: .../swift-posix-primitives/.build/debug/posix-test-helper
             var path = filePath.description
-            // Go up: POSIX.TestHelper.swift -> POSIX Kernel Primitives Tests -> Tests -> swift-posix-primitives
+            // Go up: ISO_9945.TestHelper.swift -> POSIX Kernel Primitives Tests -> Tests -> swift-posix-primitives
             for _ in 0..<3 {
                 if let lastSlash = path.lastIndex(of: "/") {
                     path = Swift.String(path[..<lastSlash])
@@ -108,7 +108,7 @@ import ISO_9945
         ///
         /// - Parameter args: Command and arguments (e.g., "exit", "42").
         /// - Returns: The process ID of the spawned helper.
-        /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
+        /// - Throws: `ISO_9945.Kernel.Process.Error.spawn` on failure.
         ///
         /// ## Commands
         ///
@@ -132,7 +132,7 @@ import ISO_9945
         /// let child = try POSIXTestHelper.spawn("stop-exit", "42")
         /// let stopped = try Kernel.Process.Wait.wait(.process(child), options: [.untraced])
         /// #expect(stopped?.status.stopped == true)
-        /// try POSIX.Kernel.Signal.Send.toProcess(.cont, pid: child)
+        /// try ISO_9945.Kernel.Signal.Send.toProcess(.cont, pid: child)
         /// let exited = try Kernel.Process.Wait.wait(.process(child))
         /// #expect(exited?.status.exit.code == 42)
         /// ```
@@ -144,7 +144,7 @@ import ISO_9945
         ///
         /// - Parameter args: Command and arguments.
         /// - Returns: The process ID of the spawned helper.
-        /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
+        /// - Throws: `ISO_9945.Kernel.Process.Error.spawn` on failure.
         static func spawn(_ args: [Swift.String]) throws -> Kernel.Process.ID {
             let path = executablePath()
             let allArgs = [path] + args
@@ -152,7 +152,7 @@ import ISO_9945
 
             return try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
                 // argv[0] is the path, use it directly
-                try unsafe POSIX.Kernel.Process.Spawn.spawn(
+                try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,
                     envp: envpPtr

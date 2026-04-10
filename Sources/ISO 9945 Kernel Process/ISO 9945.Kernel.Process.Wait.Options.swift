@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -44,13 +26,13 @@ extension ISO_9945.Kernel.Process.Wait {
     ///
     /// ```swift
     /// // Non-blocking wait
-    /// let result = try POSIX.Kernel.Process.Wait.wait(.any, options: .no.hang)
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.any, options: .no.hang)
     ///
     /// // Wait for stopped children
-    /// let result = try POSIX.Kernel.Process.Wait.wait(.any, options: .untraced)
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.any, options: .untraced)
     ///
     /// // Combine options
-    /// let result = try POSIX.Kernel.Process.Wait.wait(.any, options: [.no.hang, .untraced])
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.any, options: [.no.hang, .untraced])
     /// ```
     public struct Options: OptionSet, Sendable, Hashable {
         public let rawValue: Int32

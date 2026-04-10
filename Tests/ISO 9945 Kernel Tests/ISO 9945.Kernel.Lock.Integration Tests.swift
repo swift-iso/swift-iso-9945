@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-import ISO_9945
+import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives_Core
 import Kernel_Descriptor_Primitives
@@ -86,7 +86,7 @@ private enum LockTestHelper {
         let envp: [Swift.String] = []
 
         return try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
-            try unsafe POSIX.Kernel.Process.Spawn.spawn(
+            try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                 path: argvPtr[0]!,
                 argv: argvPtr,
                 envp: envpPtr
@@ -265,7 +265,7 @@ extension POSIXLockIntegration {
         }
 
         // Wait for helper to exit
-        _ = try? POSIX.Kernel.Process.Wait.wait(.process(helper))
+        _ = try? ISO_9945.Kernel.Process.Wait.wait(.process(helper))
     }
 }
 

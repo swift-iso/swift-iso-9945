@@ -21,7 +21,7 @@
     public import Kernel_Process_Primitives
     public import Kernel_Thread_Primitives
     public import Kernel_Error_Primitives
-    public import ISO_9945
+    public import ISO_9945_Kernel
     public import ISO_9945_Kernel
 
     /// Test utilities for I/O operations.

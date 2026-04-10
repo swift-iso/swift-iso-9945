@@ -18,5 +18,5 @@
 /// - Dynamic library loading extensions
 public enum ISO_9945: Sendable {}
 
-/// Convenience typealias for ISO 9945 (POSIX).
-public typealias POSIX = ISO_9945
+// The POSIX typealias is owned by swift-posix (L3), not iso-9945 (L2).
+// L2 code uses ISO_9945 directly.

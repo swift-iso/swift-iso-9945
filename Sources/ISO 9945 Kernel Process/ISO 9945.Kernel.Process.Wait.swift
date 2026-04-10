@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -74,7 +56,7 @@ extension ISO_9945.Kernel.Process.Wait {
         case process(Kernel.Process.ID)
 
         /// Wait for any child in a specific process group.
-        case group(POSIX.Kernel.Process.Group.ID)
+        case group(ISO_9945.Kernel.Process.Group.ID)
 
         /// Wait for any child in the calling process's group (waitpid pid=0).
         case current
@@ -90,9 +72,9 @@ extension ISO_9945.Kernel.Process.Wait {
         public let pid: Kernel.Process.ID
 
         /// The status of the process.
-        public let status: POSIX.Kernel.Process.Status
+        public let status: ISO_9945.Kernel.Process.Status
 
-        public init(pid: Kernel.Process.ID, status: POSIX.Kernel.Process.Status) {
+        public init(pid: Kernel.Process.ID, status: ISO_9945.Kernel.Process.Status) {
             self.pid = pid
             self.status = status
         }
@@ -108,7 +90,7 @@ extension ISO_9945.Kernel.Process.Wait {
     ///   - selector: Which child(ren) to wait for.
     ///   - options: Wait options (default: blocking).
     /// - Returns: Result, or `nil` if `no.hang` and no child changed state.
-    /// - Throws: `POSIX.Kernel.Process.Error.wait` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.wait` on failure.
     ///
     /// ## Common Errors
     ///
@@ -121,24 +103,24 @@ extension ISO_9945.Kernel.Process.Wait {
     ///
     /// ```swift
     /// // Wait for any child
-    /// let result = try POSIX.Kernel.Process.Wait.wait(.any)
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.any)
     /// print("PID \(result.pid) exited with \(result.status.exit.code ?? -1)")
     ///
     /// // Non-blocking wait
-    /// if let result = try POSIX.Kernel.Process.Wait.wait(.any, options: .no.hang) {
+    /// if let result = try ISO_9945.Kernel.Process.Wait.wait(.any, options: .no.hang) {
     ///     print("Child \(result.pid) ready")
     /// } else {
     ///     print("No children ready")
     /// }
     ///
     /// // Wait for specific child
-    /// let result = try POSIX.Kernel.Process.Wait.wait(.process(childPid))
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.process(childPid))
     /// ```
 
     public static func wait(
         _ selector: Selector,
         options: Options = []
-    ) throws(POSIX.Kernel.Process.Error) -> Result? {
+    ) throws(ISO_9945.Kernel.Process.Error) -> Result? {
         let pid: pid_t =
             switch selector {
             case .any:
@@ -155,7 +137,7 @@ extension ISO_9945.Kernel.Process.Wait {
         let result = unsafe waitpid(pid, &status, options.rawValue)
 
         if result == -1 {
-            throw .wait(POSIX.Kernel.Error.captureErrno())
+            throw .wait(ISO_9945.Kernel.Error.captureErrno())
         }
 
         // WNOHANG: returns 0 if no child changed state
@@ -165,7 +147,7 @@ extension ISO_9945.Kernel.Process.Wait {
 
         return Result(
             pid: Kernel.Process.ID(result),
-            status: POSIX.Kernel.Process.Status(rawValue: status)
+            status: ISO_9945.Kernel.Process.Status(rawValue: status)
         )
     }
 }

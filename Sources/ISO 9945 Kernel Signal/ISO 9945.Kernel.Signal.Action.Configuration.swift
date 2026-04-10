@@ -9,26 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
-
 extension ISO_9945.Kernel.Signal.Action {
     /// Swift representation of signal action configuration.
     ///
@@ -58,7 +38,7 @@ extension ISO_9945.Kernel.Signal.Action {
     /// )
     ///
     /// // Block other signals while handler runs
-    /// var blocked = POSIX.Kernel.Signal.Set()
+    /// var blocked = ISO_9945.Kernel.Signal.Set()
     /// try blocked.insert(.terminate)
     /// let config = Configuration(
     ///     handler: .custom(myHandler),
@@ -74,7 +54,7 @@ extension ISO_9945.Kernel.Signal.Action {
         ///
         /// The caught signal is always blocked during handler execution
         /// unless `.noDefer` flag is set.
-        public let mask: POSIX.Kernel.Signal.Set
+        public let mask: ISO_9945.Kernel.Signal.Set
 
         /// Options modifying signal handling behavior.
         public let flags: Options
@@ -94,7 +74,7 @@ extension ISO_9945.Kernel.Signal.Action {
         @unsafe
         public init(
             handler: Handler,
-            mask: POSIX.Kernel.Signal.Set = POSIX.Kernel.Signal.Set(),
+            mask: ISO_9945.Kernel.Signal.Set = ISO_9945.Kernel.Signal.Set(),
             flags: Options = []
         ) {
             unsafe (self.handler = handler)
@@ -121,7 +101,7 @@ extension ISO_9945.Kernel.Signal.Action {
         internal init(
             __unchecked: Void,
             handler: Handler,
-            mask: POSIX.Kernel.Signal.Set,
+            mask: ISO_9945.Kernel.Signal.Set,
             flags: Options
         ) {
             unsafe (self.handler = handler)

@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -54,20 +36,20 @@ extension ISO_9945.Kernel.Signal.Mask {
     ///
     /// ```swift
     /// // Block SIGINT and SIGTERM
-    /// var toBlock = POSIX.Kernel.Signal.Set()
+    /// var toBlock = ISO_9945.Kernel.Signal.Set()
     /// try toBlock.insert(.interrupt)
     /// try toBlock.insert(.terminate)
     ///
-    /// let previous = try POSIX.Kernel.Signal.Mask.change(.block, signals: toBlock)
-    /// defer { _ = try? POSIX.Kernel.Signal.Mask.change(.set, signals: previous) }
+    /// let previous = try ISO_9945.Kernel.Signal.Mask.change(.block, signals: toBlock)
+    /// defer { _ = try? ISO_9945.Kernel.Signal.Mask.change(.set, signals: previous) }
     ///
     /// // Critical section where signals are blocked
     /// ```
 
     public static func change(
         _ how: How,
-        signals: POSIX.Kernel.Signal.Set
-    ) throws(POSIX.Kernel.Signal.Error) -> POSIX.Kernel.Signal.Set {
+        signals: ISO_9945.Kernel.Signal.Set
+    ) throws(ISO_9945.Kernel.Signal.Error) -> ISO_9945.Kernel.Signal.Set {
         var previous = sigset_t()
         unsafe sigemptyset(&previous)
 
@@ -80,7 +62,7 @@ extension ISO_9945.Kernel.Signal.Mask {
             throw .mask(.posix(error))
         }
 
-        return POSIX.Kernel.Signal.Set(storage: previous)
+        return ISO_9945.Kernel.Signal.Set(storage: previous)
     }
 
     /// Returns the set of pending signals (blocked but raised).
@@ -99,20 +81,20 @@ extension ISO_9945.Kernel.Signal.Mask {
     ///
     /// ```swift
     /// // Check if any signals are pending
-    /// let pending = try POSIX.Kernel.Signal.Mask.pending()
+    /// let pending = try ISO_9945.Kernel.Signal.Mask.pending()
     /// if try pending.contains(.interrupt) {
     ///     // SIGINT was raised while blocked
     /// }
     /// ```
 
-    public static func pending() throws(POSIX.Kernel.Signal.Error) -> POSIX.Kernel.Signal.Set {
+    public static func pending() throws(ISO_9945.Kernel.Signal.Error) -> ISO_9945.Kernel.Signal.Set {
         var set = sigset_t()
         unsafe sigemptyset(&set)
 
         guard unsafe sigpending(&set) == 0 else {
-            throw .mask(POSIX.Kernel.Error.captureErrno())
+            throw .mask(ISO_9945.Kernel.Error.captureErrno())
         }
 
-        return POSIX.Kernel.Signal.Set(storage: set)
+        return ISO_9945.Kernel.Signal.Set(storage: set)
     }
 }

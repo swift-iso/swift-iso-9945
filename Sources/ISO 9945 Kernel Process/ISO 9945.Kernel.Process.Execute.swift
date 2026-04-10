@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -54,7 +36,7 @@ extension ISO_9945.Kernel.Process.Execute {
     ///   - path: Path to the executable (null-terminated C string).
     ///   - argv: Argument vector (null-terminated array of C strings).
     ///   - envp: Environment vector (null-terminated array of C strings).
-    /// - Throws: `POSIX.Kernel.Process.Error.execute` (only returns on failure).
+    /// - Throws: `ISO_9945.Kernel.Process.Error.execute` (only returns on failure).
     ///
     /// ## Important
     ///
@@ -79,14 +61,14 @@ extension ISO_9945.Kernel.Process.Execute {
     /// ## Usage
     ///
     /// ```swift
-    /// switch try POSIX.Kernel.Process.Fork.fork() {
+    /// switch try ISO_9945.Kernel.Process.Fork.fork() {
     /// case .child:
     ///     "/bin/ls".withCString { path in
     ///         let argv: [UnsafePointer<CChar>?] = [path, nil]
     ///         let envp: [UnsafePointer<CChar>?] = [nil]
     ///         argv.withUnsafeBufferPointer { argvBuf in
     ///             envp.withUnsafeBufferPointer { envpBuf in
-    ///                 try? POSIX.Kernel.Process.Execute.execve(
+    ///                 try? ISO_9945.Kernel.Process.Execute.execve(
     ///                     path: path,
     ///                     argv: argvBuf.baseAddress!,
     ///                     envp: envpBuf.baseAddress!
@@ -94,9 +76,9 @@ extension ISO_9945.Kernel.Process.Execute {
     ///             }
     ///         }
     ///     }
-    ///     POSIX.Kernel.Process.Exit.now(127) // execute failed
+    ///     ISO_9945.Kernel.Process.Exit.now(127) // execute failed
     /// case .parent(let child):
-    ///     let result = try POSIX.Kernel.Process.Wait.wait(.process(child))
+    ///     let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
     /// }
     /// ```
     @unsafe
@@ -104,7 +86,7 @@ extension ISO_9945.Kernel.Process.Execute {
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
         envp: UnsafePointer<UnsafePointer<CChar>?>
-    ) throws(POSIX.Kernel.Process.Error) {
+    ) throws(ISO_9945.Kernel.Process.Error) {
         // execve only returns on failure
         #if canImport(Darwin)
             _ = unsafe swift_execve(path, argv, envp)
@@ -113,6 +95,6 @@ extension ISO_9945.Kernel.Process.Execute {
         #elseif canImport(Musl)
             _ = unsafe Musl.execve(path, argv, envp)
         #endif
-        throw .execute(POSIX.Kernel.Error.captureErrno())
+        throw .execute(ISO_9945.Kernel.Error.captureErrno())
     }
 }

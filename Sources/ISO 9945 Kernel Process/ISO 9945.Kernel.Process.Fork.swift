@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -64,7 +46,7 @@ extension ISO_9945.Kernel.Process.Fork {
     /// Creates a new process by duplicating the calling process.
     ///
     /// - Returns: `.child` in the child process, `.parent(child:)` in the parent.
-    /// - Throws: `POSIX.Kernel.Process.Error.fork` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.fork` on failure.
     ///
     /// ## Common Errors
     ///
@@ -81,17 +63,17 @@ extension ISO_9945.Kernel.Process.Fork {
     /// ## Usage
     ///
     /// ```swift
-    /// switch try POSIX.Kernel.Process.Fork.fork() {
+    /// switch try ISO_9945.Kernel.Process.Fork.fork() {
     /// case .child:
     ///     // In child process
-    ///     try POSIX.Kernel.Process.Execute.execve(...)
-    ///     POSIX.Kernel.Process.Exit.now(127) // execute failed
+    ///     try ISO_9945.Kernel.Process.Execute.execve(...)
+    ///     ISO_9945.Kernel.Process.Exit.now(127) // execute failed
     /// case .parent(let child):
     ///     // In parent process
-    ///     let result = try POSIX.Kernel.Process.Wait.wait(.process(child))
+    ///     let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
     /// }
     /// ```
-    public static func fork() throws(POSIX.Kernel.Process.Error) -> Result {
+    public static func fork() throws(ISO_9945.Kernel.Process.Error) -> Result {
         #if canImport(Darwin)
             let pid = swift_fork()
         #elseif canImport(Glibc)
@@ -102,7 +84,7 @@ extension ISO_9945.Kernel.Process.Fork {
 
         switch pid {
         case -1:
-            throw .fork(POSIX.Kernel.Error.captureErrno())
+            throw .fork(ISO_9945.Kernel.Error.captureErrno())
         case 0:
             return .child
         default:

@@ -9,27 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
-internal import ISO_9945_ABI
-
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -61,7 +41,7 @@ extension ISO_9945.Kernel.Process.Spawn {
     ///   - argv: Argument vector (null-terminated array of C strings).
     ///   - envp: Environment vector (null-terminated array of C strings).
     /// - Returns: The process ID of the spawned child.
-    /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.spawn` on failure.
     ///
     /// ## Thread Safety
     ///
@@ -85,7 +65,7 @@ extension ISO_9945.Kernel.Process.Spawn {
     ///
     /// let child = try Kernel.Path.scope("/usr/bin/true") { path in
     ///     try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-    ///         try POSIX.Kernel.Process.Spawn.spawn(
+    ///         try ISO_9945.Kernel.Process.Spawn.spawn(
     ///             path: path.unsafeCString,
     ///             argv: argvPtr,
     ///             envp: envpPtr
@@ -100,7 +80,7 @@ extension ISO_9945.Kernel.Process.Spawn {
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
         envp: UnsafePointer<UnsafePointer<CChar>?>
-    ) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID {
+    ) throws(ISO_9945.Kernel.Process.Error) -> Kernel.Process.ID {
         var pid: pid_t = 0
 
         let rc = unsafe swift_posix_spawn(
@@ -130,13 +110,13 @@ extension ISO_9945.Kernel.Process.Spawn {
     ///   - argv: Argument vector (null-terminated array).
     ///   - envp: Environment vector (null-terminated array).
     /// - Returns: The process ID of the spawned child.
-    /// - Throws: `POSIX.Kernel.Process.Error.spawn` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.spawn` on failure.
     @unsafe
     public static func spawn(
         path: UnsafePointer<Path.Char>,
         argv: UnsafePointer<UnsafePointer<Path.Char>?>,
         envp: UnsafePointer<UnsafePointer<Path.Char>?>
-    ) throws(POSIX.Kernel.Process.Error) -> Kernel.Process.ID {
+    ) throws(ISO_9945.Kernel.Process.Error) -> Kernel.Process.ID {
         // Bridge UInt8 pointers to CChar pointers
         let pathCChar = unsafe UnsafePointer<CChar>(path)
         let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)

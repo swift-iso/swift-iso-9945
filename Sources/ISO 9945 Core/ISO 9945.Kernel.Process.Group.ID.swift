@@ -1,0 +1,48 @@
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
+
+public import Identity_Primitives
+public import Kernel_Process_Primitives
+
+#if canImport(Darwin)
+    import Darwin
+#elseif canImport(Glibc)
+    import Glibc
+#elseif canImport(Musl)
+    import Musl
+#endif
+
+// MARK: - Process.Group.ID
+
+extension ISO_9945.Kernel.Process.Group {
+    /// POSIX process group ID.
+    ///
+    /// A type-safe wrapper for process group identifiers used in signal sending.
+    ///
+    /// Distinct from `Process.ID` to prevent accidentally passing a PGID
+    /// where a PID is required (or vice versa).
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// // Send signal to a process group
+    /// try ISO_9945.Kernel.Signal.Send.toGroup(.terminate, pgid: .current)
+    /// ```
+    public typealias ID = Tagged<ISO_9945.Kernel.Process.Group, Int32>
+}
+
+// MARK: - Process.Group.ID Constants
+
+extension Tagged where Tag == ISO_9945.Kernel.Process.Group, RawValue == Int32 {
+    /// The current process group.
+
+    public static var current: Self { Self(__unchecked: (), getpgrp()) }
+}

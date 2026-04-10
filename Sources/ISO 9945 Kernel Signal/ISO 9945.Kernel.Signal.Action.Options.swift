@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -46,13 +28,13 @@ extension ISO_9945.Kernel.Signal.Action {
     ///
     /// ```swift
     /// // Restart interrupted syscalls automatically
-    /// let config = POSIX.Kernel.Signal.Action.Configuration(
+    /// let config = ISO_9945.Kernel.Signal.Action.Configuration(
     ///     handler: .custom(myHandler),
     ///     flags: .restart
     /// )
     ///
     /// // Use extended signal info
-    /// let config = POSIX.Kernel.Signal.Action.Configuration(
+    /// let config = ISO_9945.Kernel.Signal.Action.Configuration(
     ///     handler: .customInfo(myInfoHandler),
     ///     flags: [.restart, .sigInfo]  // sigInfo added automatically
     /// )

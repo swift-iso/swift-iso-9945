@@ -38,7 +38,7 @@ public import Kernel_Environment_Primitives
 public import Kernel_Process_Primitives
 public import Kernel_Thread_Primitives
 public import Kernel_Error_Primitives
-import ISO_9945
+import ISO_9945_Kernel
 import ISO_9945_Kernel
 
 @main

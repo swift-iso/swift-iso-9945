@@ -19,7 +19,7 @@ import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
 import Kernel_Error_Primitives
-import ISO_9945
+import ISO_9945_Kernel
 import ISO_9945_Kernel
 
 // MARK: - LockedBox

@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -86,7 +68,7 @@ extension ISO_9945.Kernel.Process.Kill {
     /// - Parameters:
     ///   - process: The target process ID.
     ///   - signal: The signal to send.
-    /// - Throws: `POSIX.Kernel.Process.Error.kill` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.kill` on failure.
     ///
     /// ## Common Errors
     ///
@@ -98,18 +80,18 @@ extension ISO_9945.Kernel.Process.Kill {
     ///
     /// ```swift
     /// // Send SIGTERM to gracefully terminate a process
-    /// try POSIX.Kernel.Process.Kill.kill(childPID, .term)
+    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .term)
     ///
     /// // Stop a process (for debugging or synchronization)
-    /// try POSIX.Kernel.Process.Kill.kill(childPID, .stop)
+    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .stop)
     ///
     /// // Continue a stopped process
-    /// try POSIX.Kernel.Process.Kill.kill(childPID, .cont)
+    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .cont)
     /// ```
     public static func kill(
         _ process: Kernel.Process.ID,
-        _ signal: POSIX.Kernel.Process.Signal
-    ) throws(POSIX.Kernel.Process.Error) {
+        _ signal: ISO_9945.Kernel.Process.Signal
+    ) throws(ISO_9945.Kernel.Process.Error) {
         #if canImport(Darwin)
             let rc = Darwin.kill(process.rawValue, signal.rawValue)
         #elseif canImport(Glibc)
@@ -119,7 +101,7 @@ extension ISO_9945.Kernel.Process.Kill {
         #endif
 
         if rc == -1 {
-            throw .kill(POSIX.Kernel.Error.captureErrno())
+            throw .kill(ISO_9945.Kernel.Error.captureErrno())
         }
     }
 }

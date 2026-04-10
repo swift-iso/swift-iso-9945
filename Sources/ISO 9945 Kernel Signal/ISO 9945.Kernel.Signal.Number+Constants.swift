@@ -1,33 +1,15 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-posix open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     import Darwin
@@ -36,35 +18,6 @@ public import ISO_9945
 #elseif canImport(Musl)
     import Musl
 #endif
-
-extension ISO_9945.Kernel.Signal {
-    /// A signal number.
-    ///
-    /// Use named constants (`.interrupt`, `.terminate`, etc.) for portable code.
-    /// Use `init(rawValue:)` as an escape hatch for platform-specific signals.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Use named constants for portability
-    /// try POSIX.Kernel.Signal.Send.toSelf(.user1)
-    ///
-    /// // Escape hatch for platform-specific signals
-    /// let platformSignal = POSIX.Kernel.Signal.Number(rawValue: 42)
-    /// ```
-    public struct Number: RawRepresentable, Sendable, Equatable, Hashable {
-        public let rawValue: Int32
-
-        /// Creates a signal number from a raw value.
-        ///
-        /// Prefer named constants when available. Use this initializer
-        /// as an escape hatch for platform-specific signals.
-
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-    }
-}
 
 // MARK: - Standard POSIX Signals
 

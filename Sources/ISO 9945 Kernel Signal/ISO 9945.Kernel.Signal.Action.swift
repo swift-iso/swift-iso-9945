@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -51,23 +33,23 @@ extension ISO_9945.Kernel.Signal.Action {
     /// ```swift
     /// // Install a custom handler
     /// let config = Configuration(handler: .custom(myHandler), flags: .restart)
-    /// let previous = try POSIX.Kernel.Signal.Action.set(signal: .user1, config)
+    /// let previous = try ISO_9945.Kernel.Signal.Action.set(signal: .user1, config)
     ///
     /// // Always restore on cleanup
-    /// defer { _ = try? POSIX.Kernel.Signal.Action.set(signal: .user1, previous) }
+    /// defer { _ = try? ISO_9945.Kernel.Signal.Action.set(signal: .user1, previous) }
     /// ```
     @discardableResult
 
     @unsafe
     public static func set(
-        signal: POSIX.Kernel.Signal.Number,
+        signal: ISO_9945.Kernel.Signal.Number,
         _ configuration: Configuration
-    ) throws(POSIX.Kernel.Signal.Error) -> Configuration {
+    ) throws(ISO_9945.Kernel.Signal.Error) -> Configuration {
         var newAction = unsafe sigaction(configuration)
         var oldAction = sigaction()
 
         guard unsafe sigaction(signal.rawValue, &newAction, &oldAction) == 0 else {
-            throw .action(POSIX.Kernel.Error.captureErrno())
+            throw .action(ISO_9945.Kernel.Error.captureErrno())
         }
 
         return unsafe Configuration(oldAction)
@@ -82,7 +64,7 @@ extension ISO_9945.Kernel.Signal.Action {
     /// ## Usage
     ///
     /// ```swift
-    /// let config = try POSIX.Kernel.Signal.Action.get(signal: .user1)
+    /// let config = try ISO_9945.Kernel.Signal.Action.get(signal: .user1)
     /// switch config.handler {
     /// case .default: print("Using default action")
     /// case .ignore: print("Signal ignored")
@@ -93,12 +75,12 @@ extension ISO_9945.Kernel.Signal.Action {
 
     @unsafe
     public static func get(
-        signal: POSIX.Kernel.Signal.Number
-    ) throws(POSIX.Kernel.Signal.Error) -> Configuration {
+        signal: ISO_9945.Kernel.Signal.Number
+    ) throws(ISO_9945.Kernel.Signal.Error) -> Configuration {
         var action = sigaction()
 
         guard unsafe sigaction(signal.rawValue, nil, &action) == 0 else {
-            throw .action(POSIX.Kernel.Error.captureErrno())
+            throw .action(ISO_9945.Kernel.Error.captureErrno())
         }
 
         return unsafe Configuration(action)
@@ -110,7 +92,7 @@ extension ISO_9945.Kernel.Signal.Action {
 extension sigaction {
     /// Creates a sigaction struct from a Configuration.
     @unsafe
-    internal init(_ configuration: POSIX.Kernel.Signal.Action.Configuration) {
+    internal init(_ configuration: ISO_9945.Kernel.Signal.Action.Configuration) {
         self.init()
 
         // Set mask
@@ -163,11 +145,11 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
     /// Creates a Configuration from a raw sigaction struct.
     @unsafe
     internal init(_ action: sigaction) {
-        let flags = POSIX.Kernel.Signal.Action.Options(rawValue: action.sa_flags)
-        let mask = POSIX.Kernel.Signal.Set(storage: action.sa_mask)
+        let flags = ISO_9945.Kernel.Signal.Action.Options(rawValue: action.sa_flags)
+        let mask = ISO_9945.Kernel.Signal.Set(storage: action.sa_mask)
 
         // Determine handler type
-        let handler: POSIX.Kernel.Signal.Action.Handler
+        let handler: ISO_9945.Kernel.Signal.Action.Handler
 
         #if canImport(Darwin)
             let handlerPtr = unsafe action.__sigaction_u.__sa_handler

@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     public import Darwin
@@ -56,7 +38,7 @@ extension ISO_9945.Kernel.Process.Session {
     /// Session ID wrapper.
     ///
     /// A type-safe wrapper for session identifiers.
-    public typealias ID = Tagged<POSIX.Kernel.Process.Session, pid_t>
+    public typealias ID = Tagged<ISO_9945.Kernel.Process.Session, pid_t>
 }
 
 // MARK: - Session Operations
@@ -65,7 +47,7 @@ extension ISO_9945.Kernel.Process.Session {
     /// Creates a new session with the calling process as leader.
     ///
     /// - Returns: The new session ID.
-    /// - Throws: `POSIX.Kernel.Process.Error.session` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.session` on failure.
     ///
     /// ## Behavior
     ///
@@ -84,19 +66,19 @@ extension ISO_9945.Kernel.Process.Session {
     ///
     /// ```swift
     /// // Daemonize: create new session to detach from terminal
-    /// switch try POSIX.Kernel.Process.Fork.fork() {
+    /// switch try ISO_9945.Kernel.Process.Fork.fork() {
     /// case .child:
-    ///     let sid = try POSIX.Kernel.Process.Session.create()
+    ///     let sid = try ISO_9945.Kernel.Process.Session.create()
     ///     // Now running in new session, detached from terminal
     /// case .parent:
     ///     break
     /// }
     /// ```
 
-    public static func create() throws(POSIX.Kernel.Process.Error) -> ID {
+    public static func create() throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = setsid()
         guard result != -1 else {
-            throw .session(POSIX.Kernel.Error.captureErrno())
+            throw .session(ISO_9945.Kernel.Error.captureErrno())
         }
         return ID(__unchecked: (), result)
     }
@@ -105,7 +87,7 @@ extension ISO_9945.Kernel.Process.Session {
     ///
     /// - Parameter pid: Process ID (use `.current` for calling process).
     /// - Returns: The session ID.
-    /// - Throws: `POSIX.Kernel.Process.Error.session` on failure.
+    /// - Throws: `ISO_9945.Kernel.Process.Error.session` on failure.
     ///
     /// ## Common Errors
     ///
@@ -116,16 +98,16 @@ extension ISO_9945.Kernel.Process.Session {
     ///
     /// ```swift
     /// // Get session ID of current process
-    /// let sid = try POSIX.Kernel.Process.Session.id(of: .current)
+    /// let sid = try ISO_9945.Kernel.Process.Session.id(of: .current)
     ///
     /// // Get session ID of another process
-    /// let sid = try POSIX.Kernel.Process.Session.id(of: somePid)
+    /// let sid = try ISO_9945.Kernel.Process.Session.id(of: somePid)
     /// ```
 
-    public static func id(of pid: Kernel.Process.ID) throws(POSIX.Kernel.Process.Error) -> ID {
+    public static func id(of pid: Kernel.Process.ID) throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = getsid(pid.rawValue)
         guard result != -1 else {
-            throw .session(POSIX.Kernel.Error.captureErrno())
+            throw .session(ISO_9945.Kernel.Error.captureErrno())
         }
         return ID(__unchecked: (), result)
     }

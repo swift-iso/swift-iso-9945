@@ -13,8 +13,7 @@
 
 public import Loader_Primitives
 import String_Primitives
-public import ISO_9945  // For ISO_9945.Loader typealias
-internal import ISO_9945_ABI
+public import ISO_9945_Core  // For ISO_9945.Loader typealias
 
 #if canImport(Darwin)
     internal import Darwin

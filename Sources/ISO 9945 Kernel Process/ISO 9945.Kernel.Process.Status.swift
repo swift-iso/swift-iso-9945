@@ -9,25 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
-public import Kernel_Error_Primitives
-public import Kernel_File_Primitives
-public import Kernel_IO_Primitives
-public import Kernel_Socket_Primitives
-public import Kernel_Memory_Primitives
-public import Kernel_Process_Primitives
-public import Kernel_Permission_Primitives
-public import Kernel_Path_Primitives
-public import Kernel_Thread_Primitives
-public import Kernel_System_Primitives
-public import Kernel_Time_Primitives
-public import Kernel_Clock_Primitives
-public import Kernel_Random_Primitives
-public import Kernel_Environment_Primitives
-public import Kernel_Syscall_Primitives
-public import Kernel_Terminal_Primitives
-public import ISO_9945
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -49,7 +31,7 @@ extension ISO_9945.Kernel.Process {
     /// ## Usage
     ///
     /// ```swift
-    /// let result = try POSIX.Kernel.Process.Wait.wait(.any)
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.any)
     /// if result.status.exited {
     ///     print("Exit code: \(result.status.exit.code ?? 0)")
     /// }
@@ -95,8 +77,8 @@ extension ISO_9945.Kernel.Process.Status {
 
     /// Exit code accessor (Nest.Name pattern).
     public struct Exit: Sendable {
-        let status: POSIX.Kernel.Process.Status
-        init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
+        let status: ISO_9945.Kernel.Process.Status
+        init(_ status: ISO_9945.Kernel.Process.Status) { self.status = status }
     }
 
     /// Nested accessor for terminating signal info.
@@ -104,8 +86,8 @@ extension ISO_9945.Kernel.Process.Status {
 
     /// Terminating signal accessor (Nest.Name pattern).
     public struct Terminating: Sendable {
-        let status: POSIX.Kernel.Process.Status
-        init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
+        let status: ISO_9945.Kernel.Process.Status
+        init(_ status: ISO_9945.Kernel.Process.Status) { self.status = status }
     }
 
     /// Nested accessor for stop signal info.
@@ -113,8 +95,8 @@ extension ISO_9945.Kernel.Process.Status {
 
     /// Stop signal accessor (Nest.Name pattern).
     public struct Stop: Sendable {
-        let status: POSIX.Kernel.Process.Status
-        init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
+        let status: ISO_9945.Kernel.Process.Status
+        init(_ status: ISO_9945.Kernel.Process.Status) { self.status = status }
     }
 
     /// Nested accessor for core dump info.
@@ -122,8 +104,8 @@ extension ISO_9945.Kernel.Process.Status {
 
     /// Core dump accessor (Nest.Name pattern).
     public struct Core: Sendable {
-        let status: POSIX.Kernel.Process.Status
-        init(_ status: POSIX.Kernel.Process.Status) { self.status = status }
+        let status: ISO_9945.Kernel.Process.Status
+        init(_ status: ISO_9945.Kernel.Process.Status) { self.status = status }
     }
 }
 
@@ -145,9 +127,9 @@ extension ISO_9945.Kernel.Process.Status.Terminating {
     /// The terminating signal (WTERMSIG).
     ///
     /// Returns `nil` if process was not terminated by signal.
-    public var signal: POSIX.Kernel.Signal.Number? {
+    public var signal: ISO_9945.Kernel.Signal.Number? {
         guard status.signaled else { return nil }
-        return POSIX.Kernel.Signal.Number(rawValue: swift_WTERMSIG(status.rawValue))
+        return ISO_9945.Kernel.Signal.Number(rawValue: swift_WTERMSIG(status.rawValue))
     }
 }
 
@@ -157,9 +139,9 @@ extension ISO_9945.Kernel.Process.Status.Stop {
     /// The stop signal (WSTOPSIG).
     ///
     /// Returns `nil` if process was not stopped.
-    public var signal: POSIX.Kernel.Signal.Number? {
+    public var signal: ISO_9945.Kernel.Signal.Number? {
         guard status.stopped else { return nil }
-        return POSIX.Kernel.Signal.Number(rawValue: swift_WSTOPSIG(status.rawValue))
+        return ISO_9945.Kernel.Signal.Number(rawValue: swift_WSTOPSIG(status.rawValue))
     }
 }
 
@@ -201,10 +183,10 @@ extension ISO_9945.Kernel.Process.Status {
         ///
         /// The unlabeled `Bool` indicates whether a core dump was produced.
         /// Use `status.core.dumped` for the same value.
-        case signaled(signal: POSIX.Kernel.Signal.Number, Bool)
+        case signaled(signal: ISO_9945.Kernel.Signal.Number, Bool)
 
         /// Process stopped by signal.
-        case stopped(signal: POSIX.Kernel.Signal.Number)
+        case stopped(signal: ISO_9945.Kernel.Signal.Number)
 
         /// Process continued.
         case continued

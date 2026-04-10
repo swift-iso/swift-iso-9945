@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import ISO_9945_Kernel_Test_Support
-import ISO_9945
+import ISO_9945_Kernel
 @_spi(Syscall) import Kernel_Primitives_Core
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Event_Primitives

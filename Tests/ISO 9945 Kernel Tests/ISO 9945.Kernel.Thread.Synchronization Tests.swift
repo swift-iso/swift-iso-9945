@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-import ISO_9945
+import ISO_9945_Kernel
 import Kernel_Primitives_Core
 import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives

@@ -9,29 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) public import Kernel_Primitives_Core
-@_spi(Syscall) public import Kernel_Descriptor_Primitives
-@_spi(Syscall) public import Kernel_Error_Primitives
-@_spi(Syscall) public import Kernel_File_Primitives
-@_spi(Syscall) public import Kernel_IO_Primitives
-@_spi(Syscall) public import Kernel_Socket_Primitives
-@_spi(Syscall) public import Kernel_Memory_Primitives
-@_spi(Syscall) public import Kernel_Process_Primitives
-@_spi(Syscall) public import Kernel_Permission_Primitives
-@_spi(Syscall) public import Kernel_Path_Primitives
-@_spi(Syscall) public import Kernel_Thread_Primitives
-@_spi(Syscall) public import Kernel_System_Primitives
-@_spi(Syscall) public import Kernel_Time_Primitives
-@_spi(Syscall) public import Kernel_Clock_Primitives
-@_spi(Syscall) public import Kernel_Random_Primitives
-@_spi(Syscall) public import Kernel_Environment_Primitives
-@_spi(Syscall) public import Kernel_Syscall_Primitives
-@_spi(Syscall) public import Kernel_Terminal_Primitives
-public import ISO_9945
-
-// Re-export Terminal and Clock primitives with their POSIX implementations
-@_exported public import Terminal_Primitives
-@_exported public import Clock_Primitives
+@_spi(Syscall) import Kernel_Primitives_Core
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 extension ISO_9945 {
     /// ISO 9945 (POSIX) kernel mechanisms.
@@ -47,7 +26,7 @@ extension ISO_9945 {
     public typealias Kernel = Kernel_Primitives_Core.Kernel
 }
 
-// MARK: - POSIX.Kernel.Descriptor Veneer
+// MARK: - ISO_9945.Kernel.Descriptor Veneer
 
 extension Kernel_Primitives_Core.Kernel.Descriptor {
     /// Creates a descriptor by borrowing a POSIX file descriptor.

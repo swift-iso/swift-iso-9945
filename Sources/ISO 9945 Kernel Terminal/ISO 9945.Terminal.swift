@@ -13,26 +13,6 @@
 
 #if !os(Windows)
 
-public import Terminal_Primitives
-internal import Kernel_Primitives_Core
-internal import Kernel_Descriptor_Primitives
-internal import Kernel_Error_Primitives
-internal import Kernel_File_Primitives
-internal import Kernel_IO_Primitives
-internal import Kernel_Socket_Primitives
-internal import Kernel_Memory_Primitives
-internal import Kernel_Process_Primitives
-internal import Kernel_Permission_Primitives
-internal import Kernel_Path_Primitives
-internal import Kernel_Thread_Primitives
-internal import Kernel_System_Primitives
-internal import Kernel_Time_Primitives
-internal import Kernel_Clock_Primitives
-internal import Kernel_Random_Primitives
-internal import Kernel_Environment_Primitives
-internal import Kernel_Syscall_Primitives
-internal import Kernel_Terminal_Primitives
-
 // MARK: - Interactivity
 
 extension Terminal.Stream.Interactive {

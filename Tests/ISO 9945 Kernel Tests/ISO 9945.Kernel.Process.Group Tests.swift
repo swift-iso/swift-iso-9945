@@ -13,7 +13,7 @@
 
 import Testing
 import ISO_9945_Kernel_Test_Support
-import ISO_9945
+import ISO_9945_Kernel
 import Kernel_Primitives_Core
 import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
@@ -87,7 +87,7 @@ extension Kernel.Process.Group.Test.Integration {
     @Test("getpgid for nonexistent process throws ESRCH")
     func getpgidNonexistentThrows() throws {
         let unlikelyPID = Kernel.Process.ID(999999)
-        do throws(POSIX.Kernel.Process.Error) {
+        do throws(ISO_9945.Kernel.Process.Error) {
             _ = try Kernel.Process.Group.id(of: unlikelyPID)
             Issue.record("Expected ESRCH error")
         } catch {

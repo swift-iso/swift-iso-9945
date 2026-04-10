@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Loader_Primitives
-import ISO_9945  // For ISO_9945.Loader typealias
+import ISO_9945_Core  // For ISO_9945.Loader typealias
 
 #if canImport(Darwin)
     internal import Darwin

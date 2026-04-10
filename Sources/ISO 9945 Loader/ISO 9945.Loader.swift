@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Loader_Primitives
-public import ISO_9945
+public import ISO_9945_Core
 
 extension ISO_9945 {
     /// POSIX dynamic loader interface.
@@ -22,9 +22,9 @@ extension ISO_9945 {
     ///
     /// ## Design
     ///
-    /// POSIX.Loader is organized into:
-    /// - `POSIX.Loader.Symbol` - dlsym-based symbol lookup
-    /// - `POSIX.Loader.Library` - dlopen/dlclose
+    /// ISO_9945.Loader is organized into:
+    /// - `ISO_9945.Loader.Symbol` - dlsym-based symbol lookup
+    /// - `ISO_9945.Loader.Library` - dlopen/dlclose
     ///
     /// ## Semantic Correctness
     ///
