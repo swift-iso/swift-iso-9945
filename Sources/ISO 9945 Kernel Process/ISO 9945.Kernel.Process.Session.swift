@@ -12,11 +12,11 @@
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
-    public import Darwin
+    internal import Darwin
 #elseif canImport(Glibc)
-    public import Glibc
+    internal import Glibc
 #elseif canImport(Musl)
-    public import Musl
+    internal import Musl
 #endif
 
 extension ISO_9945.Kernel.Process {
@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Process.Session {
     /// Session ID wrapper.
     ///
     /// A type-safe wrapper for session identifiers.
-    public typealias ID = Tagged<ISO_9945.Kernel.Process.Session, pid_t>
+    public typealias ID = Tagged<ISO_9945.Kernel.Process.Session, Int32>
 }
 
 // MARK: - Session Operations

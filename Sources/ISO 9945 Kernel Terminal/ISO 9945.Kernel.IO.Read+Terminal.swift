@@ -20,6 +20,7 @@
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
+import Kernel_Syscall_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -63,6 +64,29 @@ extension ISO_9945.Kernel.IO.Read {
                 orThrow: Error.current()
             )
         #endif
+    }
+}
+
+// MARK: - Error Conversion
+
+extension ISO_9945.Kernel.IO.Read.Error {
+    /// Creates an error from the current errno value.
+    fileprivate static func current() -> Self {
+        let e = errno
+        let code = Kernel.Error.Code.posix(e)
+        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
+            return .handle(handleError)
+        }
+        if let blockingError = Kernel.IO.Blocking.Error(code: code) {
+            return .blocking(blockingError)
+        }
+        if let ioError = Kernel.IO.Error(code: code) {
+            return .io(ioError)
+        }
+        if let memoryError = Kernel.Memory.Error(code: code) {
+            return .memory(memoryError)
+        }
+        return .platform(Kernel.Error(code: code))
     }
 }
 

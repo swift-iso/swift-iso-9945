@@ -1,5 +1,4 @@
 @_exported public import ISO_9945_Core
-@_exported public import ISO_9945_Kernel_File
 @_spi(Syscall) @_exported public import Kernel_Terminal_Primitives
 @_spi(Syscall) @_exported public import Kernel_IO_Primitives
 @_spi(Syscall) @_exported public import Kernel_File_Primitives

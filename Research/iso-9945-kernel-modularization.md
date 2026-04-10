@@ -1,7 +1,8 @@
 # ISO 9945 Kernel Modularization Analysis
 
 > Date: 2026-04-10
-> Status: Recommendation ready — awaiting decision
+> Updated: 2026-04-10 — Implementation complete
+> Status: **IMPLEMENTED** — Option A (Full Domain Split) shipped
 > Scope: Whether `ISO 9945 Kernel` (97 files, 11,834 lines) should be split into domain-specific targets
 
 ---
@@ -97,6 +98,8 @@ This distinction is critical:
 
 Only **two** cross-domain references exist at L2:
 
+> **SUPERSEDED** — The analysis below predicted Process → Signal as the only L2 cross-domain edge and assumed Process.Group.ID would promote to L1. Neither happened. Implementation placed both Signal.Number and Process.Group.ID in Core as cycle-breakers, eliminating the Process → Signal edge entirely. Two unforeseen edges emerged instead: Terminal → File and Lock → System. See [Implementation Status](#implementation-status-2026-04-10) for the actual dependency graph.
+
 1. **Process → Signal**: `Process.Status` (`:148`, `:160`, `:204`, `:207`) references
    `POSIX.Kernel.Signal.Number` for decoding WTERMSIG/WSTOPSIG from wait status.
 
@@ -121,6 +124,8 @@ needs errno capture. It belongs in Core.
 | `CISO9945Shim` | Memory + Terminal | `Memory.Shared.swift`, `TTY.swift` |
 
 Shim usage is domain-localized — no shim spans all domains.
+
+> **SUPERSEDED** — This matrix assumed Process → Signal and no other cross-domain edges. Actual implementation: Process and Signal are peers (both get vocabulary from Core), Terminal depends on File, Lock depends on System. See [Implementation Status](#implementation-status-2026-04-10).
 
 ### Dependency Matrix (L2 internal, after L1 promotion)
 
@@ -158,6 +163,8 @@ No cycles. No diamonds.
 | `ISO 9945 Kernel Terminal` | 4 | 372 | Kernel Terminal Primitives | Core | CISO9945Shim |
 | `ISO 9945 Kernel System` | 10 | 644 | Kernel System, Time, Clock, Random, Environment Primitives | Core | — |
 | `ISO 9945 Kernel` (umbrella) | 1 | ~20 | — | All above | — |
+
+> **SUPERSEDED** — This graph shows Process → Signal. Actual implementation: Process and Signal are peers at depth 1. Terminal → File and Lock → System are the actual cross-domain edges. See [Implementation Status](#implementation-status-2026-04-10).
 
 **Dependency graph**:
 ```
@@ -253,6 +260,8 @@ process-lifecycle-related into Process (23 files), and miscellaneous into System
 
 **Recommended: Option A (Full Domain Split) — 12 domain targets + umbrella**
 
+> **SUPERSEDED** — The recommendation below assumed one cross-domain edge (Process → Signal) and an L1 promotion prerequisite. Implementation diverged: both vocabulary types went to Core instead of L1, eliminating Process → Signal. Two unforeseen edges emerged (Terminal → File, Lock → System). See [Implementation Status](#implementation-status-2026-04-10).
+
 The analysis shows clean domain separation with minimal L2 cross-domain coupling
 (exactly one edge: Process → Signal, after promoting `Process.Group.ID` to L1).
 
@@ -260,7 +269,7 @@ The analysis shows clean domain separation with minimal L2 cross-domain coupling
 
 | Item | Decision | Rationale |
 |------|----------|-----------|
-| Process ↔ Signal cycle | Promote `Process.Group.ID` to L1 | Kernel vocabulary, not POSIX-specific; L1 already has `Kernel.Group.swift` |
+| Process ↔ Signal cycle | ~~Promote `Process.Group.ID` to L1~~ **SUPERSEDED**: both types placed in Core at L2 | Originally argued as kernel vocabulary; implementation correctly identified it as POSIX-specific |
 | Directory | Separate target | Distinct POSIX subsystem; no L2 File dependency |
 | Lock | Separate target | File locking ≠ file I/O; no L2 File dependency |
 | Environment | Separate from System | Distinct POSIX concept with own error type |
@@ -296,6 +305,8 @@ The analysis shows clean domain separation with minimal L2 cross-domain coupling
    by 17 files across File, Directory, Link, Path, Environment, and Process. Absorbing
    into Core eliminates a target and makes the projections universally available via
    the transitive Core dependency.
+
+> **SUPERSEDED** — This prerequisite was abandoned. Process.Group.ID stayed at L2 (ISO 9945 Core) because it is a POSIX-specific concept, not cross-platform vocabulary. The cycle was broken by placing both Process.Group.ID and Signal.Number in Core, not by L1 promotion. See [Workflow B findings](l1-process-signal-vocabulary.md).
 
 ### Prerequisite
 
@@ -454,11 +465,13 @@ targets: [
             .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
         ]),
 
-    // MARK: - Process (depends on Signal for Signal.Number)
+    // MARK: - Process
+    // SUPERSEDED: proposed Process → Signal dependency was eliminated.
+    // Actual implementation: Process depends on Core only (Signal.Number is in Core).
     .target(name: "ISO 9945 Kernel Process",
         dependencies: [
             "ISO 9945 Core",
-            "ISO 9945 Kernel Signal",
+            "ISO 9945 Kernel Signal",  // ← NOT in actual implementation
             .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
             .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
             .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
@@ -604,8 +617,7 @@ This is a **primary decomposition** along the POSIX subsystem axis. Core is scaf
 - Each file's 18-line import block must be replaced with target-specific imports
 - Core's `exports.swift` should `@_exported public import` its L1 dependencies
 - Each variant's `exports.swift` should `@_exported public import ISO_9945_Core`
-- Process.Kill.swift defines its own `Process.Signal` (focused subset) independent
-  of `Signal.Number` — no additional coupling
+- Process.Kill.swift now uses `Signal.Number` from Core directly (duplicate `Process.Signal` was removed 2026-04-10)
 - Pipe.swift imports `Algebra_Primitives` and `Identity_Primitives` — File target deps
 - Socket.Pair.swift imports `Algebra_Primitives` — Socket target dep
 - Directory.Working.swift and Environment.swift import `String_Primitives` and
@@ -623,3 +635,125 @@ Files that currently `internal import ISO_9945_ABI` (17 files, by proposed targe
 | Directory | `Directory.swift`, `Directory.Create`, `Directory.Remove`, `Directory.Working` |
 | Environment | `Environment.swift`, `Environment.Entries` |
 | Process | `Process.Spawn` |
+
+---
+
+## Implementation Status (2026-04-10)
+
+Option A was implemented as recommended. Both iso-9945 (L2) and swift-posix (L3) are modularized.
+
+### ISO 9945 (L2) — Final Structure
+
+**14 targets total**: Core + 12 domain + umbrella + Loader
+
+| # | Target | Type | Notes |
+|---|--------|------|-------|
+| 1 | `ISO 9945 Core` | internal | Namespace, errors, ABI projections, cycle-breaker types |
+| 2 | `ISO 9945 Kernel File` | product | File I/O, close, descriptor, device, link, path, pipe |
+| 3 | `ISO 9945 Kernel Directory` | product | opendir/readdir/closedir |
+| 4 | `ISO 9945 Kernel Lock` | product | File locking (flock). **Depends on System.** |
+| 5 | `ISO 9945 Kernel Socket` | product | Socket operations |
+| 6 | `ISO 9945 Kernel Memory` | product | mmap/munmap/mprotect/shared memory |
+| 7 | `ISO 9945 Kernel Signal` | product | sigaction, signal masks, signal sending |
+| 8 | `ISO 9945 Kernel Process` | product | fork/exec/wait/spawn. Depends on Signal (via Core). |
+| 9 | `ISO 9945 Kernel Thread` | product | pthread_mutex, pthread_cond |
+| 10 | `ISO 9945 Kernel Terminal` | product | termios, TTY. **Depends on File.** |
+| 11 | `ISO 9945 Kernel Environment` | product | getenv/setenv/environ |
+| 12 | `ISO 9945 Kernel System` | product | uname, clock, random, nanosleep |
+| 13 | `ISO 9945 Kernel` | umbrella | Re-exports all 12 domain targets |
+| 14 | `ISO 9945 Loader` | product | dlopen/dlsym/dlclose |
+
+Plus 2 C shim targets: `CPOSIXProcessShim` (Process only), `CISO9945Shim` (Memory + Terminal).
+Plus test support and test targets.
+
+### Cycle-Breaker Types in Core
+
+Two types were placed in Core to break what would otherwise be circular dependencies:
+
+| Type | In Core because |
+|------|-----------------|
+| `ISO_9945.Kernel.Signal.Number` | Process.Status decodes WTERMSIG/WSTOPSIG, needs Signal.Number. If Signal.Number were in Signal target, Process would depend on Signal, which would create coupling concerns. |
+| `ISO_9945.Kernel.Process.Group.ID` | Signal.Send.toGroup needs Process.Group.ID. Placing it in Core (along with Signal enum/Number) means neither Process nor Signal depend on each other at the target level. |
+
+### Cross-Domain Dependencies (actual)
+
+The original analysis predicted Process -> Signal as the only cross-domain edge.
+The implementation revealed two additional edges:
+
+```
+                    ISO 9945 Core
+             /  /  |  |   |   \  \  \  \  \
+          File Dir Lock Socket Mem Signal Thread  Env System
+            |       |
+         Terminal   System
+```
+
+| Edge | Mechanism | Rationale |
+|------|-----------|-----------|
+| Terminal -> File | `@_exported public import ISO_9945_Kernel_File` | Terminal I/O operations need file descriptor types |
+| Lock -> System | `@_exported public import ISO_9945_Kernel_System` | File locking needs clock/time types for timed locks |
+| Process -> Signal | Resolved via Core | Both Signal.Number and Process.Group.ID live in Core |
+
+Max depth remains **2** (Core -> File -> Terminal, or Core -> System -> Lock).
+
+### POSIX Typealias Removal
+
+The `public typealias POSIX = ISO_9945` was **removed** from L2. The `ISO 9945.swift` file now contains:
+
+```swift
+public enum ISO_9945: Sendable {}
+// The POSIX typealias is owned by swift-posix (L3), not iso-9945 (L2).
+// L2 code uses ISO_9945 directly.
+```
+
+The `POSIX` enum is defined in L3 (`swift-posix/Sources/POSIX Core/POSIX.Kernel.swift`):
+
+```swift
+public enum POSIX {
+    public enum Kernel {
+        public enum File {}
+    }
+}
+```
+
+### swift-posix (L3) — Matching Structure
+
+**16 targets**: Core + 12 domain (matching iso-9945) + Glob + Loader + umbrella
+
+10 of the 12 domain targets are re-export-only (single `exports.swift` file):
+- Lock, Signal, Thread, Directory, Memory, Socket, Process, Terminal, Environment, System
+
+Each re-export target contains:
+```swift
+@_exported public import POSIX_Core
+@_exported public import ISO_9945_Kernel_<Domain>
+```
+
+3 targets have actual L3 code:
+- **POSIX Kernel File**: `POSIX.Kernel.File.Flush` and `POSIX.Kernel.IO.Write` (EINTR-retry wrappers)
+- **POSIX Kernel Glob**: `POSIX.Kernel.Glob` (new L3 functionality, not in iso-9945)
+- **POSIX Core**: `POSIX` enum definition, `Kernel.Error.Code.posixMessage`
+
+### Downstream Consumer Verification
+
+| Consumer | Depends on | Import style | Status |
+|----------|-----------|--------------|--------|
+| `swift-kernel` | `swift-posix` | `POSIX Kernel` (umbrella, platform-conditional) | OK -- re-exports via `Kernel Core` |
+| `swift-linux` | `swift-posix` | 11 individual POSIX Kernel variant targets | OK -- selective import |
+| `swift-darwin` | `swift-posix` | 11 individual POSIX Kernel variant targets + Loader | OK -- selective import |
+| `swift-console` | `swift-posix` | `POSIX Kernel` (umbrella, platform-conditional) | OK |
+| `swift-loader` | `swift-posix` | `POSIX Loader` (platform-conditional) | OK |
+| `swift-file-system` | `swift-kernel` | Transitive via Kernel -> POSIX_Kernel | OK -- uses `POSIX.Kernel.File.Flush` |
+
+No consumer references `ISO_9945` directly (outside iso-9945 and swift-posix). All L3+ code uses the `POSIX.` namespace or gets it transitively through `swift-kernel`.
+
+No broken references found from the typealias removal. The `POSIX.` references in `swift-primitives` are to `Kernel.Error.Code.POSIX` (an error code case), not the removed typealias.
+
+### Re-Export-Only Targets Assessment
+
+10 of 16 POSIX targets contain only an `exports.swift` with re-exports. This pattern is acceptable:
+
+1. **Consumer precision**: swift-linux and swift-darwin already import individual variant targets (not the umbrella), demonstrating the value of granular products
+2. **Compilation overhead**: Minimal -- re-export-only targets compile near-instantly
+3. **Structural alignment**: 1:1 mapping between iso-9945 and POSIX targets makes the layering immediately legible
+4. **Growth path**: When EINTR-retry wrappers are added for more domains, the target already exists

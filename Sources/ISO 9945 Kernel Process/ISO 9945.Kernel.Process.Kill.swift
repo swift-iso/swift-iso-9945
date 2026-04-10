@@ -24,42 +24,6 @@ extension ISO_9945.Kernel.Process {
     public enum Kill {}
 }
 
-// MARK: - Signal
-
-extension ISO_9945.Kernel.Process {
-    /// POSIX signals for process control.
-    ///
-    /// This is a focused subset of signals used for process management.
-    /// Additional signals can be added as needed.
-    public struct Signal: RawRepresentable, Sendable, Equatable, Hashable {
-        public let rawValue: Int32
-
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-    }
-}
-
-extension ISO_9945.Kernel.Process.Signal {
-    /// Stop process (cannot be caught or ignored).
-    public static var stop: Self { Self(rawValue: SIGSTOP) }
-
-    /// Continue if stopped.
-    public static var cont: Self { Self(rawValue: SIGCONT) }
-
-    /// Kill process (cannot be caught or ignored).
-    public static var kill: Self { Self(rawValue: SIGKILL) }
-
-    /// Termination signal.
-    public static var term: Self { Self(rawValue: SIGTERM) }
-
-    /// Interrupt from keyboard (Ctrl+C).
-    public static var int: Self { Self(rawValue: SIGINT) }
-
-    /// Hangup detected on controlling terminal.
-    public static var hup: Self { Self(rawValue: SIGHUP) }
-}
-
 // MARK: - Kill Operation
 
 extension ISO_9945.Kernel.Process.Kill {
@@ -80,17 +44,17 @@ extension ISO_9945.Kernel.Process.Kill {
     ///
     /// ```swift
     /// // Send SIGTERM to gracefully terminate a process
-    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .term)
+    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .terminate)
     ///
     /// // Stop a process (for debugging or synchronization)
     /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .stop)
     ///
     /// // Continue a stopped process
-    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .cont)
+    /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .continue)
     /// ```
     public static func kill(
         _ process: Kernel.Process.ID,
-        _ signal: ISO_9945.Kernel.Process.Signal
+        _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Process.Error) {
         #if canImport(Darwin)
             let rc = Darwin.kill(process.rawValue, signal.rawValue)
