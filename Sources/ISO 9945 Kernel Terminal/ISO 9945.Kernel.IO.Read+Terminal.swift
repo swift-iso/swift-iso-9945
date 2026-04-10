@@ -72,8 +72,7 @@ extension ISO_9945.Kernel.IO.Read {
 extension ISO_9945.Kernel.IO.Read.Error {
     /// Creates an error from the current errno value.
     fileprivate static func current() -> Self {
-        let e = errno
-        let code = Kernel.Error.Code.posix(e)
+        let code = Kernel.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }

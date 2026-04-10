@@ -180,11 +180,7 @@ extension ISO_9945.Kernel.Directory.Working {
 extension ISO_9945.Kernel.Directory.Working.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        fromPosixErrno(.posix(errno))
-    }
-
-    /// Creates an error from a POSIX error code.
-    internal static func fromPosixErrno(_ code: Kernel.Error.Code) -> Self {
+        let code = Kernel.Error.Code.current()
         if let pathError = Kernel.Path.Resolution.Error(code: code) {
             return .path(pathError)
         }

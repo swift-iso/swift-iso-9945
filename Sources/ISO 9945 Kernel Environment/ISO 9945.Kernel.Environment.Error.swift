@@ -23,7 +23,7 @@
 // MARK: - POSIX environment error mapping
 
 extension ISO_9945.Kernel.Environment.Error {
-    public init(code: Kernel.Error.Code) {
+    internal init(code: Kernel.Error.Code) {
         if let e = Kernel.Memory.Error(code: code) {
             self = .memory(e)
             return
@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Environment.Error {
         self = .platform(Kernel.Error(code: code))
     }
 
-    public static func current() -> Self {
+    internal static func current() -> Self {
         Self(code: .captureErrno())
     }
 }

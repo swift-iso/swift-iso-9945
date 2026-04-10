@@ -94,24 +94,24 @@ extension ISO_9945.Kernel.File.Attributes.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {
-        let e = errno
-        switch e {
-        case ENOENT:
+        let code = Kernel.Error.Code.current()
+        switch code {
+        case .ENOENT:
             return .path(.notFound)
-        case ENAMETOOLONG:
+        case .ENAMETOOLONG:
             return .path(.tooLong)
-        case ELOOP:
+        case .ELOOP:
             return .path(.loop)
-        case EACCES:
+        case .EACCES:
             return .permission(.denied)
-        case EPERM:
+        case .EPERM:
             return .permission(.notPermitted)
-        case EROFS:
+        case .EROFS:
             return .permission(.readOnlyFilesystem)
-        case EIO:
+        case .EIO:
             return .io(.hardware)
         default:
-            return .platform(Kernel.Error(code: .posix(e)))
+            return .platform(Kernel.Error(code: code))
         }
     }
 }

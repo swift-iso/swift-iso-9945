@@ -93,10 +93,12 @@ extension ISO_9945.Kernel.Pipe {
 extension ISO_9945.Kernel.Pipe.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let e = errno
-        let code = Kernel.Error.Code.posix(e)
+        let code = Kernel.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
+        }
+        if let ioError = Kernel.IO.Error(code: code) {
+            return .io(ioError)
         }
         return .platform(Kernel.Error(code: code))
     }

@@ -98,14 +98,14 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
 extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let e = errno
-        switch e {
-        case EBADF:
+        let code = Kernel.Error.Code.current()
+        switch code {
+        case .EBADF:
             return .handle(.invalid)
-        case EMFILE:
+        case .EMFILE:
             return .tooManyOpen
         default:
-            return .platform(Kernel.Error(code: .posix(e)))
+            return .platform(Kernel.Error(code: code))
         }
     }
 }

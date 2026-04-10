@@ -83,18 +83,18 @@ extension ISO_9945.Kernel.File.Seek {
 extension ISO_9945.Kernel.File.Seek.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let e = errno
-        switch e {
-        case EBADF:
+        let code = Kernel.Error.Code.current()
+        switch code {
+        case .EBADF:
             return .invalidDescriptor
-        case EINVAL:
+        case .EINVAL:
             return .negativeOffset
-        case ESPIPE:
+        case .ESPIPE:
             return .notSeekable
-        case EOVERFLOW:
+        case .EOVERFLOW:
             return .overflow
         default:
-            return .platform(code: .posix(e))
+            return .platform(code: code)
         }
     }
 }

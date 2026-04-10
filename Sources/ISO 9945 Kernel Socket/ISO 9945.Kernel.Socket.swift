@@ -58,8 +58,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let e = errno
-        let code = Kernel.Error.Code.posix(e)
+        let code = Kernel.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
