@@ -122,8 +122,10 @@ let package = Package(
                 .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Path Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Kernel String Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
+                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
                 .product(name: "ISO 9899 Core", package: "swift-iso-9899")
             ]
         ),
