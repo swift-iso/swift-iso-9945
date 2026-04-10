@@ -9,4 +9,6 @@
 @_exported public import ISO_9945_Kernel_Thread
 @_exported public import ISO_9945_Kernel_Terminal
 @_exported public import ISO_9945_Kernel_Environment
+@_exported public import ISO_9945_Kernel_Clock
+@_exported public import ISO_9945_Kernel_Time
 @_exported public import ISO_9945_Kernel_System

@@ -60,6 +60,14 @@ let package = Package(
             targets: ["ISO 9945 Kernel Environment"]
         ),
         .library(
+            name: "ISO 9945 Kernel Clock",
+            targets: ["ISO 9945 Kernel Clock"]
+        ),
+        .library(
+            name: "ISO 9945 Kernel Time",
+            targets: ["ISO 9945 Kernel Time"]
+        ),
+        .library(
             name: "ISO 9945 Kernel System",
             targets: ["ISO 9945 Kernel System"]
         ),
@@ -147,6 +155,7 @@ let package = Package(
             name: "ISO 9945 Kernel Lock",
             dependencies: [
                 "ISO 9945 Core",
+                "ISO 9945 Kernel Clock",
                 "ISO 9945 Kernel System",
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
@@ -236,6 +245,27 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Clock
+
+        .target(
+            name: "ISO 9945 Kernel Clock",
+            dependencies: [
+                "ISO 9945 Core",
+                .product(name: "Kernel Clock Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
+            ]
+        ),
+
+        // MARK: - Time
+
+        .target(
+            name: "ISO 9945 Kernel Time",
+            dependencies: [
+                "ISO 9945 Core",
+                .product(name: "Kernel Time Primitives", package: "swift-kernel-primitives"),
+            ]
+        ),
+
         // MARK: - System
 
         .target(
@@ -243,10 +273,7 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Kernel System Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Time Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Clock Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Random Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
             ]
         ),
 
@@ -266,6 +293,8 @@ let package = Package(
                 "ISO 9945 Kernel Thread",
                 "ISO 9945 Kernel Terminal",
                 "ISO 9945 Kernel Environment",
+                "ISO 9945 Kernel Clock",
+                "ISO 9945 Kernel Time",
                 "ISO 9945 Kernel System",
             ]
         ),
