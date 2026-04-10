@@ -163,7 +163,7 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
     /// Creates a Configuration from a raw sigaction struct.
     @unsafe
     internal init(_ action: sigaction) {
-        let flags = POSIX.Kernel.Signal.Action.Flags(rawValue: action.sa_flags)
+        let flags = POSIX.Kernel.Signal.Action.Options(rawValue: action.sa_flags)
         let mask = POSIX.Kernel.Signal.Set(storage: action.sa_mask)
 
         // Determine handler type

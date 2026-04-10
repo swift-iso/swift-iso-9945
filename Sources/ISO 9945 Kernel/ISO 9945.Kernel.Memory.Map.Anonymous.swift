@@ -69,9 +69,9 @@ extension ISO_9945.Kernel.Memory.Map.Anonymous {
         protection: Kernel.Memory.Map.Protection = [.read, .write],
         shared: Bool = false
     ) throws(Kernel.Memory.Map.Error) -> Kernel.Memory.Map.Region {
-        let sharingFlag = shared ? Kernel.Memory.Map.Flags.shared : Kernel.Memory.Map.Flags.private
-        let flags = Kernel.Memory.Map.Flags(
-            rawValue: Kernel.Memory.Map.Flags.anonymous.rawValue | sharingFlag.rawValue
+        let sharingFlag = shared ? Kernel.Memory.Map.Options.shared : Kernel.Memory.Map.Options.private
+        let flags = Kernel.Memory.Map.Options(
+            rawValue: Kernel.Memory.Map.Options.anonymous.rawValue | sharingFlag.rawValue
         )
 
         let addr = try Kernel.Memory.Map.map(

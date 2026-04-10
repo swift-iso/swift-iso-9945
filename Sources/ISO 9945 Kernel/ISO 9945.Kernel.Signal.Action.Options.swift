@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Signal.Action {
     ///     flags: [.restart, .sigInfo]  // sigInfo added automatically
     /// )
     /// ```
-    public struct Flags: OptionSet, Sendable, Equatable, Hashable {
+    public struct Options: OptionSet, Sendable, Equatable, Hashable {
         public let rawValue: Int32
 
         public init(rawValue: Int32) {

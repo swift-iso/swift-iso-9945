@@ -37,9 +37,9 @@ public import ISO_9945
     public import Musl
 #endif
 
-// MARK: - POSIX Standard mlockall Flags
+// MARK: - POSIX Standard mlockall Options
 
-extension Kernel.Memory.Lock.All.Flags {
+extension Kernel.Memory.Lock.All.Options {
     /// Lock all pages currently mapped into the address space.
     public static let current = Self(rawValue: MCL_CURRENT)
 

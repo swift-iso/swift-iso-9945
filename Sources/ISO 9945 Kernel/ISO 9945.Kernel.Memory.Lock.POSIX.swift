@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Memory.Lock {
     /// - Parameter flags: Typed flags for mlockall.
     /// - Throws: `Error.lockAll` on failure.
 
-    public static func lockAll(_ flags: All.Flags) throws(Error) {
+    public static func lockAll(_ flags: All.Options) throws(Error) {
         try lockAll(flags: flags.rawValue)
     }
 }

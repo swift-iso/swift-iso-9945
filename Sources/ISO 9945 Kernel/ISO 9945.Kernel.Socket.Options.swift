@@ -37,9 +37,9 @@ public import ISO_9945
     internal import Musl
 #endif
 
-// MARK: - POSIX socket flags
+// MARK: - POSIX socket options
 
-extension ISO_9945.Kernel.Socket.Flags {
+extension ISO_9945.Kernel.Socket.Options {
     /// Set the socket to non-blocking mode.
     ///
     /// Equivalent to setting `O_NONBLOCK` after socket creation.

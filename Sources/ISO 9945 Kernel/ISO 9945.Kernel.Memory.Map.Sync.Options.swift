@@ -37,18 +37,15 @@ public import ISO_9945
     internal import Musl
 #endif
 
-// MARK: - POSIX mmap flags
+// MARK: - POSIX msync flags
 
-extension ISO_9945.Kernel.Memory.Map.Flags {
-    /// Shares modifications with other processes mapping the same file.
-    public static let shared = Self(rawValue: MAP_SHARED)
+extension ISO_9945.Kernel.Memory.Map.Sync.Options {
+    /// Synchronous sync - wait for I/O to complete.
+    public static let sync = Self(rawValue: MS_SYNC)
 
-    /// Creates a private copy-on-write mapping.
-    public static let `private` = Self(rawValue: MAP_PRIVATE)
+    /// Asynchronous sync - schedule I/O but don't wait.
+    public static let async = Self(rawValue: MS_ASYNC)
 
-    /// Creates a mapping not backed by any file.
-    public static let anonymous = Self(rawValue: MAP_ANON)
-
-    /// Places mapping at exactly the specified address.
-    public static let fixed = Self(rawValue: MAP_FIXED)
+    /// Invalidate cached copies.
+    public static let invalidate = Self(rawValue: MS_INVALIDATE)
 }
