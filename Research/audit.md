@@ -35,7 +35,7 @@
 | 21 | MEDIUM | [API-IMPL-008] | `Sources/ISO 9945 Kernel System/CPU.Atomic.Flag.swift` | `CPU.Atomic.Flag` — `isSet` and `set()` in class body. | RESOLVED 2026-04-10 — moved to extension |
 | 22 | MEDIUM | [API-IMPL-008] | `Sources/ISO 9945 Kernel Thread/ISO 9945.Kernel.Thread.Mutex.swift` | `Mutex.Lock` — nested type + methods in struct body. | RESOLVED 2026-04-10 — `Lock` extracted to own file with body members in extensions |
 | 23 | MEDIUM | [API-IMPL-008] | `Sources/ISO 9945 Kernel Directory/ISO 9945.Kernel.Directory.swift` | `Directory.Stream` — `close()` and `next()` in class body. | RESOLVED 2026-04-10 — moved to extension |
-| 24 | LOW | [API-NAME-002] | `Sources/ISO 9945 Core/ISO 9945.Kernel.swift:41` | `fileDescriptor` — compound: file+Descriptor. | DEFERRED — "file descriptor" is literally the POSIX specification term; renaming would break external consumers for minimal convention benefit |
+| 24 | LOW | [API-NAME-002] | `Sources/ISO 9945 Core/ISO 9945.Kernel.swift:41` | `fileDescriptor` — compound: file+Descriptor. | RESOLVED 2026-04-10 — veneer deleted entirely; property had zero production callers |
 | 25 | LOW | [API-IMPL-008] | `Sources/ISO 9945 Kernel Signal/ISO 9945.Kernel.Signal.Mask.How.swift` | `Signal.Mask.How` — 3 static constants in struct body. | RESOLVED 2026-04-10 — moved to extension |
 | 26 | LOW | [API-IMPL-008] | `Sources/ISO 9945 Kernel Signal/ISO 9945.Kernel.Signal.Action.Options.swift` | `Signal.Action.Options` — 7 static constants in struct body. | RESOLVED 2026-04-10 — moved to extension |
 | 27 | LOW | [API-IMPL-008] | `Sources/ISO 9945 Kernel Memory/ISO 9945.Kernel.Memory.Shared.Access.swift` | Body is clean; statics correctly in extension. | FALSE_POSITIVE |
@@ -56,7 +56,7 @@
 
 ### Summary
 
-27 findings: 25 RESOLVED, 1 DEFERRED, 1 FALSE_POSITIVE. Build verified clean.
+27 findings: 26 RESOLVED, 0 DEFERRED, 1 FALSE_POSITIVE. Build verified clean.
 
 **Systemic patterns**:
 
