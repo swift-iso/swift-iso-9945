@@ -391,8 +391,8 @@ extension POSIXLockIntegration {
 
         // If release worked, the helper acquires, holds for 100ms, exits 0.
         // If release failed, the helper blocks indefinitely and wait hangs.
-        let status = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
-        let exitedCleanly = status.classification == .exited(code: 0)
+        let result = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
+        let exitedCleanly = result?.status.classification == .exited(code: 0)
         #expect(exitedCleanly, "Helper should exit cleanly after acquiring released lock")
     }
 
@@ -410,8 +410,8 @@ extension POSIXLockIntegration {
 
         // Spawn helper to immediately try locking — should succeed without blocking.
         let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 50)
-        let status = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
-        let exitedCleanly = status.classification == .exited(code: 0)
+        let result = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
+        let exitedCleanly = result?.status.classification == .exited(code: 0)
         #expect(exitedCleanly, "Helper should acquire lock after withExclusive released it")
     }
 
@@ -433,8 +433,8 @@ extension POSIXLockIntegration {
 
         // Spawn helper — should acquire immediately since we released.
         let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 50)
-        let status = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
-        let exitedCleanly = status.classification == .exited(code: 0)
+        let result = try ISO_9945.Kernel.Process.Wait.wait(.process(helper))
+        let exitedCleanly = result?.status.classification == .exited(code: 0)
         #expect(exitedCleanly, "Helper should acquire lock after Token.release()")
     }
 }

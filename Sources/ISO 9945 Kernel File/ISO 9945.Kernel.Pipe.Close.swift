@@ -33,12 +33,13 @@ extension ISO_9945.Kernel.Pipe.Close {
     public static func write(
         _ descriptors: consuming Kernel.Pipe.Descriptors
     ) throws(Kernel.Close.Error) -> Kernel.Descriptor {
-        descriptors.map { pair in
-            pair.apply { read, write in
+        let tagged = try descriptors.map { (pair: consuming Pair<Kernel.Descriptor, Kernel.Descriptor>) throws(Kernel.Close.Error) -> Kernel.Descriptor in
+            try pair.apply { (read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) throws(Kernel.Close.Error) -> Kernel.Descriptor in
                 try Kernel.Close.close(write)
                 return read
             }
-        }.rawValue
+        }
+        return tagged.rawValue
     }
 
     /// Closes the read end of a pipe, returning the write end.
@@ -54,11 +55,12 @@ extension ISO_9945.Kernel.Pipe.Close {
     public static func read(
         _ descriptors: consuming Kernel.Pipe.Descriptors
     ) throws(Kernel.Close.Error) -> Kernel.Descriptor {
-        descriptors.map { pair in
-            pair.apply { read, write in
+        let tagged = try descriptors.map { (pair: consuming Pair<Kernel.Descriptor, Kernel.Descriptor>) throws(Kernel.Close.Error) -> Kernel.Descriptor in
+            try pair.apply { (read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) throws(Kernel.Close.Error) -> Kernel.Descriptor in
                 try Kernel.Close.close(read)
                 return write
             }
-        }.rawValue
+        }
+        return tagged.rawValue
     }
 }
