@@ -31,5 +31,11 @@ extension ISO_9945.Kernel.Process.Wait.Options {
         /// changed state, instead of blocking.
 
         public var hang: ISO_9945.Kernel.Process.Wait.Options { ISO_9945.Kernel.Process.Wait.Options(rawValue: WNOHANG) }
+
+        /// Do not remove the child from the waitable set (WNOWAIT).
+        ///
+        /// Used with `waitid`. Leaves the child in a waitable state so that
+        /// a subsequent wait call can be used to retrieve the status again.
+        public var wait: ISO_9945.Kernel.Process.Wait.Options { ISO_9945.Kernel.Process.Wait.Options(rawValue: WNOWAIT) }
     }
 }

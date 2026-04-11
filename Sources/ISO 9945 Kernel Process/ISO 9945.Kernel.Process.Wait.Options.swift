@@ -59,5 +59,17 @@ extension ISO_9945.Kernel.Process.Wait {
         /// Also report status for children that have been continued
         /// from a stopped state by delivery of SIGCONT.
         public static let continued = Self(rawValue: WCONTINUED)
+
+        // MARK: - waitid Options
+
+        /// Wait for children that have exited (WEXITED).
+        ///
+        /// Used with `waitid`. Reports children that have terminated.
+        public static let exited = Self(rawValue: WEXITED)
+
+        /// Wait for children that have been stopped by a signal (WSTOPPED).
+        ///
+        /// Used with `waitid`. Reports children that have been stopped.
+        public static let stopped = Self(rawValue: WSTOPPED)
     }
 }
