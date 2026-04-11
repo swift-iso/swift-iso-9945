@@ -76,6 +76,12 @@ let package = Package(
             targets: ["ISO 9945 Kernel System"]
         ),
 
+        // MARK: - Poll
+        .library(
+            name: "ISO 9945 Kernel Poll",
+            targets: ["ISO 9945 Kernel Poll"]
+        ),
+
         // MARK: - Loader
         .library(
             name: "ISO 9945 Loader",
@@ -292,6 +298,15 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Poll
+
+        .target(
+            name: "ISO 9945 Kernel Poll",
+            dependencies: [
+                "ISO 9945 Core",
+            ]
+        ),
+
         // MARK: - Umbrella
 
         .target(
@@ -312,6 +327,7 @@ let package = Package(
                 "ISO 9945 Kernel Clock",
                 "ISO 9945 Kernel Time",
                 "ISO 9945 Kernel System",
+                "ISO 9945 Kernel Poll",
             ]
         ),
 
