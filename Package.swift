@@ -76,6 +76,12 @@ let package = Package(
             targets: ["ISO 9945 Kernel System"]
         ),
 
+        // MARK: - Identity
+        .library(
+            name: "ISO 9945 Kernel Identity",
+            targets: ["ISO 9945 Kernel Identity"]
+        ),
+
         // MARK: - Poll
         .library(
             name: "ISO 9945 Kernel Poll",
@@ -298,6 +304,17 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Identity
+
+        .target(
+            name: "ISO 9945 Kernel Identity",
+            dependencies: [
+                "ISO 9945 Core",
+                .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+            ]
+        ),
+
         // MARK: - Poll
 
         .target(
@@ -328,6 +345,7 @@ let package = Package(
                 "ISO 9945 Kernel Time",
                 "ISO 9945 Kernel System",
                 "ISO 9945 Kernel Poll",
+                "ISO 9945 Kernel Identity",
             ]
         ),
 
