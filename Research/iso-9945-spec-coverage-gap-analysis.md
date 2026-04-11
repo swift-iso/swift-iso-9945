@@ -77,6 +77,10 @@ shutdown, Socket.Pair.create(), Socket.Backlog type.
 **This is the largest gap in the package.** The entire core socket lifecycle and
 networking stack is missing.
 
+> **Migration note**: Several socket types already exist in `swift-linux-standard`
+> (`Linux Kernel Socket Standard`) and need **migration to ISO 9945**, not greenfield
+> implementation. See "Migration from swift-linux-standard" section below.
+
 #### 1a. Socket Lifecycle (P0)
 
 | Function | Purpose | Status |
@@ -110,16 +114,37 @@ Socket.Connect.connect(_:address:) throws(Kernel.Error)
 | `getpeername()` | Get remote socket address | **MISSING** |
 | `sockatmark()` | Check out-of-band data position | **MISSING** |
 
+**Message Header types** (needed by sendmsg/recvmsg):
+
+| Type | Purpose | Status |
+|------|---------|--------|
+| `Socket.Message.Header` | msghdr wrapper (name, vectors, control) | **MIGRATE** from `Linux Kernel Socket Standard` |
+| `Socket.Message.Header.Name` | Target address for message | **MIGRATE** |
+| `Socket.Message.Header.Vectors` | Scatter/gather I/O vector array | **MIGRATE** |
+| `Socket.Message.Header.Control` | Ancillary data (cmsghdr) | **MIGRATE** |
+
+> **Note**: The handoff document lists `Kernel.Socket.Message.Header` as Linux-only,
+> but `struct msghdr` is defined in POSIX `<sys/socket.h>`. The `sendmsg()`/`recvmsg()`
+> functions and the ancillary data mechanism (`struct cmsghdr`, `CMSG_FIRSTHDR`,
+> `CMSG_NXTHDR`, `CMSG_DATA`) are all POSIX. The base type should migrate to ISO 9945;
+> Linux-specific ancillary message types (e.g., `SCM_CREDENTIALS`) remain at L2 Linux.
+
 #### 1c. Address Types (P0)
 
 | Type | Purpose | Status |
 |------|---------|--------|
-| `Socket.Address` | Generic socket address (sockaddr_storage) | **MISSING** |
-| `Socket.Address.IPv4` | IPv4 address (sockaddr_in) | **MISSING** |
-| `Socket.Address.IPv6` | IPv6 address (sockaddr_in6) | **MISSING** |
-| `Socket.Address.Unix` | Unix domain address (sockaddr_un) | **MISSING** |
-| `Socket.Domain` | Address family enum (AF_INET, AF_INET6, AF_UNIX) | **MISSING** |
+| `Socket.Address` | Namespace for address types | **MIGRATE** from `Linux Kernel Socket Standard` |
+| `Socket.Address.Family` | Address family (AF_INET, AF_INET6, AF_UNIX, AF_UNSPEC) | **MIGRATE** — RawRepresentable, rawValue: Int32 |
+| `Socket.Address.Storage` | Universal address container (sockaddr_storage) | **MIGRATE** — cValue wrapper |
+| `Socket.Address.IPv4` | IPv4 address (sockaddr_in) | **MIGRATE** — cValue wrapper, port/address accessors |
+| `Socket.Address.IPv6` | IPv6 address (sockaddr_in6) | **MIGRATE** — cValue wrapper, port/flowInfo/scopeId |
+| `Socket.Address.Unix` | Unix domain address (sockaddr_un) | **MIGRATE** — cValue wrapper |
 | `Socket.Kind` | Socket type enum (SOCK_STREAM, SOCK_DGRAM, SOCK_RAW) | **MISSING** |
+
+> Migration pattern per [PLAT-ARCH-013] shell + values: ISO 9945 defines the types
+> with POSIX constants (AF_INET, AF_INET6, AF_UNIX, AF_UNSPEC). Linux Standard extends
+> with Linux-specific constants (e.g., AF_NETLINK). Darwin Standard extends with
+> Darwin-specific constants if any.
 
 #### 1d. Address Resolution (P0)
 
@@ -662,6 +687,16 @@ Process.Status decoding (exited/signaled/stopped/continued).
 > `wait/waitpid` covered via `Process.Wait.wait(selector:options:)`. `waitid` adds
 > `WNOWAIT` (peek without reaping) and richer `siginfo_t` information.
 
+**Wait types to migrate from swift-linux-standard**:
+
+| Type | Purpose | Status |
+|------|---------|--------|
+| `Process.Wait.Kind` | idtype_t: P_ALL, P_PID, P_PGID | **MIGRATE** from `Linux Kernel System Standard` |
+| `Process.Wait.Options` | WEXITED, WSTOPPED, WCONTINUED, WNOWAIT | **MIGRATE** — OptionSet, rawValue: Int32 |
+
+> These are POSIX `waitid()` types. The existing `Process.Wait.Selector` enum covers
+> `waitpid()` semantics; `Wait.Kind` covers the `waitid()` semantics.
+
 #### 10d. Resource Limits (P1) — consider `ISO 9945 Kernel System` or new target
 
 | Function | Purpose | Status |
@@ -828,7 +863,7 @@ ContinuousClock.Instant, time().
 
 ---
 
-### 14. Asynchronous I/O — NEW TARGET: `ISO 9945 Kernel Asynchronous IO`
+### 14. Asynchronous I/O — NEW TARGET: `ISO 9945 Kernel IO Async`
 
 **Current coverage**: None.
 
@@ -849,7 +884,7 @@ Mandatory in POSIX.1-2024 (_POSIX_ASYNCHRONOUS_IO).
 > and io_uring/kqueue at the foundation layer provide superior alternatives. Still
 > needed for spec completeness.
 
-**Target**: New target `ISO 9945 Kernel Asynchronous IO`. Depends on Core only.
+**Target**: New target `ISO 9945 Kernel IO Async`. Depends on Core only.
 Estimated: 4-6 files.
 
 ---
@@ -927,6 +962,72 @@ munlockall, mlock, munlock, shm_open, shm_unlink, anonymous mapping.
 
 ---
 
+## Migration from swift-linux-standard
+
+Commit `fd04244` on `swift-linux-standard/main` created typed wrappers for io_uring
+SQE Prepare methods. Several of those types are POSIX concepts that should canonically
+live in `swift-iso-9945`. Without migration, Darwin would need duplicates.
+
+### Types to migrate
+
+| Type | Source target | Destination target | POSIX header |
+|------|-------------|-------------------|--------------|
+| `Kernel.Socket.Address` (namespace) | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket Address` | `<sys/socket.h>` |
+| `Kernel.Socket.Address.Family` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket Address` | `<sys/socket.h>` |
+| `Kernel.Socket.Address.Storage` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket Address` | `<sys/socket.h>` |
+| `Kernel.Socket.Address.IPv4` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket Address` | `<netinet/in.h>` |
+| `Kernel.Socket.Address.IPv6` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket Address` | `<netinet/in.h>` |
+| `Kernel.Socket.Address.Unix` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket Address` | `<sys/un.h>` |
+| `Kernel.Socket.Message.Header` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket IO` | `<sys/socket.h>` |
+| `Kernel.Socket.Message.Header.Name` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket IO` | `<sys/socket.h>` |
+| `Kernel.Socket.Message.Header.Vectors` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket IO` | `<sys/socket.h>` |
+| `Kernel.Socket.Message.Header.Control` | `Linux Kernel Socket Standard` | `ISO 9945 Kernel Socket IO` | `<sys/socket.h>` |
+| `Kernel.Process.Wait.Kind` | `Linux Kernel System Standard` | `ISO 9945 Kernel Process` | `<sys/wait.h>` |
+| `Kernel.Process.Wait.Options` | `Linux Kernel System Standard` | `ISO 9945 Kernel Process` | `<sys/wait.h>` |
+
+### Migration pattern
+
+Per [PLAT-ARCH-013] shell + values:
+
+1. **ISO 9945** defines the type with POSIX constants (e.g., AF_INET, AF_INET6, AF_UNIX)
+2. **Linux Standard** extends with Linux-specific constants (e.g., AF_NETLINK)
+3. **Darwin Standard** extends with Darwin-specific constants if any
+4. **swift-linux-standard** re-imports from ISO 9945 instead of defining locally
+
+### msghdr note
+
+The handoff document classifies `Kernel.Socket.Message.Header` as Linux-only.
+However, `struct msghdr` is defined in POSIX `<sys/socket.h>` — it is the structure
+used by `sendmsg()` and `recvmsg()`, which are POSIX functions. The ancillary data
+mechanism (`struct cmsghdr`, `CMSG_FIRSTHDR`/`CMSG_NXTHDR`/`CMSG_DATA`) is also POSIX.
+The base type should migrate to ISO 9945. Linux-specific ancillary message types
+(e.g., `SCM_CREDENTIALS`, `SO_PASSCRED`) and any Linux-specific msghdr field access
+patterns remain at L2 Linux.
+
+### Types correctly at L2 Linux (no migration)
+
+| Type | Reason |
+|------|--------|
+| `Kernel.IO.Uring.Timeout.Specification` | `__kernel_timespec` — Linux kernel ABI |
+| `Kernel.Futex.Wait.Entry` | `futex_waitv` — Linux-specific |
+| `Kernel.File.Open.How` + `Resolve` | `openat2(2)` — Linux-specific |
+| `Kernel.File.Statx` + subtypes | `statx(2)` — Linux-specific |
+| `Kernel.Signal.Information` + `Code` | `siginfo_t` — POSIX concept but Linux field access (`_sifields._kill.si_pid`) is platform-specific |
+
+### Remaining io_uring Prepare typing opportunities
+
+Not POSIX-related, but noted from the handoff — these Prepare parameters are still
+raw integers:
+
+- `socket(domain: Int32, type: Int32, protocol: Int32)` → `Socket.Address.Family` + `Socket.Kind`
+- `openat(mode: UInt32)` → `Kernel.File.Permissions`
+- `shutdown(how: Int32)` → typed enum
+- `fadvise(advice: UInt32)` / `madvise(advice: UInt32)` → typed enums
+
+After migration, `domain` and `type` can use the ISO 9945 types directly.
+
+---
+
 ## Summary: Coverage Heat Map
 
 | POSIX Functional Area | Current | Target Coverage | Gap Size | Priority |
@@ -943,7 +1044,7 @@ munlockall, mlock, munlock, shm_open, shm_unlink, anonymous mapping.
 | **Timers** | 30% | +timer_create/set, clock_nanosleep | MEDIUM | P1 |
 | **File System (access/umask/mkfifo/statvfs)** | 50% | +accessibility, creation mask, FS info | MEDIUM | P1-P2 |
 | **POSIX Message Queues** | 0% | mq_* family | SMALL | P2 |
-| **Asynchronous IO** | 0% | aio_* family | MEDIUM | P2 |
+| **IO.Async** | 0% | aio_* family | MEDIUM | P2 |
 | **System V IPC** | 0% | shm/msg/sem | MEDIUM | P2-P3 |
 | **System Logging** | 0% | syslog | SMALL | P2 |
 | **Memory (mprotect)** | 90% | +mprotect, aligned_alloc | SMALL | P0 |
@@ -964,7 +1065,7 @@ variant targets. For full spec coverage, additional targets are needed:
 | 2 | `ISO 9945 Kernel Semaphore` | POSIX semaphores | 4-6 | Core |
 | 3 | `ISO 9945 Kernel Identity` | User/group IDs, databases | 8-12 | Core |
 | 4 | `ISO 9945 Kernel Message Queue` | POSIX message queues | 4-6 | Core, Signal |
-| 5 | `ISO 9945 Kernel Asynchronous IO` | Asynchronous I/O | 4-6 | Core |
+| 5 | `ISO 9945 Kernel IO Async` | Asynchronous I/O | 4-6 | Core |
 | 6 | `ISO 9945 Kernel IPC` | System V shared mem, msg, sem | 6-10 | Core |
 | 7 | `ISO 9945 Kernel Syslog` | System logging | 2-3 | Core |
 | 8 | `ISO 9945 Regex` | POSIX regular expressions | 2-3 | Core |
@@ -974,7 +1075,7 @@ variant targets. For full spec coverage, additional targets are needed:
 ```
                           ISO 9945 Core (internal)
           /   /   /   |    |    |    \    \    \    \    \    \    \    \    \
-       File Dir Lock Sock Mem  Sig  Thrd Term  Env  Sys Poll  Sem  Id  AsyncIO Syslog
+       File Dir Lock Sock Mem  Sig  Thrd Term  Env  Sys Poll  Sem  Id  IO.Async Syslog
                                 |                               |
                              Process                         MsgQ
                                                                |
