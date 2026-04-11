@@ -2,6 +2,7 @@
 @_exported public import ISO_9945_Kernel_File
 @_exported public import ISO_9945_Kernel_Directory
 @_exported public import ISO_9945_Kernel_Lock
+@_exported public import ISO_9945_Kernel_Socket_Address
 @_exported public import ISO_9945_Kernel_Socket
 @_exported public import ISO_9945_Kernel_Memory
 @_exported public import ISO_9945_Kernel_Signal

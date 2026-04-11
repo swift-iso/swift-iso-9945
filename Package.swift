@@ -32,6 +32,10 @@ let package = Package(
             targets: ["ISO 9945 Kernel Lock"]
         ),
         .library(
+            name: "ISO 9945 Kernel Socket Address",
+            targets: ["ISO 9945 Kernel Socket Address"]
+        ),
+        .library(
             name: "ISO 9945 Kernel Socket",
             targets: ["ISO 9945 Kernel Socket"]
         ),
@@ -162,12 +166,23 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Socket Address
+
+        .target(
+            name: "ISO 9945 Kernel Socket Address",
+            dependencies: [
+                "ISO 9945 Core",
+                .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
+            ]
+        ),
+
         // MARK: - Socket
 
         .target(
             name: "ISO 9945 Kernel Socket",
             dependencies: [
                 "ISO 9945 Core",
+                "ISO 9945 Kernel Socket Address",
                 .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
             ]
@@ -286,6 +301,7 @@ let package = Package(
                 "ISO 9945 Kernel File",
                 "ISO 9945 Kernel Directory",
                 "ISO 9945 Kernel Lock",
+                "ISO 9945 Kernel Socket Address",
                 "ISO 9945 Kernel Socket",
                 "ISO 9945 Kernel Memory",
                 "ISO 9945 Kernel Signal",
