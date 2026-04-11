@@ -14,33 +14,6 @@ extension ISO_9945.Kernel.Socket {
     public enum Option {}
 }
 
-// MARK: - Level
-
-extension ISO_9945.Kernel.Socket.Option {
-    /// Socket option level.
-    public struct Level: RawRepresentable, Sendable, Equatable, Hashable {
-        public let rawValue: Int32
-
-        public init(rawValue: Int32) {
-            self.rawValue = rawValue
-        }
-    }
-}
-
-extension ISO_9945.Kernel.Socket.Option.Level {
-    /// Socket-level options (SOL_SOCKET).
-    public static let socket = Self(rawValue: SOL_SOCKET)
-
-    /// TCP-level options (IPPROTO_TCP).
-    public static let tcp = Self(rawValue: Int32(IPPROTO_TCP))
-
-    /// IPv4-level options (IPPROTO_IP).
-    public static let ip = Self(rawValue: Int32(IPPROTO_IP))
-
-    /// IPv6-level options (IPPROTO_IPV6).
-    public static let ipv6 = Self(rawValue: Int32(IPPROTO_IPV6))
-}
-
 // MARK: - Get/Set Int32 Options
 
 extension ISO_9945.Kernel.Socket.Option {
@@ -104,7 +77,7 @@ extension ISO_9945.Kernel.Socket.Option {
     }
 }
 
-// MARK: - Convenience: Bool Options
+// MARK: - Bool Overloads
 
 extension ISO_9945.Kernel.Socket.Option {
     /// Gets a boolean socket option.
@@ -125,33 +98,5 @@ extension ISO_9945.Kernel.Socket.Option {
         enabled: Bool
     ) throws(Kernel.Socket.Error) {
         try set(descriptor, level: level, name: name, value: enabled ? 1 : 0)
-    }
-}
-
-// MARK: - Common Socket-Level Options
-
-extension ISO_9945.Kernel.Socket.Option {
-    /// Enables address reuse (SO_REUSEADDR).
-    public static func setReuseAddress(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        enabled: Bool = true
-    ) throws(Kernel.Socket.Error) {
-        try set(descriptor, level: .socket, name: SO_REUSEADDR, enabled: enabled)
-    }
-
-    /// Enables keepalive probes (SO_KEEPALIVE).
-    public static func setKeepAlive(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        enabled: Bool = true
-    ) throws(Kernel.Socket.Error) {
-        try set(descriptor, level: .socket, name: SO_KEEPALIVE, enabled: enabled)
-    }
-
-    /// Disables Nagle's algorithm for TCP (TCP_NODELAY).
-    public static func setNoDelay(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        enabled: Bool = true
-    ) throws(Kernel.Socket.Error) {
-        try set(descriptor, level: .tcp, name: TCP_NODELAY, enabled: enabled)
     }
 }

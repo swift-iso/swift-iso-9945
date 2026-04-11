@@ -8,33 +8,9 @@
     internal import Musl
 #endif
 
-// MARK: - Group Database
-
 extension ISO_9945.Kernel.Group {
     /// Group database operations namespace.
     public enum Database {}
-}
-
-// MARK: - Entry
-
-extension ISO_9945.Kernel.Group.Database {
-    /// A group database entry (from /etc/group or equivalent).
-    public struct Entry: Sendable {
-        /// The group name.
-        public let name: String
-
-        /// The group ID.
-        public let gid: Kernel.Group.ID
-
-        /// The group member names.
-        public let members: [String]
-
-        internal init(name: String, gid: Kernel.Group.ID, members: [String]) {
-            self.name = name
-            self.gid = gid
-            self.members = members
-        }
-    }
 }
 
 // MARK: - Lookup

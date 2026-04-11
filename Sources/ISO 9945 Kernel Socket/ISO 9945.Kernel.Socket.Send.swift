@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - addressLength: The size of the destination address.
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `Kernel.Socket.Error` on failure.
-    public static func sendTo(
+    public static func to(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         buffer: UnsafeRawPointer,
         length: Int,

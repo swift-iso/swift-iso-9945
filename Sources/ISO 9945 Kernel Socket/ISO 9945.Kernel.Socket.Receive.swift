@@ -61,7 +61,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, the sender's address, and address length.
     /// - Throws: `Kernel.Socket.Error` on failure.
-    public static func receiveFrom(
+    public static func from(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         buffer: UnsafeMutableRawPointer,
         length: Int,

@@ -8,27 +8,27 @@
     internal import Musl
 #endif
 
-// MARK: - Real Group ID
+// MARK: - Effective Group ID
 
 extension ISO_9945.Kernel.Group {
-    /// Real group ID operations namespace.
-    public enum Real {}
+    /// Effective group ID operations namespace.
+    public enum Effective {}
 }
 
-extension ISO_9945.Kernel.Group.Real {
-    /// Gets the real group ID of the calling process.
+extension ISO_9945.Kernel.Group.Effective {
+    /// Gets the effective group ID of the calling process.
     public static func id() -> Kernel.Group.ID {
-        Kernel.Group.ID(__unchecked: (), getgid())
+        Kernel.Group.ID(__unchecked: (), getegid())
     }
 
-    /// Sets the real group ID of the calling process.
+    /// Sets the effective group ID of the calling process.
     ///
     /// - Throws: `Kernel.Error` on failure (EPERM if not privileged).
     public static func set(
         _ gid: Kernel.Group.ID
     ) throws(Kernel.Error) {
-        guard setgid(gid.rawValue) == 0 else {
-            throw ISO_9945.Kernel.Error.current(operation: "setgid")
+        guard setegid(gid.rawValue) == 0 else {
+            throw ISO_9945.Kernel.Error.current(operation: "setegid")
         }
     }
 }
