@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
     /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.isInterrupted` and retry if appropriate.
+    /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to write to.
@@ -92,7 +92,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
     /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.isInterrupted` and retry if appropriate.
+    /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to write to.

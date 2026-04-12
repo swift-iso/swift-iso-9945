@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
     /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.isInterrupted` and retry if appropriate.
+    /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
     /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.isInterrupted` and retry if appropriate.
+    /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
@@ -97,7 +97,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
     /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.isInterrupted` and retry if appropriate.
+    /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
@@ -124,7 +124,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
     /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.isInterrupted` and retry if appropriate.
+    /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
