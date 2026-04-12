@@ -17,12 +17,11 @@ extension ISO_9945.Kernel.Socket {
 // MARK: - Receive Operations
 
 extension ISO_9945.Kernel.Socket.Receive {
-    /// Receives data from a connected socket.
+    /// Receives data from a connected socket into a mutable span.
     ///
     /// - Parameters:
     ///   - descriptor: The socket descriptor (must be connected).
-    ///   - buffer: Pointer to the buffer to receive into.
-    ///   - length: Maximum number of bytes to receive.
+    ///   - span: The mutable span to receive into.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, or 0 for EOF.
     /// - Throws: `Kernel.Socket.Error` on failure.
@@ -34,59 +33,62 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
     public static func receive(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
-        buffer: UnsafeMutableRawPointer,
-        length: Int,
+        into span: inout MutableSpan<UInt8>,
         options: Kernel.Socket.Message.Options = []
     ) throws(Kernel.Socket.Error) -> Int {
-        let result = unsafe Darwin_or_Glibc_recv(
-            descriptor._rawValue,
-            buffer,
-            length,
-            options.rawValue
-        )
-
-        guard result >= 0 else {
-            throw Kernel.Socket.Error.current()
+        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Kernel.Socket.Error) -> Int in
+            guard let base = buffer.baseAddress else { return 0 }
+            let result = unsafe Darwin_or_Glibc_recv(
+                descriptor._rawValue,
+                base,
+                buffer.count,
+                options.rawValue
+            )
+            guard result >= 0 else {
+                throw Kernel.Socket.Error.current()
+            }
+            return result
         }
-
-        return result
     }
 
-    /// Receives data and the sender's address (for connectionless sockets).
+    /// Receives data and the sender's address into a mutable span.
     ///
     /// - Parameters:
     ///   - descriptor: The socket descriptor.
-    ///   - buffer: Pointer to the buffer to receive into.
-    ///   - length: Maximum number of bytes to receive.
+    ///   - span: The mutable span to receive into.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, the sender's address, and address length.
     /// - Throws: `Kernel.Socket.Error` on failure.
     public static func from(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
-        buffer: UnsafeMutableRawPointer,
-        length: Int,
+        into span: inout MutableSpan<UInt8>,
         options: Kernel.Socket.Message.Options = []
     ) throws(Kernel.Socket.Error) -> (count: Int, address: Kernel.Socket.Address.Storage, addressLength: UInt32) {
-        var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
+        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Kernel.Socket.Error) -> (count: Int, address: Kernel.Socket.Address.Storage, addressLength: UInt32) in
+            guard let base = buffer.baseAddress else {
+                return (count: 0, address: Kernel.Socket.Address.Storage(), addressLength: 0)
+            }
+            var storage = Kernel.Socket.Address.Storage()
+            var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
 
-        let count = storage.withUnsafeMutableBytes { ptr, _ in
-            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe recvfrom(
-                descriptor._rawValue,
-                buffer,
-                length,
-                options.rawValue,
-                sockaddrPtr,
-                &addrLen
-            )
+            let count = storage.withUnsafeMutableBytes { ptr, _ in
+                let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+                return unsafe recvfrom(
+                    descriptor._rawValue,
+                    base,
+                    buffer.count,
+                    options.rawValue,
+                    sockaddrPtr,
+                    &addrLen
+                )
+            }
+
+            guard count >= 0 else {
+                throw Kernel.Socket.Error.current()
+            }
+
+            return (count: count, address: storage, addressLength: addrLen)
         }
-
-        guard count >= 0 else {
-            throw Kernel.Socket.Error.current()
-        }
-
-        return (count: count, address: storage, addressLength: addrLen)
     }
 
     /// Receives a message with full control over headers and ancillary data.

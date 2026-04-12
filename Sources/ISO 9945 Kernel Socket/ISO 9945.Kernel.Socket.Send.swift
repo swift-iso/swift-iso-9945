@@ -17,12 +17,11 @@ extension ISO_9945.Kernel.Socket {
 // MARK: - Send Operations
 
 extension ISO_9945.Kernel.Socket.Send {
-    /// Sends data on a connected socket.
+    /// Sends data from a span on a connected socket.
     ///
     /// - Parameters:
     ///   - descriptor: The socket descriptor (must be connected).
-    ///   - buffer: Pointer to the data to send.
-    ///   - length: Number of bytes to send.
+    ///   - span: The data to send.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `Kernel.Socket.Error` on failure.
@@ -35,30 +34,29 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
     public static func send(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
-        buffer: UnsafeRawPointer,
-        length: Int,
+        from span: Span<UInt8>,
         options: Kernel.Socket.Message.Options = []
     ) throws(Kernel.Socket.Error) -> Int {
-        let result = unsafe Darwin_or_Glibc_send(
-            descriptor._rawValue,
-            buffer,
-            length,
-            options.rawValue
-        )
-
-        guard result >= 0 else {
-            throw Kernel.Socket.Error.current()
+        try unsafe span.withUnsafeBytes { buffer throws(Kernel.Socket.Error) -> Int in
+            guard let base = buffer.baseAddress else { return 0 }
+            let result = unsafe Darwin_or_Glibc_send(
+                descriptor._rawValue,
+                base,
+                buffer.count,
+                options.rawValue
+            )
+            guard result >= 0 else {
+                throw Kernel.Socket.Error.current()
+            }
+            return result
         }
-
-        return result
     }
 
-    /// Sends data to a specific address (for connectionless sockets).
+    /// Sends data from a span to a specific address (for connectionless sockets).
     ///
     /// - Parameters:
     ///   - descriptor: The socket descriptor.
-    ///   - buffer: Pointer to the data to send.
-    ///   - length: Number of bytes to send.
+    ///   - span: The data to send.
     ///   - options: Message flags (default: none).
     ///   - address: The destination address.
     ///   - addressLength: The size of the destination address.
@@ -66,29 +64,29 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - Throws: `Kernel.Socket.Error` on failure.
     public static func to(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
-        buffer: UnsafeRawPointer,
-        length: Int,
+        from span: Span<UInt8>,
         options: Kernel.Socket.Message.Options = [],
         address: Kernel.Socket.Address.Storage,
         addressLength: UInt32
     ) throws(Kernel.Socket.Error) -> Int {
-        let result = address.withUnsafeBytes { ptr, _ in
-            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe sendto(
-                descriptor._rawValue,
-                buffer,
-                length,
-                options.rawValue,
-                sockaddrPtr,
-                socklen_t(addressLength)
-            )
+        try unsafe span.withUnsafeBytes { buffer throws(Kernel.Socket.Error) -> Int in
+            guard let base = buffer.baseAddress else { return 0 }
+            let result = address.withUnsafeBytes { ptr, _ in
+                let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+                return unsafe sendto(
+                    descriptor._rawValue,
+                    base,
+                    buffer.count,
+                    options.rawValue,
+                    sockaddrPtr,
+                    socklen_t(addressLength)
+                )
+            }
+            guard result >= 0 else {
+                throw Kernel.Socket.Error.current()
+            }
+            return result
         }
-
-        guard result >= 0 else {
-            throw Kernel.Socket.Error.current()
-        }
-
-        return result
     }
 
     /// Sends a message with full control over headers and ancillary data.

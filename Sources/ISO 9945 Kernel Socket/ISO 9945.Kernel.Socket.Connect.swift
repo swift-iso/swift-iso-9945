@@ -1,5 +1,6 @@
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Socket_Primitives
+import ISO_9945_Kernel_Poll
 
 #if canImport(Darwin)
     internal import Darwin
@@ -74,6 +75,45 @@ extension ISO_9945.Kernel.Socket.Connect {
         try connect(descriptor, address: address.storage, length: UInt32(MemoryLayout<sockaddr_un>.size))
     }
 }
+
+// MARK: - Await Completion (poll-based)
+
+extension ISO_9945.Kernel.Socket.Connect {
+    /// Waits for an in-progress connection to complete via poll + SO_ERROR.
+    ///
+    /// Called after `connect()` returns EINTR or EINPROGRESS. Blocks until
+    /// the connection completes or fails.
+    ///
+    /// Per POSIX: when `connect()` is interrupted, the connection attempt
+    /// continues asynchronously. Recovery requires polling for writability,
+    /// then checking the socket error to determine the outcome.
+    ///
+    /// - Parameter descriptor: The socket descriptor with in-progress connection.
+    /// - Throws: `Kernel.Socket.Error` if the connection failed.
+    public static func awaitCompletion(
+        _ descriptor: borrowing Kernel.Socket.Descriptor
+    ) throws(Kernel.Socket.Error) {
+        var entries = [Kernel.Poll.Entry(descriptor: descriptor._rawValue, requested: .output)]
+
+        while true {
+            do {
+                let ready = try Kernel.Poll.poll(&entries, timeout: -1)
+                if ready > 0 { break }
+            } catch where error.code.isInterrupted {
+                continue
+            } catch {
+                throw .platform(error)
+            }
+        }
+
+        let code = try Kernel.Socket.getError(descriptor)
+        guard code == .posix(0) else {
+            throw .platform(Kernel.Error(code: code))
+        }
+    }
+}
+
+// MARK: - Platform disambiguation
 
 private func Darwin_or_Glibc_connect(_ fd: Int32, _ addr: UnsafePointer<sockaddr>, _ len: socklen_t) -> Int32 {
     #if canImport(Darwin)
