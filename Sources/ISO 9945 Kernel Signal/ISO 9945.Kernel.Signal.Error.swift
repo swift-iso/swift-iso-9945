@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.Signal.Error {
     /// with EINTR as the underlying POSIX error code.
     public var isInterrupted: Bool {
         if case .interrupted = self { return true }
-        if let code, code.posix == EINTR { return true }
+        if let code, code.isInterrupted { return true }
         return false
     }
 

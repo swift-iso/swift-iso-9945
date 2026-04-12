@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.Process.Error {
     ///
     /// Derived from code, not a separate case.
     public var isInterrupted: Bool {
-        code.posix == EINTR
+        code.isInterrupted
     }
 
     /// Semantic meaning of the error, if mappable.
