@@ -48,23 +48,27 @@ extension ISO_9945.Kernel.IO.Vector {
             self.base = unsafe base
             self.length = length
         }
+    }
+}
 
-        /// Creates a segment from a mutable raw buffer pointer.
-        @unsafe
-        public init(_ buffer: UnsafeMutableRawBufferPointer) {
-            self.base = unsafe buffer.baseAddress
-            self.length = buffer.count
-        }
+// MARK: - Convenience Initializers
 
-        /// Creates a read-only segment from a raw buffer pointer.
-        ///
-        /// The base pointer is cast to mutable for kernel ABI compatibility;
-        /// the kernel does not write to segments used in write operations.
-        @unsafe
-        public init(_ buffer: UnsafeRawBufferPointer) {
-            self.base = unsafe UnsafeMutableRawPointer(mutating: buffer.baseAddress)
-            self.length = buffer.count
-        }
+extension ISO_9945.Kernel.IO.Vector.Segment {
+    /// Creates a segment from a mutable raw buffer pointer.
+    @unsafe
+    public init(_ buffer: UnsafeMutableRawBufferPointer) {
+        self.base = unsafe buffer.baseAddress
+        self.length = buffer.count
+    }
+
+    /// Creates a read-only segment from a raw buffer pointer.
+    ///
+    /// The base pointer is cast to mutable for kernel ABI compatibility;
+    /// the kernel does not write to segments used in write operations.
+    @unsafe
+    public init(_ buffer: UnsafeRawBufferPointer) {
+        self.base = unsafe UnsafeMutableRawPointer(mutating: buffer.baseAddress)
+        self.length = buffer.count
     }
 }
 
