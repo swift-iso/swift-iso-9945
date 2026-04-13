@@ -54,6 +54,62 @@ static inline void *iso9945_RTLD_NEXT(void) {
 // MARK: - Darwin-specific POSIX workarounds
 // ===----------------------------------------------------------------------===//
 
+// ===----------------------------------------------------------------------===//
+// MARK: - Glob / Fnmatch (POSIX Issue 8)
+// ===----------------------------------------------------------------------===//
+
+// _GNU_SOURCE is required on glibc to expose FNM_CASEFOLD (POSIX Issue 8).
+// Darwin exposes it unconditionally. Musl does not implement it yet.
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
+#include <fnmatch.h>
+#include <glob.h>
+
+// fnmatch constants
+static inline int iso9945_fnm_pathname(void) { return FNM_PATHNAME; }
+static inline int iso9945_fnm_noescape(void) { return FNM_NOESCAPE; }
+static inline int iso9945_fnm_period(void)   { return FNM_PERIOD; }
+
+#ifdef FNM_CASEFOLD
+static inline int iso9945_fnm_casefold(void) { return FNM_CASEFOLD; }
+#else
+static inline int iso9945_fnm_casefold(void) { return 0; }
+#endif
+
+// fnmatch function
+static inline int iso9945_fnmatch(const char *pattern, const char *string, int flags) {
+    return fnmatch(pattern, string, flags);
+}
+
+// glob constants
+static inline int iso9945_glob_err(void)      { return GLOB_ERR; }
+static inline int iso9945_glob_mark(void)     { return GLOB_MARK; }
+static inline int iso9945_glob_nosort(void)   { return GLOB_NOSORT; }
+static inline int iso9945_glob_nocheck(void)  { return GLOB_NOCHECK; }
+static inline int iso9945_glob_noescape(void) { return GLOB_NOESCAPE; }
+
+// glob error codes
+static inline int iso9945_glob_nomatch(void)  { return GLOB_NOMATCH; }
+static inline int iso9945_glob_nospace(void)  { return GLOB_NOSPACE; }
+static inline int iso9945_glob_aborted(void)  { return GLOB_ABORTED; }
+
+// glob function
+static inline int iso9945_glob(const char *pattern, int flags,
+                               int (*errfunc)(const char *, int),
+                               glob_t *pglob) {
+    return glob(pattern, flags, errfunc, pglob);
+}
+
+static inline void iso9945_globfree(glob_t *pglob) {
+    globfree(pglob);
+}
+
+// ===----------------------------------------------------------------------===//
+// MARK: - Darwin-specific POSIX workarounds
+// ===----------------------------------------------------------------------===//
+
 #if defined(__APPLE__)
 
 #include <sys/mman.h>

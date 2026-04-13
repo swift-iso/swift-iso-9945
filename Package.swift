@@ -88,6 +88,12 @@ let package = Package(
             targets: ["ISO 9945 Kernel Poll"]
         ),
 
+        // MARK: - Glob
+        .library(
+            name: "ISO 9945 Glob",
+            targets: ["ISO 9945 Glob"]
+        ),
+
         // MARK: - Loader
         .library(
             name: "ISO 9945 Loader",
@@ -326,6 +332,17 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Glob
+
+        .target(
+            name: "ISO 9945 Glob",
+            dependencies: [
+                "ISO 9945 Core",
+                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .product(name: "Kernel Path Primitives", package: "swift-kernel-primitives"),
+            ]
+        ),
+
         // MARK: - Umbrella
 
         .target(
@@ -406,6 +423,7 @@ let package = Package(
             name: "ISO 9945 Kernel Tests",
             dependencies: [
                 "ISO 9945 Kernel",
+                "ISO 9945 Glob",
                 "ISO 9945 Kernel Test Support",
             ]
         ),

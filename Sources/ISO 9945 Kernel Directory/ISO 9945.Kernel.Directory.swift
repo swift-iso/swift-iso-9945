@@ -112,7 +112,7 @@ extension ISO_9945.Kernel.Directory.Stream {
                 while length < bufferSize && (unsafe bytes[length]) != 0 {
                     length += 1
                 }
-                return unsafe Array(UnsafeBufferPointer(start: bytes, count: length))
+                return unsafe Array(UnsafeBufferPointer(start: bytes, count: length + 1))
             }
         }
 
