@@ -32,17 +32,17 @@ extension ISO_9945.Kernel.File.Times {
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
     /// - Throws: `Kernel.File.Times.Error` on failure.
 
-    public static func setTimes(
-        path: borrowing Kernel.Path.View,
-        accessTime: Kernel.Time,
-        modificationTime: Kernel.Time,
+    public static func set(
+        access accessTime: Kernel.Time,
+        modification modificationTime: Kernel.Time,
+        at path: borrowing Kernel.Path.View,
         followSymlinks: Bool = true
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
-            try unsafe _setTimes(
+            try unsafe _set(
+                access: accessTime,
+                modification: modificationTime,
                 path: cString,
-                accessTime: accessTime,
-                modificationTime: modificationTime,
                 followSymlinks: followSymlinks
             )
         }
@@ -57,10 +57,10 @@ extension ISO_9945.Kernel.File.Times {
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
     /// - Throws: `Kernel.File.Times.Error` on failure.
     @usableFromInline
-    internal static func _setTimes(
+    internal static func _set(
+        access accessTime: Kernel.Time,
+        modification modificationTime: Kernel.Time,
         path: UnsafePointer<Path.Char>,
-        accessTime: Kernel.Time,
-        modificationTime: Kernel.Time,
         followSymlinks: Bool = true
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
@@ -96,10 +96,10 @@ extension ISO_9945.Kernel.File.Times {
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     /// - Throws: `Kernel.File.Times.Error` on failure.
-    public static func setTimes(
-        _ descriptor: borrowing Kernel.Descriptor,
-        accessTime: Kernel.Time,
-        modificationTime: Kernel.Time
+    public static func set(
+        access accessTime: Kernel.Time,
+        modification modificationTime: Kernel.Time,
+        on descriptor: borrowing Kernel.Descriptor
     ) throws(Error) {
         var times = [timespec](repeating: timespec(), count: 2)
 
