@@ -67,3 +67,51 @@ extension ISO_9945.Kernel.Socket.Name {
         return (address: storage, length: addrLen)
     }
 }
+
+// MARK: - Name queries on Kernel.Descriptor
+
+extension ISO_9945.Kernel.Socket.Name {
+    /// Gets the local address of a socket.
+    ///
+    /// Overload on `borrowing Kernel.Descriptor` for consumers storing the
+    /// socket as a generic descriptor.
+    public static func local(
+        _ descriptor: borrowing Kernel.Descriptor
+    ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: UInt32) {
+        var storage = Kernel.Socket.Address.Storage()
+        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
+
+        let rc = storage.withUnsafeMutableBytes { ptr, _ in
+            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+            return unsafe getsockname(descriptor._rawValue, sockaddrPtr, &addrLen)
+        }
+
+        guard rc == 0 else {
+            throw Kernel.Socket.Error.current()
+        }
+
+        return (address: storage, length: addrLen)
+    }
+
+    /// Gets the remote address of a connected socket.
+    ///
+    /// Overload on `borrowing Kernel.Descriptor` for consumers storing the
+    /// socket as a generic descriptor.
+    public static func peer(
+        _ descriptor: borrowing Kernel.Descriptor
+    ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: UInt32) {
+        var storage = Kernel.Socket.Address.Storage()
+        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
+
+        let rc = storage.withUnsafeMutableBytes { ptr, _ in
+            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+            return unsafe getpeername(descriptor._rawValue, sockaddrPtr, &addrLen)
+        }
+
+        guard rc == 0 else {
+            throw Kernel.Socket.Error.current()
+        }
+
+        return (address: storage, length: addrLen)
+    }
+}

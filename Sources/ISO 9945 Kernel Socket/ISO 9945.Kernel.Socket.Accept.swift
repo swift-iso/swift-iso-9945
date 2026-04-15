@@ -70,3 +70,37 @@ private func Darwin_or_Glibc_accept(_ fd: Int32, _ addr: UnsafeMutablePointer<so
         unsafe Musl.accept(fd, addr, len)
     #endif
 }
+
+// MARK: - Accept on Kernel.Descriptor
+
+extension ISO_9945.Kernel.Socket.Accept {
+    /// Accepts an incoming connection on a listening socket.
+    ///
+    /// Overload on `borrowing Kernel.Descriptor` for consumers storing a
+    /// listening socket as a generic descriptor. The returned
+    /// `Kernel.Socket.Accept.Result` still carries a typed
+    /// `Kernel.Socket.Descriptor` for the new connection — socket typing
+    /// resurfaces at the result boundary where socket semantics (address
+    /// family, peer tracking) matter.
+    public static func accept(
+        _ descriptor: borrowing Kernel.Descriptor
+    ) throws(Kernel.Socket.Error) -> Result {
+        var storage = Kernel.Socket.Address.Storage()
+        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
+
+        let fd = storage.withUnsafeMutableBytes { ptr, _ in
+            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+            return unsafe Darwin_or_Glibc_accept(descriptor._rawValue, sockaddrPtr, &addrLen)
+        }
+
+        guard fd >= 0 else {
+            throw Kernel.Socket.Error.current()
+        }
+
+        return Result(
+            descriptor: Kernel.Socket.Descriptor(_rawValue: fd),
+            address: storage,
+            length: addrLen
+        )
+    }
+}

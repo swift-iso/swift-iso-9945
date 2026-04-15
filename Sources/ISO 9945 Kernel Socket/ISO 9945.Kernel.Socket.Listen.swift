@@ -49,3 +49,23 @@ private func Darwin_or_Glibc_listen(_ fd: Int32, _ backlog: Int32) -> Int32 {
         unsafe Musl.listen(fd, backlog)
     #endif
 }
+
+// MARK: - Listen on Kernel.Descriptor
+
+extension ISO_9945.Kernel.Socket.Listen {
+    /// Marks a socket as a passive socket for accepting connections.
+    ///
+    /// Overload on `borrowing Kernel.Descriptor` for consumers storing a
+    /// listening socket as a generic descriptor. Body is identical to the
+    /// `Kernel.Socket.Descriptor` overload modulo the parameter type.
+    public static func listen(
+        _ descriptor: borrowing Kernel.Descriptor,
+        backlog: Kernel.Socket.Backlog = .max
+    ) throws(Kernel.Socket.Error) {
+        let rc = unsafe Darwin_or_Glibc_listen(descriptor._rawValue, backlog.rawValue)
+
+        guard rc == 0 else {
+            throw Kernel.Socket.Error.current()
+        }
+    }
+}
