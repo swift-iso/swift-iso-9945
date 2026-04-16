@@ -30,24 +30,6 @@ static inline int iso9945_ioctl_tiocgwinsz(int fd, struct winsize *ws) {
     return ioctl(fd, TIOCGWINSZ, ws);
 }
 
-// ===----------------------------------------------------------------------===//
-// MARK: - Dynamic Loading Sentinels (C macros)
-// ===----------------------------------------------------------------------===//
-
-#include <dlfcn.h>
-
-/// RTLD_DEFAULT — search default symbol scope.
-/// This is a C macro (typically ((void *)0)), not importable by Swift.
-static inline void *iso9945_RTLD_DEFAULT(void) {
-    return RTLD_DEFAULT;
-}
-
-/// RTLD_NEXT — search next shared object in load order.
-/// This is a C macro, not importable by Swift.
-static inline void *iso9945_RTLD_NEXT(void) {
-    return RTLD_NEXT;
-}
-
 #endif /* __APPLE__ || __linux__ || __OpenBSD__ */
 
 // ===----------------------------------------------------------------------===//
