@@ -53,17 +53,6 @@ extension ISO_9945.Kernel.System {
         return System.Processor.Count(__unchecked: (), Cardinal(UInt(count > 0 ? count : 1)))
     }
 
-    /// Sleeps for the specified number of nanoseconds.
-    ///
-    /// - Parameter nanoseconds: The number of nanoseconds to sleep.
-
-    public static func sleep(nanoseconds: UInt64) {
-        var ts = timespec()
-        ts.tv_sec = Int(nanoseconds / 1_000_000_000)
-        ts.tv_nsec = Int(nanoseconds % 1_000_000_000)
-        unsafe nanosleep(&ts, nil)
-    }
-
     /// Sleeps for the specified duration.
     ///
     /// - Parameter duration: The duration to sleep.
