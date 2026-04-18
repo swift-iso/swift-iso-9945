@@ -18,12 +18,10 @@
 extension Clock.Continuous: _Concurrency.Clock {
     /// The current instant according to the continuous clock.
     ///
-    /// Uses `Kernel.Clock.Continuous.now()` which wraps:
+    /// Delegates directly to `Kernel.Clock.Continuous.now()`, which wraps:
     /// - Darwin: `clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)`
     /// - Linux: `clock_gettime(CLOCK_BOOTTIME)`
-    public var now: Instant {
-        Instant(nanoseconds: Kernel.Clock.Continuous.now())
-    }
+    public var now: Instant { Kernel.Clock.Continuous.now() }
 
     /// The current instant according to the continuous clock (static convenience).
     public static var now: Instant { Self().now }
@@ -36,8 +34,7 @@ extension Clock.Continuous: _Concurrency.Clock {
     /// - Throws: `CancellationError` if the task is cancelled.
     nonisolated(nonsending)
     public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError) {
-        let target = deadline.nanoseconds
-        while Kernel.Clock.Continuous.now() < target {
+        while Kernel.Clock.Continuous.now() < deadline {
             do {
                 try Task.checkCancellation()
                 try await Task.sleep(for: .nanoseconds(1_000_000)) // 1ms granularity
@@ -55,12 +52,10 @@ extension Clock.Continuous: _Concurrency.Clock {
 extension Clock.Suspending: _Concurrency.Clock {
     /// The current instant according to the suspending clock.
     ///
-    /// Uses `Kernel.Clock.Suspending.now()` which wraps:
+    /// Delegates directly to `Kernel.Clock.Suspending.now()`, which wraps:
     /// - Darwin: `clock_gettime_nsec_np(CLOCK_UPTIME_RAW)`
     /// - Linux: `clock_gettime(CLOCK_MONOTONIC)`
-    public var now: Instant {
-        Instant(nanoseconds: Kernel.Clock.Suspending.now())
-    }
+    public var now: Instant { Kernel.Clock.Suspending.now() }
 
     /// The current instant according to the suspending clock (static convenience).
     public static var now: Instant { Self().now }
@@ -73,8 +68,7 @@ extension Clock.Suspending: _Concurrency.Clock {
     /// - Throws: `CancellationError` if the task is cancelled.
     nonisolated(nonsending)
     public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError) {
-        let target = deadline.nanoseconds
-        while Kernel.Clock.Suspending.now() < target {
+        while Kernel.Clock.Suspending.now() < deadline {
             do {
                 try Task.checkCancellation()
                 try await Task.sleep(for: .nanoseconds(1_000_000)) // 1ms granularity

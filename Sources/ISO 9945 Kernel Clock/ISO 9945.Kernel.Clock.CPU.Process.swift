@@ -27,7 +27,16 @@ extension Kernel.Clock.CPU {
 }
 
 extension Kernel.Clock.CPU.Process {
-    /// Returns the process-wide CPU time consumed so far, in nanoseconds.
+    /// A phantom-tagged instant on the process-wide CPU clock.
+    ///
+    /// Type-distinct from `Clock.Continuous.Instant` and
+    /// `Clock.Suspending.Instant`: mixing CPU-time with wall-clock time
+    /// is a compile error.
+    public typealias Instant = Tagged<Kernel.Clock.CPU.Process, Clock.Nanoseconds>
+}
+
+extension Kernel.Clock.CPU.Process {
+    /// Returns the current instant on the process-wide CPU clock.
     ///
     /// Wraps `clock_gettime(CLOCK_PROCESS_CPUTIME_ID)`. Available on all
     /// Darwin versions this ecosystem targets and on glibc-based Linux
@@ -46,12 +55,14 @@ extension Kernel.Clock.CPU.Process {
     /// let before = Kernel.Clock.CPU.Process.now()
     /// try await Task.sleep(for: .milliseconds(50))
     /// let after = Kernel.Clock.CPU.Process.now()
-    /// // `after - before` is nanoseconds of CPU consumed during the sleep.
-    /// // If no thread is working, expect ~0; a hot-spinning thread shows ~50ms.
+    /// let delta: Duration = after - before
+    /// // If no thread is working, expect ~.zero;
+    /// // a hot-spinning thread shows ~.milliseconds(50).
     /// ```
-    public static func now() -> UInt64 {
+    public static func now() -> Instant {
         var ts = timespec()
         _ = unsafe clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts)
-        return UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+        let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+        return Instant(nanoseconds: ns)
     }
 }
