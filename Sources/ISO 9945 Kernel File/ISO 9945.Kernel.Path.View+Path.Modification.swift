@@ -1,0 +1,44 @@
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
+
+// MARK: - POSIX Modification Conformance
+
+// Appending inserts a single POSIX separator `/` between `view` and `other`
+// unless `view` already ends with one. See `+Path.Decomposition.swift` for
+// the decomposition half of the split.
+
+extension Path.View: @retroactive Path.Modification {
+    @inlinable
+    public static func appending(
+        _ view: borrowing Path.View,
+        _ other: borrowing Path.View
+    ) -> Path {
+        let selfEndsWithSep: Bool = if view.count > 0 {
+            unsafe view.pointer[view.count - 1] == 0x2F
+        } else {
+            false
+        }
+        let separatorSize = selfEndsWithSep ? 0 : 1
+        let totalCount = view.count + separatorSize + other.count
+
+        let buffer = UnsafeMutablePointer<Path.Char>.allocate(capacity: totalCount + 1)
+        unsafe buffer.initialize(from: view.pointer, count: view.count)
+        var offset = view.count
+        if !selfEndsWithSep {
+            (unsafe buffer)[offset] = 0x2F
+            offset += 1
+        }
+        unsafe (buffer + offset).initialize(from: other.pointer, count: other.count)
+        (unsafe buffer)[totalCount] = 0
+
+        return unsafe Path(adopting: buffer, count: totalCount)
+    }
+}

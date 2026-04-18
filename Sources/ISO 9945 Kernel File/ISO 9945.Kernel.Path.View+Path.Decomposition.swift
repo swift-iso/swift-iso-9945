@@ -9,16 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - POSIX Conformance
+// MARK: - POSIX Decomposition Conformance
 
 // POSIX path separator: '/' (U+002F).
 //
-// Decomposition delegates to `Path.Scan.lastSeparatorIndex` for the byte
-// scan; branching (root handling, sub-span construction) is POSIX-specific
-// and lives here. Appending inserts a single separator between `view` and
-// `other` unless `view` already ends with one.
+// parent and component delegate to `Path.Scan.lastSeparatorIndex` for the
+// byte scan; branching (root handling, sub-span construction) is POSIX-specific
+// and lives here. See `ISO 9945.Kernel.Path.View+Path.Modification.swift`
+// for the appending half of the split.
 
-extension Path.View: @retroactive Path.`Protocol` {
+extension Path.View: @retroactive Path.Decomposition {
     public typealias Char = Path.Char
 
     @inlinable
@@ -58,31 +58,5 @@ extension Path.View: @retroactive Path.`Protocol` {
             Span(_unsafeStart: view.pointer + offset, count: view.count - offset),
             copying: view
         )
-    }
-
-    @inlinable
-    public static func appending(
-        _ view: borrowing Path.View,
-        _ other: borrowing Path.View
-    ) -> Path {
-        let selfEndsWithSep: Bool = if view.count > 0 {
-            unsafe view.pointer[view.count - 1] == 0x2F
-        } else {
-            false
-        }
-        let separatorSize = selfEndsWithSep ? 0 : 1
-        let totalCount = view.count + separatorSize + other.count
-
-        let buffer = UnsafeMutablePointer<Path.Char>.allocate(capacity: totalCount + 1)
-        unsafe buffer.initialize(from: view.pointer, count: view.count)
-        var offset = view.count
-        if !selfEndsWithSep {
-            (unsafe buffer)[offset] = 0x2F
-            offset += 1
-        }
-        unsafe (buffer + offset).initialize(from: other.pointer, count: other.count)
-        (unsafe buffer)[totalCount] = 0
-
-        return unsafe Path(adopting: buffer, count: totalCount)
     }
 }
