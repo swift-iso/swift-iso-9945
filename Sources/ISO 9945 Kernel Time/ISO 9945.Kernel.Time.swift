@@ -40,22 +40,27 @@ extension ISO_9945.Kernel.Time {
         #endif
     }
 
-    /// Gets the current wall-clock time as seconds since Unix epoch.
+    /// Gets the current wall-clock time as a typed `Kernel.Time`.
     ///
-    /// Uses `CLOCK_REALTIME` which tracks real-world time. Subject to
-    /// NTP adjustments and manual clock changes — NOT suitable for
+    /// Uses `clock_gettime(CLOCK_REALTIME, ...)` which tracks real-world time.
+    /// Subject to NTP adjustments and manual clock changes — NOT suitable for
     /// elapsed time measurement. Use for timestamps and record-keeping.
     ///
-    /// - Returns: Seconds since 1970-01-01 00:00:00 UTC (with microsecond precision).
-    public static func realtimeEpochSeconds() -> Double {
+    /// - Returns: The current wall-clock reading as seconds and nanoseconds
+    ///   since 1970-01-01 00:00:00 UTC (nanosecond precision).
+    public static func realtime() -> Kernel.Time {
         #if canImport(Darwin)
-            var tv = Darwin.timeval()
+            var ts = Darwin.timespec()
         #elseif canImport(Musl)
-            var tv = Musl.timeval()
+            var ts = Musl.timespec()
         #elseif canImport(Glibc)
-            var tv = Glibc.timeval()
+            var ts = Glibc.timespec()
         #endif
-        unsafe gettimeofday(&tv, nil)
-        return Double(tv.tv_sec) + Double(tv.tv_usec) / 1_000_000.0
+        unsafe clock_gettime(CLOCK_REALTIME, &ts)
+        return Kernel.Time(
+            __unchecked: (),
+            secondsSinceUnixEpoch: Int64(ts.tv_sec),
+            nanosecondFraction: Int32(ts.tv_nsec)
+        )
     }
 }
