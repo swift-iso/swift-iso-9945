@@ -13,8 +13,9 @@
 
 // POSIX path separator: '/' (U+002F).
 //
-// Decomposition scans the view's bytes for the last occurrence of the
-// separator. Appending inserts a single separator between `view` and
+// Decomposition delegates to `Path.Scan.lastSeparatorIndex` for the byte
+// scan; branching (root handling, sub-span construction) is POSIX-specific
+// and lives here. Appending inserts a single separator between `view` and
 // `other` unless `view` already ends with one.
 
 extension Path.View: @retroactive Path.`Protocol` {
@@ -23,11 +24,10 @@ extension Path.View: @retroactive Path.`Protocol` {
     @inlinable
     @_lifetime(copy view)
     public static func parent(of view: borrowing Path.View) -> Span<Path.Char>? {
-        var lastSep = -1
-        for i in 0..<view.count {
-            if unsafe view.pointer[i] == 0x2F { lastSep = i }
-        }
-        guard lastSep >= 0 else { return nil }
+        guard let lastSep = Path.Scan.lastSeparatorIndex(
+            in: view.span,
+            primary: 0x2F
+        ) else { return nil }
         // Root "/" — parent of the root is the root itself, but we return
         // nil to signal "no further parent exists."
         if lastSep == 0 && view.count == 1 { return nil }
@@ -43,12 +43,11 @@ extension Path.View: @retroactive Path.`Protocol` {
     @inlinable
     @_lifetime(copy view)
     public static func component(of view: borrowing Path.View) -> Span<Path.Char> {
-        var lastSep = -1
-        for i in 0..<view.count {
-            if unsafe view.pointer[i] == 0x2F { lastSep = i }
-        }
-        // No separator → full view is the component.
-        guard lastSep >= 0 else {
+        guard let lastSep = Path.Scan.lastSeparatorIndex(
+            in: view.span,
+            primary: 0x2F
+        ) else {
+            // No separator → full view is the component.
             return unsafe _overrideLifetime(
                 Span(_unsafeStart: view.pointer, count: view.count),
                 copying: view
