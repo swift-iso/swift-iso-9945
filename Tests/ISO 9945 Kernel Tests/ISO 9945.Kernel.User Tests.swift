@@ -36,18 +36,18 @@ extension Kernel.User {
 // MARK: - Unit Tests
 
 extension Kernel.User.Test.Unit {
-    @Test("User namespace exists")
-    func namespaceExists() {
+    @Test
+    func `User namespace exists`() {
         _ = Kernel.User.self
     }
 
-    @Test("User is an enum")
-    func isEnum() {
+    @Test
+    func `User is an enum`() {
         let _: Kernel.User.Type = Kernel.User.self
     }
 
-    @Test("User.ID type exists")
-    func idTypeExists() {
+    @Test
+    func `User.ID type exists`() {
         let _: Kernel.User.ID.Type = Kernel.User.ID.self
     }
 }
@@ -55,14 +55,14 @@ extension Kernel.User.Test.Unit {
 // MARK: - User.ID Tests
 
 extension Kernel.User.Test.Unit {
-    @Test("User.ID from UInt32")
-    func idFromUInt32() {
+    @Test
+    func `User.ID from UInt32`() {
         let uid: Kernel.User.ID = 501
         #expect(uid == 501)
     }
 
-    @Test("User.ID root constant")
-    func rootConstant() {
+    @Test
+    func `User.ID root constant`() {
         let root = Kernel.User.ID.root
         #expect(root == 0)
     }
@@ -71,14 +71,14 @@ extension Kernel.User.Test.Unit {
 // MARK: - User.ID Conformance Tests
 
 extension Kernel.User.Test.Unit {
-    @Test("User.ID is Sendable")
-    func idIsSendable() {
+    @Test
+    func `User.ID is Sendable`() {
         let value: any Sendable = Kernel.User.ID.root
         #expect(value is Kernel.User.ID)
     }
 
-    @Test("User.ID is Equatable")
-    func idIsEquatable() {
+    @Test
+    func `User.ID is Equatable`() {
         let a: Kernel.User.ID = 501
         let b: Kernel.User.ID = 501
         let c: Kernel.User.ID = 502
@@ -86,8 +86,8 @@ extension Kernel.User.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("User.ID is Hashable")
-    func idIsHashable() {
+    @Test
+    func `User.ID is Hashable`() {
         let id501: Kernel.User.ID = 501
         let id502: Kernel.User.ID = 502
         var set = Set<Kernel.User.ID>()
@@ -101,14 +101,14 @@ extension Kernel.User.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.User.Test.EdgeCase {
-    @Test("User.ID zero is root")
-    func zeroIsRoot() {
+    @Test
+    func `User.ID zero is root`() {
         let uid: Kernel.User.ID = 0
         #expect(uid == .root)
     }
 
-    @Test("User.ID rawValue roundtrip")
-    func rawValueRoundtrip() {
+    @Test
+    func `User.ID rawValue roundtrip`() {
         for value: UInt32 in [0, 1, 501, 65534, UInt32.max] {
             let uid = Kernel.User.ID(__unchecked: (), value)
             #expect(uid.rawValue == value)

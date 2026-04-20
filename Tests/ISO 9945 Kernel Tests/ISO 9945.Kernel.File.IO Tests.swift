@@ -28,8 +28,8 @@ import Testing
 
 @Suite("File I/O Integration")
 struct FileIOIntegrationTests {
-    @Test("open and close file")
-    func openAndClose() throws {
+    @Test
+    func `open and close file`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test")
 
         try ISO_9945.Kernel.Path.scope(pathString) { path in
@@ -52,8 +52,8 @@ struct FileIOIntegrationTests {
         }
     }
 
-    @Test("open nonexistent file throws")
-    func openNonexistent() throws {
+    @Test
+    func `open nonexistent file throws`() throws {
         let pathString = "/nonexistent/path/that/does/not/exist/file.txt"
 
         var threwError = false
@@ -72,8 +72,8 @@ struct FileIOIntegrationTests {
         #expect(threwError)
     }
 
-    @Test("write and read data")
-    func writeAndRead() throws {
+    @Test
+    func `write and read data`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-rw")
         let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]  // "Hello"
 
@@ -107,8 +107,8 @@ struct FileIOIntegrationTests {
         }
     }
 
-    @Test("read returns 0 on EOF")
-    func readEOF() throws {
+    @Test
+    func `read returns 0 on EOF`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-eof")
 
         try ISO_9945.Kernel.Path.scope(pathString) { path in
@@ -138,8 +138,8 @@ struct FileIOIntegrationTests {
 // MARK: - Edge Cases (Integration)
 
 extension FileIOIntegrationTests {
-    @Test("close invalid descriptor throws")
-    func closeInvalid() {
+    @Test
+    func `close invalid descriptor throws`() {
         var threwError = false
         do {
             try ISO_9945.Kernel.Close.close(.invalid)
@@ -149,8 +149,8 @@ extension FileIOIntegrationTests {
         #expect(threwError)
     }
 
-    @Test("read from invalid descriptor throws")
-    func readInvalid() {
+    @Test
+    func `read from invalid descriptor throws`() {
         var buffer = [UInt8](repeating: 0, count: 10)
         var threwError = false
         do {
@@ -163,8 +163,8 @@ extension FileIOIntegrationTests {
         #expect(threwError)
     }
 
-    @Test("write to invalid descriptor throws")
-    func writeInvalid() {
+    @Test
+    func `write to invalid descriptor throws`() {
         let data: [UInt8] = [1, 2, 3]
         var threwError = false
         do {

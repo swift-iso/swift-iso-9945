@@ -54,8 +54,8 @@
             return "/usr/bin/true"  // Fallback, may fail
         }
 
-        @Test("spawn with /usr/bin/true or /bin/true succeeds")
-        func spawnTrue() throws {
+        @Test
+        func `spawn with /usr/bin/true or /bin/true succeeds`() throws {
             let path = Self.findTruePath()
             let argv = [path]
             let envp: [Swift.String] = []
@@ -73,8 +73,8 @@
             #expect(result?.status.exit.code == 0, "true should exit with 0")
         }
 
-        @Test("spawn with invalid path throws ENOENT")
-        func spawnInvalidPath() throws {
+        @Test
+        func `spawn with invalid path throws ENOENT`() throws {
             let path = "/nonexistent/path/to/binary"
             let argv = [path]
             let envp: [Swift.String] = []
@@ -104,8 +104,8 @@
             }
         }
 
-        @Test("spawn passes arguments to program")
-        func spawnPassesArguments() throws {
+        @Test
+        func `spawn passes arguments to program`() throws {
             let path = "/bin/sh"
             let argv = ["/bin/sh", "-c", "exit 42"]
             let envp: [Swift.String] = []
@@ -122,8 +122,8 @@
             #expect(result?.status.exit.code == 42, "Shell should exit with code 42")
         }
 
-        @Test("spawn passes environment to program")
-        func spawnPassesEnvironment() throws {
+        @Test
+        func `spawn passes environment to program`() throws {
             // Use sh -c with direct variable expansion
             // The shell reads TEST_EXIT_CODE from its environment and uses it as exit code
             let path = "/bin/sh"

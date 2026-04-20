@@ -43,20 +43,20 @@ extension Kernel.Descriptor {
 // __checkBinaryOperation) which require Copyable.
 
 extension Kernel.Descriptor.Test.Unit {
-    @Test("invalid descriptor has correct raw value on POSIX")
-    func invalidDescriptorValue() {
+    @Test
+    func `invalid descriptor has correct raw value on POSIX`() {
         let invalidFd = Kernel.Descriptor.invalid._rawValue
         #expect(invalidFd == -1)
     }
 
-    @Test("isValid returns false for invalid descriptor")
-    func isValidFalseForInvalid() {
+    @Test
+    func `isValid returns false for invalid descriptor`() {
         let isValid = Kernel.Descriptor.invalid.isValid
         #expect(!isValid)
     }
 
-    @Test("isValid returns true for valid descriptor")
-    func isValidTrueForValid() throws {
+    @Test
+    func `isValid returns true for valid descriptor`() throws {
         // Open a real file so we have a definitively valid fd without
         // constructing Descriptor instances from well-known raw values
         // (e.g., 0/1/2 for stdin/stdout/stderr). Constructing a
@@ -69,8 +69,8 @@ extension Kernel.Descriptor.Test.Unit {
         #expect(fdIsValid)
     }
 
-    @Test("negative descriptors are invalid on POSIX")
-    func negativeDescriptorsInvalid() {
+    @Test
+    func `negative descriptors are invalid on POSIX`() {
         let minusOne = Kernel.Descriptor(_rawValue: -1).isValid
         let minusHundred = Kernel.Descriptor(_rawValue: -100).isValid
         let intMin = Kernel.Descriptor(_rawValue: Int32.min).isValid

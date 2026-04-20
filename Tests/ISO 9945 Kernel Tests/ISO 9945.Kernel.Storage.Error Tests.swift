@@ -37,13 +37,13 @@ extension Kernel.Storage.Error {
 // MARK: - Unit Tests
 
 extension Kernel.Storage.Error.Test.Unit {
-    @Test("Error type exists")
-    func typeExists() {
+    @Test
+    func `Error type exists`() {
         let _: Kernel.Storage.Error.Type = Kernel.Storage.Error.self
     }
 
-    @Test("exhausted case exists")
-    func exhaustedCase() {
+    @Test
+    func `exhausted case exists`() {
         let error = Kernel.Storage.Error.exhausted
         if case .exhausted = error {
             // Expected
@@ -52,8 +52,8 @@ extension Kernel.Storage.Error.Test.Unit {
         }
     }
 
-    @Test("quota case exists")
-    func quotaCase() {
+    @Test
+    func `quota case exists`() {
         let error = Kernel.Storage.Error.quota
         if case .quota = error {
             // Expected
@@ -66,20 +66,20 @@ extension Kernel.Storage.Error.Test.Unit {
 // MARK: - Conformance Tests
 
 extension Kernel.Storage.Error.Test.Unit {
-    @Test("Error conforms to Swift.Error")
-    func isError() {
+    @Test
+    func `Error conforms to Swift.Error`() {
         let error: any Swift.Error = Kernel.Storage.Error.exhausted
         #expect(error is Kernel.Storage.Error)
     }
 
-    @Test("Error is Sendable")
-    func isSendable() {
+    @Test
+    func `Error is Sendable`() {
         let value: any Sendable = Kernel.Storage.Error.exhausted
         #expect(value is Kernel.Storage.Error)
     }
 
-    @Test("Error is Equatable")
-    func isEquatable() {
+    @Test
+    func `Error is Equatable`() {
         let a = Kernel.Storage.Error.exhausted
         let b = Kernel.Storage.Error.exhausted
         let c = Kernel.Storage.Error.quota
@@ -87,8 +87,8 @@ extension Kernel.Storage.Error.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Error is Hashable")
-    func isHashable() {
+    @Test
+    func `Error is Hashable`() {
         var set = Set<Kernel.Storage.Error>()
         set.insert(.exhausted)
         set.insert(.quota)
@@ -100,14 +100,14 @@ extension Kernel.Storage.Error.Test.Unit {
 // MARK: - Description Tests
 
 extension Kernel.Storage.Error.Test.Unit {
-    @Test("exhausted description")
-    func exhaustedDescription() {
+    @Test
+    func `exhausted description`() {
         let error = Kernel.Storage.Error.exhausted
         #expect(error.description == "no space left on device")
     }
 
-    @Test("quota description")
-    func quotaDescription() {
+    @Test
+    func `quota description`() {
         let error = Kernel.Storage.Error.quota
         #expect(error.description == "disk quota exceeded")
     }
@@ -116,15 +116,15 @@ extension Kernel.Storage.Error.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Storage.Error.Test.EdgeCase {
-    @Test("All cases are distinct")
-    func allCasesDistinct() {
+    @Test
+    func `All cases are distinct`() {
         let cases: [Kernel.Storage.Error] = [.exhausted, .quota]
         let uniqueCases = Set(cases)
         #expect(uniqueCases.count == cases.count)
     }
 
-    @Test("CustomStringConvertible works for all cases")
-    func customStringConvertibleAllCases() {
+    @Test
+    func `CustomStringConvertible works for all cases`() {
         let cases: [Kernel.Storage.Error] = [.exhausted, .quota]
         for error in cases {
             let description = Swift.String(describing: error)

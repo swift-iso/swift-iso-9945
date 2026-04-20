@@ -37,15 +37,15 @@ extension Kernel.Lock {
 // MARK: - Range Unit Tests
 
 extension Kernel.Lock.Test.Unit {
-    @Test("Range.file is equatable")
-    func rangeFileEquatable() {
+    @Test
+    func `Range.file is equatable`() {
         let r1 = Kernel.Lock.Range.file
         let r2 = Kernel.Lock.Range.file
         #expect(r1 == r2)
     }
 
-    @Test("Range.bytes is equatable")
-    func rangeBytesEquatable() {
+    @Test
+    func `Range.bytes is equatable`() {
         let r1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(110))
         let r2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(110))
         let r3 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(20), end: Kernel.File.Offset(120))
@@ -54,16 +54,16 @@ extension Kernel.Lock.Test.Unit {
         #expect(r1 != r3)
     }
 
-    @Test("Range.file and Range.bytes are not equal")
-    func rangeFileVsBytes() {
+    @Test
+    func `Range.file and Range.bytes are not equal`() {
         let file = Kernel.Lock.Range.file
         let bytes = Kernel.Lock.Range.bytes(start: .zero, end: .zero)
 
         #expect(file != bytes)
     }
 
-    @Test("Range.bytes with length convenience")
-    func rangeBytesWithLength() {
+    @Test
+    func `Range.bytes with length convenience`() {
         let range = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(100), length: Kernel.File.Size(100))
         #expect(range == .bytes(start: Kernel.File.Offset(100), end: Kernel.File.Offset(200)))
     }
@@ -72,8 +72,8 @@ extension Kernel.Lock.Test.Unit {
 // MARK: - Kind Unit Tests
 
 extension Kernel.Lock.Test.Unit {
-    @Test("Kind.shared and Kind.exclusive")
-    func kindValues() {
+    @Test
+    func `Kind.shared and Kind.exclusive`() {
         let shared = Kernel.Lock.Kind.shared
         let exclusive = Kernel.Lock.Kind.exclusive
 
@@ -86,20 +86,20 @@ extension Kernel.Lock.Test.Unit {
 // MARK: - Acquire Unit Tests
 
 extension Kernel.Lock.Test.Unit {
-    @Test("Acquire.try case")
-    func acquireTry() {
+    @Test
+    func `Acquire.try case`() {
         let acquire = Kernel.Lock.Acquire.try
         #expect(acquire == .try)
     }
 
-    @Test("Acquire.wait case")
-    func acquireWait() {
+    @Test
+    func `Acquire.wait case`() {
         let acquire = Kernel.Lock.Acquire.wait
         #expect(acquire == .wait)
     }
 
-    @Test("Acquire.deadline case")
-    func acquireDeadline() {
+    @Test
+    func `Acquire.deadline case`() {
         let deadline = Clock.Continuous.now
         let acquire = Kernel.Lock.Acquire.deadline(deadline)
 
@@ -110,8 +110,8 @@ extension Kernel.Lock.Test.Unit {
         }
     }
 
-    @Test("Acquire is equatable")
-    func acquireEquatable() {
+    @Test
+    func `Acquire is equatable`() {
         #expect(Kernel.Lock.Acquire.try == .try)
         #expect(Kernel.Lock.Acquire.wait == .wait)
         #expect(Kernel.Lock.Acquire.try != .wait)
@@ -121,8 +121,8 @@ extension Kernel.Lock.Test.Unit {
 // MARK: - Hashable Tests
 
 extension Kernel.Lock.Test.Unit {
-    @Test("Range is hashable")
-    func rangeHashable() {
+    @Test
+    func `Range is hashable`() {
         var set = Set<Kernel.Lock.Range>()
         set.insert(.file)
         set.insert(.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(30)))
@@ -131,8 +131,8 @@ extension Kernel.Lock.Test.Unit {
         #expect(set.count == 2)
     }
 
-    @Test("Kind is hashable")
-    func kindHashable() {
+    @Test
+    func `Kind is hashable`() {
         var set = Set<Kernel.Lock.Kind>()
         set.insert(.shared)
         set.insert(.exclusive)
@@ -151,8 +151,8 @@ extension Kernel.Lock.Test.Unit {
 
 
     extension Kernel.Lock.Test.Unit {
-        @Test("lock and unlock on file succeeds")
-        func lockAndUnlockSucceeds() throws {
+        @Test
+        func `lock and unlock on file succeeds`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -161,8 +161,8 @@ extension Kernel.Lock.Test.Unit {
             try Kernel.Lock.unlock(fd, range: .file)
         }
 
-        @Test("Immediate.lock succeeds on uncontested file")
-        func immediateLockSucceedsUncontested() throws {
+        @Test
+        func `Immediate.lock succeeds on uncontested file`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -171,8 +171,8 @@ extension Kernel.Lock.Test.Unit {
             try Kernel.Lock.unlock(fd, range: .file)
         }
 
-        @Test("multiple descriptors can lock same file within process")
-        func multipleDescriptorsSameProcess() throws {
+        @Test
+        func `multiple descriptors can lock same file within process`() throws {
             // NOTE: This demonstrates POSIX behavior where same-process locks don't contend.
             // It is NOT testing that "shared allows multiple" in a meaningful way.
             // Cross-process contention is tested in the Integration Tests.
@@ -191,8 +191,8 @@ extension Kernel.Lock.Test.Unit {
             try Kernel.Lock.unlock(fd2, range: .file)
         }
 
-        @Test("byte range locks on non-overlapping regions")
-        func nonOverlappingByteRanges() throws {
+        @Test
+        func `byte range locks on non-overlapping regions`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -207,8 +207,8 @@ extension Kernel.Lock.Test.Unit {
             try Kernel.Lock.unlock(fd, range: range2)
         }
 
-        @Test("unlock on non-locked region is no-op on POSIX")
-        func unlockNonLockedRegion() throws {
+        @Test
+        func `unlock on non-locked region is no-op on POSIX`() throws {
             // POSIX: unlocking a region not locked by the process is a no-op, not an error
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
@@ -222,8 +222,8 @@ extension Kernel.Lock.Test.Unit {
     // MARK: - Token Tests
 
     extension Kernel.Lock.Test.Unit {
-        @Test("Token acquires and releases lock")
-        func tokenAcquiresAndReleases() throws {
+        @Test
+        func `Token acquires and releases lock`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -238,8 +238,8 @@ extension Kernel.Lock.Test.Unit {
             try token.release()
         }
 
-        @Test("Token with try acquire succeeds when uncontested")
-        func tokenTryAcquireSucceeds() throws {
+        @Test
+        func `Token with try acquire succeeds when uncontested`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -254,8 +254,8 @@ extension Kernel.Lock.Test.Unit {
             try token.release()
         }
 
-        @Test("Token release is idempotent")
-        func tokenReleaseIdempotent() throws {
+        @Test
+        func `Token release is idempotent`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -270,8 +270,8 @@ extension Kernel.Lock.Test.Unit {
             try token.release()  // Should be no-op
         }
 
-        @Test("Token with byte range lock")
-        func tokenByteRangeLock() throws {
+        @Test
+        func `Token with byte range lock`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -291,8 +291,8 @@ extension Kernel.Lock.Test.Unit {
     // MARK: - withExclusive/withShared Tests
 
     extension Kernel.Lock.Test.Unit {
-        @Test("withExclusive executes body and releases lock")
-        func withExclusiveExecutesBody() throws {
+        @Test
+        func `withExclusive executes body and releases lock`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -308,8 +308,8 @@ extension Kernel.Lock.Test.Unit {
             // locks the process held on the inode.
         }
 
-        @Test("withExclusive returns value from body")
-        func withExclusiveReturnsValue() throws {
+        @Test
+        func `withExclusive returns value from body`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -320,8 +320,8 @@ extension Kernel.Lock.Test.Unit {
             #expect(result == 42)
         }
 
-        @Test("withShared executes body and releases lock")
-        func withSharedExecutesBody() throws {
+        @Test
+        func `withShared executes body and releases lock`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -333,8 +333,8 @@ extension Kernel.Lock.Test.Unit {
             #expect(executed == true)
         }
 
-        @Test("withExclusive releases lock on throw")
-        func withExclusiveReleasesOnThrow() throws {
+        @Test
+        func `withExclusive releases lock on throw`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             defer { KernelIOTest.cleanup(path: path) }
 

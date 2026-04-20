@@ -36,13 +36,13 @@ extension Kernel.Signal {
 // MARK: - Unit Tests
 
 extension Kernel.Signal.Test.Unit {
-    @Test("Signal namespace exists")
-    func namespaceExists() {
+    @Test
+    func `Signal namespace exists`() {
         _ = Kernel.Signal.self
     }
 
-    @Test("Signal is an enum")
-    func isEnum() {
+    @Test
+    func `Signal is an enum`() {
         let _: Kernel.Signal.Type = Kernel.Signal.self
     }
 }
@@ -51,8 +51,8 @@ extension Kernel.Signal.Test.Unit {
 
 extension Kernel.Signal.Test.Unit {
     #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
-        @Test("Signal.Error type exists")
-        func errorTypeExists() {
+        @Test
+        func `Signal.Error type exists`() {
             let _: Kernel.Signal.Error.Type = Kernel.Signal.Error.self
         }
     #endif

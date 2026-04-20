@@ -38,13 +38,13 @@ extension Kernel.Copy.Clone {
 // MARK: - Unit Tests
 
 extension Kernel.Copy.Clone.Test.Unit {
-    @Test("Clone namespace exists")
-    func namespaceExists() {
+    @Test
+    func `Clone namespace exists`() {
         _ = Kernel.Copy.Clone.self
     }
 
-    @Test("Clone is an enum")
-    func isEnum() {
+    @Test
+    func `Clone is an enum`() {
         let _: Kernel.Copy.Clone.Type = Kernel.Copy.Clone.self
     }
 }
@@ -53,8 +53,8 @@ extension Kernel.Copy.Clone.Test.Unit {
 
 #if os(Linux)
 extension Kernel.Copy.Clone.Test.Unit {
-    @Test("perform function exists on Linux")
-    func performSignatureExists() {
+    @Test
+    func `perform function exists on Linux`() {
         // Verify the function signature compiles
         typealias PerformType = (Kernel.Descriptor, Kernel.Descriptor) throws -> Void
     }
@@ -63,8 +63,8 @@ extension Kernel.Copy.Clone.Test.Unit {
 
 #if canImport(Darwin)
 extension Kernel.Copy.Clone.Test.Unit {
-    @Test("file function exists on Darwin")
-    func fileSignatureExists() {
+    @Test
+    func `file function exists on Darwin`() {
         // Verify the namespace and function exist at compile time
         _ = Kernel.Copy.Clone.self
     }

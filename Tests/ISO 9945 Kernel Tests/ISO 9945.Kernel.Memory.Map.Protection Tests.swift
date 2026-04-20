@@ -38,13 +38,13 @@ extension Kernel.Memory.Map.Protection {
 
 
     extension Kernel.Memory.Map.Protection.Test.Unit {
-        @Test("none has zero raw value")
-        func noneHasZeroRawValue() {
+        @Test
+        func `none has zero raw value`() {
             #expect(Kernel.Memory.Map.Protection.none.rawValue == 0)
         }
 
-        @Test("read write execute are distinct")
-        func readWriteExecuteDistinct() {
+        @Test
+        func `read write execute are distinct`() {
             let read = Kernel.Memory.Map.Protection.read
             let write = Kernel.Memory.Map.Protection.write
             let execute = Kernel.Memory.Map.Protection.execute
@@ -54,8 +54,8 @@ extension Kernel.Memory.Map.Protection {
             #expect(write != execute)
         }
 
-        @Test("bitwise OR combines flags")
-        func bitwiseOrCombinesFlags() {
+        @Test
+        func `bitwise OR combines flags`() {
             let read = Kernel.Memory.Map.Protection.read
             let write = Kernel.Memory.Map.Protection.write
             let combined = read | write
@@ -63,8 +63,8 @@ extension Kernel.Memory.Map.Protection {
             #expect(combined.rawValue == (read.rawValue | write.rawValue))
         }
 
-        @Test("contains checks flag presence")
-        func containsChecksFlagPresence() {
+        @Test
+        func `contains checks flag presence`() {
             let read = Kernel.Memory.Map.Protection.read
             let write = Kernel.Memory.Map.Protection.write
             let combined = read | write
@@ -74,8 +74,8 @@ extension Kernel.Memory.Map.Protection {
             #expect(!combined.contains(.execute))
         }
 
-        @Test("readWrite is read OR write")
-        func readWriteIsReadOrWrite() {
+        @Test
+        func `readWrite is read OR write`() {
             let readWrite = Kernel.Memory.Map.Protection.readWrite
             let manual = Kernel.Memory.Map.Protection.read | .write
 
@@ -84,8 +84,8 @@ extension Kernel.Memory.Map.Protection {
             #expect(readWrite.contains(.write))
         }
 
-        @Test("none contains nothing")
-        func noneContainsNothing() {
+        @Test
+        func `none contains nothing`() {
             let none = Kernel.Memory.Map.Protection.none
 
             #expect(!none.contains(.read))
@@ -93,8 +93,8 @@ extension Kernel.Memory.Map.Protection {
             #expect(!none.contains(.execute))
         }
 
-        @Test("Protection is Equatable")
-        func protectionIsEquatable() {
+        @Test
+        func `Protection is Equatable`() {
             let a = Kernel.Memory.Map.Protection.read
             let b = Kernel.Memory.Map.Protection.read
             let c = Kernel.Memory.Map.Protection.write
@@ -103,8 +103,8 @@ extension Kernel.Memory.Map.Protection {
             #expect(a != c)
         }
 
-        @Test("Protection is Hashable")
-        func protectionIsHashable() {
+        @Test
+        func `Protection is Hashable`() {
             var set = Set<Kernel.Memory.Map.Protection>()
             set.insert(.read)
             set.insert(.write)

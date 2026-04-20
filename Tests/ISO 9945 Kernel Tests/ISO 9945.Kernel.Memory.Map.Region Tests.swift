@@ -37,13 +37,13 @@ extension Kernel.Memory.Map.Region {
 // MARK: - Unit Tests
 
 extension Kernel.Memory.Map.Region.Test.Unit {
-    @Test("Region type exists")
-    func typeExists() {
+    @Test
+    func `Region type exists`() {
         let _: Kernel.Memory.Map.Region.Type = Kernel.Memory.Map.Region.self
     }
 
-    @Test("Region is @unchecked Sendable")
-    func isSendable() {
+    @Test
+    func `Region is @unchecked Sendable`() {
         // Region contains a raw pointer but is marked @unchecked Sendable
         let _: any Sendable.Type = Kernel.Memory.Map.Region.self
     }
@@ -52,8 +52,8 @@ extension Kernel.Memory.Map.Region.Test.Unit {
 // MARK: - Property Tests
 
     extension Kernel.Memory.Map.Region.Test.Unit {
-        @Test("Region stores base address")
-        func storesBase() throws {
+        @Test
+        func `Region stores base address`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -61,8 +61,8 @@ extension Kernel.Memory.Map.Region.Test.Unit {
             #expect(region.base != .null)
         }
 
-        @Test("Region stores length")
-        func storesLength() throws {
+        @Test
+        func `Region stores length`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -70,8 +70,8 @@ extension Kernel.Memory.Map.Region.Test.Unit {
             #expect(region.length == pageSize)
         }
 
-        @Test("Region init sets values correctly")
-        func initSetsValues() throws {
+        @Test
+        func `Region init sets values correctly`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -87,8 +87,8 @@ extension Kernel.Memory.Map.Region.Test.Unit {
 
 #if os(Windows)
     extension Kernel.Memory.Map.Region.Test.Unit {
-        @Test("Region stores mappingHandle on Windows")
-        func storesMappingHandle() throws {
+        @Test
+        func `Region stores mappingHandle on Windows`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }

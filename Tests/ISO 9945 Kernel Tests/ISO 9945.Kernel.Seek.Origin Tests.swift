@@ -37,8 +37,8 @@ extension Kernel.File.Seek.Origin {
 // MARK: - Unit Tests
 
 extension Kernel.File.Seek.Origin.Test.Unit {
-    @Test("start case exists")
-    func startCase() {
+    @Test
+    func `start case exists`() {
         let origin = Kernel.File.Seek.Origin.start
         if case .start = origin {
             // Expected
@@ -47,8 +47,8 @@ extension Kernel.File.Seek.Origin.Test.Unit {
         }
     }
 
-    @Test("current case exists")
-    func currentCase() {
+    @Test
+    func `current case exists`() {
         let origin = Kernel.File.Seek.Origin.current
         if case .current = origin {
             // Expected
@@ -57,8 +57,8 @@ extension Kernel.File.Seek.Origin.Test.Unit {
         }
     }
 
-    @Test("end case exists")
-    func endCase() {
+    @Test
+    func `end case exists`() {
         let origin = Kernel.File.Seek.Origin.end
         if case .end = origin {
             // Expected
@@ -71,8 +71,8 @@ extension Kernel.File.Seek.Origin.Test.Unit {
 // MARK: - Conformances
 
 extension Kernel.File.Seek.Origin.Test.Unit {
-    @Test("Origin is Sendable")
-    func isSendable() {
+    @Test
+    func `Origin is Sendable`() {
         let origin: any Sendable = Kernel.File.Seek.Origin.start
         #expect(origin is Kernel.File.Seek.Origin)
     }
@@ -81,8 +81,8 @@ extension Kernel.File.Seek.Origin.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.File.Seek.Origin.Test.EdgeCase {
-    @Test("all cases are distinct")
-    func allCasesDistinct() {
+    @Test
+    func `all cases are distinct`() {
         let start = Kernel.File.Seek.Origin.start
         let current = Kernel.File.Seek.Origin.current
         let end = Kernel.File.Seek.Origin.end
@@ -114,8 +114,8 @@ extension Kernel.File.Seek.Origin.Test.EdgeCase {
 // MARK: - Usage Patterns
 
 extension Kernel.File.Seek.Origin.Test.Unit {
-    @Test("Origin can be used in switch")
-    func switchUsage() {
+    @Test
+    func `Origin can be used in switch`() {
         func describe(_ origin: Kernel.File.Seek.Origin) -> Swift.String {
             switch origin {
             case .start: return "beginning"

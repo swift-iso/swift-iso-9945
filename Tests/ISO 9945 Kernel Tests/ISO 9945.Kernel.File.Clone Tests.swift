@@ -77,8 +77,8 @@ struct POSIXKernelFileCloneTests {
     @Suite("Types")
     struct TypeTests {
 
-        @Test("Capability enum values")
-        func capabilityValues() {
+        @Test
+        func `Capability enum values`() {
             let reflink = ISO_9945.Kernel.File.Clone.Capability.reflink
             let none = ISO_9945.Kernel.File.Clone.Capability.none
 
@@ -87,8 +87,8 @@ struct POSIXKernelFileCloneTests {
             #expect(none == .none)
         }
 
-        @Test("Behavior enum values")
-        func behaviorValues() {
+        @Test
+        func `Behavior enum values`() {
             let reflinkOrFail = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrFail
             let reflinkOrCopy = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrCopy
             let copyOnly = ISO_9945.Kernel.File.Clone.Behavior.copyOnly
@@ -98,16 +98,16 @@ struct POSIXKernelFileCloneTests {
             #expect(reflinkOrFail != copyOnly)
         }
 
-        @Test("Result enum values")
-        func resultValues() {
+        @Test
+        func `Result enum values`() {
             let reflinked = ISO_9945.Kernel.File.Clone.Result.reflinked
             let copied = ISO_9945.Kernel.File.Clone.Result.copied
 
             #expect(reflinked != copied)
         }
 
-        @Test("types are Sendable")
-        func typesAreSendable() {
+        @Test
+        func `types are Sendable`() {
             let cap: ISO_9945.Kernel.File.Clone.Capability = .reflink
             let behavior: ISO_9945.Kernel.File.Clone.Behavior = .reflinkOrCopy
             let result: ISO_9945.Kernel.File.Clone.Result = .copied
@@ -125,8 +125,8 @@ struct POSIXKernelFileCloneTests {
     @Suite("Error")
     struct ErrorTests {
 
-        @Test("error descriptions are meaningful")
-        func errorDescriptions() {
+        @Test
+        func `error descriptions are meaningful`() {
             let errors: [ISO_9945.Kernel.File.Clone.Error] = [
                 .notSupported,
                 .crossDevice,
@@ -146,8 +146,8 @@ struct POSIXKernelFileCloneTests {
             #expect(ISO_9945.Kernel.File.Clone.Error.crossDevice.description.contains("different"))
         }
 
-        @Test("error is Equatable")
-        func errorEquatable() {
+        @Test
+        func `error is Equatable`() {
             #expect(ISO_9945.Kernel.File.Clone.Error.notSupported == .notSupported)
             #expect(ISO_9945.Kernel.File.Clone.Error.crossDevice != .notSupported)
 

@@ -38,22 +38,22 @@ import Testing
     // MARK: - Unit Tests
 
     extension Kernel.Process.Fork.Test.Unit {
-        @Test("Result.child is distinct from Result.parent")
-        func resultCasesDistinct() {
+        @Test
+        func `Result.child is distinct from Result.parent`() {
             let child = Kernel.Process.Fork.Result.child
             let parent = Kernel.Process.Fork.Result.parent(child: Kernel.Process.ID(123))
 
             #expect(child != parent)
         }
 
-        @Test("Result is Sendable")
-        func resultIsSendable() {
+        @Test
+        func `Result is Sendable`() {
             let result: any Sendable = Kernel.Process.Fork.Result.child
             #expect(result is Kernel.Process.Fork.Result)
         }
 
-        @Test("Result is Equatable")
-        func resultIsEquatable() {
+        @Test
+        func `Result is Equatable`() {
             let pid = Kernel.Process.ID(42)
             #expect(Kernel.Process.Fork.Result.child == Kernel.Process.Fork.Result.child)
             #expect(
@@ -73,8 +73,8 @@ import Testing
     // to avoid Swift runtime lock corruption in multithreaded test environments.
 
     extension Kernel.Process.Fork.Test.Integration {
-        @Test("spawned child process can exit with code")
-        func spawnAndExit() throws {
+        @Test
+        func `spawned child process can exit with code`() throws {
             // Spawn helper that exits with code 42
             let child = try POSIXTestHelper.spawn("exit", "42")
 
@@ -86,8 +86,8 @@ import Testing
             #expect(result?.status.exit.code == 42)
         }
 
-        @Test("spawned child PID is positive")
-        func spawnedPIDIsPositive() throws {
+        @Test
+        func `spawned child PID is positive`() throws {
             // Spawn helper that exits with code 0
             let child = try POSIXTestHelper.spawn("exit", "0")
 
@@ -98,8 +98,8 @@ import Testing
             _ = try? Kernel.Process.Wait.wait(.process(child))
         }
 
-        @Test("child PID matches wait result PID")
-        func childPIDConsistent() throws {
+        @Test
+        func `child PID matches wait result PID`() throws {
             // Spawn helper that exits with code 0
             let child = try POSIXTestHelper.spawn("exit", "0")
 

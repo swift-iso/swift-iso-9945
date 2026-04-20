@@ -46,8 +46,8 @@ extension Kernel.Close {
 // MARK: - Close Tests
 
 extension Kernel.Close.Test.Unit {
-    @Test("close succeeds on valid descriptor")
-    func closeSucceedsOnValidDescriptor() throws {
+    @Test
+    func `close succeeds on valid descriptor`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "close-test")
         defer { KernelIOTest.cleanup(path: path) }
         let fd = try KernelIOTest.open(at: path)
@@ -55,8 +55,8 @@ extension Kernel.Close.Test.Unit {
         try Kernel.Close.close(fd)
     }
 
-    @Test("close throws on invalid descriptor")
-    func closeThrowsOnInvalid() {
+    @Test
+    func `close throws on invalid descriptor`() {
         #expect(throws: Kernel.Close.Error.self) {
             try Kernel.Close.close(.invalid)
         }
@@ -66,8 +66,8 @@ extension Kernel.Close.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Close.Test.EdgeCase {
-    @Test("close throws on negative descriptor")
-    func closeThrowsOnNegativeDescriptor() {
+    @Test
+    func `close throws on negative descriptor`() {
         #expect(throws: Kernel.Close.Error.self) {
             try Kernel.Close.close(Kernel.Descriptor(_rawValue: -100))
         }

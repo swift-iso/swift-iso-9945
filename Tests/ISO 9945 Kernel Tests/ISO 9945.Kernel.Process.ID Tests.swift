@@ -34,14 +34,14 @@ import Testing
 
     @Suite("Kernel.Process.ID Parent Tests")
     struct KernelProcessIDParentTests {
-        @Test("parent returns positive PID")
-        func parentReturnsPositivePID() {
+        @Test
+        func `parent returns positive PID`() {
             let parent = Kernel.Process.ID.parent
             #expect(parent.rawValue > 0)
         }
 
-        @Test("spawned child's parent matches spawner's current")
-        func childParentMatchesSpawnerCurrent() throws {
+        @Test
+        func `spawned child's parent matches spawner's current`() throws {
             #if os(macOS)
                 let ourPID = Kernel.Process.ID.current
 

@@ -32,13 +32,13 @@ import Kernel_Error_Primitives
 // MARK: - Namespace Existence
 
 extension Kernel.Thread.Test.Unit {
-    @Test("Thread namespace exists")
-    func namespaceExists() {
+    @Test
+    func `Thread namespace exists`() {
         _ = Kernel.Thread.self
     }
 
-    @Test("Thread is an enum")
-    func isEnum() {
+    @Test
+    func `Thread is an enum`() {
         let _: Kernel.Thread.Type = Kernel.Thread.self
     }
 }
@@ -46,23 +46,23 @@ extension Kernel.Thread.Test.Unit {
 // MARK: - Nested Types
 
 extension Kernel.Thread.Test.Unit {
-    @Test("Thread.Handle type exists")
-    func handleTypeExists() {
+    @Test
+    func `Thread.Handle type exists`() {
         let _: Kernel.Thread.Handle.Type = Kernel.Thread.Handle.self
     }
 
-    @Test("Thread.Error type exists")
-    func errorTypeExists() {
+    @Test
+    func `Thread.Error type exists`() {
         let _: Kernel.Thread.Error.Type = Kernel.Thread.Error.self
     }
 
-    @Test("Thread.Mutex type exists")
-    func mutexTypeExists() {
+    @Test
+    func `Thread.Mutex type exists`() {
         let _: Kernel.Thread.Mutex.Type = Kernel.Thread.Mutex.self
     }
 
-    @Test("Thread.Condition type exists")
-    func conditionTypeExists() {
+    @Test
+    func `Thread.Condition type exists`() {
         let _: Kernel.Thread.Condition.Type = Kernel.Thread.Condition.self
     }
 }
@@ -70,8 +70,8 @@ extension Kernel.Thread.Test.Unit {
 // MARK: - Create Function
 
 extension Kernel.Thread.Test.Unit {
-    @Test("create function signature exists")
-    func createFunctionExists() {
+    @Test
+    func `create function signature exists`() {
         // Verify the create function signature exists
         // create(_:) -> Handle throws(Error)
         typealias CreateType = (@escaping @Sendable () -> Void) throws -> Kernel.Thread.Handle

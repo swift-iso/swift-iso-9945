@@ -39,8 +39,8 @@ import Testing
     // MARK: - Signal.Error Tests
 
     extension Kernel.Signal.Error.Test.Unit {
-        @Test("interrupted case exists")
-        func interruptedCaseExists() {
+        @Test
+        func `interrupted case exists`() {
             let error = Kernel.Signal.Error.interrupted
             if case .interrupted = error {
                 // Expected
@@ -49,28 +49,28 @@ import Testing
             }
         }
 
-        @Test("Signal.Error conforms to Swift.Error")
-        func conformsToSwiftError() {
+        @Test
+        func `Signal.Error conforms to Swift.Error`() {
             let error: any Swift.Error = Kernel.Signal.Error.interrupted
             #expect(error is Kernel.Signal.Error)
         }
 
-        @Test("Signal.Error is Sendable")
-        func isSendable() {
+        @Test
+        func `Signal.Error is Sendable`() {
             let error: any Sendable = Kernel.Signal.Error.interrupted
             #expect(error is Kernel.Signal.Error)
         }
 
-        @Test("Signal.Error is Equatable")
-        func isEquatable() {
+        @Test
+        func `Signal.Error is Equatable`() {
             let a = Kernel.Signal.Error.interrupted
             let b = Kernel.Signal.Error.interrupted
 
             #expect(a == b)
         }
 
-        @Test("Signal.Error is Hashable")
-        func isHashable() {
+        @Test
+        func `Signal.Error is Hashable`() {
             var set = Set<Kernel.Signal.Error>()
             set.insert(.interrupted)
             set.insert(.interrupted)  // duplicate
@@ -79,14 +79,14 @@ import Testing
             #expect(set.contains(.interrupted))
         }
 
-        @Test("description returns meaningful string")
-        func descriptionMeaningful() {
+        @Test
+        func `description returns meaningful string`() {
             let error = Kernel.Signal.Error.interrupted
             #expect(error.description == "interrupted by signal")
         }
 
-        @Test("CustomStringConvertible conformance")
-        func customStringConvertibleConformance() {
+        @Test
+        func `CustomStringConvertible conformance`() {
             let error = Kernel.Signal.Error.interrupted
             let description = Swift.String(describing: error)
             #expect(!description.isEmpty)

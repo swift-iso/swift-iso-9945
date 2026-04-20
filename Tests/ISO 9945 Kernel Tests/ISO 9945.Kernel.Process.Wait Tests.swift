@@ -40,8 +40,8 @@ import ISO_9945_Kernel
     // MARK: - Selector Tests
 
     extension Kernel.Process.Wait.Test.Unit {
-        @Test("Selector cases are distinct")
-        func selectorCasesDistinct() {
+        @Test
+        func `Selector cases are distinct`() {
             let pid = Kernel.Process.ID(123)
             let pgid = Kernel.Process.Group.ID(456)
 
@@ -61,14 +61,14 @@ import ISO_9945_Kernel
             }
         }
 
-        @Test("Selector is Sendable")
-        func selectorIsSendable() {
+        @Test
+        func `Selector is Sendable`() {
             let selector: any Sendable = Kernel.Process.Wait.Selector.any
             #expect(selector is Kernel.Process.Wait.Selector)
         }
 
-        @Test("Selector is Equatable")
-        func selectorIsEquatable() {
+        @Test
+        func `Selector is Equatable`() {
             let pid = Kernel.Process.ID(42)
             #expect(Kernel.Process.Wait.Selector.any == Kernel.Process.Wait.Selector.any)
             #expect(
@@ -81,15 +81,15 @@ import ISO_9945_Kernel
     // MARK: - Options Tests
 
     extension Kernel.Process.Wait.Test.Unit {
-        @Test("Options is OptionSet")
-        func optionsIsOptionSet() {
+        @Test
+        func `Options is OptionSet`() {
             let options: Kernel.Process.Wait.Options = [.untraced, .continued]
             #expect(options.contains(.untraced))
             #expect(options.contains(.continued))
         }
 
-        @Test("no.hang accessor works")
-        func noHangAccessor() {
+        @Test
+        func `no.hang accessor works`() {
             let noHang = Kernel.Process.Wait.Options.no.hang
             #expect(noHang.rawValue != 0)
         }
@@ -98,8 +98,8 @@ import ISO_9945_Kernel
     // MARK: - Result Tests
 
     extension Kernel.Process.Wait.Test.Unit {
-        @Test("Result is Sendable")
-        func resultIsSendable() {
+        @Test
+        func `Result is Sendable`() {
             let result: any Sendable = Kernel.Process.Wait.Result(
                 pid: Kernel.Process.ID(1),
                 status: Kernel.Process.Status(rawValue: 0)
@@ -107,8 +107,8 @@ import ISO_9945_Kernel
             #expect(result is Kernel.Process.Wait.Result)
         }
 
-        @Test("Result is Equatable")
-        func resultIsEquatable() {
+        @Test
+        func `Result is Equatable`() {
             let result1 = Kernel.Process.Wait.Result(
                 pid: Kernel.Process.ID(42),
                 status: Kernel.Process.Status(rawValue: 0)
@@ -133,8 +133,8 @@ import ISO_9945_Kernel
     // to avoid Swift runtime lock corruption in multithreaded test environments.
 
     extension Kernel.Process.Wait.Test.Integration {
-        @Test("wait(.process) collects specific child status")
-        func waitProcessCollectsChild() throws {
+        @Test
+        func `wait(.process) collects specific child status`() throws {
             // Spawn helper that exits with code 99
             let childPID = try POSIXTestHelper.spawn("exit", "99")
 
@@ -145,8 +145,8 @@ import ISO_9945_Kernel
             #expect(result?.status.exit.code == 99)
         }
 
-        @Test("wait(.process(id)) waits for specific child")
-        func waitProcessSpecific() throws {
+        @Test
+        func `wait(.process(id)) waits for specific child`() throws {
             // Spawn helper that exits with code 77
             let child = try POSIXTestHelper.spawn("exit", "77")
 
@@ -155,8 +155,8 @@ import ISO_9945_Kernel
             #expect(result?.status.exit.code == 77)
         }
 
-        @Test("wait with no.hang returns nil when child exists but is not reportable")
-        func waitNoHangReturnsNilWhenStopped() throws {
+        @Test
+        func `wait with no.hang returns nil when child exists but is not reportable`() throws {
             // Deterministic test using SIGSTOP/WUNTRACED:
             // 1. Child self-stops with SIGSTOP (deterministic "not exited" state)
             // 2. Parent confirms stop via WUNTRACED (blocking, deterministic)
@@ -191,8 +191,8 @@ import ISO_9945_Kernel
             #expect(exited?.status.exit.code == 42)
         }
 
-        @Test("ECHILD when no children exist")
-        func echldWhenNoChildren() throws {
+        @Test
+        func `ECHILD when no children exist`() throws {
             // Spawn a child that exits immediately, then wait for it
             // After that, waiting again should give ECHILD
             let child = try POSIXTestHelper.spawn("exit", "0")
@@ -209,8 +209,8 @@ import ISO_9945_Kernel
             }
         }
 
-        @Test("status classification matches exited")
-        func statusClassificationExited() throws {
+        @Test
+        func `status classification matches exited`() throws {
             // Spawn helper that exits with code 55
             let child = try POSIXTestHelper.spawn("exit", "55")
 

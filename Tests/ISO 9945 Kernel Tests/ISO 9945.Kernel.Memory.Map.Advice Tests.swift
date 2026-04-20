@@ -37,39 +37,39 @@ extension Kernel.Memory.Map.Advice {
 // MARK: - Unit Tests
 
 extension Kernel.Memory.Map.Advice.Test.Unit {
-    @Test("Advice from rawValue")
-    func rawValueInit() {
+    @Test
+    func `Advice from rawValue`() {
         let advice = Kernel.Memory.Map.Advice(rawValue: 0)
         #expect(advice.rawValue == 0)
     }
 
-    @Test("normal constant exists")
-    func normalConstant() {
+    @Test
+    func `normal constant exists`() {
         let advice = Kernel.Memory.Map.Advice.normal
         // Normal is typically 0 on most platforms
         _ = advice.rawValue
     }
 
-    @Test("sequential constant exists")
-    func sequentialConstant() {
+    @Test
+    func `sequential constant exists`() {
         let advice = Kernel.Memory.Map.Advice.sequential
         _ = advice.rawValue
     }
 
-    @Test("random constant exists")
-    func randomConstant() {
+    @Test
+    func `random constant exists`() {
         let advice = Kernel.Memory.Map.Advice.random
         _ = advice.rawValue
     }
 
-    @Test("willNeed constant exists")
-    func willNeedConstant() {
+    @Test
+    func `willNeed constant exists`() {
         let advice = Kernel.Memory.Map.Advice.willNeed
         _ = advice.rawValue
     }
 
-    @Test("dontNeed constant exists")
-    func dontNeedConstant() {
+    @Test
+    func `dontNeed constant exists`() {
         let advice = Kernel.Memory.Map.Advice.dontNeed
         _ = advice.rawValue
     }
@@ -78,14 +78,14 @@ extension Kernel.Memory.Map.Advice.Test.Unit {
 // MARK: - Conformance Tests
 
 extension Kernel.Memory.Map.Advice.Test.Unit {
-    @Test("Advice is Sendable")
-    func isSendable() {
+    @Test
+    func `Advice is Sendable`() {
         let advice: any Sendable = Kernel.Memory.Map.Advice.normal
         #expect(advice is Kernel.Memory.Map.Advice)
     }
 
-    @Test("Advice is Equatable")
-    func isEquatable() {
+    @Test
+    func `Advice is Equatable`() {
         let a = Kernel.Memory.Map.Advice.normal
         let b = Kernel.Memory.Map.Advice.normal
         let c = Kernel.Memory.Map.Advice.sequential
@@ -93,8 +93,8 @@ extension Kernel.Memory.Map.Advice.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Advice is Hashable")
-    func isHashable() {
+    @Test
+    func `Advice is Hashable`() {
         var set = Set<Kernel.Memory.Map.Advice>()
         set.insert(.normal)
         set.insert(.sequential)
@@ -106,8 +106,8 @@ extension Kernel.Memory.Map.Advice.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Memory.Map.Advice.Test.EdgeCase {
-    @Test("all advice types are distinct")
-    func allAdviceDistinct() {
+    @Test
+    func `all advice types are distinct`() {
         let advices: [Kernel.Memory.Map.Advice] = [
             .normal,
             .sequential,

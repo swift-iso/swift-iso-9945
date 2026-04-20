@@ -45,16 +45,16 @@ extension POSIXThreadSynchronizationTests {
 }
 
 extension POSIXThreadSynchronizationTests.MutexUnit {
-    @Test("mutex can be locked and unlocked")
-    func lockAndUnlock() {
+    @Test
+    func `mutex can be locked and unlocked`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         mutex.lock()
         mutex.unlock()
         // No error means success
     }
 
-    @Test("withLock executes body under lock")
-    func withLockExecutesBody() {
+    @Test
+    func `withLock executes body under lock`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         var executed = false
 
@@ -65,8 +65,8 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
         #expect(executed == true)
     }
 
-    @Test("withLock returns value from body")
-    func withLockReturnsValue() {
+    @Test
+    func `withLock returns value from body`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
 
         let result = mutex.withLock {
@@ -76,8 +76,8 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
         #expect(result == 42)
     }
 
-    @Test("lock.immediate fails when mutex held")
-    func immediateFailsWhenHeld() throws {
+    @Test
+    func `lock.immediate fails when mutex held`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let held = Atomic<Bool>(false)
         let tryResult = Atomic<Bool>(false)
@@ -123,22 +123,22 @@ extension POSIXThreadSynchronizationTests {
 }
 
 extension POSIXThreadSynchronizationTests.ConditionUnit {
-    @Test("condition can signal without waiters")
-    func signalNoWaiters() {
+    @Test
+    func `condition can signal without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
         condition.signal()
         // No error means success
     }
 
-    @Test("condition can broadcast without waiters")
-    func broadcastNoWaiters() {
+    @Test
+    func `condition can broadcast without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
         condition.broadcast()
         // No error means success
     }
 
-    @Test("wait with timeout returns false on timeout")
-    func waitTimeoutReturnsFalse() {
+    @Test
+    func `wait with timeout returns false on timeout`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
 
@@ -167,8 +167,8 @@ private func smallSleep(milliseconds: UInt32) {
 }
 
 extension POSIXThreadSynchronizationTests.Integration {
-    @Test("signal wakes one waiter")
-    func signalWakesOneWaiter() throws {
+    @Test
+    func `signal wakes one waiter`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
         let waiterReady = Atomic<Bool>(false)
@@ -198,8 +198,8 @@ extension POSIXThreadSynchronizationTests.Integration {
         #expect(waiterWoken.load(ordering: .acquiring) == true)
     }
 
-    @Test("broadcast wakes all waiters")
-    func broadcastWakesAllWaiters() throws {
+    @Test
+    func `broadcast wakes all waiters`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
         let waitersReady = Atomic<Int>(0)
@@ -247,8 +247,8 @@ extension POSIXThreadSynchronizationTests.Integration {
         #expect(waitersWoken.load(ordering: .acquiring) == numWaiters)
     }
 
-    @Test("wait with timeout eventually times out")
-    func waitTimeoutDecrementsCount() throws {
+    @Test
+    func `wait with timeout eventually times out`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
         let timedOut = Atomic<Bool>(false)
@@ -265,8 +265,8 @@ extension POSIXThreadSynchronizationTests.Integration {
         #expect(timedOut.load(ordering: .acquiring) == true)
     }
 
-    @Test("mutex protects shared state")
-    func mutexProtectsSharedState() throws {
+    @Test
+    func `mutex protects shared state`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let counter = Atomic<Int>(0)
         let iterations = 1000
@@ -287,8 +287,8 @@ extension POSIXThreadSynchronizationTests.Integration {
         #expect(counter.load(ordering: .acquiring) == numThreads * iterations)
     }
 
-    @Test("condition variable wait/signal ping-pong")
-    func pingPong() throws {
+    @Test
+    func `condition variable wait/signal ping-pong`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
         let turn = Atomic<Int>(0)  // 0 = ping's turn, 1 = pong's turn

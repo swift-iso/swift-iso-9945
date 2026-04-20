@@ -36,13 +36,13 @@ extension Kernel.File.Direct {
 // MARK: - Unit Tests
 
 extension Kernel.File.Direct.Test.Unit {
-    @Test("Direct namespace exists")
-    func namespaceExists() {
+    @Test
+    func `Direct namespace exists`() {
         _ = Kernel.File.Direct.self
     }
 
-    @Test("Direct is an enum")
-    func isEnum() {
+    @Test
+    func `Direct is an enum`() {
         let _: Kernel.File.Direct.Type = Kernel.File.Direct.self
     }
 }
@@ -50,23 +50,23 @@ extension Kernel.File.Direct.Test.Unit {
 // MARK: - Nested Types
 
 extension Kernel.File.Direct.Test.Unit {
-    @Test("Direct.Capability type exists")
-    func capabilityTypeExists() {
+    @Test
+    func `Direct.Capability type exists`() {
         let _: Kernel.File.Direct.Capability.Type = Kernel.File.Direct.Capability.self
     }
 
-    @Test("Direct.Mode type exists")
-    func modeTypeExists() {
+    @Test
+    func `Direct.Mode type exists`() {
         let _: Kernel.File.Direct.Mode.Type = Kernel.File.Direct.Mode.self
     }
 
-    @Test("Direct.Requirements type exists")
-    func requirementsTypeExists() {
+    @Test
+    func `Direct.Requirements type exists`() {
         let _: Kernel.File.Direct.Requirements.Type = Kernel.File.Direct.Requirements.self
     }
 
-    @Test("Direct.Error type exists")
-    func errorTypeExists() {
+    @Test
+    func `Direct.Error type exists`() {
         let _: Kernel.File.Direct.Error.Type = Kernel.File.Direct.Error.self
     }
 }
@@ -74,16 +74,16 @@ extension Kernel.File.Direct.Test.Unit {
 // MARK: - Resolved Mode Tests
 
 extension Kernel.File.Direct.Test.Unit {
-    @Test("direct mode resolved is equatable")
-    func directModeEquatable() {
+    @Test
+    func `direct mode resolved is equatable`() {
         #expect(Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
         #expect(Kernel.File.Direct.Mode.Resolved.direct == .direct)
         #expect(Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
         #expect(Kernel.File.Direct.Mode.Resolved.buffered != .direct)
     }
 
-    @Test("requirements known case")
-    func requirementsKnownCase() {
+    @Test
+    func `requirements known case`() {
         let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let requirements = Kernel.File.Direct.Requirements.known(alignment)
 
@@ -94,8 +94,8 @@ extension Kernel.File.Direct.Test.Unit {
         }
     }
 
-    @Test("requirements unknown case")
-    func requirementsUnknownCase() {
+    @Test
+    func `requirements unknown case`() {
         let requirements = Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
 
         if case .unknown(let reason) = requirements {

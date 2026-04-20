@@ -36,23 +36,23 @@ extension Kernel.Link {
 // MARK: - Unit Tests
 
 extension Kernel.Link.Test.Unit {
-    @Test("Link namespace exists")
-    func namespaceExists() {
+    @Test
+    func `Link namespace exists`() {
         _ = Kernel.Link.self
     }
 
-    @Test("Link is an enum")
-    func isEnum() {
+    @Test
+    func `Link is an enum`() {
         let _: Kernel.Link.Type = Kernel.Link.self
     }
 
-    @Test("Link.Count type exists")
-    func countTypeExists() {
+    @Test
+    func `Link.Count type exists`() {
         let _: Kernel.Link.Count.Type = Kernel.Link.Count.self
     }
 
-    @Test("Link.Error type exists")
-    func errorTypeExists() {
+    @Test
+    func `Link.Error type exists`() {
         let _: Kernel.Link.Error.Type = Kernel.Link.Error.self
     }
 }
@@ -60,8 +60,8 @@ extension Kernel.Link.Test.Unit {
 // MARK: - Link.Count Tests
 
 extension Kernel.Link.Test.Unit {
-    @Test("Link.Count zero constant")
-    func zeroConstant() {
+    @Test
+    func `Link.Count zero constant`() {
         let zero = Kernel.Link.Count.zero
         #expect(zero == 0)
     }
@@ -70,14 +70,14 @@ extension Kernel.Link.Test.Unit {
 // MARK: - Link.Count Conformance Tests
 
 extension Kernel.Link.Test.Unit {
-    @Test("Link.Count is Sendable")
-    func countIsSendable() {
+    @Test
+    func `Link.Count is Sendable`() {
         let value: any Sendable = Kernel.Link.Count.zero
         #expect(value is Kernel.Link.Count)
     }
 
-    @Test("Link.Count is Equatable")
-    func countIsEquatable() {
+    @Test
+    func `Link.Count is Equatable`() {
         let a: Kernel.Link.Count = 1
         let b: Kernel.Link.Count = 1
         let c: Kernel.Link.Count = 2
@@ -85,8 +85,8 @@ extension Kernel.Link.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Link.Count is Hashable")
-    func countIsHashable() {
+    @Test
+    func `Link.Count is Hashable`() {
         let c0 = Kernel.Link.Count.zero
         let c1: Kernel.Link.Count = 1
         var set = Set<Kernel.Link.Count>()
@@ -100,14 +100,14 @@ extension Kernel.Link.Test.Unit {
 // MARK: - Link.Error Tests
 
 extension Kernel.Link.Test.Unit {
-    @Test("Link.Error conforms to Swift.Error")
-    func errorIsError() {
+    @Test
+    func `Link.Error conforms to Swift.Error`() {
         let error: any Swift.Error = Kernel.Link.Error.notFound
         #expect(error is Kernel.Link.Error)
     }
 
-    @Test("Link.Error cases are distinct")
-    func errorCasesDistinct() {
+    @Test
+    func `Link.Error cases are distinct`() {
         let cases: [Kernel.Link.Error] = [
             .notFound, .permission, .exists, .crossDevice,
             .isDirectory, .notDirectory, .readOnly, .tooManyLinks,
@@ -124,8 +124,8 @@ extension Kernel.Link.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Link.Test.EdgeCase {
-    @Test("Link.Error descriptions are non-empty")
-    func errorDescriptionsNonEmpty() {
+    @Test
+    func `Link.Error descriptions are non-empty`() {
         let cases: [Kernel.Link.Error] = [
             .notFound, .permission, .exists, .crossDevice,
             .isDirectory, .notDirectory, .readOnly, .tooManyLinks,

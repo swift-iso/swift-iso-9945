@@ -38,8 +38,8 @@ extension ISO_9945.Kernel.Thread {
 // MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Thread.Test.Unit {
-    @Test("create spawns thread that executes body")
-    func createExecutesBody() throws {
+    @Test
+    func `create spawns thread that executes body`() throws {
         let executed = Atomic<Bool>(false)
         let handle = try ISO_9945.Kernel.Thread.create {
             executed.store(true, ordering: .releasing)
@@ -48,8 +48,8 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
         #expect(executed.load(ordering: .acquiring) == true)
     }
 
-    @Test("Handle.join waits for thread completion")
-    func handleJoinWaits() throws {
+    @Test
+    func `Handle.join waits for thread completion`() throws {
         let completed = Atomic<Bool>(false)
         let handle = try ISO_9945.Kernel.Thread.create {
             // Small delay to ensure we're actually waiting
@@ -63,8 +63,8 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
         #expect(completed.load(ordering: .acquiring) == true)
     }
 
-    @Test("Handle.isCurrent returns false from main thread")
-    func isCurrentFalseFromMain() throws {
+    @Test
+    func `Handle.isCurrent returns false from main thread`() throws {
         let handle = try ISO_9945.Kernel.Thread.create {
             // Do nothing
         }
@@ -79,8 +79,8 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
 // MARK: - Integration Tests
 
 extension ISO_9945.Kernel.Thread.Test.Integration {
-    @Test("multiple threads can execute concurrently")
-    func multipleThreadsConcurrent() throws {
+    @Test
+    func `multiple threads can execute concurrently`() throws {
         let counter = Atomic<Int>(0)
         let numThreads = 4
 
@@ -95,8 +95,8 @@ extension ISO_9945.Kernel.Thread.Test.Integration {
         #expect(counter.load(ordering: .acquiring) == numThreads)
     }
 
-    @Test("thread detach allows independent execution")
-    func detachAllowsIndependentExecution() throws {
+    @Test
+    func `thread detach allows independent execution`() throws {
         let started = Atomic<Bool>(false)
 
         let handle = try ISO_9945.Kernel.Thread.create {

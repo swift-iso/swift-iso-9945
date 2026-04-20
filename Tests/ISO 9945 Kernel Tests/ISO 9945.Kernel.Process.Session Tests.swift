@@ -40,8 +40,8 @@ extension Kernel.Process.Session {
 // MARK: - Unit Tests
 
 extension Kernel.Process.Session.Test.Unit {
-    @Test("Session.ID is type alias for Tagged")
-    func sessionIDIsTagged() {
+    @Test
+    func `Session.ID is type alias for Tagged`() {
         let id = Kernel.Process.Session.ID(__unchecked: (), 123)
         #expect(id.rawValue == 123)
     }
@@ -50,22 +50,22 @@ extension Kernel.Process.Session.Test.Unit {
 // MARK: - Integration Tests
 
 extension Kernel.Process.Session.Test.Integration {
-    @Test("getsid returns current session ID")
-    func getsidReturnsSessionID() throws {
+    @Test
+    func `getsid returns current session ID`() throws {
         let currentPID = Kernel.Process.ID.current
         let sessionID = try Kernel.Process.Session.id(of: currentPID)
         #expect(sessionID.rawValue > 0)
     }
 
-    @Test("spawned child can create new session")
-    func childCanCreateSession() throws {
+    @Test
+    func `spawned child can create new session`() throws {
         let child = try POSIXTestHelper.spawn("create-session")
         let result = try Kernel.Process.Wait.wait(.process(child))
         #expect(result?.status.exit.code == 0, "Child should successfully create new session")
     }
 
-    @Test("setsid fails if already group leader")
-    func setsidFailsIfGroupLeader() throws {
+    @Test
+    func `setsid fails if already group leader`() throws {
         let child = try POSIXTestHelper.spawn("double-setsid")
         let result = try Kernel.Process.Wait.wait(.process(child))
         #expect(result?.status.exit.code == 0, "Second setsid should fail with EPERM")

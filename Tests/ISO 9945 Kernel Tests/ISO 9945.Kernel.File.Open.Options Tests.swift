@@ -46,8 +46,8 @@ extension Kernel.File.Open.Options {
 // MARK: - Unit Tests
 
 extension Kernel.File.Open.Options.Test.Unit {
-    @Test("Options from rawValue")
-    func rawValueInit() {
+    @Test
+    func `Options from rawValue`() {
         let options = Kernel.File.Open.Options(rawValue: 1)
         #expect(options.rawValue == 1)
     }
@@ -56,34 +56,34 @@ extension Kernel.File.Open.Options.Test.Unit {
 // MARK: - Standard Options
 
 extension Kernel.File.Open.Options.Test.Unit {
-    @Test("create maps to O_CREAT")
-    func createConstant() {
+    @Test
+    func `create maps to O_CREAT`() {
         #expect(Kernel.File.Open.Options.create.rawValue == O_CREAT)
     }
 
-    @Test("truncate maps to O_TRUNC")
-    func truncateConstant() {
+    @Test
+    func `truncate maps to O_TRUNC`() {
         #expect(Kernel.File.Open.Options.truncate.rawValue == O_TRUNC)
     }
 
-    @Test("append maps to O_APPEND")
-    func appendConstant() {
+    @Test
+    func `append maps to O_APPEND`() {
         #expect(Kernel.File.Open.Options.append.rawValue == O_APPEND)
     }
 
-    @Test("exclusive maps to O_EXCL")
-    func exclusiveConstant() {
+    @Test
+    func `exclusive maps to O_EXCL`() {
         #expect(Kernel.File.Open.Options.exclusive.rawValue == O_EXCL)
     }
 
-    @Test("noFollow maps to O_NOFOLLOW")
-    func noFollowConstant() {
+    @Test
+    func `noFollow maps to O_NOFOLLOW`() {
         #expect(Kernel.File.Open.Options.noFollow.rawValue == O_NOFOLLOW)
     }
 
     #if os(Linux)
-        @Test("direct maps to O_DIRECT on Linux")
-        func directConstant() {
+        @Test
+        func `direct maps to O_DIRECT on Linux`() {
             #expect(Kernel.File.Open.Options.direct.rawValue == O_DIRECT)
         }
     #endif
@@ -92,30 +92,30 @@ extension Kernel.File.Open.Options.Test.Unit {
 // MARK: - OptionSet Operations
 
 extension Kernel.File.Open.Options.Test.Unit {
-    @Test("options can be combined")
-    func combinedOptions() {
+    @Test
+    func `options can be combined`() {
         let options: Kernel.File.Open.Options = [.create, .truncate]
         #expect(options.contains(.create))
         #expect(options.contains(.truncate))
     }
 
-    @Test("contains check")
-    func containsCheck() {
+    @Test
+    func `contains check`() {
         let options: Kernel.File.Open.Options = [.create, .exclusive]
         #expect(options.contains(.create))
         #expect(options.contains(.exclusive))
         #expect(!options.contains(.append))
     }
 
-    @Test("empty options")
-    func emptyOptions() {
+    @Test
+    func `empty options`() {
         let options = Kernel.File.Open.Options()
         #expect(!options.contains(.create))
         #expect(!options.contains(.truncate))
     }
 
-    @Test("union of options")
-    func unionOptions() {
+    @Test
+    func `union of options`() {
         let a: Kernel.File.Open.Options = [.create]
         let b: Kernel.File.Open.Options = [.truncate]
         let combined = a.union(b)
@@ -123,8 +123,8 @@ extension Kernel.File.Open.Options.Test.Unit {
         #expect(combined.contains(.truncate))
     }
 
-    @Test("intersection of options")
-    func intersectionOptions() {
+    @Test
+    func `intersection of options`() {
         let a: Kernel.File.Open.Options = [.create, .truncate]
         let b: Kernel.File.Open.Options = [.truncate, .append]
         let common = a.intersection(b)
@@ -137,38 +137,38 @@ extension Kernel.File.Open.Options.Test.Unit {
 // MARK: - POSIX Flag Verification
 
 extension Kernel.File.Open.Options.Test.Unit {
-    @Test("create rawValue contains O_CREAT")
-    func createPosixFlags() {
+    @Test
+    func `create rawValue contains O_CREAT`() {
         let options: Kernel.File.Open.Options = [.create]
         #expect(options.rawValue & O_CREAT != 0)
     }
 
-    @Test("truncate rawValue contains O_TRUNC")
-    func truncatePosixFlags() {
+    @Test
+    func `truncate rawValue contains O_TRUNC`() {
         let options: Kernel.File.Open.Options = [.truncate]
         #expect(options.rawValue & O_TRUNC != 0)
     }
 
-    @Test("append rawValue contains O_APPEND")
-    func appendPosixFlags() {
+    @Test
+    func `append rawValue contains O_APPEND`() {
         let options: Kernel.File.Open.Options = [.append]
         #expect(options.rawValue & O_APPEND != 0)
     }
 
-    @Test("exclusive rawValue contains O_EXCL")
-    func exclusivePosixFlags() {
+    @Test
+    func `exclusive rawValue contains O_EXCL`() {
         let options: Kernel.File.Open.Options = [.exclusive]
         #expect(options.rawValue & O_EXCL != 0)
     }
 
-    @Test("noFollow rawValue contains O_NOFOLLOW")
-    func noFollowPosixFlags() {
+    @Test
+    func `noFollow rawValue contains O_NOFOLLOW`() {
         let options: Kernel.File.Open.Options = [.noFollow]
         #expect(options.rawValue & O_NOFOLLOW != 0)
     }
 
-    @Test("combined options rawValue maps correctly")
-    func combinedPosixFlags() {
+    @Test
+    func `combined options rawValue maps correctly`() {
         let options: Kernel.File.Open.Options = [.create, .truncate, .exclusive]
         let flags = options.rawValue
         #expect(flags & O_CREAT != 0)
@@ -176,15 +176,15 @@ extension Kernel.File.Open.Options.Test.Unit {
         #expect(flags & O_EXCL != 0)
     }
 
-    @Test("empty options have zero rawValue")
-    func emptyPosixFlags() {
+    @Test
+    func `empty options have zero rawValue`() {
         let options = Kernel.File.Open.Options()
         #expect(options.rawValue == 0)
     }
 
     #if os(Linux)
-        @Test("direct rawValue contains O_DIRECT on Linux")
-        func directPosixFlags() {
+        @Test
+        func `direct rawValue contains O_DIRECT on Linux`() {
             let options: Kernel.File.Open.Options = [.direct]
             #expect(options.rawValue & O_DIRECT != 0)
         }
@@ -194,14 +194,14 @@ extension Kernel.File.Open.Options.Test.Unit {
 // MARK: - Conformances
 
 extension Kernel.File.Open.Options.Test.Unit {
-    @Test("Options is Sendable")
-    func isSendable() {
+    @Test
+    func `Options is Sendable`() {
         let options: any Sendable = Kernel.File.Open.Options.create
         #expect(options is Kernel.File.Open.Options)
     }
 
-    @Test("Options is Equatable")
-    func isEquatable() {
+    @Test
+    func `Options is Equatable`() {
         let a: Kernel.File.Open.Options = [.create]
         let b: Kernel.File.Open.Options = [.create]
         let c: Kernel.File.Open.Options = [.truncate]
@@ -209,8 +209,8 @@ extension Kernel.File.Open.Options.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Options is Hashable")
-    func isHashable() {
+    @Test
+    func `Options is Hashable`() {
         var set = Set<Kernel.File.Open.Options>()
         set.insert([.create])
         set.insert([.truncate])
@@ -222,8 +222,8 @@ extension Kernel.File.Open.Options.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.File.Open.Options.Test.EdgeCase {
-    @Test("all standard options are distinct")
-    func distinctBits() {
+    @Test
+    func `all standard options are distinct`() {
         var options: [Kernel.File.Open.Options] = [
             .create, .truncate, .append, .exclusive, .noFollow,
         ]
@@ -237,15 +237,15 @@ extension Kernel.File.Open.Options.Test.EdgeCase {
         }
     }
 
-    @Test("common file creation pattern")
-    func createTruncatePattern() {
+    @Test
+    func `common file creation pattern`() {
         let options: Kernel.File.Open.Options = [.create, .truncate]
         #expect(options.contains(.create))
         #expect(options.contains(.truncate))
     }
 
-    @Test("exclusive create pattern")
-    func exclusiveCreatePattern() {
+    @Test
+    func `exclusive create pattern`() {
         let options: Kernel.File.Open.Options = [.create, .exclusive]
         #expect(options.contains(.create))
         #expect(options.contains(.exclusive))

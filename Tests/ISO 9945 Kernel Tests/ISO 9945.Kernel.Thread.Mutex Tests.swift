@@ -45,28 +45,28 @@ extension Kernel.Thread.Mutex {
 // MARK: - API Unit Tests
 
 extension Kernel.Thread.Mutex.Test.Unit {
-    @Test("init creates valid mutex")
-    func initCreatesValidMutex() {
+    @Test
+    func `init creates valid mutex`() {
         let mutex = Kernel.Thread.Mutex()
         _ = mutex
     }
 
-    @Test("lock and unlock complete successfully")
-    func lockAndUnlockSucceed() {
+    @Test
+    func `lock and unlock complete successfully`() {
         let mutex = Kernel.Thread.Mutex()
         mutex.lock()
         mutex.unlock()
     }
 
-    @Test("lock.immediate succeeds when available")
-    func lockImmediateSucceedsWhenAvailable() throws {
+    @Test
+    func `lock.immediate succeeds when available`() throws {
         let mutex = Kernel.Thread.Mutex()
         try mutex.lock.immediate()
         mutex.unlock()
     }
 
-    @Test("lock.immediate and unlock cycle works repeatedly")
-    func lockImmediateUnlockCycle() throws {
+    @Test
+    func `lock.immediate and unlock cycle works repeatedly`() throws {
         let mutex = Kernel.Thread.Mutex()
         let iterations = 100
 
@@ -76,8 +76,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
         }
     }
 
-    @Test("withLock executes body")
-    func withLockExecutesBody() {
+    @Test
+    func `withLock executes body`() {
         let mutex = Kernel.Thread.Mutex()
         var executed = false
 
@@ -88,8 +88,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
         #expect(executed == true)
     }
 
-    @Test("withLock returns value from body")
-    func withLockReturnsValue() {
+    @Test
+    func `withLock returns value from body`() {
         let mutex = Kernel.Thread.Mutex()
 
         let result = mutex.withLock {
@@ -99,8 +99,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
         #expect(result == 42)
     }
 
-    @Test("withLock releases mutex after body")
-    func withLockReleasesMutex() throws {
+    @Test
+    func `withLock releases mutex after body`() throws {
         let mutex = Kernel.Thread.Mutex()
 
         mutex.withLock {}
@@ -109,8 +109,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
         mutex.unlock()
     }
 
-    @Test("withLock releases mutex on throw")
-    func withLockReleasesOnThrow() throws {
+    @Test
+    func `withLock releases mutex on throw`() throws {
         let mutex = Kernel.Thread.Mutex()
 
         struct TestError: Swift.Error {}
@@ -125,8 +125,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
         mutex.unlock()
     }
 
-    @Test("multiple mutexes are independent")
-    func multipleMutexesIndependent() throws {
+    @Test
+    func `multiple mutexes are independent`() throws {
         let mutex1 = Kernel.Thread.Mutex()
         let mutex2 = Kernel.Thread.Mutex()
 
@@ -136,8 +136,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
         mutex1.unlock()
     }
 
-    @Test("nested withLock on different mutexes")
-    func nestedWithLockDifferentMutexes() {
+    @Test
+    func `nested withLock on different mutexes`() {
         let mutex1 = Kernel.Thread.Mutex()
         let mutex2 = Kernel.Thread.Mutex()
         var innerExecuted = false
@@ -163,8 +163,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
 #if canImport(Darwin)
 
     extension Kernel.Thread.Mutex.Test.Unit {
-        @Test("lock.immediate throws contention when held by another thread")
-        func lockImmediateThrowsContentionWhenHeld() throws {
+        @Test
+        func `lock.immediate throws contention when held by another thread`() throws {
             let mutex = Kernel.Thread.Mutex()
 
             struct State {
@@ -233,8 +233,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
             }
         }
 
-        @Test("lock blocks until mutex is available")
-        func lockBlocksUntilAvailable() throws {
+        @Test
+        func `lock blocks until mutex is available`() throws {
             let mutex = Kernel.Thread.Mutex()
 
             struct State {
@@ -300,8 +300,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
             }
         }
 
-        @Test("mutex protects shared counter from data races")
-        func mutexProtectsSharedCounter() throws {
+        @Test
+        func `mutex protects shared counter from data races`() throws {
             let mutex = Kernel.Thread.Mutex()
 
             struct State {

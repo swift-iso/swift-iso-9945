@@ -38,8 +38,8 @@ extension Kernel.Memory.Map.Options {
 
 
     extension Kernel.Memory.Map.Options.Test.Unit {
-        @Test("shared and private are distinct")
-        func sharedAndPrivateDistinct() {
+        @Test
+        func `shared and private are distinct`() {
             let shared = Kernel.Memory.Map.Options.shared
             let priv = Kernel.Memory.Map.Options.private
 
@@ -47,20 +47,20 @@ extension Kernel.Memory.Map.Options {
             #expect(shared.rawValue != priv.rawValue)
         }
 
-        @Test("anonymous flag exists")
-        func anonymousFlagExists() {
+        @Test
+        func `anonymous flag exists`() {
             let anon = Kernel.Memory.Map.Options.anonymous
             #expect(anon.rawValue != 0)
         }
 
-        @Test("fixed flag exists")
-        func fixedFlagExists() {
+        @Test
+        func `fixed flag exists`() {
             let fixed = Kernel.Memory.Map.Options.fixed
             #expect(fixed.rawValue != 0)
         }
 
-        @Test("bitwise OR combines flags")
-        func bitwiseOrCombinesOptions() {
+        @Test
+        func `bitwise OR combines flags`() {
             let priv = Kernel.Memory.Map.Options.private
             let anon = Kernel.Memory.Map.Options.anonymous
             let combined = priv | anon
@@ -68,8 +68,8 @@ extension Kernel.Memory.Map.Options {
             #expect(combined.rawValue == (priv.rawValue | anon.rawValue))
         }
 
-        @Test("Options is Equatable")
-        func flagsIsEquatable() {
+        @Test
+        func `Options is Equatable`() {
             let a = Kernel.Memory.Map.Options.shared
             let b = Kernel.Memory.Map.Options.shared
             let c = Kernel.Memory.Map.Options.private
@@ -78,8 +78,8 @@ extension Kernel.Memory.Map.Options {
             #expect(a != c)
         }
 
-        @Test("Options is Hashable")
-        func flagsIsHashable() {
+        @Test
+        func `Options is Hashable`() {
             var set = Set<Kernel.Memory.Map.Options>()
             set.insert(.shared)
             set.insert(.private)
@@ -90,8 +90,8 @@ extension Kernel.Memory.Map.Options {
             #expect(set.contains(.private))
         }
 
-        @Test("all flags are distinct")
-        func allOptionsDistinct() {
+        @Test
+        func `all flags are distinct`() {
             let shared = Kernel.Memory.Map.Options.shared
             let priv = Kernel.Memory.Map.Options.private
             let anon = Kernel.Memory.Map.Options.anonymous

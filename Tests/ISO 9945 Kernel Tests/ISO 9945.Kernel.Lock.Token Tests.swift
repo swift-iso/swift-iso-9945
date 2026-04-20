@@ -37,13 +37,13 @@ extension Kernel.Lock.Token {
 // MARK: - Unit Tests
 
 extension Kernel.Lock.Token.Test.Unit {
-    @Test("Token type exists")
-    func typeExists() {
+    @Test
+    func `Token type exists`() {
         let _: Kernel.Lock.Token.Type = Kernel.Lock.Token.self
     }
 
-    @Test("Token is ~Copyable")
-    func isNonCopyable() {
+    @Test
+    func `Token is ~Copyable`() {
         // Token is ~Copyable, which means it cannot be copied
         // This is a compile-time constraint, we just verify the type exists
         let _: Kernel.Lock.Token.Type = Kernel.Lock.Token.self
@@ -53,8 +53,8 @@ extension Kernel.Lock.Token.Test.Unit {
 // MARK: - withExclusive and withShared Tests
 
 extension Kernel.Lock.Token.Test.Unit {
-    @Test("withExclusive exists")
-    func withExclusiveExists() {
+    @Test
+    func `withExclusive exists`() {
         // Verify the static method signature exists
         typealias WithExclusiveType = (
             borrowing Kernel.Descriptor,
@@ -65,8 +65,8 @@ extension Kernel.Lock.Token.Test.Unit {
         // The method signature is verified at compile time
     }
 
-    @Test("withShared exists")
-    func withSharedExists() {
+    @Test
+    func `withShared exists`() {
         // Verify the static method signature exists
         typealias WithSharedType = (
             borrowing Kernel.Descriptor,
@@ -81,21 +81,21 @@ extension Kernel.Lock.Token.Test.Unit {
 // MARK: - Acquire Strategy Tests
 
 extension Kernel.Lock.Token.Test.Unit {
-    @Test("Token init accepts try acquisition")
-    func initAcceptsTry() {
+    @Test
+    func `Token init accepts try acquisition`() {
         // Verify the init accepts .try acquisition
         // The init signature is: init(descriptor:range:kind:acquire:)
         let _: Kernel.Lock.Acquire = .try
     }
 
-    @Test("Token init accepts wait acquisition")
-    func initAcceptsWait() {
+    @Test
+    func `Token init accepts wait acquisition`() {
         // Verify the init accepts .wait acquisition (the default)
         let _: Kernel.Lock.Acquire = .wait
     }
 
-    @Test("Token init accepts deadline acquisition")
-    func initAcceptsDeadline() {
+    @Test
+    func `Token init accepts deadline acquisition`() {
         // Verify the init accepts .deadline acquisition
         let deadline = Clock.Continuous.now
         let _: Kernel.Lock.Acquire = .deadline(deadline)
@@ -105,14 +105,14 @@ extension Kernel.Lock.Token.Test.Unit {
 // MARK: - Default Parameter Tests
 
 extension Kernel.Lock.Token.Test.Unit {
-    @Test("Token init has default range of .file")
-    func defaultRangeIsFile() {
+    @Test
+    func `Token init has default range of .file`() {
         // The init has: range: Range = .file
         let _: Kernel.Lock.Range = .file
     }
 
-    @Test("Token init has default acquire of .wait")
-    func defaultAcquireIsWait() {
+    @Test
+    func `Token init has default acquire of .wait`() {
         // The init has: acquire: Acquire = .wait
         let _: Kernel.Lock.Acquire = .wait
     }
@@ -121,23 +121,23 @@ extension Kernel.Lock.Token.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Lock.Token.Test.EdgeCase {
-    @Test("Token uses all Lock.Kind values")
-    func usesAllKinds() {
+    @Test
+    func `Token uses all Lock.Kind values`() {
         // Token accepts both shared and exclusive kinds
         let _: Kernel.Lock.Kind = .shared
         let _: Kernel.Lock.Kind = .exclusive
     }
 
-    @Test("Token uses all Lock.Range values")
-    func usesAllRanges() {
+    @Test
+    func `Token uses all Lock.Range values`() {
         // Token accepts all range types
         let _: Kernel.Lock.Range = .file
         let _: Kernel.Lock.Range = .bytes(start: 0, end: 100)
         let _: Kernel.Lock.Range = .bytes(start: 0, length: 100)
     }
 
-    @Test("Token uses all Lock.Acquire values")
-    func usesAllAcquireStrategies() {
+    @Test
+    func `Token uses all Lock.Acquire values`() {
         // Token accepts all acquisition strategies
         let _: Kernel.Lock.Acquire = .try
         let _: Kernel.Lock.Acquire = .wait

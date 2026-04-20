@@ -37,29 +37,29 @@ extension Kernel.File.Open.Mode {
 // MARK: - Unit Tests
 
 extension Kernel.File.Open.Mode.Test.Unit {
-    @Test("explicit init sets read/write fields")
-    func explicitInit() {
+    @Test
+    func `explicit init sets read/write fields`() {
         let mode = Kernel.File.Open.Mode(read: true, write: false)
         #expect(mode.read == true)
         #expect(mode.write == false)
     }
 
-    @Test(".read constant is read-only")
-    func readConstant() {
+    @Test
+    func `.read constant is read-only`() {
         let mode = Kernel.File.Open.Mode.read
         #expect(mode.read == true)
         #expect(mode.write == false)
     }
 
-    @Test(".write constant is write-only")
-    func writeConstant() {
+    @Test
+    func `.write constant is write-only`() {
         let mode = Kernel.File.Open.Mode.write
         #expect(mode.read == false)
         #expect(mode.write == true)
     }
 
-    @Test(".readWrite constant is read+write")
-    func readWriteConstant() {
+    @Test
+    func `.readWrite constant is read+write`() {
         let mode = Kernel.File.Open.Mode.readWrite
         #expect(mode.read == true)
         #expect(mode.write == true)
@@ -69,14 +69,14 @@ extension Kernel.File.Open.Mode.Test.Unit {
 // MARK: - Conformances
 
 extension Kernel.File.Open.Mode.Test.Unit {
-    @Test("Mode is Sendable")
-    func isSendable() {
+    @Test
+    func `Mode is Sendable`() {
         let mode: any Sendable = Kernel.File.Open.Mode.read
         #expect(mode is Kernel.File.Open.Mode)
     }
 
-    @Test("Mode is Equatable")
-    func isEquatable() {
+    @Test
+    func `Mode is Equatable`() {
         let a = Kernel.File.Open.Mode(read: true, write: false)
         let b = Kernel.File.Open.Mode(read: true, write: false)
         let c = Kernel.File.Open.Mode(read: false, write: true)
@@ -84,8 +84,8 @@ extension Kernel.File.Open.Mode.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Mode is Hashable")
-    func isHashable() {
+    @Test
+    func `Mode is Hashable`() {
         var set = Set<Kernel.File.Open.Mode>()
         set.insert(.read)
         set.insert(.write)
@@ -97,19 +97,19 @@ extension Kernel.File.Open.Mode.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.File.Open.Mode.Test.EdgeCase {
-    @Test(".read and .write are distinct modes")
-    func distinctConstants() {
+    @Test
+    func `.read and .write are distinct modes`() {
         #expect(Kernel.File.Open.Mode.read != Kernel.File.Open.Mode.write)
     }
 
-    @Test(".readWrite combines both flags")
-    func readWriteCombined() {
+    @Test
+    func `.readWrite combines both flags`() {
         let rw = Kernel.File.Open.Mode.readWrite
         #expect(rw.read && rw.write)
     }
 
-    @Test("empty mode has neither flag set")
-    func emptyMode() {
+    @Test
+    func `empty mode has neither flag set`() {
         let empty = Kernel.File.Open.Mode(read: false, write: false)
         #expect(!empty.read)
         #expect(!empty.write)

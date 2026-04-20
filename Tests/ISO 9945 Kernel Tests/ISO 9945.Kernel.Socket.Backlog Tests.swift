@@ -37,19 +37,19 @@ extension Kernel.Socket.Backlog {
 // MARK: - Unit Tests
 
 extension Kernel.Socket.Backlog.Test.Unit {
-    @Test("Backlog type exists")
-    func typeExists() {
+    @Test
+    func `Backlog type exists`() {
         let _: Kernel.Socket.Backlog.Type = Kernel.Socket.Backlog.self
     }
 
-    @Test("Backlog from rawValue")
-    func fromRawValue() {
+    @Test
+    func `Backlog from rawValue`() {
         let backlog = Kernel.Socket.Backlog(rawValue: 64)
         #expect(backlog.rawValue == 64)
     }
 
-    @Test("Backlog from Int32")
-    func fromInt32() {
+    @Test
+    func `Backlog from Int32`() {
         let backlog = Kernel.Socket.Backlog(256)
         #expect(backlog.rawValue == 256)
     }
@@ -58,23 +58,23 @@ extension Kernel.Socket.Backlog.Test.Unit {
 // MARK: - Constants Tests
 
 extension Kernel.Socket.Backlog.Test.Unit {
-    @Test("Backlog.default is 128")
-    func defaultConstant() {
+    @Test
+    func `Backlog.default is 128`() {
         #expect(Kernel.Socket.Backlog.default.rawValue == 128)
     }
 
-    @Test("Backlog.small is 16")
-    func smallConstant() {
+    @Test
+    func `Backlog.small is 16`() {
         #expect(Kernel.Socket.Backlog.small.rawValue == 16)
     }
 
-    @Test("Backlog.large is 4096")
-    func largeConstant() {
+    @Test
+    func `Backlog.large is 4096`() {
         #expect(Kernel.Socket.Backlog.large.rawValue == 4096)
     }
 
-        @Test("Backlog.max uses SOMAXCONN")
-        func maxConstant() {
+        @Test
+        func `Backlog.max uses SOMAXCONN`() {
             let max = Kernel.Socket.Backlog.max
             #expect(max.rawValue > 0)
         }
@@ -83,8 +83,8 @@ extension Kernel.Socket.Backlog.Test.Unit {
 // MARK: - ExpressibleByIntegerLiteral Tests
 
 extension Kernel.Socket.Backlog.Test.Unit {
-    @Test("Backlog from integer literal")
-    func fromIntegerLiteral() {
+    @Test
+    func `Backlog from integer literal`() {
         let backlog: Kernel.Socket.Backlog = 512
         #expect(backlog.rawValue == 512)
     }
@@ -93,14 +93,14 @@ extension Kernel.Socket.Backlog.Test.Unit {
 // MARK: - Conformance Tests
 
 extension Kernel.Socket.Backlog.Test.Unit {
-    @Test("Backlog is Sendable")
-    func isSendable() {
+    @Test
+    func `Backlog is Sendable`() {
         let value: any Sendable = Kernel.Socket.Backlog.default
         #expect(value is Kernel.Socket.Backlog)
     }
 
-    @Test("Backlog is Equatable")
-    func isEquatable() {
+    @Test
+    func `Backlog is Equatable`() {
         let a = Kernel.Socket.Backlog(128)
         let b = Kernel.Socket.Backlog(128)
         let c = Kernel.Socket.Backlog(256)
@@ -108,8 +108,8 @@ extension Kernel.Socket.Backlog.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Backlog is Hashable")
-    func isHashable() {
+    @Test
+    func `Backlog is Hashable`() {
         var set = Set<Kernel.Socket.Backlog>()
         set.insert(.default)
         set.insert(.small)
@@ -121,8 +121,8 @@ extension Kernel.Socket.Backlog.Test.Unit {
 // MARK: - CustomStringConvertible Tests
 
 extension Kernel.Socket.Backlog.Test.Unit {
-    @Test("Backlog description shows raw value")
-    func description() {
+    @Test
+    func `Backlog description shows raw value`() {
         let backlog = Kernel.Socket.Backlog(100)
         #expect(backlog.description == "100")
     }
@@ -131,20 +131,20 @@ extension Kernel.Socket.Backlog.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Socket.Backlog.Test.EdgeCase {
-    @Test("Backlog zero")
-    func zeroBacklog() {
+    @Test
+    func `Backlog zero`() {
         let backlog = Kernel.Socket.Backlog(0)
         #expect(backlog.rawValue == 0)
     }
 
-    @Test("Backlog negative")
-    func negativeBacklog() {
+    @Test
+    func `Backlog negative`() {
         let backlog = Kernel.Socket.Backlog(-1)
         #expect(backlog.rawValue == -1)
     }
 
-    @Test("Backlog rawValue roundtrip")
-    func rawValueRoundtrip() {
+    @Test
+    func `Backlog rawValue roundtrip`() {
         for value: Int32 in [0, 1, 16, 128, 4096, Int32.max] {
             let backlog = Kernel.Socket.Backlog(rawValue: value)
             #expect(backlog.rawValue == value)

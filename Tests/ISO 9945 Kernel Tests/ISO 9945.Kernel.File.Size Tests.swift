@@ -34,32 +34,32 @@ struct FileSizeTests {
 
     // MARK: - Basic Initialization
 
-    @Test("Size from integer literal")
-    func literalInit() {
+    @Test
+    func `Size from integer literal`() {
         let size: Kernel.File.Size = 4096
         #expect(size == 4096)
     }
 
-    @Test("Size from Int")
-    func intInit() {
+    @Test
+    func `Size from Int`() {
         let size = Kernel.File.Size(100)
         #expect(size == 100)
     }
 
-    @Test("Size from Int64")
-    func int64Init() {
+    @Test
+    func `Size from Int64`() {
         let size = Kernel.File.Size(Int64(5000))
         #expect(size == 5000)
     }
 
-    @Test("Size from UInt64")
-    func uint64Init() {
+    @Test
+    func `Size from UInt64`() {
         let size = Kernel.File.Size(UInt64(8192))
         #expect(size == 8192)
     }
 
-    @Test("Size from pages")
-    func pagesInit() {
+    @Test
+    func `Size from pages`() {
         let pageSizeBytes = UInt(Int(Kernel.System.pageSize))
         let size = Kernel.File.Size(pages: 2, pageSize: pageSizeBytes)
         let expectedBytes = 2 * Int(Kernel.System.pageSize)
@@ -68,28 +68,28 @@ struct FileSizeTests {
 
     // MARK: - Constants
 
-    @Test("zero constant")
-    func zeroConstant() {
+    @Test
+    func `zero constant`() {
         #expect(Kernel.File.Size.zero == 0)
     }
 
-    @Test("kilobyte constant")
-    func kilobyteConstant() {
+    @Test
+    func `kilobyte constant`() {
         #expect(Kernel.File.Size.kilobyte == 1024)
     }
 
-    @Test("megabyte constant")
-    func megabyteConstant() {
+    @Test
+    func `megabyte constant`() {
         #expect(Kernel.File.Size.megabyte.rawValue == 1024 * 1024)
     }
 
-    @Test("gigabyte constant")
-    func gigabyteConstant() {
+    @Test
+    func `gigabyte constant`() {
         #expect(Kernel.File.Size.gigabyte.rawValue == 1024 * 1024 * 1024)
     }
 
-    @Test("page constant")
-    func pageConstant() {
+    @Test
+    func `page constant`() {
         let pageSizeBytes = UInt(Int(Kernel.System.pageSize))
         let pageSize = Kernel.File.Size.page(size: pageSizeBytes)
         #expect(pageSize.rawValue == Int64(pageSizeBytes))
@@ -97,40 +97,40 @@ struct FileSizeTests {
 
     // MARK: - Queries
 
-    @Test("isZero for zero size")
-    func isZeroTrue() {
+    @Test
+    func `isZero for zero size`() {
         #expect(Kernel.File.Size.zero.isZero)
     }
 
-    @Test("isZero for non-zero size")
-    func isZeroFalse() {
+    @Test
+    func `isZero for non-zero size`() {
         let size: Kernel.File.Size = 100
         #expect(!size.isZero)
     }
 
-    @Test("isPositive for positive size")
-    func isPositiveTrue() {
+    @Test
+    func `isPositive for positive size`() {
         let size: Kernel.File.Size = 100
         #expect(size.isPositive)
     }
 
-    @Test("isPositive for zero")
-    func isPositiveZero() {
+    @Test
+    func `isPositive for zero`() {
         #expect(!Kernel.File.Size.zero.isPositive)
     }
 
     // MARK: - Arithmetic
 
-    @Test("Size plus Size")
-    func sizePlusSize() {
+    @Test
+    func `Size plus Size`() {
         let a: Kernel.File.Size = 1000
         let b: Kernel.File.Size = 2000
         let result = a + b
         #expect(result == 3000)
     }
 
-    @Test("Size minus Size")
-    func sizeMinusSize() {
+    @Test
+    func `Size minus Size`() {
         let a: Kernel.File.Size = 3000
         let b: Kernel.File.Size = 1000
         let result = a - b
@@ -139,8 +139,8 @@ struct FileSizeTests {
 
     // MARK: - Int Conversion
 
-    @Test("Int from Size")
-    func intFromSize() {
+    @Test
+    func `Int from Size`() {
         let size: Kernel.File.Size = 4096
         let intValue = Int(size)
         #expect(intValue == 4096)
@@ -148,8 +148,8 @@ struct FileSizeTests {
 
     // MARK: - Conformances
 
-    @Test("Size is Equatable")
-    func isEquatable() {
+    @Test
+    func `Size is Equatable`() {
         let a: Kernel.File.Size = 4096
         let b: Kernel.File.Size = 4096
         let c: Kernel.File.Size = 8192
@@ -157,8 +157,8 @@ struct FileSizeTests {
         #expect(a != c)
     }
 
-    @Test("Size is Hashable")
-    func isHashable() {
+    @Test
+    func `Size is Hashable`() {
         var set = Set<Kernel.File.Size>()
         set.insert(Kernel.File.Size(1024))
         set.insert(Kernel.File.Size(2048))
@@ -166,14 +166,14 @@ struct FileSizeTests {
         #expect(set.count == 2)
     }
 
-    @Test("Size is Sendable")
-    func isSendable() {
+    @Test
+    func `Size is Sendable`() {
         let size: any Sendable = Kernel.File.Size(4096)
         #expect(size is Kernel.File.Size)
     }
 
-    @Test("Size is Comparable")
-    func isComparable() {
+    @Test
+    func `Size is Comparable`() {
         let a: Kernel.File.Size = 1024
         let b: Kernel.File.Size = 2048
         #expect(a < b)

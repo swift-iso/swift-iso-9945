@@ -43,27 +43,27 @@ import Testing
 // MARK: - Unit Tests
 
     extension Kernel.Process.Error.Test.Unit {
-        @Test("error conforms to Swift.Error")
-        func conformsToError() {
+        @Test
+        func `error conforms to Swift.Error`() {
             let error: any Swift.Error = Kernel.Process.Error.fork(.posix(1))
             #expect(error is Kernel.Process.Error)
         }
 
-        @Test("error is Sendable")
-        func isSendable() {
+        @Test
+        func `error is Sendable`() {
             let error: any Sendable = Kernel.Process.Error.fork(.posix(1))
             #expect(error is Kernel.Process.Error)
         }
 
-        @Test("error is Equatable")
-        func isEquatable() {
+        @Test
+        func `error is Equatable`() {
             let code = Kernel.Error.Code.posix(1)
             #expect(Kernel.Process.Error.fork(code) == Kernel.Process.Error.fork(code))
             #expect(Kernel.Process.Error.fork(code) != Kernel.Process.Error.wait(code))
         }
 
-        @Test("code accessor returns underlying code")
-        func codeAccessor() {
+        @Test
+        func `code accessor returns underlying code`() {
             let code = Kernel.Error.Code.posix(42)
             let errors: [Kernel.Process.Error] = [
                 .fork(code),
@@ -78,8 +78,8 @@ import Testing
             }
         }
 
-        @Test("isInterrupted returns true for EINTR")
-        func isInterruptedCheck() {
+        @Test
+        func `isInterrupted returns true for EINTR`() {
             let code = Kernel.Error.Code.posix(EINTR)
             let error = Kernel.Process.Error.wait(code)
             #expect(error.isInterrupted)
@@ -88,8 +88,8 @@ import Testing
             #expect(!nonInterrupted.isInterrupted)
         }
 
-        @Test("all error cases are distinct")
-        func casesDistinct() {
+        @Test
+        func `all error cases are distinct`() {
             let code = Kernel.Error.Code.posix(1)
             let cases: [Kernel.Process.Error] = [
                 .fork(code),
@@ -112,8 +112,8 @@ import Testing
     // MARK: - Semantic Tests
 
     extension Kernel.Process.Error.Test.Unit {
-        @Test("semantic classification works")
-        func semanticClassification() {
+        @Test
+        func `semantic classification works`() {
             let resourceLimit = Kernel.Process.Error.fork(.posix(EAGAIN))
             #expect(resourceLimit.semantic == .resourceLimit)
 

@@ -38,8 +38,8 @@ extension Kernel.IO.Read {
 
 
     extension Kernel.IO.Read.Test.Unit {
-        @Test("read returns bytes from file")
-        func readReturnsBytesFromFile() throws {
+        @Test
+        func `read returns bytes from file`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -57,8 +57,8 @@ extension Kernel.IO.Read {
             #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, World!")
         }
 
-        @Test("read returns 0 on EOF")
-        func readReturnsZeroOnEOF() throws {
+        @Test
+        func `read returns 0 on EOF`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -79,8 +79,8 @@ extension Kernel.IO.Read {
             #expect(bytesRead == 0)
         }
 
-        @Test("read with empty buffer returns 0")
-        func readWithEmptyBufferReturnsZero() throws {
+        @Test
+        func `read with empty buffer returns 0`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -92,8 +92,8 @@ extension Kernel.IO.Read {
             #expect(bytesRead == 0)
         }
 
-        @Test("read partial buffer")
-        func readPartialBuffer() throws {
+        @Test
+        func `read partial buffer`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -111,8 +111,8 @@ extension Kernel.IO.Read {
             #expect(Swift.String(decoding: buffer.prefix(5), as: UTF8.self) == "Short")
         }
 
-        @Test("pread reads at offset without changing position")
-        func preadReadsAtOffset() throws {
+        @Test
+        func `pread reads at offset without changing position`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -135,8 +135,8 @@ extension Kernel.IO.Read {
             #expect(finalPos == initialPos)
         }
 
-        @Test("pread at end of file returns 0")
-        func preadAtEOFReturnsZero() throws {
+        @Test
+        func `pread at end of file returns 0`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -150,8 +150,8 @@ extension Kernel.IO.Read {
             #expect(bytesRead == 0)
         }
 
-        @Test("pread with empty buffer returns 0")
-        func preadWithEmptyBufferReturnsZero() throws {
+        @Test
+        func `pread with empty buffer returns 0`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -167,8 +167,8 @@ extension Kernel.IO.Read {
     // MARK: - Error Tests
 
     extension Kernel.IO.Read.Test.EdgeCase {
-        @Test("read throws on invalid descriptor")
-        func readThrowsOnInvalidDescriptor() {
+        @Test
+        func `read throws on invalid descriptor`() {
             var buffer = [UInt8](repeating: 0, count: 10)
 
             #expect(throws: Kernel.IO.Read.Error.self) {
@@ -178,8 +178,8 @@ extension Kernel.IO.Read {
             }
         }
 
-        @Test("pread throws on invalid descriptor")
-        func preadThrowsOnInvalidDescriptor() {
+        @Test
+        func `pread throws on invalid descriptor`() {
             var buffer = [UInt8](repeating: 0, count: 10)
 
             #expect(throws: Kernel.IO.Read.Error.self) {

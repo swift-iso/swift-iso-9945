@@ -27,22 +27,22 @@ import Kernel_Error_Primitives
 @Suite("Kernel.Thread.Yield")
 struct KernelThreadYieldTests {
 
-    @Test("yield completes without error")
-    func yieldCompletesWithoutError() {
+    @Test
+    func `yield completes without error`() {
         // Basic smoke test - yield should complete without crashing
         Kernel.Thread.yield()
     }
 
-    @Test("yield can be called repeatedly")
-    func yieldCanBeCalledRepeatedly() {
+    @Test
+    func `yield can be called repeatedly`() {
         // Verify repeated yields don't cause issues
         for _ in 0..<100 {
             Kernel.Thread.yield()
         }
     }
 
-    @Test("yield from concurrent tasks")
-    func yieldFromConcurrentTasks() async {
+    @Test
+    func `yield from concurrent tasks`() async {
         // Verify yield works correctly when called from concurrent tasks
         // Note: This tests concurrent task execution, not necessarily
         // multiple OS threads (Swift runtime decides thread mapping)
@@ -65,8 +65,8 @@ struct KernelThreadYieldTests {
 import Darwin
 
 extension KernelThreadYieldTests {
-    @Test("yield from multiple OS threads")
-    func yieldFromMultipleOSThreads() throws {
+    @Test
+    func `yield from multiple OS threads`() throws {
         // Test yield from actual OS threads using pthread
         let threadCount = 4
         let iterations = 100

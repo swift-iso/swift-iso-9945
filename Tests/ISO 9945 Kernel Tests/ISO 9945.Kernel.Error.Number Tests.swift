@@ -46,85 +46,85 @@ extension Kernel.Error.Number {
     #endif
 
     extension Kernel.Error.Number.Test.Unit {
-        @Test("noEntry equals ENOENT")
-        func noEntryEqualsENOENT() {
+        @Test
+        func `noEntry equals ENOENT`() {
             #expect(Kernel.Error.Number.noEntry == Kernel.Error.Number(__unchecked: (), ENOENT))
         }
 
-        @Test("accessDenied equals EACCES")
-        func accessDeniedEqualsEACCES() {
+        @Test
+        func `accessDenied equals EACCES`() {
             #expect(Kernel.Error.Number.accessDenied == Kernel.Error.Number(__unchecked: (), EACCES))
         }
 
-        @Test("notPermitted equals EPERM")
-        func notPermittedEqualsEPERM() {
+        @Test
+        func `notPermitted equals EPERM`() {
             #expect(Kernel.Error.Number.notPermitted == Kernel.Error.Number(__unchecked: (), EPERM))
         }
 
-        @Test("exists equals EEXIST")
-        func existsEqualsEEXIST() {
+        @Test
+        func `exists equals EEXIST`() {
             #expect(Kernel.Error.Number.exists == Kernel.Error.Number(__unchecked: (), EEXIST))
         }
 
-        @Test("isDirectory equals EISDIR")
-        func isDirectoryEqualsEISDIR() {
+        @Test
+        func `isDirectory equals EISDIR`() {
             #expect(Kernel.Error.Number.isDirectory == Kernel.Error.Number(__unchecked: (), EISDIR))
         }
 
-        @Test("processLimit equals EMFILE")
-        func processLimitEqualsEMFILE() {
+        @Test
+        func `processLimit equals EMFILE`() {
             #expect(Kernel.Error.Number.processLimit == Kernel.Error.Number(__unchecked: (), EMFILE))
         }
 
-        @Test("systemLimit equals ENFILE")
-        func systemLimitEqualsENFILE() {
+        @Test
+        func `systemLimit equals ENFILE`() {
             #expect(Kernel.Error.Number.systemLimit == Kernel.Error.Number(__unchecked: (), ENFILE))
         }
 
-        @Test("invalid equals EINVAL")
-        func invalidEqualsEINVAL() {
+        @Test
+        func `invalid equals EINVAL`() {
             #expect(Kernel.Error.Number.invalid == Kernel.Error.Number(__unchecked: (), EINVAL))
         }
 
-        @Test("interrupted equals EINTR")
-        func interruptedEqualsEINTR() {
+        @Test
+        func `interrupted equals EINTR`() {
             #expect(Kernel.Error.Number.interrupted == Kernel.Error.Number(__unchecked: (), EINTR))
         }
 
-        @Test("wouldBlock equals EAGAIN")
-        func wouldBlockEqualsEAGAIN() {
+        @Test
+        func `wouldBlock equals EAGAIN`() {
             #expect(Kernel.Error.Number.wouldBlock == Kernel.Error.Number(__unchecked: (), EAGAIN))
         }
 
-        @Test("noDevice equals ENODEV")
-        func noDeviceEqualsENODEV() {
+        @Test
+        func `noDevice equals ENODEV`() {
             #expect(Kernel.Error.Number.noDevice == Kernel.Error.Number(__unchecked: (), ENODEV))
         }
 
-        @Test("notDirectory equals ENOTDIR")
-        func notDirectoryEqualsENOTDIR() {
+        @Test
+        func `notDirectory equals ENOTDIR`() {
             #expect(Kernel.Error.Number.notDirectory == Kernel.Error.Number(__unchecked: (), ENOTDIR))
         }
 
-        @Test("readOnlyFilesystem equals EROFS")
-        func readOnlyFilesystemEqualsEROFS() {
+        @Test
+        func `readOnlyFilesystem equals EROFS`() {
             #expect(Kernel.Error.Number.readOnlyFilesystem == Kernel.Error.Number(__unchecked: (), EROFS))
         }
 
-        @Test("noSpace equals ENOSPC")
-        func noSpaceEqualsENOSPC() {
+        @Test
+        func `noSpace equals ENOSPC`() {
             #expect(Kernel.Error.Number.noSpace == Kernel.Error.Number(__unchecked: (), ENOSPC))
         }
 
-        @Test("badDescriptor equals EBADF")
-        func badDescriptorEqualsEBADF() {
+        @Test
+        func `badDescriptor equals EBADF`() {
             #expect(Kernel.Error.Number.badDescriptor == Kernel.Error.Number(__unchecked: (), EBADF))
         }
     }
 
     extension Kernel.Error.Number.Test.Unit {
-        @Test("all error number values are distinct")
-        func allValuesDistinct() {
+        @Test
+        func `all error number values are distinct`() {
             let values: [Kernel.Error.Number] = [
                 .noEntry,
                 .accessDenied,
@@ -145,8 +145,8 @@ extension Kernel.Error.Number {
             #expect(uniqueValues.count == values.count, "All error number values should be distinct")
         }
 
-        @Test("all error number values are positive")
-        func allValuesPositive() {
+        @Test
+        func `all error number values are positive`() {
             #expect(Kernel.Error.Number.noEntry > 0)
             #expect(Kernel.Error.Number.accessDenied > 0)
             #expect(Kernel.Error.Number.notPermitted > 0)

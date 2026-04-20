@@ -37,13 +37,13 @@ extension Kernel.Thread.Handle {
 // MARK: - Unit Tests
 
 extension Kernel.Thread.Handle.Test.Unit {
-    @Test("Handle type exists")
-    func typeExists() {
+    @Test
+    func `Handle type exists`() {
         let _: Kernel.Thread.Handle.Type = Kernel.Thread.Handle.self
     }
 
-    @Test("Handle is ~Copyable")
-    func isNonCopyable() {
+    @Test
+    func `Handle is ~Copyable`() {
         // Handle is ~Copyable to enforce exactly-once join semantics
         // This is a compile-time constraint
         let _: Kernel.Thread.Handle.Type = Kernel.Thread.Handle.self
@@ -53,8 +53,8 @@ extension Kernel.Thread.Handle.Test.Unit {
 // MARK: - Conformance Tests
 
 extension Kernel.Thread.Handle.Test.Unit {
-    @Test("Handle type exists")
-    func handleTypeExists() {
+    @Test
+    func `Handle type exists`() {
         // Handle is @unchecked Sendable and ~Copyable
         // Verify the type exists
         let _: Kernel.Thread.Handle.Type = Kernel.Thread.Handle.self
@@ -64,22 +64,22 @@ extension Kernel.Thread.Handle.Test.Unit {
 // MARK: - Method Signature Tests
 
 extension Kernel.Thread.Handle.Test.Unit {
-    @Test("join method exists")
-    func joinMethodExists() {
+    @Test
+    func `join method exists`() {
         // join() is a consuming method that waits for thread completion
         // Signature: consuming func join()
         // This is verified at compile time
     }
 
-    @Test("detach method exists")
-    func detachMethodExists() {
+    @Test
+    func `detach method exists`() {
         // detach() is a consuming method that detaches the thread
         // Signature: consuming func detach()
         // This is verified at compile time
     }
 
-    @Test("isCurrent property exists")
-    func isCurrentPropertyExists() {
+    @Test
+    func `isCurrent property exists`() {
         // isCurrent checks if the handle refers to the current thread
         // Signature: var isCurrent: Bool { get }
         // This is verified at compile time
@@ -90,16 +90,16 @@ extension Kernel.Thread.Handle.Test.Unit {
 
 #if os(Windows)
     extension Kernel.Thread.Handle.Test.Unit {
-        @Test("Handle wraps HANDLE on Windows")
-        func wrapsWindowsHandle() {
+        @Test
+        func `Handle wraps HANDLE on Windows`() {
             // On Windows, Handle wraps a HANDLE
             // rawValue is of type HANDLE
         }
     }
 #else
     extension Kernel.Thread.Handle.Test.Unit {
-        @Test("Handle wraps pthread_t on POSIX")
-        func wrapsPthreadT() {
+        @Test
+        func `Handle wraps pthread_t on POSIX`() {
             // On POSIX, Handle wraps a pthread_t
             // rawValue is of type pthread_t
         }
@@ -109,8 +109,8 @@ extension Kernel.Thread.Handle.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Thread.Handle.Test.EdgeCase {
-    @Test("Handle move-only semantics prevent double-join")
-    func moveOnlySemantics() {
+    @Test
+    func `Handle move-only semantics prevent double-join`() {
         // The ~Copyable constraint ensures Handle cannot be copied
         // This prevents double-join which is undefined behavior
         // This is enforced at compile time

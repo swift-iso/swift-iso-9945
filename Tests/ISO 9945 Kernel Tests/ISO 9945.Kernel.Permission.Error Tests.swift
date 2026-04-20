@@ -37,8 +37,8 @@ extension Kernel.Permission.Error {
 // MARK: - Permission.Error Tests
 
 extension Kernel.Permission.Error.Test.Unit {
-    @Test("denied case exists")
-    func deniedCaseExists() {
+    @Test
+    func `denied case exists`() {
         let error = Kernel.Permission.Error.denied
         if case .denied = error {
             // Expected
@@ -47,8 +47,8 @@ extension Kernel.Permission.Error.Test.Unit {
         }
     }
 
-    @Test("notPermitted case exists")
-    func notPermittedCaseExists() {
+    @Test
+    func `notPermitted case exists`() {
         let error = Kernel.Permission.Error.notPermitted
         if case .notPermitted = error {
             // Expected
@@ -57,8 +57,8 @@ extension Kernel.Permission.Error.Test.Unit {
         }
     }
 
-    @Test("readOnlyFilesystem case exists")
-    func readOnlyFilesystemCaseExists() {
+    @Test
+    func `readOnlyFilesystem case exists`() {
         let error = Kernel.Permission.Error.readOnlyFilesystem
         if case .readOnlyFilesystem = error {
             // Expected
@@ -67,8 +67,8 @@ extension Kernel.Permission.Error.Test.Unit {
         }
     }
 
-    @Test("all cases are distinct")
-    func allCasesDistinct() {
+    @Test
+    func `all cases are distinct`() {
         let denied = Kernel.Permission.Error.denied
         let notPermitted = Kernel.Permission.Error.notPermitted
         let readOnly = Kernel.Permission.Error.readOnlyFilesystem
@@ -78,20 +78,20 @@ extension Kernel.Permission.Error.Test.Unit {
         #expect(notPermitted != readOnly)
     }
 
-    @Test("Permission.Error conforms to Swift.Error")
-    func conformsToSwiftError() {
+    @Test
+    func `Permission.Error conforms to Swift.Error`() {
         let error: any Swift.Error = Kernel.Permission.Error.denied
         #expect(error is Kernel.Permission.Error)
     }
 
-    @Test("Permission.Error is Sendable")
-    func isSendable() {
+    @Test
+    func `Permission.Error is Sendable`() {
         let error: any Sendable = Kernel.Permission.Error.denied
         #expect(error is Kernel.Permission.Error)
     }
 
-    @Test("Permission.Error is Equatable")
-    func isEquatable() {
+    @Test
+    func `Permission.Error is Equatable`() {
         let a = Kernel.Permission.Error.denied
         let b = Kernel.Permission.Error.denied
         let c = Kernel.Permission.Error.notPermitted
@@ -100,8 +100,8 @@ extension Kernel.Permission.Error.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Permission.Error is Hashable")
-    func isHashable() {
+    @Test
+    func `Permission.Error is Hashable`() {
         var set = Set<Kernel.Permission.Error>()
         set.insert(.denied)
         set.insert(.notPermitted)
@@ -114,28 +114,28 @@ extension Kernel.Permission.Error.Test.Unit {
         #expect(set.contains(.readOnlyFilesystem))
     }
 
-    @Test("denied description is meaningful")
-    func deniedDescription() {
+    @Test
+    func `denied description is meaningful`() {
         let error = Kernel.Permission.Error.denied
         #expect(error.description == "permission denied")
     }
 
-    @Test("notPermitted description is meaningful")
-    func notPermittedDescription() {
+    @Test
+    func `notPermitted description is meaningful`() {
         let error = Kernel.Permission.Error.notPermitted
         #expect(error.description == "operation not permitted")
     }
 
-    @Test("readOnlyFilesystem description is meaningful")
-    func readOnlyFilesystemDescription() {
+    @Test
+    func `readOnlyFilesystem description is meaningful`() {
         let error = Kernel.Permission.Error.readOnlyFilesystem
         #expect(error.description == "read-only filesystem")
     }
 }
 
 extension Kernel.Permission.Error.Test.Unit {
-    @Test("CustomStringConvertible works for all cases")
-    func customStringConvertibleAllCases() {
+    @Test
+    func `CustomStringConvertible works for all cases`() {
         let cases: [Kernel.Permission.Error] = [.denied, .notPermitted, .readOnlyFilesystem]
 
         for error in cases {

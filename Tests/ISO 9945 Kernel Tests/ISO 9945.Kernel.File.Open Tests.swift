@@ -41,29 +41,29 @@ extension Kernel.File.Open {
 // MARK: - Options Unit Tests
 
 extension Kernel.File.Open.Test.Unit {
-    @Test("Options is OptionSet")
-    func optionsIsOptionSet() {
+    @Test
+    func `Options is OptionSet`() {
         let options: Kernel.File.Open.Options = [.create, .truncate]
         #expect(options.contains(.create))
         #expect(options.contains(.truncate))
         #expect(!options.contains(.append))
     }
 
-    @Test("Options is Sendable")
-    func optionsIsSendable() {
+    @Test
+    func `Options is Sendable`() {
         let options: any Sendable = Kernel.File.Open.Options.create
         #expect(options is Kernel.File.Open.Options)
     }
 
-    @Test("Options can be combined")
-    func optionsCombine() {
+    @Test
+    func `Options can be combined`() {
         let combined = Kernel.File.Open.Options.create.union(.exclusive)
         #expect(combined.contains(.create))
         #expect(combined.contains(.exclusive))
     }
 
-    @Test("all standard options are distinct")
-    func standardOptionsDistinct() {
+    @Test
+    func `all standard options are distinct`() {
         let options: [Kernel.File.Open.Options] = [
             .create,
             .truncate,
@@ -84,14 +84,14 @@ extension Kernel.File.Open.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.File.Open.Test.EdgeCase {
-    @Test("empty options has zero raw value")
-    func emptyOptions() {
+    @Test
+    func `empty options has zero raw value`() {
         let empty = Kernel.File.Open.Options()
         #expect(empty.rawValue == 0)
     }
 
-    @Test("exclusive without create is valid but semantically requires create")
-    func exclusiveWithoutCreate() {
+    @Test
+    func `exclusive without create is valid but semantically requires create`() {
         // exclusive alone is valid at the API level
         let options = Kernel.File.Open.Options.exclusive
         #expect(options.contains(.exclusive))
@@ -103,8 +103,8 @@ extension Kernel.File.Open.Test.EdgeCase {
 
 
     extension Kernel.File.Open.Test.Unit {
-        @Test("open existing file for read succeeds")
-        func openExistingFileForRead() throws {
+        @Test
+        func `open existing file for read succeeds`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "open-test")
             defer { KernelIOTest.cleanup(path: path) }
             let fd = try KernelIOTest.open(at: path)
@@ -123,8 +123,8 @@ extension Kernel.File.Open.Test.EdgeCase {
             #expect(isValid)
         }
 
-        @Test("open with create creates new file")
-        func openWithCreateCreatesFile() throws {
+        @Test
+        func `open with create creates new file`() throws {
             let pathString = Kernel.Temporary.filePath(prefix: "open-create-test")
             let fd = try ISO_9945.Kernel.Path.scope(pathString) { path in
                 try Kernel.File.Open.open(
@@ -144,8 +144,8 @@ extension Kernel.File.Open.Test.EdgeCase {
             #expect(stats.type == .regular, "File should exist after create")
         }
 
-        @Test("open with truncate truncates existing file")
-        func openWithTruncateTruncatesFile() throws {
+        @Test
+        func `open with truncate truncates existing file`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "open-test")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -170,8 +170,8 @@ extension Kernel.File.Open.Test.EdgeCase {
             #expect(stats.size == 0, "File should be truncated to 0 bytes")
         }
 
-        @Test("open with append positions at end")
-        func openWithAppendPositionsAtEnd() throws {
+        @Test
+        func `open with append positions at end`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "open-test")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -209,8 +209,8 @@ extension Kernel.File.Open.Test.EdgeCase {
             #expect(content == "initial_extra")
         }
 
-        @Test("open with exclusive fails if file exists")
-        func openWithExclusiveFailsIfExists() throws {
+        @Test
+        func `open with exclusive fails if file exists`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "open-test")
             defer { KernelIOTest.cleanup(path: path) }
 
@@ -241,8 +241,8 @@ extension Kernel.File.Open.Test.EdgeCase {
     }
 
     extension Kernel.File.Open.Test.EdgeCase {
-        @Test("open nonexistent file without create throws")
-        func openNonexistentFileThrows() throws {
+        @Test
+        func `open nonexistent file without create throws`() throws {
             try ISO_9945.Kernel.Path.scope("/nonexistent/path/to/file") { path in
                 #expect(throws: Kernel.File.Open.Error.self) {
                     _ = try Kernel.File.Open.open(
@@ -255,8 +255,8 @@ extension Kernel.File.Open.Test.EdgeCase {
             }
         }
 
-        @Test("open directory for write throws")
-        func openDirectoryForWriteThrows() throws {
+        @Test
+        func `open directory for write throws`() throws {
             try ISO_9945.Kernel.Path.scope("/tmp") { path in
                 #expect(throws: Kernel.File.Open.Error.self) {
                     _ = try Kernel.File.Open.open(

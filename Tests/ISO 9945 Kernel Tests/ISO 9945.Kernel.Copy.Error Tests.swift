@@ -37,8 +37,8 @@ extension Kernel.Copy.Error {
 // MARK: - Unit Tests
 
 extension Kernel.Copy.Error.Test.Unit {
-    @Test("invalidDescriptor case exists")
-    func invalidDescriptorCase() {
+    @Test
+    func `invalidDescriptor case exists`() {
         let error = Kernel.Copy.Error.invalidDescriptor
         if case .invalidDescriptor = error {
             // Expected
@@ -47,8 +47,8 @@ extension Kernel.Copy.Error.Test.Unit {
         }
     }
 
-    @Test("crossDevice case exists")
-    func crossDeviceCase() {
+    @Test
+    func `crossDevice case exists`() {
         let error = Kernel.Copy.Error.crossDevice
         if case .crossDevice = error {
             // Expected
@@ -57,8 +57,8 @@ extension Kernel.Copy.Error.Test.Unit {
         }
     }
 
-    @Test("unsupported case exists")
-    func unsupportedCase() {
+    @Test
+    func `unsupported case exists`() {
         let error = Kernel.Copy.Error.unsupported
         if case .unsupported = error {
             // Expected
@@ -67,8 +67,8 @@ extension Kernel.Copy.Error.Test.Unit {
         }
     }
 
-    @Test("noSpace case exists")
-    func noSpaceCase() {
+    @Test
+    func `noSpace case exists`() {
         let error = Kernel.Copy.Error.noSpace
         if case .noSpace = error {
             // Expected
@@ -77,8 +77,8 @@ extension Kernel.Copy.Error.Test.Unit {
         }
     }
 
-    @Test("io case exists")
-    func ioCase() {
+    @Test
+    func `io case exists`() {
         let error = Kernel.Copy.Error.io
         if case .io = error {
             // Expected
@@ -87,8 +87,8 @@ extension Kernel.Copy.Error.Test.Unit {
         }
     }
 
-    @Test("permissionDenied case exists")
-    func permissionDeniedCase() {
+    @Test
+    func `permissionDenied case exists`() {
         let error = Kernel.Copy.Error.permissionDenied
         if case .permissionDenied = error {
             // Expected
@@ -101,33 +101,33 @@ extension Kernel.Copy.Error.Test.Unit {
 // MARK: - Description Tests
 
 extension Kernel.Copy.Error.Test.Unit {
-    @Test("invalidDescriptor description")
-    func invalidDescriptorDescription() {
+    @Test
+    func `invalidDescriptor description`() {
         #expect(Kernel.Copy.Error.invalidDescriptor.description == "invalid file descriptor")
     }
 
-    @Test("crossDevice description")
-    func crossDeviceDescription() {
+    @Test
+    func `crossDevice description`() {
         #expect(Kernel.Copy.Error.crossDevice.description == "cross-device copy not supported")
     }
 
-    @Test("unsupported description")
-    func unsupportedDescription() {
+    @Test
+    func `unsupported description`() {
         #expect(Kernel.Copy.Error.unsupported.description == "operation not supported")
     }
 
-    @Test("noSpace description")
-    func noSpaceDescription() {
+    @Test
+    func `noSpace description`() {
         #expect(Kernel.Copy.Error.noSpace.description == "no space left on device")
     }
 
-    @Test("io description")
-    func ioDescription() {
+    @Test
+    func `io description`() {
         #expect(Kernel.Copy.Error.io.description == "I/O error")
     }
 
-    @Test("permissionDenied description")
-    func permissionDeniedDescription() {
+    @Test
+    func `permissionDenied description`() {
         #expect(Kernel.Copy.Error.permissionDenied.description == "permission denied")
     }
 }
@@ -135,20 +135,20 @@ extension Kernel.Copy.Error.Test.Unit {
 // MARK: - Conformance Tests
 
 extension Kernel.Copy.Error.Test.Unit {
-    @Test("Error conforms to Swift.Error")
-    func isSwiftError() {
+    @Test
+    func `Error conforms to Swift.Error`() {
         let error: any Swift.Error = Kernel.Copy.Error.invalidDescriptor
         #expect(error is Kernel.Copy.Error)
     }
 
-    @Test("Error is Sendable")
-    func isSendable() {
+    @Test
+    func `Error is Sendable`() {
         let error: any Sendable = Kernel.Copy.Error.invalidDescriptor
         #expect(error is Kernel.Copy.Error)
     }
 
-    @Test("Error is Equatable")
-    func isEquatable() {
+    @Test
+    func `Error is Equatable`() {
         let a = Kernel.Copy.Error.invalidDescriptor
         let b = Kernel.Copy.Error.invalidDescriptor
         let c = Kernel.Copy.Error.crossDevice
@@ -156,8 +156,8 @@ extension Kernel.Copy.Error.Test.Unit {
         #expect(a != c)
     }
 
-    @Test("Error is Hashable")
-    func isHashable() {
+    @Test
+    func `Error is Hashable`() {
         var set = Set<Kernel.Copy.Error>()
         set.insert(.invalidDescriptor)
         set.insert(.crossDevice)
@@ -169,8 +169,8 @@ extension Kernel.Copy.Error.Test.Unit {
 // MARK: - Edge Cases
 
 extension Kernel.Copy.Error.Test.EdgeCase {
-    @Test("all cases are distinct")
-    func allCasesDistinct() {
+    @Test
+    func `all cases are distinct`() {
         let cases: [Kernel.Copy.Error] = [
             .invalidDescriptor,
             .crossDevice,
@@ -199,62 +199,62 @@ extension Kernel.Copy.Error.Test.EdgeCase {
     #endif
 
     extension Kernel.Copy.Error.Test.Unit {
-        @Test("EBADF maps to invalidDescriptor")
-        func ebadfMapping() {
+        @Test
+        func `EBADF maps to invalidDescriptor`() {
             let error = Kernel.Copy.Error(posixErrno: EBADF)
             #expect(error == .invalidDescriptor)
         }
 
-        @Test("EXDEV maps to crossDevice")
-        func exdevMapping() {
+        @Test
+        func `EXDEV maps to crossDevice`() {
             let error = Kernel.Copy.Error(posixErrno: EXDEV)
             #expect(error == .crossDevice)
         }
 
-        @Test("EINVAL maps to unsupported")
-        func einvalMapping() {
+        @Test
+        func `EINVAL maps to unsupported`() {
             let error = Kernel.Copy.Error(posixErrno: EINVAL)
             #expect(error == .unsupported)
         }
 
-        @Test("ENOTSUP maps to unsupported")
-        func enotsupMapping() {
+        @Test
+        func `ENOTSUP maps to unsupported`() {
             let error = Kernel.Copy.Error(posixErrno: ENOTSUP)
             #expect(error == .unsupported)
         }
 
-        @Test("EOPNOTSUPP maps to unsupported")
-        func eopnotsuppMapping() {
+        @Test
+        func `EOPNOTSUPP maps to unsupported`() {
             let error = Kernel.Copy.Error(posixErrno: EOPNOTSUPP)
             #expect(error == .unsupported)
         }
 
-        @Test("ENOSPC maps to noSpace")
-        func enospcMapping() {
+        @Test
+        func `ENOSPC maps to noSpace`() {
             let error = Kernel.Copy.Error(posixErrno: ENOSPC)
             #expect(error == .noSpace)
         }
 
-        @Test("EIO maps to io")
-        func eioMapping() {
+        @Test
+        func `EIO maps to io`() {
             let error = Kernel.Copy.Error(posixErrno: EIO)
             #expect(error == .io)
         }
 
-        @Test("EACCES maps to permissionDenied")
-        func eaccesMapping() {
+        @Test
+        func `EACCES maps to permissionDenied`() {
             let error = Kernel.Copy.Error(posixErrno: EACCES)
             #expect(error == .permissionDenied)
         }
 
-        @Test("EPERM maps to permissionDenied")
-        func epermMapping() {
+        @Test
+        func `EPERM maps to permissionDenied`() {
             let error = Kernel.Copy.Error(posixErrno: EPERM)
             #expect(error == .permissionDenied)
         }
 
-        @Test("unknown error maps to unsupported")
-        func unknownMapping() {
+        @Test
+        func `unknown error maps to unsupported`() {
             // Use an unlikely error code
             let error = Kernel.Copy.Error(posixErrno: 999)
             #expect(error == .unsupported)

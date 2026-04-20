@@ -38,8 +38,8 @@ extension Kernel.IO.Write {
 
 
     extension Kernel.IO.Write.Test.Unit {
-        @Test("write writes bytes to file")
-        func writeWritesBytesToFile() throws {
+        @Test
+        func `write writes bytes to file`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -60,8 +60,8 @@ extension Kernel.IO.Write {
             #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, World!")
         }
 
-        @Test("write with empty buffer returns 0")
-        func writeWithEmptyBufferReturnsZero() throws {
+        @Test
+        func `write with empty buffer returns 0`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -72,8 +72,8 @@ extension Kernel.IO.Write {
             #expect(bytesWritten == 0)
         }
 
-        @Test("write advances file position")
-        func writeAdvancesFilePosition() throws {
+        @Test
+        func `write advances file position`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -89,8 +89,8 @@ extension Kernel.IO.Write {
             #expect(finalPos == initialPos + 5)
         }
 
-        @Test("multiple writes append correctly")
-        func multipleWritesAppend() throws {
+        @Test
+        func `multiple writes append correctly`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -110,8 +110,8 @@ extension Kernel.IO.Write {
             #expect(Swift.String(decoding: buffer, as: UTF8.self) == "FirstSecond")
         }
 
-        @Test("pwrite writes at offset without changing position")
-        func pwriteWritesAtOffset() throws {
+        @Test
+        func `pwrite writes at offset without changing position`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -144,8 +144,8 @@ extension Kernel.IO.Write {
             #expect(Swift.String(decoding: buffer, as: UTF8.self) == "XXXABCXXXX")
         }
 
-        @Test("pwrite with empty buffer returns 0")
-        func pwriteWithEmptyBufferReturnsZero() throws {
+        @Test
+        func `pwrite with empty buffer returns 0`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -156,8 +156,8 @@ extension Kernel.IO.Write {
             #expect(bytesWritten == 0)
         }
 
-        @Test("pwrite can extend file")
-        func pwriteCanExtendFile() throws {
+        @Test
+        func `pwrite can extend file`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "write-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
@@ -179,8 +179,8 @@ extension Kernel.IO.Write {
     // MARK: - Error Tests
 
     extension Kernel.IO.Write.Test.EdgeCase {
-        @Test("write throws on invalid descriptor")
-        func writeThrowsOnInvalidDescriptor() {
+        @Test
+        func `write throws on invalid descriptor`() {
             let content = Array("test".utf8)
 
             #expect(throws: Kernel.IO.Write.Error.self) {
@@ -190,8 +190,8 @@ extension Kernel.IO.Write {
             }
         }
 
-        @Test("pwrite throws on invalid descriptor")
-        func pwriteThrowsOnInvalidDescriptor() {
+        @Test
+        func `pwrite throws on invalid descriptor`() {
             let content = Array("test".utf8)
 
             #expect(throws: Kernel.IO.Write.Error.self) {

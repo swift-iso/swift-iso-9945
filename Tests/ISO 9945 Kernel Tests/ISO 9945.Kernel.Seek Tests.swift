@@ -37,8 +37,8 @@ extension Kernel.File.Seek {
 // MARK: - Origin Unit Tests
 
 extension Kernel.File.Seek.Test.Unit {
-    @Test("Origin cases are distinct")
-    func originCasesDistinct() {
+    @Test
+    func `Origin cases are distinct`() {
         let start = Kernel.File.Seek.Origin.start
         let current = Kernel.File.Seek.Origin.current
         let end = Kernel.File.Seek.Origin.end
@@ -48,8 +48,8 @@ extension Kernel.File.Seek.Test.Unit {
         #expect(current != end)
     }
 
-    @Test("Origin is Sendable")
-    func originIsSendable() {
+    @Test
+    func `Origin is Sendable`() {
         let origin: any Sendable = Kernel.File.Seek.Origin.start
         #expect(origin is Kernel.File.Seek.Origin)
     }

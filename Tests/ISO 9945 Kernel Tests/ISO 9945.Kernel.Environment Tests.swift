@@ -37,13 +37,13 @@ extension Kernel.Environment {
 // MARK: - Unit Tests
 
 extension Kernel.Environment.Test.Unit {
-    @Test("Environment namespace exists")
-    func namespaceExists() {
+    @Test
+    func `Environment namespace exists`() {
         _ = Kernel.Environment.self
     }
 
-    @Test("Environment is an enum")
-    func isEnum() {
+    @Test
+    func `Environment is an enum`() {
         let _: Kernel.Environment.Type = Kernel.Environment.self
     }
 }
@@ -51,16 +51,16 @@ extension Kernel.Environment.Test.Unit {
 // MARK: - Get Tests
 
 extension Kernel.Environment.Test.Unit {
-    @Test("get returns nil for unset variable")
-    func getUnsetVariable() {
+    @Test
+    func `get returns nil for unset variable`() {
         let result = Kernel.Environment.get("__KERNEL_TEST_UNSET_VAR_12345__")
         // Kernel.String is ~Copyable, so we check nil-ness differently
         let isNil = (result == nil)
         #expect(isNil)
     }
 
-    @Test("get returns value for PATH")
-    func getPathVariable() {
+    @Test
+    func `get returns value for PATH`() {
         // PATH should always be set on all platforms
         let result = Kernel.Environment.get("PATH")
         // Kernel.String is ~Copyable, so we check nil-ness differently

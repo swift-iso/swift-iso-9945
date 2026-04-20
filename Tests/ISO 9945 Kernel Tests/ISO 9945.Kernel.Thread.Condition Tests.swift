@@ -45,26 +45,26 @@ extension Kernel.Thread.Condition {
 // MARK: - API Unit Tests
 
 extension Kernel.Thread.Condition.Test.Unit {
-    @Test("init creates valid condition")
-    func initCreatesValidCondition() {
+    @Test
+    func `init creates valid condition`() {
         let condition = Kernel.Thread.Condition()
         _ = condition
     }
 
-    @Test("signal with no waiters is no-op")
-    func signalWithNoWaitersIsNoOp() {
+    @Test
+    func `signal with no waiters is no-op`() {
         let condition = Kernel.Thread.Condition()
         condition.signal()
     }
 
-    @Test("broadcast with no waiters is no-op")
-    func broadcastWithNoWaitersIsNoOp() {
+    @Test
+    func `broadcast with no waiters is no-op`() {
         let condition = Kernel.Thread.Condition()
         condition.broadcast()
     }
 
-    @Test("wait with timeout can return false")
-    func waitWithTimeoutCanReturnFalse() {
+    @Test
+    func `wait with timeout can return false`() {
         // NOTE: We cannot assert a single timed wait MUST return false because
         // both POSIX pthread_cond_timedwait and Windows SleepConditionVariableSRW
         // allow spurious wakeups (returning success without being signaled).
@@ -91,8 +91,8 @@ extension Kernel.Thread.Condition.Test.Unit {
         #expect(sawTimeout == true, "Should observe at least one timeout within \(attempts) attempts")
     }
 
-    @Test("multiple conditions are independent")
-    func multipleConditionsIndependent() {
+    @Test
+    func `multiple conditions are independent`() {
         // Same note about spurious wakes - we verify independence structurally
         // by checking that signaling one condition doesn't affect the other.
         let mutex = Kernel.Thread.Mutex()
@@ -122,8 +122,8 @@ extension Kernel.Thread.Condition.Test.Unit {
         #expect(sawTimeout2 == true)
     }
 
-    @Test("signal and broadcast can be called repeatedly")
-    func signalAndBroadcastRepeatedCalls() {
+    @Test
+    func `signal and broadcast can be called repeatedly`() {
         let condition = Kernel.Thread.Condition()
 
         for _ in 0..<100 {
@@ -144,8 +144,8 @@ extension Kernel.Thread.Condition.Test.Unit {
 #if canImport(Darwin)
 
     extension Kernel.Thread.Condition.Test.Unit {
-        @Test("signal wakes waiting thread")
-        func signalWakesWaitingThread() throws {
+        @Test
+        func `signal wakes waiting thread`() throws {
             let mutex = Kernel.Thread.Mutex()
             let condition = Kernel.Thread.Condition()
 
@@ -234,8 +234,8 @@ extension Kernel.Thread.Condition.Test.Unit {
             }
         }
 
-        @Test("broadcast wakes all waiting threads")
-        func broadcastWakesAllThreads() throws {
+        @Test
+        func `broadcast wakes all waiting threads`() throws {
             let mutex = Kernel.Thread.Mutex()
             let condition = Kernel.Thread.Condition()
             let threadCount = 3
@@ -317,8 +317,8 @@ extension Kernel.Thread.Condition.Test.Unit {
             #expect(woken == threadCount, "All \(threadCount) threads should wake, got \(woken)")
         }
 
-        @Test("wait releases mutex while waiting")
-        func waitReleasesMutexWhileWaiting() throws {
+        @Test
+        func `wait releases mutex while waiting`() throws {
             let mutex = Kernel.Thread.Mutex()
             let condition = Kernel.Thread.Condition()
 
@@ -411,8 +411,8 @@ extension Kernel.Thread.Condition.Test.Unit {
             }
         }
 
-        @Test("wait reacquires mutex before returning")
-        func waitReacquiresMutexBeforeReturning() throws {
+        @Test
+        func `wait reacquires mutex before returning`() throws {
             let mutex = Kernel.Thread.Mutex()
             let condition = Kernel.Thread.Condition()
 
@@ -520,8 +520,8 @@ extension Kernel.Thread.Condition.Test.Unit {
             #expect(observed == true, "Thread should hold mutex immediately after wait returns")
         }
 
-        @Test("producer-consumer pattern works correctly")
-        func producerConsumerPattern() throws {
+        @Test
+        func `producer-consumer pattern works correctly`() throws {
             let mutex = Kernel.Thread.Mutex()
             let condition = Kernel.Thread.Condition()
             let itemCount = 100

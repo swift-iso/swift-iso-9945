@@ -38,8 +38,8 @@ extension Kernel.Memory.Map {
 
 
     extension Kernel.Memory.Map.Test.Unit {
-        @Test("anonymous map succeeds")
-        func anonymousMapSucceeds() throws {
+        @Test
+        func `anonymous map succeeds`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -48,8 +48,8 @@ extension Kernel.Memory.Map {
             #expect(region.length == pageSize)
         }
 
-        @Test("map and unmap cycle works")
-        func mapAndUnmapCycleWorks() throws {
+        @Test
+        func `map and unmap cycle works`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
 
@@ -60,8 +60,8 @@ extension Kernel.Memory.Map {
             // so we can't easily verify the unmap worked other than no error.
         }
 
-        @Test("mapped memory is readable and writable")
-        func mappedMemoryReadableWritable() throws {
+        @Test
+        func `mapped memory is readable and writable`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
@@ -79,8 +79,8 @@ extension Kernel.Memory.Map {
             #expect(region.span[1] == 123)
         }
 
-        @Test("sync succeeds on mapped region")
-        func syncSucceeds() throws {
+        @Test
+        func `sync succeeds on mapped region`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -89,8 +89,8 @@ extension Kernel.Memory.Map {
             try Kernel.Memory.Map.sync(addr: region.base, length: region.length)
         }
 
-        @Test("protect changes memory protection")
-        func protectChangesProtection() throws {
+        @Test
+        func `protect changes memory protection`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
@@ -115,8 +115,8 @@ extension Kernel.Memory.Map {
             // Note: Writing would now cause SIGBUS/SIGSEGV, which we can't test safely
         }
 
-        @Test("advise does not throw")
-        func adviseDoesNotThrow() throws {
+        @Test
+        func `advise does not throw`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -129,8 +129,8 @@ extension Kernel.Memory.Map {
             )
         }
 
-        @Test("multi-page mapping works")
-        func multiPageMappingWorks() throws {
+        @Test
+        func `multi-page mapping works`() throws {
             let multiPageSize = Kernel.File.Size(pages: 4, pageSize: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: multiPageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -147,8 +147,8 @@ extension Kernel.Memory.Map {
             #expect(region.span[region.span.count - 1] == 255)
         }
 
-        @Test("Region struct stores base and length")
-        func regionStructStoresValues() throws {
+        @Test
+        func `Region struct stores base and length`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
@@ -162,15 +162,15 @@ extension Kernel.Memory.Map {
     // MARK: - Error Tests
 
     extension Kernel.Memory.Map.Test.EdgeCase {
-        @Test("map with zero length throws")
-        func mapWithZeroLengthThrows() {
+        @Test
+        func `map with zero length throws`() {
             #expect(throws: Kernel.Memory.Map.Error.self) {
                 _ = try Kernel.Memory.Map.Anonymous.map(length: .zero)
             }
         }
 
-        @Test("map with zero length throws invalid length error")
-        func mapWithZeroLengthThrowsInvalidLength() {
+        @Test
+        func `map with zero length throws invalid length error`() {
             do {
                 _ = try Kernel.Memory.Map.Anonymous.map(length: .zero)
                 Issue.record("Expected error to be thrown")

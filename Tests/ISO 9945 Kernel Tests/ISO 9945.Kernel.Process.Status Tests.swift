@@ -37,26 +37,26 @@ import Testing
     // MARK: - Unit Tests
 
     extension Kernel.Process.Status.Test.Unit {
-        @Test("status is RawRepresentable")
-        func isRawRepresentable() {
+        @Test
+        func `status is RawRepresentable`() {
             let status = Kernel.Process.Status(rawValue: 0)
             #expect(status.rawValue == 0)
         }
 
-        @Test("status is Sendable")
-        func isSendable() {
+        @Test
+        func `status is Sendable`() {
             let status: any Sendable = Kernel.Process.Status(rawValue: 0)
             #expect(status is Kernel.Process.Status)
         }
 
-        @Test("status is Equatable")
-        func isEquatable() {
+        @Test
+        func `status is Equatable`() {
             #expect(Kernel.Process.Status(rawValue: 0) == Kernel.Process.Status(rawValue: 0))
             #expect(Kernel.Process.Status(rawValue: 0) != Kernel.Process.Status(rawValue: 1))
         }
 
-        @Test("status is Hashable")
-        func isHashable() {
+        @Test
+        func `status is Hashable`() {
             let status = Kernel.Process.Status(rawValue: 42)
             var set = Set<Kernel.Process.Status>()
             set.insert(status)
@@ -67,29 +67,29 @@ import Testing
     // MARK: - Nest.Name Accessor Tests
 
     extension Kernel.Process.Status.Test.Unit {
-        @Test("exit accessor returns Exit struct")
-        func exitAccessor() {
+        @Test
+        func `exit accessor returns Exit struct`() {
             let status = Kernel.Process.Status(rawValue: 0)
             let exit = status.exit
             #expect(exit is Kernel.Process.Status.Exit)
         }
 
-        @Test("terminating accessor returns Terminating struct")
-        func terminatingAccessor() {
+        @Test
+        func `terminating accessor returns Terminating struct`() {
             let status = Kernel.Process.Status(rawValue: 0)
             let terminating = status.terminating
             #expect(terminating is Kernel.Process.Status.Terminating)
         }
 
-        @Test("stop accessor returns Stop struct")
-        func stopAccessor() {
+        @Test
+        func `stop accessor returns Stop struct`() {
             let status = Kernel.Process.Status(rawValue: 0)
             let stop = status.stop
             #expect(stop is Kernel.Process.Status.Stop)
         }
 
-        @Test("core accessor returns Core struct")
-        func coreAccessor() {
+        @Test
+        func `core accessor returns Core struct`() {
             let status = Kernel.Process.Status(rawValue: 0)
             let core = status.core
             #expect(core is Kernel.Process.Status.Core)
@@ -99,8 +99,8 @@ import Testing
     // MARK: - Classification Tests
 
     extension Kernel.Process.Status.Test.Unit {
-        @Test("Classification cases are distinct")
-        func classificationCasesDistinct() {
+        @Test
+        func `Classification cases are distinct`() {
             let signal = Kernel.Signal.Number(rawValue: 9)  // SIGKILL
             let cases: [Kernel.Process.Status.Classification] = [
                 .exited(code: 0),
@@ -118,16 +118,16 @@ import Testing
             }
         }
 
-        @Test("exited classifications with different codes are different")
-        func exitedCodesDifferent() {
+        @Test
+        func `exited classifications with different codes are different`() {
             #expect(
                 Kernel.Process.Status.Classification.exited(code: 0)
                     != Kernel.Process.Status.Classification.exited(code: 1)
             )
         }
 
-        @Test("signaled classifications with different signals are different")
-        func signaledSignalsDifferent() {
+        @Test
+        func `signaled classifications with different signals are different`() {
             let sig9 = Kernel.Signal.Number(rawValue: 9)
             let sig15 = Kernel.Signal.Number(rawValue: 15)
             #expect(
@@ -136,8 +136,8 @@ import Testing
             )
         }
 
-        @Test("signaled classifications with different core dump are different")
-        func signaledCoreDifferent() {
+        @Test
+        func `signaled classifications with different core dump are different`() {
             let sig = Kernel.Signal.Number(rawValue: 9)
             #expect(
                 Kernel.Process.Status.Classification.signaled(signal: sig, false)
