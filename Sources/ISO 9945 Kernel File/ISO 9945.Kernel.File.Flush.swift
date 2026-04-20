@@ -2,7 +2,7 @@
 //
 // This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -25,9 +25,7 @@
 extension ISO_9945.Kernel.File.Flush {
     /// Synchronizes a file's in-core state with storage device.
     ///
-    /// This is the raw POSIX `fsync(2)` syscall. It does NOT automatically retry
-    /// on EINTR - callers must handle signal interruption explicitly. For automatic
-    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    /// This is the raw POSIX `fsync(2)` syscall.
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
@@ -36,7 +34,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func flush(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    public static func fsync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         #if canImport(Darwin)
             let result = Darwin.fsync(descriptor._rawValue)
         #elseif canImport(Musl)
@@ -55,11 +53,9 @@ extension ISO_9945.Kernel.File.Flush {
     #if os(Linux)
     /// Synchronizes a file's data (without metadata) to storage device.
     ///
-    /// This is the raw POSIX `fdatasync(2)` syscall. It does NOT automatically retry
-    /// on EINTR - callers must handle signal interruption explicitly. For automatic
-    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    /// This is the raw POSIX `fdatasync(2)` syscall.
     ///
-    /// Like `flush()`, but does not flush modified metadata unless needed
+    /// Like `fsync()`, but does not flush modified metadata unless needed
     /// to allow subsequent data retrieval.
     ///
     /// ## EINTR
@@ -69,7 +65,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func data(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    public static func fdatasync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         #if canImport(Musl)
             let result = Musl.fdatasync(descriptor._rawValue)
         #elseif canImport(Glibc)
@@ -87,9 +83,7 @@ extension ISO_9945.Kernel.File.Flush {
     #if canImport(Darwin)
     /// Flushes data to permanent storage with full sync (Darwin).
     ///
-    /// This is the raw Darwin `fcntl(F_FULLFSYNC)` syscall. It does NOT automatically
-    /// retry on EINTR - callers must handle signal interruption explicitly. For automatic
-    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    /// This is the raw Darwin `fcntl(F_FULLFSYNC)` syscall.
     ///
     /// Uses F_FULLFSYNC to ensure data is flushed through disk caches.
     /// This is the strongest durability guarantee on Darwin.
@@ -101,7 +95,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func full(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    public static func fullFsync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         let result = Darwin.fcntl(descriptor._rawValue, F_FULLFSYNC)
 
         if result != -1 {
@@ -113,9 +107,7 @@ extension ISO_9945.Kernel.File.Flush {
 
     /// Flushes data with barrier sync (Darwin).
     ///
-    /// This is the raw Darwin `fcntl(F_BARRIERFSYNC)` syscall. It does NOT automatically
-    /// retry on EINTR - callers must handle signal interruption explicitly. For automatic
-    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    /// This is the raw Darwin `fcntl(F_BARRIERFSYNC)` syscall.
     ///
     /// Uses F_BARRIERFSYNC which is lighter than F_FULLFSYNC but still provides
     /// ordering guarantees. Data is flushed to disk and a barrier is issued to
@@ -128,7 +120,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func barrier(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    public static func barrierFsync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
         let result = Darwin.fcntl(descriptor._rawValue, F_BARRIERFSYNC)
 
         if result != -1 {
