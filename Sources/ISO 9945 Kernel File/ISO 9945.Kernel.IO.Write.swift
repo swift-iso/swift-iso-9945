@@ -48,6 +48,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - buffer: The buffer to write from.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
+    @_disfavoredOverload
     public static func write(
         _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
@@ -100,6 +101,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
+    @_disfavoredOverload
     public static func pwrite(
         _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer,
@@ -139,6 +141,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - descriptor: The file descriptor to write to.
     ///   - buffer: The buffer to write from.
     /// - Throws: ``Kernel/IO/Write/Error`` on failure.
+    @_disfavoredOverload
     public static func writeAll(
         _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
@@ -176,6 +179,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Returns: Number of bytes written.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
 
+    @_disfavoredOverload
     public static func write(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>
@@ -194,6 +198,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Returns: Number of bytes written.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
 
+    @_disfavoredOverload
     public static func pwrite(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>,
@@ -211,6 +216,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - span: The span containing bytes to write.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
 
+    @_disfavoredOverload
     public static func writeAll(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>

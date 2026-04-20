@@ -54,7 +54,7 @@ extension Kernel.Thread.Handle.Test.Unit {
 
 extension Kernel.Thread.Handle.Test.Unit {
     @Test
-    func `Handle type exists`() {
+    func `Handle is @unchecked Sendable`() {
         // Handle is @unchecked Sendable and ~Copyable
         // Verify the type exists
         let _: Kernel.Thread.Handle.Type = Kernel.Thread.Handle.self

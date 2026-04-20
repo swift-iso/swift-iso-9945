@@ -30,6 +30,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - buffer: The buffer to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer
@@ -69,6 +70,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer,
@@ -113,6 +115,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
 
+    @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>
@@ -131,6 +134,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
 
+    @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>,
