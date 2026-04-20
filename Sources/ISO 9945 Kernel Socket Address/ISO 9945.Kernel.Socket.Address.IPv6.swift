@@ -15,7 +15,8 @@ extension Kernel.Socket.Address {
     public struct IPv6: @unchecked Sendable {
         internal var cValue: sockaddr_in6
 
-        /// Creates an IPv6 address.
+        /// Creates an IPv6 address with only the port set; the address bytes
+        /// are zero (the unspecified address, `::`).
         ///
         /// - Parameters:
         ///   - port: Port number in host byte order.
@@ -23,6 +24,42 @@ extension Kernel.Socket.Address {
             self.cValue = sockaddr_in6()
             self.cValue.sin6_family = sa_family_t(AF_INET6)
             self.cValue.sin6_port = port.bigEndian
+        }
+
+        /// Creates an IPv6 address from 16 raw bytes plus port / flow /
+        /// scope metadata.
+        ///
+        /// Per POSIX, `sockaddr_in6.sin6_addr` is a 16-byte quantity — the
+        /// address in network byte order. This init accepts those 16 bytes
+        /// directly and writes them into `sin6_addr`; no endianness
+        /// conversion is applied to the address bytes (they are already the
+        /// wire representation).
+        ///
+        /// - Parameters:
+        ///   - address: The 16 bytes of the IPv6 address in network byte
+        ///     order (first byte on the wire is `address.0`).
+        ///   - port: Port number in host byte order.
+        ///   - flowInfo: IPv6 flow information field.
+        ///   - scopeId: IPv6 scope identifier.
+        public init(
+            address: (
+                UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+                UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8
+            ),
+            port: UInt16 = 0,
+            flowInfo: UInt32 = 0,
+            scopeId: UInt32 = 0
+        ) {
+            self.cValue = sockaddr_in6()
+            self.cValue.sin6_family = sa_family_t(AF_INET6)
+            self.cValue.sin6_port = port.bigEndian
+            self.cValue.sin6_flowinfo = flowInfo
+            self.cValue.sin6_scope_id = scopeId
+            unsafe withUnsafeMutableBytes(of: &self.cValue.sin6_addr) { dst in
+                unsafe withUnsafeBytes(of: address) { src in
+                    unsafe dst.copyMemory(from: src)
+                }
+            }
         }
     }
 }
