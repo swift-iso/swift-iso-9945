@@ -29,15 +29,25 @@
 // MARK: - TTY Check
 
 extension ISO_9945.Kernel.TTY {
-    /// Check if a file descriptor refers to a terminal.
+    /// Check if a descriptor refers to a terminal.
+    ///
+    /// Wraps `isatty(fd)`.
+    ///
+    /// - Parameter descriptor: The descriptor to check.
+    /// - Returns: `true` if the descriptor refers to a terminal, `false` otherwise
+    ///
+    /// This is a pure observation - returns `false` on error rather than throwing.
+    public static func isTTY(_ descriptor: borrowing Kernel.Descriptor) -> Bool {
+        isTTY(fd: descriptor._rawValue)
+    }
+
+    /// Check if a raw file descriptor refers to a terminal (syscall variant).
     ///
     /// Wraps `isatty(fd)`.
     ///
     /// - Parameter fd: File descriptor to check (typically 0=stdin, 1=stdout, 2=stderr)
     /// - Returns: `true` if the descriptor refers to a terminal, `false` otherwise
-    ///
-    /// This is a pure observation - returns `false` on error rather than throwing.
-
+    @_spi(Syscall)
     public static func isTTY(fd: Int32) -> Bool {
         isatty(fd) != 0
     }
@@ -46,13 +56,25 @@ extension ISO_9945.Kernel.TTY {
 // MARK: - TTY Size Query
 
 extension ISO_9945.Kernel.TTY.Size {
-    /// Query terminal size for the given file descriptor.
+    /// Query terminal size for the given descriptor.
+    ///
+    /// Wraps `ioctl(fd, TIOCGWINSZ, &winsize)`.
+    ///
+    /// - Parameter descriptor: The descriptor to query.
+    /// - Returns: Terminal size in rows and columns
+    /// - Throws: ``Kernel.Error`` if the ioctl call fails (e.g., not a terminal)
+    public static func query(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
+        try query(fd: descriptor._rawValue)
+    }
+
+    /// Query terminal size for the given raw file descriptor (syscall variant).
     ///
     /// Wraps `ioctl(fd, TIOCGWINSZ, &winsize)`.
     ///
     /// - Parameter fd: File descriptor (typically 0=stdin, 1=stdout, 2=stderr)
     /// - Returns: Terminal size in rows and columns
     /// - Throws: ``Kernel.Error`` if the ioctl call fails (e.g., not a terminal)
+    @_spi(Syscall)
     public static func query(fd: Int32) throws(Kernel.Error) -> Self {
         var ws = winsize()
         let result = unsafe iso9945_ioctl_tiocgwinsz(fd, &ws)

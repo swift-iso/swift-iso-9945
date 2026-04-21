@@ -26,13 +26,25 @@
 // MARK: - Termios Attributes Get
 
 extension ISO_9945.Kernel.Termios.Attributes {
-    /// Get terminal attributes for the given file descriptor.
+    /// Get terminal attributes for the given descriptor.
+    ///
+    /// Wraps `tcgetattr(fd, &termios)`.
+    ///
+    /// - Parameter descriptor: The descriptor (must refer to a terminal).
+    /// - Returns: Current terminal attributes
+    /// - Throws: ``Kernel.Error`` if the syscall fails
+    public static func get(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
+        try get(fd: descriptor._rawValue)
+    }
+
+    /// Get terminal attributes for the given raw file descriptor (syscall variant).
     ///
     /// Wraps `tcgetattr(fd, &termios)`.
     ///
     /// - Parameter fd: File descriptor (must refer to a terminal)
     /// - Returns: Current terminal attributes
     /// - Throws: ``Kernel.Error`` if the syscall fails
+    @_spi(Syscall)
     public static func get(fd: Int32) throws(Kernel.Error) -> Self {
         var t = termios()
         let result = unsafe tcgetattr(fd, &t)
