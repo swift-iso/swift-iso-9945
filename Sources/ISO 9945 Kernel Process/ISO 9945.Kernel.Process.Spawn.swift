@@ -59,23 +59,27 @@ extension ISO_9945.Kernel.Process.Spawn {
     ///
     /// ## Usage
     ///
+    /// Consumers SHOULD use the `Path.Char` overload together with
+    /// ``Kernel/Path/Scope/array(_:_:_:)``; that overload is the typed
+    /// public entry point. This `CChar` form is kept as an SPI escape
+    /// hatch for callers that already own `CChar` pointers.
+    ///
     /// ```swift
     /// let argv = ["/usr/bin/true"]
     /// let envp: [String] = []
     ///
-    /// let child = try Kernel.Path.scope("/usr/bin/true") { path in
-    ///     try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
-    ///         try ISO_9945.Kernel.Process.Spawn.spawn(
-    ///             path: path.unsafeCString,
-    ///             argv: argvPtr,
-    ///             envp: envpPtr
-    ///         )
-    ///     }
+    /// let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+    ///     try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
+    ///         path: argvPtr[0]!,
+    ///         argv: argvPtr,
+    ///         envp: envpPtr
+    ///     )
     /// }
     ///
     /// let result = try Kernel.Process.Wait.wait(.process(child))
     /// ```
     @unsafe
+    @_spi(Syscall)
     public static func spawn(
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
