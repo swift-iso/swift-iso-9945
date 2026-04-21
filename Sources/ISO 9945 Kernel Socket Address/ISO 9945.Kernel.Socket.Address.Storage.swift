@@ -45,11 +45,11 @@ extension Kernel.Socket.Address.Storage {
     ///
     /// Used by syscall wrappers (bind, connect) that need a `sockaddr *` parameter.
     /// The pointer is valid only for the duration of the closure.
-    public func withUnsafeBytes<R>(
-        _ body: (UnsafeRawPointer, UInt32) throws -> R
-    ) rethrows -> R {
-        try unsafe withUnsafePointer(to: cValue) { ptr in
-            try unsafe body(UnsafeRawPointer(ptr), UInt32(MemoryLayout<sockaddr_storage>.size))
+    public func withUnsafeBytes<R, E: Swift.Error>(
+        _ body: (UnsafeRawPointer, UInt32) throws(E) -> R
+    ) throws(E) -> R {
+        try unsafe Swift.withUnsafeBytes(of: cValue) { (buffer: UnsafeRawBufferPointer) throws(E) -> R in
+            try unsafe body(buffer.baseAddress!, UInt32(buffer.count))
         }
     }
 
@@ -58,11 +58,11 @@ extension Kernel.Socket.Address.Storage {
     /// written by the kernel.
     ///
     /// Used by syscall wrappers (accept, getsockname) that fill in an address.
-    public mutating func withUnsafeMutableBytes<R>(
-        _ body: (UnsafeMutableRawPointer, UInt32) throws -> R
-    ) rethrows -> R {
-        try unsafe withUnsafeMutablePointer(to: &cValue) { ptr in
-            try unsafe body(UnsafeMutableRawPointer(ptr), UInt32(MemoryLayout<sockaddr_storage>.size))
+    public mutating func withUnsafeMutableBytes<R, E: Swift.Error>(
+        _ body: (UnsafeMutableRawPointer, UInt32) throws(E) -> R
+    ) throws(E) -> R {
+        try unsafe Swift.withUnsafeMutableBytes(of: &cValue) { (buffer: UnsafeMutableRawBufferPointer) throws(E) -> R in
+            try unsafe body(buffer.baseAddress!, UInt32(buffer.count))
         }
     }
 }
