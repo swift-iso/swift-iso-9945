@@ -1,6 +1,6 @@
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Socket_Primitives
-import ISO_9945_Kernel_Poll
+@_spi(Syscall) import ISO_9945_Kernel_Poll
 
 #if canImport(Darwin)
     internal import Darwin

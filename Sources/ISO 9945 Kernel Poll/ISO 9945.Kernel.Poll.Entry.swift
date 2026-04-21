@@ -16,11 +16,12 @@ extension ISO_9945.Kernel.Poll {
         /// The underlying C struct.
         internal var cValue: pollfd
 
-        /// Creates a poll entry.
+        /// Creates a poll entry (raw-Int32 descriptor variant).
         ///
         /// - Parameters:
         ///   - descriptor: The raw file descriptor to monitor.
         ///   - requested: Events to monitor for.
+        @_spi(Syscall)
         public init(descriptor: Int32, requested: Events) {
             self.cValue = pollfd(
                 fd: descriptor,
@@ -34,7 +35,8 @@ extension ISO_9945.Kernel.Poll {
 // MARK: - Accessors
 
 extension ISO_9945.Kernel.Poll.Entry {
-    /// The file descriptor being monitored.
+    /// The raw file descriptor being monitored.
+    @_spi(Syscall)
     public var descriptor: Int32 {
         get { cValue.fd }
         set { cValue.fd = newValue }
