@@ -38,6 +38,7 @@ extension ISO_9945.Kernel.Socket.Accept {
     /// defer { try? Kernel.Close.close(result.descriptor) }
     /// // result.address contains the peer's address
     /// ```
+    @_disfavoredOverload
     public static func accept(
         _ descriptor: borrowing Kernel.Socket.Descriptor
     ) throws(Kernel.Socket.Error) -> Result {
@@ -82,6 +83,7 @@ extension ISO_9945.Kernel.Socket.Accept {
     /// `Kernel.Socket.Descriptor` for the new connection — socket typing
     /// resurfaces at the result boundary where socket semantics (address
     /// family, peer tracking) matter.
+    @_disfavoredOverload
     public static func accept(
         _ descriptor: borrowing Kernel.Descriptor
     ) throws(Kernel.Socket.Error) -> Result {

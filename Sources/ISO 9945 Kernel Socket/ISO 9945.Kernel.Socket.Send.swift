@@ -32,6 +32,7 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - `.platform(.connectionReset)` (ECONNRESET): Peer reset the connection.
     /// - `.platform(.brokenPipe)` (EPIPE): Peer closed the connection.
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
+    @_disfavoredOverload
     public static func send(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         from span: Span<UInt8>,
@@ -62,6 +63,7 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - addressLength: The size of the destination address.
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `Kernel.Socket.Error` on failure.
+    @_disfavoredOverload
     public static func to(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         from span: Span<UInt8>,
@@ -97,6 +99,7 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `Kernel.Socket.Error` on failure.
+    @_disfavoredOverload
     public static func message(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         header: inout Kernel.Socket.Message.Header,

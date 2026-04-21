@@ -36,6 +36,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     /// - `.platform(.networkUnreachable)` (ENETUNREACH): Network is unreachable.
     /// - `.platform(.inProgress)` (EINPROGRESS): Non-blocking connect initiated.
     /// - `.platform(.alreadyConnected)` (EISCONN): Socket is already connected.
+    @_disfavoredOverload
     public static func connect(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.Storage,
@@ -52,6 +53,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     /// Connects a socket to an IPv4 address.
+    @_disfavoredOverload
     public static func connect(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.IPv4
@@ -60,6 +62,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     /// Connects a socket to an IPv6 address.
+    @_disfavoredOverload
     public static func connect(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.IPv6
@@ -68,6 +71,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     /// Connects a socket to a Unix domain address.
+    @_disfavoredOverload
     public static func connect(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.Unix

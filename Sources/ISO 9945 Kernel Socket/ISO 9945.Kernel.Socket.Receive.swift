@@ -31,6 +31,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// - `.platform(.wouldBlock)` (EAGAIN): Non-blocking and no data available.
     /// - `.platform(.connectionReset)` (ECONNRESET): Peer reset the connection.
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
+    @_disfavoredOverload
     public static func receive(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         into span: inout MutableSpan<UInt8>,
@@ -59,6 +60,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, the sender's address, and address length.
     /// - Throws: `Kernel.Socket.Error` on failure.
+    @_disfavoredOverload
     public static func from(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         into span: inout MutableSpan<UInt8>,
@@ -99,6 +101,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received.
     /// - Throws: `Kernel.Socket.Error` on failure.
+    @_disfavoredOverload
     public static func message(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         header: inout Kernel.Socket.Message.Header,
