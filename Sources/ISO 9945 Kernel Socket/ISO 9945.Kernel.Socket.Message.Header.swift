@@ -62,8 +62,8 @@ extension Kernel.Socket.Message.Header {
     }
 
     /// Flags on received message (output only, set by recvmsg).
-    public var flags: Int32 {
-        get { unsafe cValue.msg_flags }
-        set { unsafe cValue.msg_flags = newValue }
+    public var flags: Kernel.Socket.Message.Options {
+        get { unsafe Kernel.Socket.Message.Options(rawValue: cValue.msg_flags) }
+        set { unsafe cValue.msg_flags = newValue.rawValue }
     }
 }
