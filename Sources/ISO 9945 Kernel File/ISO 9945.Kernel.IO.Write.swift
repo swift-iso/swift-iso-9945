@@ -130,44 +130,6 @@ extension ISO_9945.Kernel.IO.Write {
     }
 }
 
-// MARK: - Write All
-
-extension ISO_9945.Kernel.IO.Write {
-    /// Writes all bytes to a file descriptor, handling partial writes and EINTR.
-    ///
-    /// This function loops until all bytes are written or an error occurs.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to write to.
-    ///   - buffer: The buffer to write from.
-    /// - Throws: ``Kernel/IO/Write/Error`` on failure.
-    @_disfavoredOverload
-    public static func writeAll(
-        _ descriptor: borrowing Kernel.Descriptor,
-        from buffer: UnsafeRawBufferPointer
-    ) throws(Error) {
-        guard let baseAddress = buffer.baseAddress else {
-            return
-        }
-
-        var written = 0
-        let total = buffer.count
-
-        while written < total {
-            let remaining = unsafe UnsafeRawBufferPointer(
-                start: baseAddress.advanced(by: written),
-                count: total - written
-            )
-            let n = try unsafe write(descriptor, from: remaining)
-            if n == 0 {
-                // Should not happen for regular files, but handle gracefully
-                throw .io(.hardware)
-            }
-            written += n
-        }
-    }
-}
-
 // MARK: - Span Adapters
 
 extension ISO_9945.Kernel.IO.Write {
@@ -209,22 +171,6 @@ extension ISO_9945.Kernel.IO.Write {
         }
     }
 
-    /// Writes all bytes from a span to a file descriptor.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to write to.
-    ///   - span: The span containing bytes to write.
-    /// - Throws: `Kernel.IO.Write.Error` on failure.
-
-    @_disfavoredOverload
-    public static func writeAll(
-        _ descriptor: borrowing Kernel.Descriptor,
-        from span: Span<UInt8>
-    ) throws(Error) {
-        try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) in
-            try unsafe writeAll(descriptor, from: buffer)
-        }
-    }
 }
 
 // MARK: - Error Conversion

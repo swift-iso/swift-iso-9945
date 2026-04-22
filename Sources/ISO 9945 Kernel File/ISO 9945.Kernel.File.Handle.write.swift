@@ -68,30 +68,6 @@ extension Kernel.File.Handle {
     }
 }
 
-// MARK: - Write All
-
-extension Kernel.File.Handle {
-    /// Writes all bytes to the file, handling partial writes.
-    ///
-    /// Loops until all bytes are written or an error occurs.
-    ///
-    /// - Parameter buffer: The buffer to write from.
-    /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
-    ///   `.right(.occurred)` for EINTR.
-    public borrowing func writeAll(
-        from buffer: UnsafeRawBufferPointer
-    ) throws(Either<Error, Kernel.Interrupt>) {
-        do {
-            try unsafe ISO_9945.Kernel.IO.Write.writeAll(descriptor, from: buffer)
-        } catch {
-            if error.code.isInterrupted {
-                throw .right(.occurred)
-            }
-            throw .left(Error(from: error, operation: .write))
-        }
-    }
-}
-
 // MARK: - Span Adapters
 
 extension Kernel.File.Handle {
@@ -128,24 +104,6 @@ extension Kernel.File.Handle {
     ) throws(Either<Error, Kernel.Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: span, at: offset)
-        } catch {
-            if error.code.isInterrupted {
-                throw .right(.occurred)
-            }
-            throw .left(Error(from: error, operation: .write))
-        }
-    }
-
-    /// Writes all bytes from a span to the file.
-    ///
-    /// - Parameter span: The span containing bytes to write.
-    /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
-    ///   `.right(.occurred)` for EINTR.
-    public borrowing func writeAll(
-        from span: Span<UInt8>
-    ) throws(Either<Error, Kernel.Interrupt>) {
-        do {
-            try ISO_9945.Kernel.IO.Write.writeAll(descriptor, from: span)
         } catch {
             if error.code.isInterrupted {
                 throw .right(.occurred)
