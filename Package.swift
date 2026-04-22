@@ -201,6 +201,7 @@ let package = Package(
             name: "ISO 9945 Kernel Socket",
             dependencies: [
                 "ISO 9945 Core",
+                "ISO 9945 Kernel File",
                 "ISO 9945 Kernel Poll",
                 "ISO 9945 Kernel Socket Address",
                 .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),

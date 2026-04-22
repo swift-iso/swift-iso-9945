@@ -1,5 +1,6 @@
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Socket_Primitives
+public import ISO_9945_Kernel_File
 
 #if canImport(Darwin)
     internal import Darwin
@@ -42,12 +43,12 @@ extension Kernel.Socket.Message.Header {
     public var vectors: Vectors {
         get {
             unsafe Vectors(
-                pointer: cValue.msg_iov.map(UnsafeMutableRawPointer.init),
+                pointer: UnsafeMutableRawPointer(cValue.msg_iov)?.assumingMemoryBound(to: Kernel.IO.Vector.Segment.self),
                 count: Int(cValue.msg_iovlen)
             )
         }
         set {
-            unsafe cValue.msg_iov = newValue.pointer?.assumingMemoryBound(to: iovec.self)
+            unsafe cValue.msg_iov = UnsafeMutableRawPointer(newValue.pointer)?.assumingMemoryBound(to: iovec.self)
             cValue.msg_iovlen = numericCast(newValue.count)
         }
     }
