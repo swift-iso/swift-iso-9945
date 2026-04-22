@@ -285,3 +285,76 @@ Reasoning:
 - Did NOT model the full si_code catalog in the doc — Option 3's union would need ~15–20 cases each with a sub-struct; deferred to the dedicated Option 3 implementation cycle to keep this doc within the 200–500-line target. Open Question #3 escalates the cross-platform coverage question that the full catalog would resolve.
 - Flagged the adjacent `public import Darwin/Glibc/Musl` concern as a drive-by observation and Open Question #5 — principal's Doc 2 guidance on "no silent scope expansion" applies; bundling is proposed, not assumed.
 - Applied the principal's "Span / stdlib-buffer over unsafe / pointer code" direction by considering `Span<UInt8>` for siginfo_t in Option 3's concepts — rejected because `Span` is `~Escapable` and the handler receives a pointer whose lifetime isn't scope-bound in the Swift sense. The layout-compatible struct (Kernel.Signal.Information) is the right shape for a fixed-size-layout C struct; Span fits variable-length byte buffers, which siginfo_t is not.
+
+## Principal Decisions (2026-04-22)
+
+Principal reviewed Doc 3 after `fd88ab4` landed; decisions on the 7 escalated open questions recorded here as the durable artifact. Decisions are binding on any implementation-cycle supervise block that carries forward this investigation.
+
+| # | Question | Decision | Rationale (principal's words, compressed) |
+|---|----------|----------|-------------------------------------------|
+| 1 | Option 1 staged vs Option 3 now vs Option 4 defer | **Option 1 staged.** | Foundation + typed accessors lands now; Option 3's `.content` enum lands as a follow-up cycle after empirical async-signal-safety verification. Option 4 (L3 AsyncSequence event bridge) deferred as weeks-scale. |
+| 2 | Async-signal-safety verification discipline | **Recommended for Option 1, required for Option 3.** | Option 1's typed-accessor pattern matches existing layout-compatible wrappers (Socket.Address.Storage, Vector.Segment) which don't allocate — low risk. Option 3 introduces enum construction whose compiler-version-dependent codegen IS the risk. If/when Option 3 ships, the verification experiment is a blocking prerequisite with explicit pass criteria (see Weakness #1 addition below). |
+| 3 | Platform-variance coverage (Option 3-conditional) | **Union-of-all-platforms with Linux-only cases marked.** | Cross-platform consumers get the richer Linux catalog as valid enum cases that just never fire on Darwin; Darwin-only consumers switch over the subset that fires for them. Intersection loses Linux-precision; platform-specific breaks portability. Union is the standard enum shape for platform-discriminated unions in the ecosystem. |
+| 4 | ucontext_t parameter treatment | **Option (a) — leave as `UnsafeMutableRawPointer?` with docstring acknowledging narrow-use exception. Option (c) "drop entirely" to be investigated as a separate follow-up.** | Option (c) is tempting but needs ABI-soundness verification — can Swift declare a 2-arg `@convention(c)` function type and have the runtime invoke it from a 3-arg sigaction slot? This needs a minimal test before committing. Option (b) "wrap in typed opaque" adds surface for minimal value (ucontext_t is rarely used). Start with (a); investigate (c) as a separate follow-up. See expanded analysis below (Weakness #3). |
+| 5 | Drive-by `public import Darwin/Glibc/Musl` bundle | **YES, bundle with Option 1's implementation cycle.** | Same file, same structural concern; the Handler redesign changes this file anyway. Demoting `public import` → `internal import` is additive to the Option 1 edit. Not scope expansion — coherent completion of the Handler.swift file's layering. |
+| 6 | Naming: `Kernel.Signal.Information` broad vs `Kernel.Signal.Action.Information` Action-coupled | **Broad: `Kernel.Signal.Information`.** | Precedent is `Kernel.Socket.Message.Header` directly under `.Message` (not under `.Send` or `.Receive`). siginfo_t describes information about the signal, used by any SA_SIGINFO handler — not coupled to Action. Placing under `.Signal` matches the pattern. |
+| 7 | Layout-soundness of `UnsafeMutablePointer<Signal.Information>` over kernel-allocated siginfo_t | **Confirmed sound.** | siginfo_t is kernel-allocated at full platform size (104 bytes Darwin, 128 bytes Linux); `Signal.Information`'s `internal var cValue: siginfo_t` inherits the exact layout. `MemoryLayout<Signal.Information>.stride == MemoryLayout<siginfo_t>.stride` by construction. Swift's typed-pointer contract is satisfied. Reasoning is correct — this is unlike Doc 2's Name case where msg_name pointed at a smaller allocation. |
+
+### Additional weaknesses principal flagged for the implementation cycle
+
+#### Weakness #1 — concrete async-signal-safety acceptance criteria
+
+Principal flagged Q2's "verify" as risk of sliding into "seems fine." Concrete pass criteria for the Option 3 verification experiment (required if Option 3 ever ships):
+
+1. **Test harness**: install the typed handler via `ISO_9945.Kernel.Signal.Action.set(signal:configuration:)` using `Handler.customInfo` with a body that constructs `info.pointee.content` and writes a byte to a pipe (async-signal-safe pipe write).
+2. **Allocation trap**: `LD_PRELOAD`-equivalent a `malloc`/`calloc`/`realloc`/`free` wrapper that `abort()`s on any call during the handler's execution. On Darwin use `malloc_zone_*` interception; on Linux use a shared library preload.
+3. **Trigger**: provoke SIGSEGV (dereference a null pointer in a separate thread). Signal handler runs in the signaled context.
+4. **Pass**: the pipe byte arrives AND the malloc-wrapper did NOT abort during `info.pointee.content` construction. Run 1000 iterations to account for stochastic codegen paths.
+5. **Fail**: either the malloc-wrapper aborts (indicating heap allocation inside the handler — Option 3 is structurally unsafe for handler use and collapses to Option 4), or the pipe byte never arrives (indicating the handler crashed — separate diagnostic). Either failure blocks the Option 3 remediation until a non-allocating construction path is designed.
+
+Experiment spec estimated at half-day scope once the implementation cycle opens. Without these criteria, "verification" is impossible to judge done.
+
+#### Weakness #2 — scoping estimate for Option 3's full si_code catalog
+
+Principal flagged Option 3's "~15–20 cases" as un-costed for scheduling. Rough estimate for the Option 3 follow-up cycle, conditional on the async-signal-safety experiment passing:
+
+- **POSIX-spec-defined si_code cases** (cross-platform union): `SI_USER`, `SI_QUEUE`, `SI_TIMER`, `SI_ASYNCIO`, `SI_MESGQ`, `CLD_EXITED`, `CLD_KILLED`, `CLD_DUMPED`, `CLD_TRAPPED`, `CLD_STOPPED`, `CLD_CONTINUED`, `SEGV_MAPERR`, `SEGV_ACCERR`, `BUS_ADRALN`, `BUS_ADRERR`, `BUS_OBJERR`, `ILL_ILLOPC`, `ILL_ILLOPN`, `ILL_ILLADR`, `ILL_ILLTRP`, `ILL_PRVOPC`, `ILL_PRVREG`, `ILL_COPROC`, `ILL_BADSTK`, `FPE_INTDIV`, `FPE_INTOVF`, `FPE_FLTDIV`, `FPE_FLTOVF`, `FPE_FLTUND`, `FPE_FLTRES`, `FPE_FLTINV`, `FPE_FLTSUB`, `TRAP_BRKPT`, `TRAP_TRACE`, `POLL_IN`, `POLL_OUT`, `POLL_MSG`, `POLL_ERR`, `POLL_PRI`, `POLL_HUP`. ~40 cases.
+- **Linux-only additions**: `SI_KERNEL`, `SI_SIGIO`, `SI_TKILL`, `SEGV_BNDERR`, `SEGV_PKUERR`, `BUS_MCEERR_AR`, `BUS_MCEERR_AO`, `FPE_FLTUNK`, `FPE_CONDTRAP`, `TRAP_BRANCH`, `TRAP_HWBKPT`, `TRAP_UNK`, `POLL_CLR`, etc. ~10–15 additional.
+- **Darwin-only additions**: minimal (`SI_USER` derivatives, `EVFILT_*`-adjacent codes). ~3–5 additional.
+
+Total ~55–60 si_code constants mapping into the typed Content enum (consolidating where Content sub-structs can unify multiple si_code values — e.g., all `CLD_*` map into `.child(Child)` with a `Reason` sub-enum). Realistic enum case count is ~8–10 top-level cases + ~5–7 sub-types with ~3–8 sub-enum cases each. Implementation cycle estimated **3–5 days** (catalog + sub-type design + per-platform dispatch + tests), excluding the half-day async-signal-safety verification experiment.
+
+#### Weakness #3 — Q4 option (c) "drop the third ucontext_t parameter" expanded analysis
+
+Principal flagged that "drop the third parameter entirely" was under-analyzed. Expanded:
+
+The kernel invokes sa_sigaction handlers with three arguments per POSIX: `void (*sa_sigaction)(int, siginfo_t *, void *)`. The third argument (`ucontext_t*`) is the execution context at signal delivery. Most handlers ignore it.
+
+Swift allows declaring `@convention(c)` function types with fewer parameters than the calling convention provides, IF the C calling convention discards extras correctly. On most ABIs (x86_64 System V, AArch64 AAPCS) the caller is responsible for parameter cleanup, so extras passed in registers or on the stack are safely ignored by a 2-arg callee. A 2-arg `@convention(c) (Int32, UnsafeMutablePointer<Signal.Information>?) -> Void` COULD be ABI-compatible with a 3-arg sigaction slot — but this is platform-and-ABI-dependent and is NOT guaranteed by the C standard.
+
+Verification experiment for Option (c):
+1. Install a 2-arg `@convention(c)` handler via sigaction's sa_sigaction slot.
+2. Trigger SIGSEGV.
+3. Verify the handler receives correct `Int32` and `siginfo_t*` values (no register-mangling; no crash on return).
+4. Run on macOS arm64 + Linux x86_64 + Linux arm64.
+
+If all three pass, Option (c) is viable as a Swift-side API shape (the kernel still passes 3 args; Swift just ignores the third). If any fail, Option (c) is off the table.
+
+Scope: 1–2 days for the experiment across platforms. Not part of Option 1's implementation cycle; either a same-cycle experiment (add a day) or a separate investigation after Option 1 ships.
+
+### Forward-looking note for implementation-cycle scheduling
+
+Principal's recommended implementation-cycle order: Doc 2 → Doc 3 → Doc 1. Rationale:
+
+1. **Doc 2 first** (smallest, iso-9945-local, no cross-package cascade, no verification gate). Establishes the "typed pointer on a struct slot" pattern cleanly.
+2. **Doc 3 second** (still iso-9945-local). Applies Doc 2's layout-compatible-wrapper pattern to siginfo_t. Async-signal-safety verification recommended, not blocking for Option 1 alone. Bundle the `public import Darwin/Glibc/Musl` → `internal import` drive-by per Decision #5.
+3. **Doc 1 third** (biggest — cross-package iso-9945 + swift-posix, `@inlinable` cascade risk pre-check, Docker Linux verification mandatory per Doc 1's Q5 ruling). Do last so Docs 2 and 3 can establish precedent for the layout-compatible-wrapper pattern before the method-level-split in Doc 1 lands on top.
+
+Each implementation cycle opens with its own fresh `/supervise` block per [SUPER-010]. Implementation-cycle ground rules template (principal-provided at Doc 3 close):
+
+- **MUST** implement the doc's recommended Option as specified; no structural deviation without escalation.
+- **MUST** run Docker Linux build (swift 6.3.1) before landing — `swift build --build-tests` clean on macOS AND Linux, not just local-platform. Load-bearing per the 2026-04-20 L2/L3 latent-ambiguity reflection.
+- **MUST NOT** touch `descriptor-migration-wip` branches, expand scope beyond the doc's options-matrix bounds, or attempt design changes not contemplated in the approved doc.
+- **MUST NOT** bundle with other docs' implementation cycles unless principal explicitly authorizes (each doc gets its own cycle).
+- **fact**: open questions for this doc have been principal-answered at cycle-open time (the Principal Decisions section above). Mid-cycle design drift escalates.
+- **ask**: tactical decisions → `[SUPER-015]` appendix on the commit. Structural ambiguities → escalate.
