@@ -56,7 +56,7 @@ extension Kernel.Copy.Clone.Test.Unit {
     @Test
     func `perform function exists on Linux`() {
         // Verify the function signature compiles
-        typealias PerformType = (Kernel.Descriptor, Kernel.Descriptor) throws -> Void
+        typealias PerformType = (borrowing Kernel.Descriptor, borrowing Kernel.Descriptor) throws -> Void
     }
 }
 #endif

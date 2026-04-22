@@ -28,7 +28,6 @@ import Kernel_Error_Primitives
     import Darwin
 #elseif canImport(Glibc)
     import Glibc
-    import CLinuxShim
 #elseif canImport(Musl)
     import Musl
 #endif
@@ -80,13 +79,6 @@ extension Kernel.File.Open.Options.Test.Unit {
     func `noFollow maps to O_NOFOLLOW`() {
         #expect(Kernel.File.Open.Options.noFollow.rawValue == O_NOFOLLOW)
     }
-
-    #if os(Linux)
-        @Test
-        func `direct maps to O_DIRECT on Linux`() {
-            #expect(Kernel.File.Open.Options.direct.rawValue == O_DIRECT)
-        }
-    #endif
 }
 
 // MARK: - OptionSet Operations
@@ -181,14 +173,6 @@ extension Kernel.File.Open.Options.Test.Unit {
         let options = Kernel.File.Open.Options()
         #expect(options.rawValue == 0)
     }
-
-    #if os(Linux)
-        @Test
-        func `direct rawValue contains O_DIRECT on Linux`() {
-            let options: Kernel.File.Open.Options = [.direct]
-            #expect(options.rawValue & O_DIRECT != 0)
-        }
-    #endif
 }
 
 // MARK: - Conformances
@@ -224,12 +208,9 @@ extension Kernel.File.Open.Options.Test.Unit {
 extension Kernel.File.Open.Options.Test.EdgeCase {
     @Test
     func `all standard options are distinct`() {
-        var options: [Kernel.File.Open.Options] = [
+        let options: [Kernel.File.Open.Options] = [
             .create, .truncate, .append, .exclusive, .noFollow,
         ]
-        #if os(Linux)
-            options.append(.direct)
-        #endif
         for i in 0..<options.count {
             for j in (i + 1)..<options.count {
                 #expect(options[i].rawValue & options[j].rawValue == 0)
