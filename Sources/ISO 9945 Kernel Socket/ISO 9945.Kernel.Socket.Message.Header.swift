@@ -55,10 +55,16 @@ extension Kernel.Socket.Message.Header {
 
     /// Ancillary data (control messages).
     public var control: Control {
-        get { unsafe Control(pointer: cValue.msg_control, length: Int(cValue.msg_controllen)) }
+        get {
+            unsafe Control(
+                pointer: cValue.msg_control.map { start in
+                    UnsafeMutableRawBufferPointer(start: start, count: Int(cValue.msg_controllen))
+                }
+            )
+        }
         set {
-            unsafe cValue.msg_control = newValue.pointer
-            cValue.msg_controllen = numericCast(newValue.length)
+            unsafe cValue.msg_control = newValue.pointer?.baseAddress
+            cValue.msg_controllen = numericCast(newValue.pointer?.count ?? 0)
         }
     }
 

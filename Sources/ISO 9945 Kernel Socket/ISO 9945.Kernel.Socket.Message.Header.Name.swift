@@ -14,6 +14,7 @@ extension Kernel.Socket.Message.Header {
         /// - Parameters:
         ///   - pointer: Pointer to the socket address structure.
         ///   - length: Length of the socket address in bytes.
+        @unsafe
         public init(pointer: UnsafeMutableRawPointer? = nil, length: UInt32 = 0) {
             unsafe self.pointer = pointer
             self.length = length
