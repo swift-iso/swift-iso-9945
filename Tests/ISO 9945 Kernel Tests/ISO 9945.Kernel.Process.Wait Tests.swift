@@ -12,7 +12,7 @@
 #if os(macOS)
 
 import Testing
-import Identity_Primitives_Test_Support
+import Tagged_Primitives_Test_Support
 
     import Kernel_Primitives_Core
     import Kernel_Descriptor_Primitives

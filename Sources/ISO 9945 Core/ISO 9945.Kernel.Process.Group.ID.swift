@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Identity_Primitives
+public import Tagged_Primitives
 public import Kernel_Process_Primitives
 
 #if canImport(Darwin)

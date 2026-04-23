@@ -108,7 +108,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../swift-primitives/swift-algebra-primitives"),
-        .package(path: "../../swift-primitives/swift-identity-primitives"),
+        .package(path: "../../swift-primitives/swift-tagged-primitives"),
         .package(path: "../../swift-primitives/swift-kernel-primitives"),
         .package(path: "../../swift-primitives/swift-loader-primitives"),
         .package(path: "../../swift-primitives/swift-string-primitives"),
@@ -126,7 +126,7 @@ let package = Package(
                 .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Error Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
         ),
 
@@ -156,7 +156,7 @@ let package = Package(
                 .product(name: "Kernel String Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
-                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "ISO 9899 Core", package: "swift-iso-9899")
             ]
         ),
@@ -320,7 +320,7 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
         ),
 
