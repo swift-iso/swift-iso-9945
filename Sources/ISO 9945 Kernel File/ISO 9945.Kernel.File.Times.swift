@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.File.Times {
     public static func set(
         access accessTime: Kernel.Time,
         modification modificationTime: Kernel.Time,
-        at path: borrowing Kernel.Path.View,
+        at path: borrowing Kernel.Path.Borrowed,
         followSymlinks: Bool = true
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in

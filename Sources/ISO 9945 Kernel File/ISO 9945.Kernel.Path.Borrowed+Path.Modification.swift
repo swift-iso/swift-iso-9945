@@ -15,11 +15,11 @@
 // unless `view` already ends with one. See `+Path.Decomposition.swift` for
 // the decomposition half of the split.
 
-extension Path.View: @retroactive Path.Modification {
+extension Path.Borrowed: @retroactive Path.Modification {
     @inlinable
     public static func appending(
-        _ view: borrowing Path.View,
-        _ other: borrowing Path.View
+        _ view: borrowing Path.Borrowed,
+        _ other: borrowing Path.Borrowed
     ) -> Path {
         let selfEndsWithSep: Bool = if view.count > 0 {
             unsafe view.pointer[view.count - 1] == 0x2F

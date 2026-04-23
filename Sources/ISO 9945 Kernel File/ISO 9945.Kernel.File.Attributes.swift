@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.File.Attributes {
 
     public static func set(
         _ permissions: Kernel.File.Permissions,
-        at path: borrowing Kernel.Path.View
+        at path: borrowing Kernel.Path.Borrowed
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe _set(permissions, path: cString)

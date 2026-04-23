@@ -31,7 +31,7 @@ extension ISO_9945.Kernel.Directory.Create {
     ///   - permissions: The permissions for the new directory (default: 0o755).
     /// - Throws: `Kernel.Directory.Create.Error` on failure.
     public static func create(
-        _ path: borrowing Kernel.Path.View,
+        _ path: borrowing Kernel.Path.Borrowed,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in

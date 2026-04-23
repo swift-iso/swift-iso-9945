@@ -102,8 +102,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///   - linkPath: The path where the symlink will be created.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
     public static func create(
-        target: borrowing Kernel.Path.View,
-        at linkPath: borrowing Kernel.Path.View
+        target: borrowing Kernel.Path.Borrowed,
+        at linkPath: borrowing Kernel.Path.Borrowed
     ) throws(Error) {
         try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
@@ -129,7 +129,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Returns: The result of the closure.
     /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTargetBytes<R: ~Copyable>(
-        at path: borrowing Kernel.Path.View,
+        at path: borrowing Kernel.Path.Borrowed,
         _ body: (Span<Path.Char>) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
@@ -167,7 +167,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// Convenience: scoped access as NUL-terminated view.
     ///
     /// This API adds a NUL terminator internally and provides a
-    /// `Kernel.String.View` for APIs that expect NUL-terminated strings.
+    /// `Kernel.String.Borrowed` for APIs that expect NUL-terminated strings.
     ///
     /// - Parameters:
     ///   - path: The path to the symbolic link.
@@ -175,8 +175,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Returns: The result of the closure.
     /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTarget<R: ~Copyable>(
-        at path: borrowing Kernel.Path.View,
-        _ body: (borrowing Kernel.String.View) -> R
+        at path: borrowing Kernel.Path.Borrowed,
+        _ body: (borrowing Kernel.String.Borrowed) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
             var bufferSize = 256
@@ -201,7 +201,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
                 if count < bufferSize {
                     unsafe (buffer[count] = 0)  // NUL terminate
                     let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
-                    let view = unsafe Kernel.String.View(u8Ptr, count: count)
+                    let view = unsafe Kernel.String.Borrowed(u8Ptr, count: count)
                     return body(view)
                 }
 
@@ -221,7 +221,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Parameter path: The path to the symbolic link.
     /// - Returns: The target path as a `Kernel.String`.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-    public static func readTarget(at path: borrowing Kernel.Path.View) throws(Error) -> Kernel.String {
+    public static func readTarget(at path: borrowing Kernel.Path.Borrowed) throws(Error) -> Kernel.String {
         try withTarget(at: path) { view in
             Kernel.String(copying: view)
         }

@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.Directory.Remove {
     ///
     /// - Parameter path: The path to remove.
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
-    public static func remove(_ path: borrowing Kernel.Path.View) throws(Error) {
+    public static func remove(_ path: borrowing Kernel.Path.Borrowed) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe _remove(ptr)
         }

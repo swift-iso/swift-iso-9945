@@ -32,7 +32,7 @@ extension ISO_9945.Glob {
     /// - Returns: Array of matching paths as strings.
     /// - Throws: `Expand.Error` on failure.
     public static func expand(
-        pattern: borrowing Kernel.Path.View,
+        pattern: borrowing Kernel.Path.Borrowed,
         options: Expand.Options = []
     ) throws(Expand.Error) -> [Swift.String] {
         var gt = unsafe glob_t()

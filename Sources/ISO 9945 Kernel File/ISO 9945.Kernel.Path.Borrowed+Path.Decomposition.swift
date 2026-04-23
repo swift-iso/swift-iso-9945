@@ -15,15 +15,15 @@
 //
 // parent and component delegate to `Path.Scan.lastSeparatorIndex` for the
 // byte scan; branching (root handling, sub-span construction) is POSIX-specific
-// and lives here. See `ISO 9945.Kernel.Path.View+Path.Modification.swift`
+// and lives here. See `ISO 9945.Kernel.Path.Borrowed+Path.Modification.swift`
 // for the appending half of the split.
 
-extension Path.View: @retroactive Path.Decomposition {
+extension Path.Borrowed: @retroactive Path.Decomposition {
     public typealias Char = Path.Char
 
     @inlinable
     @_lifetime(copy view)
-    public static func parent(of view: borrowing Path.View) -> Span<Path.Char>? {
+    public static func parent(of view: borrowing Path.Borrowed) -> Span<Path.Char>? {
         guard let lastSep = Path.Scan.lastSeparatorIndex(
             in: view.span,
             primary: 0x2F
@@ -42,7 +42,7 @@ extension Path.View: @retroactive Path.Decomposition {
 
     @inlinable
     @_lifetime(copy view)
-    public static func component(of view: borrowing Path.View) -> Span<Path.Char> {
+    public static func component(of view: borrowing Path.Borrowed) -> Span<Path.Char> {
         guard let lastSep = Path.Scan.lastSeparatorIndex(
             in: view.span,
             primary: 0x2F

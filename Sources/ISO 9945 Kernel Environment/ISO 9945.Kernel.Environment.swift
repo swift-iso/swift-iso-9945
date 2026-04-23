@@ -60,7 +60,7 @@ extension ISO_9945.Kernel.Environment {
 
     /// Convenience: scoped access as NUL-terminated view.
     ///
-    /// This API provides a `Kernel.String.View` for APIs that expect
+    /// This API provides a `Kernel.String.Borrowed` for APIs that expect
     /// NUL-terminated strings.
     ///
     /// - Warning: The caller MUST NOT call `set`, `unset`, or any other
@@ -73,7 +73,7 @@ extension ISO_9945.Kernel.Environment {
     /// - Returns: The result of the closure, or `nil` if the variable is not set.
     public static func withValue<R: ~Copyable>(
         _ name: UnsafePointer<String.Char>,
-        _ body: (borrowing Kernel.String.View) -> R
+        _ body: (borrowing Kernel.String.Borrowed) -> R
     ) -> R? {
         let cName = unsafe UnsafePointer<CChar>(name)
         guard let valuePtr = unsafe getenv(cName) else {
@@ -81,7 +81,7 @@ extension ISO_9945.Kernel.Environment {
         }
 
         let u8Ptr = unsafe UnsafePointer<UInt8>(valuePtr)
-        let view = unsafe Kernel.String.View(u8Ptr, count: Kernel.String.length(of: u8Ptr))
+        let view = unsafe Kernel.String.Borrowed(u8Ptr, count: Kernel.String.length(of: u8Ptr))
         return body(view)
     }
 

@@ -32,8 +32,8 @@ extension ISO_9945.Kernel.Link {
     ///   - existingPath: The path to the existing file.
     /// - Throws: `Kernel.Link.Error` on failure.
     public static func create(
-        at linkPath: borrowing Kernel.Path.View,
-        to existingPath: borrowing Kernel.Path.View
+        at linkPath: borrowing Kernel.Path.Borrowed,
+        to existingPath: borrowing Kernel.Path.Borrowed
     ) throws(Error) {
         try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Path.Char>) throws(Error) in
