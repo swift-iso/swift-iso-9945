@@ -28,6 +28,11 @@ extension Kernel.File.Handle {
     /// - Returns: Number of bytes written.
     /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
+    ///
+    /// ## See Also
+    /// - ``POSIX/Kernel/File/Handle/writeAll(from:)`` — L3 partial-IO
+    ///   convenience that loops this method in swift-posix, surfacing EINTR
+    ///   identically to this method.
     public borrowing func write(
         from buffer: UnsafeRawBufferPointer
     ) throws(Either<Error, Kernel.Interrupt>) -> Int {
@@ -77,6 +82,11 @@ extension Kernel.File.Handle {
     /// - Returns: Number of bytes written.
     /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
+    ///
+    /// ## See Also
+    /// - ``POSIX/Kernel/File/Handle/writeAll(from:)`` — L3 partial-IO
+    ///   convenience that loops this method in swift-posix, surfacing EINTR
+    ///   identically to this method.
     public borrowing func write(
         from span: Span<UInt8>
     ) throws(Either<Error, Kernel.Interrupt>) -> Int {
