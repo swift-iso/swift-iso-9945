@@ -56,6 +56,19 @@ extension ISO_9945.Kernel.Signal {
     public struct Information: @unchecked Sendable {
         internal var cValue: siginfo_t
 
+        /// Creates a zeroed signal information buffer suitable for passing
+        /// to kernel interfaces that expect a writable `siginfo_t *` output
+        /// parameter (e.g., `sigwaitinfo(2)`, `waitid(2)`, io_uring
+        /// `IORING_OP_WAITID`).
+        ///
+        /// The returned value has all fields zeroed; the caller typically
+        /// hands an `UnsafeMutablePointer<Information>` to the kernel, which
+        /// writes `siginfo_t` bytes into the buffer. Accessors then read
+        /// the kernel-populated fields.
+        public init() {
+            unsafe (self.cValue = siginfo_t())
+        }
+
         /// Creates a typed signal information value by copying the pointee
         /// of a kernel-provided `siginfo_t` pointer.
         ///
