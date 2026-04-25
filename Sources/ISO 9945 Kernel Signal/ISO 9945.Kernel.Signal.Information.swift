@@ -25,9 +25,13 @@ extension ISO_9945.Kernel.Signal {
     /// Wraps `siginfo_t` layout-compatibly so typed accessors read the
     /// kernel-populated bytes without a copy. Consumers construct an
     /// `Information` value inside a `Handler.customInfo` body by dereferencing
-    /// the `UnsafeMutablePointer<siginfo_t>?` passed by the kernel:
+    /// the `UnsafeMutablePointer<siginfo_t>?` passed by the kernel. The
+    /// `init(pointee:)` constructor is gated by `@_spi(Syscall)` per
+    /// [PLAT-ARCH-005a]'s SPI exception (it accepts a `siginfo_t` C struct):
     ///
     /// ```swift
+    /// @_spi(Syscall) import ISO_9945_Kernel_Signal
+    ///
     /// let config = Configuration(handler: .customInfo { sig, infoPtr, _ in
     ///     guard let ptr = infoPtr else { return }
     ///     let info = unsafe Kernel.Signal.Information(pointee: ptr.pointee)
@@ -74,6 +78,14 @@ extension ISO_9945.Kernel.Signal {
         ///
         /// Typically called inside a `Handler.customInfo` handler body:
         /// `unsafe Kernel.Signal.Information(pointee: infoPtr.pointee)`.
+        ///
+        /// Gated by `@_spi(Syscall)` per [PLAT-ARCH-005a]'s SPI exception:
+        /// the parameter exposes `siginfo_t` (a Darwin/Glibc/Musl C struct),
+        /// which is permitted only under explicit `@_spi(Syscall)` opt-in
+        /// for kernel-ABI-bridge consumers. Non-syscall consumers should
+        /// use the typed accessors (`.number`, `.sender`, `.fault`) on an
+        /// `Information` value constructed by code with SPI access.
+        @_spi(Syscall)
         @unsafe
         public init(pointee: siginfo_t) {
             unsafe (self.cValue = pointee)
