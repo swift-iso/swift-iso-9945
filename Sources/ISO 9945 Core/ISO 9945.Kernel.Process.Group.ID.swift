@@ -13,11 +13,11 @@ public import Tagged_Primitives
 public import Kernel_Process_Primitives
 
 #if canImport(Darwin)
-    import Darwin
+    internal import Darwin
 #elseif canImport(Glibc)
-    import Glibc
+    internal import Glibc
 #elseif canImport(Musl)
-    import Musl
+    internal import Musl
 #endif
 
 // MARK: - Process.Group.ID
