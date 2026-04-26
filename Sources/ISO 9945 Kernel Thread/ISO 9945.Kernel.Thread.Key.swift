@@ -17,17 +17,24 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX Thread Local Storage
+// MARK: - POSIX Thread Local Storage Key
 
 extension ISO_9945.Kernel.Thread {
-    /// Per-thread storage slot — a policy-free wrapper around the POSIX
+    /// Per-thread storage key — a policy-free wrapper around the POSIX
     /// `pthread_key_t` family (`pthread_key_create`, `pthread_setspecific`,
     /// `pthread_getspecific`, `pthread_key_delete`).
     ///
-    /// Each `Local` instance owns one platform-allocated TLS key. The
+    /// Spec-mirrors POSIX `pthread_key_t` per [API-NAME-003]. The L3
+    /// unifier ``Kernel/Thread/Local`` wraps this raw key with typed
+    /// payload accessors and the `Unmanaged` retain/release dance —
+    /// per [PLAT-ARCH-008f] solution (a), the L2 raw type uses the
+    /// spec-literal name to free `Local` for the L3 typed wrapper.
+    ///
+    /// Each `Key` instance owns one platform-allocated TLS key. The
     /// key is freed on `deinit`. The slot stores an
     /// `UnsafeMutableRawPointer?` per thread; consumers cast to/from
-    /// their typed payload at the boundary.
+    /// their typed payload at the boundary (or use the L3 generic
+    /// `Kernel.Thread.Local<Payload>` which encapsulates the cast).
     ///
     /// ## Threading
     /// - **value (get)**: Returns the calling thread's slot value, or
@@ -47,11 +54,11 @@ extension ISO_9945.Kernel.Thread {
     ///
     /// ## Usage
     /// ```swift
-    /// let local = ISO_9945.Kernel.Thread.Local()
-    /// local.value = UnsafeMutableRawPointer(...)
-    /// // ... synchronous code on the same thread reads `local.value` ...
+    /// let key = ISO_9945.Kernel.Thread.Key()
+    /// key.value = UnsafeMutableRawPointer(...)
+    /// // ... synchronous code on the same thread reads `key.value` ...
     /// ```
-    public final class Local: @unchecked Sendable {
+    public final class Key: @unchecked Sendable {
         private var key: pthread_key_t
 
         /// Allocates a new TLS key.
