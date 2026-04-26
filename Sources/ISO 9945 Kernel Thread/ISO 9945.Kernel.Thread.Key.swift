@@ -61,14 +61,37 @@ extension ISO_9945.Kernel.Thread {
     public final class Key: @unchecked Sendable {
         private var key: pthread_key_t
 
-        /// Allocates a new TLS key.
+        /// Allocates a new TLS key with no per-thread destructor.
+        ///
+        /// The slot value is not automatically released on thread exit —
+        /// callers must clear the slot before threads exit, or accept
+        /// the leak. For automatic per-thread cleanup, use
+        /// ``init(destructor:)``.
         public init() {
             self.key = pthread_key_t()
             unsafe pthread_key_create(&self.key, nil)
         }
 
+        /// Allocates a new TLS key with a per-thread destructor.
+        ///
+        /// `destructor` is invoked by the kernel on thread exit IF the
+        /// thread's slot value is non-`nil` at exit. The kernel passes
+        /// the slot value to the destructor, then sets the slot to
+        /// `nil`. Use this to release retained payloads automatically
+        /// (see the L3 ``Kernel/Thread/Local`` typed wrapper).
+        ///
+        /// Per POSIX, if the destructor sets a new value on the same
+        /// key, the kernel may invoke the destructor again, up to
+        /// `PTHREAD_DESTRUCTOR_ITERATIONS` times — typically 4. A
+        /// destructor that only releases (and does not re-set) avoids
+        /// re-entry.
+        public init(destructor: @convention(c) (UnsafeMutableRawPointer) -> Void) {
+            self.key = pthread_key_t()
+            unsafe pthread_key_create(&self.key, destructor)
+        }
+
         deinit {
-            unsafe pthread_key_delete(key)
+            pthread_key_delete(key)
         }
 
         /// The calling thread's slot value. `nil` if the thread has not
