@@ -36,7 +36,6 @@ extension Kernel.Close {
     /// - Parameter fd: File descriptor to close.
     /// - Returns: 0 on success, -1 on failure (`errno` set).
     @_spi(Syscall)
-    @inlinable
     public static func close(_ fd: Int32) -> Int32 {
         #if canImport(Darwin)
         return Darwin.close(fd)
