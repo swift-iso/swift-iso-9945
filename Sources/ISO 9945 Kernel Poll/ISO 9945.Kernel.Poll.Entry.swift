@@ -1,5 +1,3 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -51,18 +49,5 @@ extension ISO_9945.Kernel.Poll.Entry {
     /// Events returned by the kernel after poll.
     public var returned: ISO_9945.Kernel.Poll.Events {
         ISO_9945.Kernel.Poll.Events(rawValue: cValue.revents)
-    }
-}
-
-// MARK: - Convenience Initializer
-
-extension ISO_9945.Kernel.Poll.Entry {
-    /// Creates a poll entry from a borrowing Kernel.Descriptor.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The descriptor to monitor.
-    ///   - requested: Events to monitor for.
-    public init(_ descriptor: borrowing Kernel.Descriptor, requested: ISO_9945.Kernel.Poll.Events) {
-        self.init(descriptor: descriptor._rawValue, requested: requested)
     }
 }
