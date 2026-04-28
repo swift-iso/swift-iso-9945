@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+@_spi(Syscall) import Kernel_Descriptor_Primitives  // for Kernel.Descriptor.Validity.Error in error mapping
 @_spi(Syscall) import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
@@ -23,22 +23,26 @@
 // MARK: - POSIX shutdown() syscall
 
 extension ISO_9945.Kernel.Socket.Shutdown {
-    /// Shuts down part of a full-duplex connection.
+    /// Shuts down part of a full-duplex connection (raw fd).
+    ///
+    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
+    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor.
+    ///   - fd: The socket file descriptor.
     ///   - how: Which half of the connection to shut down.
     /// - Throws: `Kernel.Socket.Shutdown.Error` on failure.
+    @_spi(Syscall)
     public static func shutdown(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         how: How
     ) throws(Error) {
         #if canImport(Darwin)
-            let result = Darwin.shutdown(descriptor._rawValue, how.rawValue)
+            let result = Darwin.shutdown(fd, how.rawValue)
         #elseif canImport(Musl)
-            let result = Musl.shutdown(descriptor._rawValue, how.rawValue)
+            let result = Musl.shutdown(fd, how.rawValue)
         #elseif canImport(Glibc)
-            let result = Glibc.shutdown(descriptor._rawValue, how.rawValue)
+            let result = Glibc.shutdown(fd, how.rawValue)
         #endif
 
         guard result == 0 else {

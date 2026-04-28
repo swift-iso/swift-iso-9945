@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
@@ -68,22 +67,23 @@ extension ISO_9945.Kernel.Socket.Name {
     }
 }
 
-// MARK: - Name queries on Kernel.Descriptor
+// MARK: - Name raw fd SPI
 
 extension ISO_9945.Kernel.Socket.Name {
-    /// Gets the local address of a socket.
+    /// Gets the local address of a raw socket fd.
     ///
-    /// Overload on `borrowing Kernel.Descriptor` for consumers storing the
-    /// socket as a generic descriptor.
+    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
+    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
+    @_spi(Syscall)
     public static func local(
-        _ descriptor: borrowing Kernel.Descriptor
+        fd: Int32
     ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: UInt32) {
         var storage = Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
 
         let rc = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe getsockname(descriptor._rawValue, sockaddrPtr, &addrLen)
+            return unsafe getsockname(fd, sockaddrPtr, &addrLen)
         }
 
         guard rc == 0 else {
@@ -93,19 +93,17 @@ extension ISO_9945.Kernel.Socket.Name {
         return (address: storage, length: addrLen)
     }
 
-    /// Gets the remote address of a connected socket.
-    ///
-    /// Overload on `borrowing Kernel.Descriptor` for consumers storing the
-    /// socket as a generic descriptor.
+    /// Gets the remote address of a connected raw socket fd.
+    @_spi(Syscall)
     public static func peer(
-        _ descriptor: borrowing Kernel.Descriptor
+        fd: Int32
     ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: UInt32) {
         var storage = Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
 
         let rc = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe getpeername(descriptor._rawValue, sockaddrPtr, &addrLen)
+            return unsafe getpeername(fd, sockaddrPtr, &addrLen)
         }
 
         guard rc == 0 else {

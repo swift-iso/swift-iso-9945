@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
@@ -50,19 +49,19 @@ private func Darwin_or_Glibc_listen(_ fd: Int32, _ backlog: Int32) -> Int32 {
     #endif
 }
 
-// MARK: - Listen on Kernel.Descriptor
+// MARK: - Listen raw fd SPI
 
 extension ISO_9945.Kernel.Socket.Listen {
-    /// Marks a socket as a passive socket for accepting connections.
+    /// Marks a raw socket fd as a passive listening socket.
     ///
-    /// Overload on `borrowing Kernel.Descriptor` for consumers storing a
-    /// listening socket as a generic descriptor. Body is identical to the
-    /// `Kernel.Socket.Descriptor` overload modulo the parameter type.
+    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
+    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
+    @_spi(Syscall)
     public static func listen(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         backlog: Kernel.Socket.Backlog = .max
     ) throws(Kernel.Socket.Error) {
-        let rc = unsafe Darwin_or_Glibc_listen(descriptor._rawValue, backlog.rawValue)
+        let rc = unsafe Darwin_or_Glibc_listen(fd, backlog.rawValue)
 
         guard rc == 0 else {
             throw Kernel.Socket.Error.current()

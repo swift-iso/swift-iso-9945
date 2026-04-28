@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
@@ -85,60 +84,28 @@ extension ISO_9945.Kernel.Socket.Bind {
     }
 }
 
-// MARK: - Bind on Kernel.Descriptor
+// MARK: - Bind raw fd SPI
 //
-// Overloads accepting `borrowing Kernel.Descriptor`. Consumers that store
-// a listening socket as a generic `Kernel.Descriptor` (e.g., for composition
-// with swift-io's IO witness which takes `borrowing Kernel.Descriptor`) bind
-// through these variants. Bodies are identical to the Socket.Descriptor
-// variants above modulo the parameter type — both descriptors expose
-// `_rawValue: Int32` via `@_spi(Syscall)`.
+// Spec-literal raw form taking `fd: Int32`. The L3-policy typed-descriptor
+// convenience for `borrowing Kernel.Descriptor` lives at swift-posix per
+// [PLAT-ARCH-005] / [PLAT-ARCH-008e].
 
 extension ISO_9945.Kernel.Socket.Bind {
-    /// Binds a socket to a local address.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The kernel descriptor of the socket.
-    ///   - address: The address to bind to, as a `Storage` container.
-    ///   - length: The size of the actual address within storage.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// Binds a raw socket fd to a local address.
+    @_spi(Syscall)
     public static func bind(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         address: Kernel.Socket.Address.Storage,
         length: UInt32
     ) throws(Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_bind(descriptor._rawValue, sockaddrPtr, socklen_t(length))
+            return unsafe Darwin_or_Glibc_bind(fd, sockaddrPtr, socklen_t(length))
         }
 
         guard rc == 0 else {
             throw Kernel.Socket.Error.current()
         }
-    }
-
-    /// Binds a socket to an IPv4 address.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Descriptor,
-        address: Kernel.Socket.Address.IPv4
-    ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
-    }
-
-    /// Binds a socket to an IPv6 address.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Descriptor,
-        address: Kernel.Socket.Address.IPv6
-    ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
-    }
-
-    /// Binds a socket to a Unix domain address.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Descriptor,
-        address: Kernel.Socket.Address.Unix
-    ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: UInt32(MemoryLayout<sockaddr_un>.size))
     }
 }
 

@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+@_spi(Syscall) import Kernel_Descriptor_Primitives  // for Kernel.Descriptor.Validity.Error in error mapping
 @_spi(Syscall) import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
@@ -33,12 +33,21 @@ extension ISO_9945.Kernel.Socket {
     /// - Returns: The error code (`.posix(0)` if no pending error).
     /// - Throws: `Kernel.Socket.Error` if getsockopt fails.
 
-    public static func getError(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
+    /// Gets and clears the pending socket error (SO_ERROR) — raw fd variant.
+    ///
+    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
+    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
+    ///
+    /// - Parameter fd: The socket file descriptor.
+    /// - Returns: The error code (`.posix(0)` if no pending error).
+    /// - Throws: `Kernel.Socket.Error` if getsockopt fails.
+    @_spi(Syscall)
+    public static func getError(fd: Int32) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
         let rc = unsafe getsockopt(
-            descriptor._rawValue,
+            fd,
             SOL_SOCKET,
             SO_ERROR,
             &err,
