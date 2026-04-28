@@ -45,29 +45,6 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Internal implementation for creating a symbolic link relative to a directory descriptor.
-    @usableFromInline
-    internal static func _create(
-        target: UnsafePointer<Path.Char>,
-        relativeTo descriptor: borrowing Kernel.Descriptor,
-        linkPath: UnsafePointer<Path.Char>
-    ) throws(Error) {
-        let cTarget = unsafe UnsafePointer<CChar>(target)
-        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
-
-        #if canImport(Darwin)
-            let result = unsafe Darwin.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
-        #elseif canImport(Musl)
-            let result = Musl.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
-        #elseif canImport(Glibc)
-            let result = Glibc.symlinkat(cTarget, descriptor._rawValue, cLinkPath)
-        #endif
-
-        guard result == 0 else {
-            throw Error.currentCreate()
-        }
-    }
-
     /// Internal implementation for reading the target into a provided buffer.
     @usableFromInline
     internal static func _readTarget(
@@ -90,9 +67,71 @@ extension ISO_9945.Kernel.Link.Symbolic {
 
         return count
     }
+}
 
-    // MARK: - Ergonomic Kernel.Path Overloads
+// MARK: - POSIX symlinkat() syscall (raw @_spi(Syscall))
 
+extension ISO_9945.Kernel.Link.Symbolic {
+    /// Creates a symbolic link relative to a raw directory descriptor.
+    ///
+    /// Spec-literal raw `symlinkat(2)`. The typed L2 internal-only convenience
+    /// (`ISO_9945.Kernel.Link.Symbolic._create(target:relativeTo:linkPath:)`
+    /// taking `borrowing Kernel.Descriptor`) delegates to this raw SPI
+    /// internally.
+    ///
+    /// - Parameters:
+    ///   - target: The path the symlink points to.
+    ///   - fd: Raw directory descriptor for the link path.
+    ///   - linkPath: The path where the symlink will be created.
+    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    @_spi(Syscall)
+    public static func create(
+        target: UnsafePointer<Path.Char>,
+        relativeToFd fd: Int32,
+        linkPath: UnsafePointer<Path.Char>
+    ) throws(Error) {
+        let cTarget = unsafe UnsafePointer<CChar>(target)
+        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
+
+        #if canImport(Darwin)
+            let result = unsafe Darwin.symlinkat(cTarget, fd, cLinkPath)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.symlinkat(cTarget, fd, cLinkPath)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.symlinkat(cTarget, fd, cLinkPath)
+        #endif
+
+        guard result == 0 else {
+            throw Error.currentCreate()
+        }
+    }
+}
+
+// MARK: - Typed Convenience (internal)
+
+extension ISO_9945.Kernel.Link.Symbolic {
+    /// Internal implementation for creating a symbolic link relative to a directory descriptor.
+    ///
+    /// Internal typed L2 form. Delegates to the raw
+    /// `create(target:relativeToFd:linkPath:)` SPI via
+    /// `descriptor._rawValue`.
+    @usableFromInline
+    internal static func _create(
+        target: UnsafePointer<Path.Char>,
+        relativeTo descriptor: borrowing Kernel.Descriptor,
+        linkPath: UnsafePointer<Path.Char>
+    ) throws(Error) {
+        try unsafe create(
+            target: target,
+            relativeToFd: descriptor._rawValue,
+            linkPath: linkPath
+        )
+    }
+}
+
+// MARK: - Ergonomic Kernel.Path Overloads
+
+extension ISO_9945.Kernel.Link.Symbolic {
     /// Creates a symbolic link using `Kernel.Path`.
     ///
     /// This is the preferred entry point.

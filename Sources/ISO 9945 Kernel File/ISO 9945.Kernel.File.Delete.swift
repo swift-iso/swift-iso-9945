@@ -48,8 +48,49 @@ extension ISO_9945.Kernel.File.Delete {
 
         try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
     }
+}
 
+// MARK: - POSIX unlinkat() syscall (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.File.Delete {
+    /// Removes a file or symbolic link relative to a raw directory descriptor.
+    ///
+    /// Spec-literal raw `unlinkat(2)`. The typed L2 internal-only convenience
+    /// (`ISO_9945.Kernel.File.Delete._delete(relativeTo:path:flags:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - fd: Raw directory descriptor (or AT_FDCWD for current directory).
+    ///   - path: The path to the file to remove.
+    ///   - flags: Options to control the operation (e.g., AT_REMOVEDIR).
+    /// - Throws: `Kernel.File.Delete.Error` on failure.
+    @_spi(Syscall)
+    public static func delete(
+        fd: Int32,
+        path: UnsafePointer<Path.Char>,
+        flags: Int32 = 0
+    ) throws(Error) {
+        let cPath = unsafe UnsafePointer<CChar>(path)
+
+        #if canImport(Darwin)
+            let result = unsafe Darwin.unlinkat(fd, cPath, flags)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.unlinkat(fd, cPath, flags)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.unlinkat(fd, cPath, flags)
+        #endif
+
+        try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
+    }
+}
+
+// MARK: - Typed Convenience (internal)
+
+extension ISO_9945.Kernel.File.Delete {
     /// Removes a file or symbolic link relative to a directory descriptor.
+    ///
+    /// Internal typed L2 form. Delegates to the raw `delete(fd:path:flags:)`
+    /// SPI via `descriptor._rawValue`.
     ///
     /// - Parameters:
     ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
@@ -62,17 +103,7 @@ extension ISO_9945.Kernel.File.Delete {
         path: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
-        let cPath = unsafe UnsafePointer<CChar>(path)
-
-        #if canImport(Darwin)
-            let result = unsafe Darwin.unlinkat(descriptor._rawValue, cPath, flags)
-        #elseif canImport(Musl)
-            let result = Musl.unlinkat(descriptor._rawValue, cPath, flags)
-        #elseif canImport(Glibc)
-            let result = Glibc.unlinkat(descriptor._rawValue, cPath, flags)
-        #endif
-
-        try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
+        try unsafe delete(fd: descriptor._rawValue, path: path, flags: flags)
     }
 }
 

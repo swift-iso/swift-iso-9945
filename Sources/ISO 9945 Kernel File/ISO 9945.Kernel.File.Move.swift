@@ -69,8 +69,54 @@ extension ISO_9945.Kernel.File.Move {
             }
         }
     }
+}
 
+// MARK: - POSIX renameat() syscall (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.File.Move {
+    /// Moves/renames a file or directory relative to raw directory descriptors.
+    ///
+    /// Spec-literal raw `renameat(2)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Move.move(from:oldPath:to:newPath:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - oldFd: Raw directory descriptor for the old path.
+    ///   - oldPath: The current path.
+    ///   - newFd: Raw directory descriptor for the new path.
+    ///   - newPath: The new path.
+    /// - Throws: `Kernel.File.Move.Error` on failure.
+    @_spi(Syscall)
+    public static func move(
+        from oldFd: Int32,
+        oldPath: UnsafePointer<Path.Char>,
+        to newFd: Int32,
+        newPath: UnsafePointer<Path.Char>
+    ) throws(Error) {
+        let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
+        let cNewPath = unsafe UnsafePointer<CChar>(newPath)
+
+        #if canImport(Darwin)
+            let result = unsafe Darwin.renameat(oldFd, cOldPath, newFd, cNewPath)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.renameat(oldFd, cOldPath, newFd, cNewPath)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.renameat(oldFd, cOldPath, newFd, cNewPath)
+        #endif
+
+        guard result == 0 else {
+            throw Error.current()
+        }
+    }
+}
+
+// MARK: - Typed Convenience
+
+extension ISO_9945.Kernel.File.Move {
     /// Moves/renames a file or directory relative to directory descriptors.
+    ///
+    /// Typed L2 form. Delegates to the raw `move(from:oldPath:to:newPath:)`
+    /// SPI via `descriptor._rawValue`.
     ///
     /// - Parameters:
     ///   - oldDescriptor: Directory descriptor for the old path.
@@ -85,29 +131,12 @@ extension ISO_9945.Kernel.File.Move {
         to newDescriptor: borrowing Kernel.Descriptor,
         newPath: UnsafePointer<Path.Char>
     ) throws(Error) {
-        let cOldPath = unsafe UnsafePointer<CChar>(oldPath)
-        let cNewPath = unsafe UnsafePointer<CChar>(newPath)
-
-        #if canImport(Darwin)
-            let result = unsafe Darwin.renameat(
-                oldDescriptor._rawValue, cOldPath,
-                newDescriptor._rawValue, cNewPath
-            )
-        #elseif canImport(Musl)
-            let result = Musl.renameat(
-                oldDescriptor._rawValue, cOldPath,
-                newDescriptor._rawValue, cNewPath
-            )
-        #elseif canImport(Glibc)
-            let result = Glibc.renameat(
-                oldDescriptor._rawValue, cOldPath,
-                newDescriptor._rawValue, cNewPath
-            )
-        #endif
-
-        guard result == 0 else {
-            throw Error.current()
-        }
+        try unsafe move(
+            from: oldDescriptor._rawValue,
+            oldPath: oldPath,
+            to: newDescriptor._rawValue,
+            newPath: newPath
+        )
     }
 }
 

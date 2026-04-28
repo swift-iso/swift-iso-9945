@@ -63,8 +63,58 @@ extension ISO_9945.Kernel.Link {
             throw Error.current()
         }
     }
+}
 
+// MARK: - POSIX linkat() syscall (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.Link {
+    /// Creates a hard link relative to raw directory descriptors.
+    ///
+    /// Spec-literal raw `linkat(2)`. The typed L2 internal-only convenience
+    /// (`ISO_9945.Kernel.Link._create(from:existingPath:at:linkPath:flags:)`
+    /// taking `borrowing Kernel.Descriptor`) delegates to this raw SPI
+    /// internally.
+    ///
+    /// - Parameters:
+    ///   - existingFd: Raw directory descriptor for the existing path.
+    ///   - existingPath: The path to the existing file.
+    ///   - linkFd: Raw directory descriptor for the link path.
+    ///   - linkPath: The path where the hard link will be created.
+    ///   - flags: Resolution flags (e.g., AT_SYMLINK_FOLLOW).
+    /// - Throws: `Kernel.Link.Error` on failure.
+    @_spi(Syscall)
+    public static func create(
+        fromFd existingFd: Int32,
+        existingPath: UnsafePointer<Path.Char>,
+        atFd linkFd: Int32,
+        linkPath: UnsafePointer<Path.Char>,
+        flags: Int32 = 0
+    ) throws(Error) {
+        let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)
+        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
+
+        #if canImport(Darwin)
+            let result = unsafe Darwin.linkat(existingFd, cExistingPath, linkFd, cLinkPath, flags)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.linkat(existingFd, cExistingPath, linkFd, cLinkPath, flags)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.linkat(existingFd, cExistingPath, linkFd, cLinkPath, flags)
+        #endif
+
+        guard result == 0 else {
+            throw Error.current()
+        }
+    }
+}
+
+// MARK: - Typed Convenience (internal)
+
+extension ISO_9945.Kernel.Link {
     /// Internal implementation for creating a hard link relative to directory descriptors.
+    ///
+    /// Internal typed L2 form. Delegates to the raw
+    /// `create(fromFd:existingPath:atFd:linkPath:flags:)` SPI via
+    /// `descriptor._rawValue`.
     @usableFromInline
     internal static func _create(
         from existingDescriptor: borrowing Kernel.Descriptor,
@@ -73,32 +123,13 @@ extension ISO_9945.Kernel.Link {
         linkPath: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
-        let cExistingPath = unsafe UnsafePointer<CChar>(existingPath)
-        let cLinkPath = unsafe UnsafePointer<CChar>(linkPath)
-
-        #if canImport(Darwin)
-            let result = unsafe Darwin.linkat(
-                existingDescriptor._rawValue, cExistingPath,
-                linkDescriptor._rawValue, cLinkPath,
-                flags
-            )
-        #elseif canImport(Musl)
-            let result = Musl.linkat(
-                existingDescriptor._rawValue, cExistingPath,
-                linkDescriptor._rawValue, cLinkPath,
-                flags
-            )
-        #elseif canImport(Glibc)
-            let result = Glibc.linkat(
-                existingDescriptor._rawValue, cExistingPath,
-                linkDescriptor._rawValue, cLinkPath,
-                flags
-            )
-        #endif
-
-        guard result == 0 else {
-            throw Error.current()
-        }
+        try unsafe create(
+            fromFd: existingDescriptor._rawValue,
+            existingPath: existingPath,
+            atFd: linkDescriptor._rawValue,
+            linkPath: linkPath,
+            flags: flags
+        )
     }
 }
 
