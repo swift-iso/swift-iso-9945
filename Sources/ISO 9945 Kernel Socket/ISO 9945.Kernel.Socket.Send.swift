@@ -69,7 +69,7 @@ extension ISO_9945.Kernel.Socket.Send {
         from span: Span<UInt8>,
         options: Kernel.Socket.Message.Options = [],
         address: Kernel.Socket.Address.Storage,
-        addressLength: UInt32
+        addressLength: Kernel.Socket.Address.Length
     ) throws(Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeBytes { buffer throws(Kernel.Socket.Error) -> Int in
             guard let base = buffer.baseAddress else { return 0 }
@@ -81,7 +81,7 @@ extension ISO_9945.Kernel.Socket.Send {
                     buffer.count,
                     options.rawValue,
                     sockaddrPtr,
-                    socklen_t(addressLength)
+                    socklen_t(addressLength.rawValue.rawValue)
                 )
             }
             guard result >= 0 else {

@@ -7,7 +7,7 @@ extension Kernel.Socket.Message.Header {
         public var pointer: UnsafeMutableRawPointer?
 
         /// Length of the socket address in bytes.
-        public var length: UInt32
+        public var length: Kernel.Socket.Address.Length
 
         /// Creates a socket address descriptor.
         ///
@@ -15,7 +15,7 @@ extension Kernel.Socket.Message.Header {
         ///   - pointer: Pointer to the socket address structure.
         ///   - length: Length of the socket address in bytes.
         @unsafe
-        public init(pointer: UnsafeMutableRawPointer? = nil, length: UInt32 = 0) {
+        public init(pointer: UnsafeMutableRawPointer? = nil, length: Kernel.Socket.Address.Length = Kernel.Socket.Address.Length(UInt(0))) {
             unsafe self.pointer = pointer
             self.length = length
         }

@@ -19,13 +19,13 @@ extension ISO_9945.Kernel.Socket.Accept {
         public var address: Kernel.Socket.Address.Storage
 
         /// The length of the peer address.
-        public var length: UInt32
+        public var length: Kernel.Socket.Address.Length
 
         @inlinable
         internal init(
             descriptor: consuming Kernel.Socket.Descriptor,
             address: Kernel.Socket.Address.Storage,
-            length: UInt32
+            length: Kernel.Socket.Address.Length
         ) {
             self.descriptor = descriptor
             self.address = address

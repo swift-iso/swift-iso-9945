@@ -39,11 +39,11 @@ extension ISO_9945.Kernel.Socket.Connect {
     public static func connect(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.Storage,
-        length: UInt32
+        length: Kernel.Socket.Address.Length
     ) throws(Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_connect(descriptor._rawValue, sockaddrPtr, socklen_t(length))
+            return unsafe Darwin_or_Glibc_connect(descriptor._rawValue, sockaddrPtr, socklen_t(length.rawValue.rawValue))
         }
 
         guard rc == 0 else {
@@ -75,7 +75,7 @@ extension ISO_9945.Kernel.Socket.Connect {
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.Unix
     ) throws(Kernel.Socket.Error) {
-        try connect(descriptor, address: address.storage, length: UInt32(MemoryLayout<sockaddr_un>.size))
+        try connect(descriptor, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
     }
 }
 

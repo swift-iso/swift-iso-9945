@@ -32,10 +32,10 @@ extension Kernel.Socket.Message {
 extension Kernel.Socket.Message.Header {
     /// Socket address for the message destination (sendmsg) or source (recvmsg).
     public var name: Name {
-        get { unsafe Name(pointer: cValue.msg_name, length: cValue.msg_namelen) }
+        get { unsafe Name(pointer: cValue.msg_name, length: Kernel.Socket.Address.Length(cValue.msg_namelen)) }
         set {
             unsafe cValue.msg_name = newValue.pointer
-            unsafe cValue.msg_namelen = newValue.length
+            unsafe cValue.msg_namelen = socklen_t(newValue.length.rawValue.rawValue)
         }
     }
 

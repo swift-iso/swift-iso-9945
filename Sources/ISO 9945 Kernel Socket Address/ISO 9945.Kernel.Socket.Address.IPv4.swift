@@ -51,8 +51,8 @@ extension Kernel.Socket.Address.IPv4 {
     }
 
     /// The size of the underlying sockaddr_in structure.
-    public static var size: UInt32 {
-        UInt32(MemoryLayout<sockaddr_in>.size)
+    public static var size: Kernel.Socket.Address.Length {
+        Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_in>.size))
     }
 }
 

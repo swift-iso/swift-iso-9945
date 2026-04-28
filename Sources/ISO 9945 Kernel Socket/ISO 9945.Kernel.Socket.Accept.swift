@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         _ descriptor: borrowing Kernel.Socket.Descriptor
     ) throws(Kernel.Socket.Error) -> Result {
         var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
+        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
 
         let fd = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -56,7 +56,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         return Result(
             descriptor: Kernel.Socket.Descriptor(_rawValue: fd),
             address: storage,
-            length: addrLen
+            length: Kernel.Socket.Address.Length(addrLen)
         )
     }
 }
@@ -85,7 +85,7 @@ extension ISO_9945.Kernel.Socket.Accept {
     @_spi(Syscall)
     public static func accept(fd: Int32) throws(Kernel.Socket.Error) -> Result {
         var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size)
+        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
 
         let acceptedFd = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -99,7 +99,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         return Result(
             descriptor: Kernel.Socket.Descriptor(_rawValue: acceptedFd),
             address: storage,
-            length: addrLen
+            length: Kernel.Socket.Address.Length(addrLen)
         )
     }
 }

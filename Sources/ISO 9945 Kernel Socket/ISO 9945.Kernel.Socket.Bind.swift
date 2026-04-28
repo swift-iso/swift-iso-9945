@@ -32,11 +32,11 @@ extension ISO_9945.Kernel.Socket.Bind {
     public static func bind(
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.Storage,
-        length: UInt32
+        length: Kernel.Socket.Address.Length
     ) throws(Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_bind(descriptor._rawValue, sockaddrPtr, socklen_t(length))
+            return unsafe Darwin_or_Glibc_bind(descriptor._rawValue, sockaddrPtr, socklen_t(length.rawValue.rawValue))
         }
 
         guard rc == 0 else {
@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.Socket.Bind {
         _ descriptor: borrowing Kernel.Socket.Descriptor,
         address: Kernel.Socket.Address.Unix
     ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: UInt32(MemoryLayout<sockaddr_un>.size))
+        try bind(descriptor, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
     }
 }
 
@@ -96,11 +96,11 @@ extension ISO_9945.Kernel.Socket.Bind {
     public static func bind(
         fd: Int32,
         address: Kernel.Socket.Address.Storage,
-        length: UInt32
+        length: Kernel.Socket.Address.Length
     ) throws(Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_bind(fd, sockaddrPtr, socklen_t(length))
+            return unsafe Darwin_or_Glibc_bind(fd, sockaddrPtr, socklen_t(length.rawValue.rawValue))
         }
 
         guard rc == 0 else {

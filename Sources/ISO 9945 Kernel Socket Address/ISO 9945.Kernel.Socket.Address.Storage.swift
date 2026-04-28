@@ -33,8 +33,8 @@ extension Kernel.Socket.Address.Storage {
     }
 
     /// The size of the underlying `sockaddr_storage` structure.
-    public static var size: UInt32 {
-        UInt32(MemoryLayout<sockaddr_storage>.size)
+    public static var size: Kernel.Socket.Address.Length {
+        Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_storage>.size))
     }
 }
 
