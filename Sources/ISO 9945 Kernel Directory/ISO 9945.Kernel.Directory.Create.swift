@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -60,26 +58,40 @@ extension ISO_9945.Kernel.Directory.Create {
         }
     }
 
-    /// Internal implementation for creating a directory relative to a descriptor.
-    @usableFromInline
-    internal static func _create(
-        relativeTo descriptor: borrowing Kernel.Descriptor,
+    /// Raw POSIX `mkdirat(2)` syscall.
+    ///
+    /// Spec-literal: takes a raw fd, raw path pointer, returns the raw
+    /// result. Zero policy: NO `errno` read, NO error mapping, NO throwing.
+    /// The caller inspects the return value and reads `errno` on failure.
+    ///
+    /// L3-policy throwing wrappers (`POSIX.Kernel.Directory.Create.create(relativeTo:path:permissions:)`
+    /// in swift-posix) compose this raw call with `errno`-to-
+    /// `Kernel.Directory.Create.Error` mapping per [PLAT-ARCH-008e]. L1
+    /// syscall callers MUST NOT call this function directly; the
+    /// L1 → L3-policy → L2 chain is mandatory.
+    ///
+    /// - Parameters:
+    ///   - descriptor: Directory file descriptor.
+    ///   - path: Path of the directory to create.
+    ///   - permissions: New directory permissions.
+    /// - Returns: 0 on success, -1 on failure (`errno` set).
+    @_spi(Syscall)
+    public static func mkdirat(
+        descriptor: Int32,
         path: UnsafePointer<Path.Char>,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
-    ) throws(Error) {
+    ) -> Int32 {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
         #if canImport(Darwin)
-            let result = unsafe Darwin.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+            return unsafe Darwin.mkdirat(descriptor, cPath, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
-            let result = Musl.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+            return Musl.mkdirat(descriptor, cPath, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)
-            let result = Glibc.mkdirat(descriptor._rawValue, cPath, mode_t(permissions.rawValue))
+            return Glibc.mkdirat(descriptor, cPath, mode_t(permissions.rawValue))
+        #else
+            return -1
         #endif
-
-        guard result == 0 else {
-            throw Error.current()
-        }
     }
 }
 
