@@ -28,9 +28,11 @@ extension ISO_9945.Kernel.Lock {
     /// L1 lock-error type) on failure — error mapping stays at L2 because
     /// the L2 Token type internally consumes this surface and depends on
     /// the typed error throw. Pattern A's typed-descriptor parameter has
-    /// been replaced with a raw `fd: Int32`. The L3-policy wrapper
-    /// (`POSIX.Kernel.Lock.lock(_:range:kind:)` in swift-posix) calls this
-    /// SPI from a typed `borrowing POSIX.Kernel.Descriptor`.
+    /// been replaced with a raw `fd: Int32`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.Lock.lock(_:range:kind:)` taking `borrowing
+    /// Kernel.Descriptor`) and the L3-policy wrapper
+    /// (`POSIX.Kernel.Lock.lock(_:range:kind:)` in swift-posix) both call
+    /// this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The file descriptor.
@@ -54,9 +56,11 @@ extension ISO_9945.Kernel.Lock {
 
     /// Releases a lock on a byte range.
     ///
-    /// Wraps `fcntl(fd, F_SETLK, &flock)` with `F_UNLCK`. The L3-policy
-    /// wrapper (`POSIX.Kernel.Lock.unlock(_:range:)` in swift-posix) calls
-    /// this SPI from a typed `borrowing POSIX.Kernel.Descriptor`.
+    /// Wraps `fcntl(fd, F_SETLK, &flock)` with `F_UNLCK`. The typed L2
+    /// convenience (`ISO_9945.Kernel.Lock.unlock(_:range:)` taking
+    /// `borrowing Kernel.Descriptor`) and the L3-policy wrapper
+    /// (`POSIX.Kernel.Lock.unlock(_:range:)` in swift-posix) both call
+    /// this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The file descriptor.
@@ -140,9 +144,11 @@ extension ISO_9945.Kernel.Lock {
     public enum Immediate {
         /// Attempts to acquire a lock without blocking.
         ///
-        /// Wraps `fcntl(fd, F_SETLK, &flock)`. The L3-policy wrapper
+        /// Wraps `fcntl(fd, F_SETLK, &flock)`. The typed L2 convenience
+        /// (`ISO_9945.Kernel.Lock.Immediate.lock(_:range:kind:)` taking
+        /// `borrowing Kernel.Descriptor`) and the L3-policy wrapper
         /// (`POSIX.Kernel.Lock.Immediate.lock(_:range:kind:)` in swift-posix)
-        /// calls this SPI from a typed `borrowing POSIX.Kernel.Descriptor`.
+        /// both call this raw SPI internally.
         ///
         /// - Parameters:
         ///   - fd: The file descriptor.
