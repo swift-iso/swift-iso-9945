@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -92,6 +94,34 @@ extension ISO_9945.Kernel.Directory.Create {
         #else
             return -1
         #endif
+    }
+
+    /// Creates a directory relative to a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form per
+    /// `swift-institute/Research/posix-descriptor-l2-vs-l3policy.md` v1.0.0.
+    /// Composes the L2 raw `mkdirat(2)` SPI form with errno-to-error mapping.
+    /// The raw form is retained alongside as `@_spi(Syscall)` for
+    /// spec-coverage callers.
+    ///
+    /// - Parameters:
+    ///   - path: The path of the directory to create.
+    ///   - descriptor: The directory descriptor that `path` is interpreted
+    ///     relative to.
+    ///   - permissions: The permissions for the new directory (default 0o755).
+    /// - Throws: ``Error`` on failure.
+    public static func create(
+        _ path: borrowing Kernel.Path.Borrowed,
+        relativeTo descriptor: borrowing POSIX.Kernel.Descriptor,
+        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+    ) throws(Error) {
+        let raw = descriptor._rawValue
+        try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
+            let result = unsafe Self.mkdirat(descriptor: raw, path: ptr, permissions: permissions)
+            guard result == 0 else {
+                throw Error.current()
+            }
+        }
     }
 }
 

@@ -203,6 +203,7 @@ let package = Package(
             name: "ISO 9945 Kernel Directory",
             dependencies: [
                 "ISO 9945 Core",
+                "ISO 9945 Kernel Descriptor",
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ]
@@ -366,6 +367,7 @@ let package = Package(
             name: "ISO 9945 Kernel Poll",
             dependencies: [
                 "ISO 9945 Core",
+                "ISO 9945 Kernel Descriptor",
             ]
         ),
 

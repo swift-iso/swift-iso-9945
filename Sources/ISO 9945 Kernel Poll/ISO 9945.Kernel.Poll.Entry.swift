@@ -1,3 +1,5 @@
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -49,5 +51,24 @@ extension ISO_9945.Kernel.Poll.Entry {
     /// Events returned by the kernel after poll.
     public var returned: ISO_9945.Kernel.Poll.Events {
         ISO_9945.Kernel.Poll.Events(rawValue: cValue.revents)
+    }
+}
+
+// MARK: - Typed Convenience Initializer (Phase 1.5)
+
+extension ISO_9945.Kernel.Poll.Entry {
+    /// Creates a poll entry from a typed `POSIX.Kernel.Descriptor`.
+    ///
+    /// Phase 1.5 typed L2 form per
+    /// `swift-institute/Research/posix-descriptor-l2-vs-l3policy.md` v1.0.0.
+    /// The raw `init(descriptor: Int32, ...)` SPI form is retained for
+    /// spec-coverage callers; this typed form delegates to it via
+    /// `descriptor._rawValue` (the @_spi(Syscall) accessor).
+    ///
+    /// - Parameters:
+    ///   - descriptor: The descriptor to monitor.
+    ///   - requested: Events to monitor for.
+    public init(_ descriptor: borrowing POSIX.Kernel.Descriptor, requested: ISO_9945.Kernel.Poll.Events) {
+        self.init(descriptor: descriptor._rawValue, requested: requested)
     }
 }
