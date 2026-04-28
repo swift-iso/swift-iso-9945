@@ -12,6 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Terminal_Primitives
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
 
 #if canImport(Darwin)
     internal import Darwin
@@ -81,6 +82,30 @@ extension ISO_9945.Kernel.Termios.Attributes {
         guard result == 0 else {
             throw Kernel.Error.current(operation: "tcsetattr")
         }
+    }
+}
+
+// MARK: - Typed Convenience (Phase 1.5)
+
+extension ISO_9945.Kernel.Termios.Attributes {
+    /// Get terminal attributes from a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `get(fd:)` SPI form
+    /// via `descriptor._rawValue`.
+    public static func get(_ descriptor: borrowing POSIX.Kernel.Descriptor) throws(Kernel.Error) -> Self {
+        try get(fd: descriptor._rawValue)
+    }
+
+    /// Set terminal attributes on a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `set(_:fd:action:)` form
+    /// via `descriptor._rawValue`.
+    public static func set(
+        _ attributes: Self,
+        on descriptor: borrowing POSIX.Kernel.Descriptor,
+        action: Action = .now
+    ) throws(Kernel.Error) {
+        try set(attributes, fd: descriptor._rawValue, action: action)
     }
 }
 

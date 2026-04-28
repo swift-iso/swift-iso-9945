@@ -12,6 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Terminal_Primitives
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
 
 #if canImport(Darwin)
     internal import Darwin
@@ -63,6 +64,28 @@ extension ISO_9945.Kernel.TTY.Size {
             throw Kernel.Error.current(operation: "ioctl(TIOCGWINSZ)")
         }
         return Self(rows: ws.ws_row, columns: ws.ws_col)
+    }
+}
+
+// MARK: - Typed Convenience (Phase 1.5)
+
+extension ISO_9945.Kernel.TTY {
+    /// Check if a typed descriptor refers to a terminal.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `isTTY(fd:)` SPI form
+    /// via `descriptor._rawValue`.
+    public static func isTTY(_ descriptor: borrowing POSIX.Kernel.Descriptor) -> Bool {
+        isTTY(fd: descriptor._rawValue)
+    }
+}
+
+extension ISO_9945.Kernel.TTY.Size {
+    /// Query terminal size from a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `query(fd:)` SPI form
+    /// via `descriptor._rawValue`.
+    public static func query(_ descriptor: borrowing POSIX.Kernel.Descriptor) throws(Kernel.Error) -> Self {
+        try query(fd: descriptor._rawValue)
     }
 }
 
