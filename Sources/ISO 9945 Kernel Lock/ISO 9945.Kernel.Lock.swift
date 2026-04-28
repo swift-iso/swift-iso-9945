@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -24,23 +22,29 @@
 extension ISO_9945.Kernel.Lock {
     /// Acquires a lock on a byte range (blocking).
     ///
-    /// This call blocks until the lock can be acquired.
+    /// Wraps `fcntl(fd, F_SETLKW, &flock)`. Throws `Kernel.Lock.Error` (the
+    /// L1 lock-error type) on failure — error mapping stays at L2 because
+    /// the L2 Token type internally consumes this surface and depends on
+    /// the typed error throw. Pattern A's typed-descriptor parameter has
+    /// been replaced with a raw `fd: Int32`. The L3-policy wrapper
+    /// (`POSIX.Kernel.Lock.lock(_:range:kind:)` in swift-posix) calls this
+    /// SPI from a typed `borrowing POSIX.Kernel.Descriptor`.
     ///
     /// - Parameters:
-    ///   - descriptor: The file descriptor.
+    ///   - fd: The file descriptor.
     ///   - range: The byte range to lock.
     ///   - kind: The lock kind (shared or exclusive).
     /// - Throws: `Error.deadlock` if a deadlock is detected,
     ///           `Error.unavailable` if the system lock table is exhausted.
-
+    @_spi(Syscall)
     public static func lock(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind
     ) throws(Kernel.Lock.Error) {
         var fl = makeFlock(range: range, kind: kind)
 
-        let result = unsafe fcntl(descriptor._rawValue, F_SETLKW, &fl)
+        let result = unsafe fcntl(fd, F_SETLKW, &fl)
         guard result != -1 else {
             throw Kernel.Lock.Error(Kernel.Error.Code.captureErrno())
         }
@@ -48,13 +52,17 @@ extension ISO_9945.Kernel.Lock {
 
     /// Releases a lock on a byte range.
     ///
+    /// Wraps `fcntl(fd, F_SETLK, &flock)` with `F_UNLCK`. The L3-policy
+    /// wrapper (`POSIX.Kernel.Lock.unlock(_:range:)` in swift-posix) calls
+    /// this SPI from a typed `borrowing POSIX.Kernel.Descriptor`.
+    ///
     /// - Parameters:
-    ///   - descriptor: The file descriptor.
+    ///   - fd: The file descriptor.
     ///   - range: The byte range to unlock.
     /// - Throws: `Error` if unlocking fails.
-
+    @_spi(Syscall)
     public static func unlock(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         range: Kernel.Lock.Range
     ) throws(Kernel.Lock.Error) {
         var fl = flock()
@@ -70,7 +78,7 @@ extension ISO_9945.Kernel.Lock {
             fl.l_len = off_t((end - start).rawValue)
         }
 
-        let result = unsafe fcntl(descriptor._rawValue, F_SETLK, &fl)
+        let result = unsafe fcntl(fd, F_SETLK, &fl)
         guard result != -1 else {
             throw Kernel.Lock.Error(Kernel.Error.Code.captureErrno())
         }
@@ -105,22 +113,26 @@ extension ISO_9945.Kernel.Lock {
     public enum Immediate {
         /// Attempts to acquire a lock without blocking.
         ///
+        /// Wraps `fcntl(fd, F_SETLK, &flock)`. The L3-policy wrapper
+        /// (`POSIX.Kernel.Lock.Immediate.lock(_:range:kind:)` in swift-posix)
+        /// calls this SPI from a typed `borrowing POSIX.Kernel.Descriptor`.
+        ///
         /// - Parameters:
-        ///   - descriptor: The file descriptor.
+        ///   - fd: The file descriptor.
         ///   - range: The byte range to lock.
         ///   - kind: The lock kind (shared or exclusive).
         /// - Throws: `Error.contention` if the lock is held by another process,
         ///           `Error.deadlock` if a deadlock is detected,
         ///           `Error.unavailable` if the system lock table is exhausted.
-
+        @_spi(Syscall)
         public static func lock(
-            _ descriptor: borrowing Kernel.Descriptor,
+            fd: Int32,
             range: Kernel.Lock.Range,
             kind: Kernel.Lock.Kind
         ) throws(Kernel.Lock.Error) {
             var fl = ISO_9945.Kernel.Lock.makeFlock(range: range, kind: kind)
 
-            let result = unsafe fcntl(descriptor._rawValue, F_SETLK, &fl)
+            let result = unsafe fcntl(fd, F_SETLK, &fl)
             if result == -1 {
                 // EAGAIN or EACCES means the lock is held by another process
                 if errno == EAGAIN || errno == EACCES {

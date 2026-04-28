@@ -11,8 +11,9 @@
 
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
+@_spi(Syscall) import ISO_9945_Kernel_Lock
 import Kernel_Primitives_Core
-import Kernel_Descriptor_Primitives
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
@@ -157,8 +158,8 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            try Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd, range: .file)
+            try Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
         }
 
         @Test
@@ -167,8 +168,8 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            try Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd, range: .file)
+            try Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
+            try Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
         }
 
         @Test
@@ -184,11 +185,11 @@ extension Kernel.Lock.Test.Unit {
                 try Kernel.File.Open.open(path: p, mode: .readWrite, options: [], permissions: .privateFile)
             }
 
-            try Kernel.Lock.lock(fd1, range: .file, kind: .shared)
-            try Kernel.Lock.Immediate.lock(fd2, range: .file, kind: .shared)
+            try Kernel.Lock.lock(fd: fd1._rawValue, range: .file, kind: .shared)
+            try Kernel.Lock.Immediate.lock(fd: fd2._rawValue, range: .file, kind: .shared)
 
-            try Kernel.Lock.unlock(fd1, range: .file)
-            try Kernel.Lock.unlock(fd2, range: .file)
+            try Kernel.Lock.unlock(fd: fd1._rawValue, range: .file)
+            try Kernel.Lock.unlock(fd: fd2._rawValue, range: .file)
         }
 
         @Test
@@ -200,11 +201,11 @@ extension Kernel.Lock.Test.Unit {
             let range1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(100))
             let range2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(200), end: Kernel.File.Offset(300))
 
-            try Kernel.Lock.lock(fd, range: range1, kind: .exclusive)
-            try Kernel.Lock.Immediate.lock(fd, range: range2, kind: .exclusive)
+            try Kernel.Lock.lock(fd: fd._rawValue, range: range1, kind: .exclusive)
+            try Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: range2, kind: .exclusive)
 
-            try Kernel.Lock.unlock(fd, range: range1)
-            try Kernel.Lock.unlock(fd, range: range2)
+            try Kernel.Lock.unlock(fd: fd._rawValue, range: range1)
+            try Kernel.Lock.unlock(fd: fd._rawValue, range: range2)
         }
 
         @Test
@@ -215,7 +216,7 @@ extension Kernel.Lock.Test.Unit {
             defer { KernelIOTest.cleanup(path: path) }
 
             // Should not throw
-            try Kernel.Lock.unlock(fd, range: .file)
+            try Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
         }
     }
 

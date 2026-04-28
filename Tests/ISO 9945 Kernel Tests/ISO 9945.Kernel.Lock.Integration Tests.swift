@@ -11,9 +11,10 @@
 
 
 import ISO_9945_Kernel
+@_spi(Syscall) import ISO_9945_Kernel_Lock
 import ISO_9945_Kernel_Test_Support
 import Kernel_Primitives_Core
-import Kernel_Descriptor_Primitives
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
@@ -108,9 +109,9 @@ private enum LockTestHelper {
         while Clock.Continuous.now < deadline {
             do {
                 // Try to acquire lock - if it fails with contention, the helper has it
-                try ISO_9945.Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+                try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
                 // We got the lock - release it and try again
-                try? ISO_9945.Kernel.Lock.unlock(fd, range: .file)
+                try? ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
                 // Small delay before retry
                 ISO_9945.Kernel.System.sleep(.milliseconds(5))
             } catch {
@@ -280,10 +281,10 @@ extension POSIXLockIntegration {
         let fd = try openLockTestFile(path)
 
         // Lock directly
-        try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+        try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
 
         // Unlock directly
-        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
+        try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
     }
 
     @Test
@@ -294,10 +295,10 @@ extension POSIXLockIntegration {
         let fd = try openLockTestFile(path)
 
         // Try immediate lock - should succeed
-        try ISO_9945.Kernel.Lock.Immediate.lock(fd, range: .file, kind: .exclusive)
+        try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
 
         // Cleanup
-        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
+        try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
     }
 
     @Test
@@ -308,14 +309,14 @@ extension POSIXLockIntegration {
         let fd = try openLockTestFile(path)
 
         // Acquire exclusive lock
-        try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+        try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
 
         // Try immediate lock on same descriptor (same process, same thread)
         // Note: POSIX allows same-process relock, so this tests API not contention
         // For true contention testing, need multi-process tests
 
         // Cleanup
-        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
+        try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
     }
 }
 
@@ -378,7 +379,7 @@ extension POSIXLockIntegration {
 
         // Acquire exclusive lock in this process.
         let fd = try openLockTestFile(path)
-        try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+        try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
 
         // Spawn helper — it blocks on fcntl(F_SETLKW) because we hold the lock.
         let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 100)
@@ -387,7 +388,7 @@ extension POSIXLockIntegration {
         ISO_9945.Kernel.System.sleep(.milliseconds(50))
 
         // Release our lock — helper should now acquire.
-        try ISO_9945.Kernel.Lock.unlock(fd, range: .file)
+        try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
 
         // If release worked, the helper acquires, holds for 100ms, exits 0.
         // If release failed, the helper blocks indefinitely and wait hangs.

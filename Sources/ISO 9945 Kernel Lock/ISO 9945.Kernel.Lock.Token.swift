@@ -115,7 +115,7 @@ extension ISO_9945.Kernel.Lock {
         /// - Throws: `Kernel.Lock.Error` if the unlock syscall fails.
         public mutating func release() throws(Kernel.Lock.Error) {
             guard !isReleased else { return }
-            try ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
+            try ISO_9945.Kernel.Lock.unlock(fd: descriptor._rawValue, range: range)
             isReleased = true
         }
 
@@ -124,7 +124,7 @@ extension ISO_9945.Kernel.Lock {
             // release(), unlock via the owned descriptor. The descriptor's
             // own deinit runs immediately after and closes the fd.
             guard !isReleased else { return }
-            _ = Result { try ISO_9945.Kernel.Lock.unlock(descriptor, range: range) }
+            _ = Result { try ISO_9945.Kernel.Lock.unlock(fd: descriptor._rawValue, range: range) }
         }
     }
 }
@@ -141,10 +141,10 @@ extension ISO_9945.Kernel.Lock.Token {
     ) throws(Kernel.Lock.Error) {
         switch acquire {
         case .try:
-            try ISO_9945.Kernel.Lock.Immediate.lock(descriptor, range: range, kind: kind)
+            try ISO_9945.Kernel.Lock.Immediate.lock(fd: descriptor._rawValue, range: range, kind: kind)
 
         case .wait:
-            try ISO_9945.Kernel.Lock.lock(descriptor, range: range, kind: kind)
+            try ISO_9945.Kernel.Lock.lock(fd: descriptor._rawValue, range: range, kind: kind)
 
         case .deadline(let deadline):
             try acquireWithDeadline(
@@ -177,12 +177,12 @@ extension ISO_9945.Kernel.Lock.Token {
 
             // Try to acquire
             do throws(Kernel.Lock.Error) {
-                try ISO_9945.Kernel.Lock.Immediate.lock(descriptor, range: range, kind: kind)
+                try ISO_9945.Kernel.Lock.Immediate.lock(fd: descriptor._rawValue, range: range, kind: kind)
                 // Critical: re-check deadline after acquisition
                 // If deadline passed, unlock and throw to maintain invariant:
                 // "success means lock was acquired before deadline"
                 if Clock.Continuous.now >= deadline {
-                    try? ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
+                    try? ISO_9945.Kernel.Lock.unlock(fd: descriptor._rawValue, range: range)
                     throw Kernel.Lock.Error.contention
                 }
                 return

@@ -29,7 +29,7 @@
 #if os(macOS) || os(Linux)
 
 public import Kernel_Primitives_Core
-public import Kernel_Descriptor_Primitives
+@_spi(Syscall) public import Kernel_Descriptor_Primitives
 public import Kernel_IO_Primitives
 public import Kernel_File_Primitives
 public import Kernel_Path_Primitives
@@ -38,7 +38,7 @@ public import Kernel_Process_Primitives
 public import Kernel_Thread_Primitives
 public import Kernel_Error_Primitives
 import ISO_9945_Kernel
-import ISO_9945_Kernel
+@_spi(Syscall) import ISO_9945_Kernel_Lock
 
 @main
 struct LockHelper {
@@ -66,9 +66,9 @@ struct LockHelper {
                     permissions: 0
                 )
 
-                // Acquire exclusive lock
-                try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-                defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
+                // Acquire exclusive lock (via raw fd SPI per Path X Phase 1)
+                try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
+                defer { try? ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file) }
 
                 // Signal that lock is held
                 print("LOCKED")
