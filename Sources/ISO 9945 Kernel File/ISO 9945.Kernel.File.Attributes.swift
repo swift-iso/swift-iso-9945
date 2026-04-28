@@ -63,8 +63,47 @@ extension ISO_9945.Kernel.File.Attributes {
             throw Error.current()
         }
     }
+}
 
+// MARK: - POSIX fchmod() syscall (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.File.Attributes {
+    /// Changes the permissions of an open raw file descriptor.
+    ///
+    /// Spec-literal raw `fchmod(2)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Attributes.set(_:on:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - permissions: The new permissions.
+    ///   - fd: The raw file descriptor.
+    /// - Throws: `Kernel.File.Attributes.Error` on failure.
+    @_spi(Syscall)
+    public static func set(
+        _ permissions: Kernel.File.Permissions,
+        fd: Int32
+    ) throws(Error) {
+        #if canImport(Darwin)
+            let result = unsafe Darwin.fchmod(fd, mode_t(permissions.rawValue))
+        #elseif canImport(Musl)
+            let result = unsafe Musl.fchmod(fd, mode_t(permissions.rawValue))
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.fchmod(fd, mode_t(permissions.rawValue))
+        #endif
+
+        guard result == 0 else {
+            throw Error.current()
+        }
+    }
+}
+
+// MARK: - Typed Convenience
+
+extension ISO_9945.Kernel.File.Attributes {
     /// Changes the permissions of an open file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `set(_:fd:)` SPI via
+    /// `descriptor._rawValue`.
     ///
     /// - Parameters:
     ///   - permissions: The new permissions.
@@ -74,17 +113,7 @@ extension ISO_9945.Kernel.File.Attributes {
         _ permissions: Kernel.File.Permissions,
         on descriptor: borrowing Kernel.Descriptor
     ) throws(Error) {
-        #if canImport(Darwin)
-            let result = Darwin.fchmod(descriptor._rawValue, mode_t(permissions.rawValue))
-        #elseif canImport(Musl)
-            let result = Musl.fchmod(descriptor._rawValue, mode_t(permissions.rawValue))
-        #elseif canImport(Glibc)
-            let result = Glibc.fchmod(descriptor._rawValue, mode_t(permissions.rawValue))
-        #endif
-
-        guard result == 0 else {
-            throw Error.current()
-        }
+        try unsafe set(permissions, fd: descriptor._rawValue)
     }
 }
 

@@ -68,31 +68,6 @@ extension ISO_9945.Kernel.File.Chown {
         }
     }
 
-    /// Changes the ownership of an open file descriptor.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor.
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
-    public static func fchown(
-        _ descriptor: borrowing Kernel.Descriptor,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
-    ) throws(Error) {
-        #if canImport(Darwin)
-            let result = Darwin.fchown(descriptor._rawValue, uid.rawValue, gid.rawValue)
-        #elseif canImport(Musl)
-            let result = Musl.fchown(descriptor._rawValue, uid.rawValue, gid.rawValue)
-        #elseif canImport(Glibc)
-            let result = Glibc.fchown(descriptor._rawValue, uid.rawValue, gid.rawValue)
-        #endif
-
-        guard result == 0 else {
-            throw Error.current()
-        }
-    }
-
     /// Changes the ownership of a symbolic link (not the target).
     ///
     /// - Parameters:
@@ -136,6 +111,62 @@ extension ISO_9945.Kernel.File.Chown {
         guard result == 0 else {
             throw Error.current()
         }
+    }
+}
+
+// MARK: - POSIX fchown() syscall (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.File.Chown {
+    /// Changes the ownership of an open raw file descriptor.
+    ///
+    /// Spec-literal raw `fchown(2)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Chown.fchown(_:uid:gid:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - fd: The raw file descriptor.
+    ///   - uid: The new user ID.
+    ///   - gid: The new group ID.
+    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    @_spi(Syscall)
+    public static func fchown(
+        fd: Int32,
+        uid: Kernel.User.ID,
+        gid: Kernel.Group.ID
+    ) throws(Error) {
+        #if canImport(Darwin)
+            let result = unsafe Darwin.fchown(fd, uid.rawValue, gid.rawValue)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.fchown(fd, uid.rawValue, gid.rawValue)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.fchown(fd, uid.rawValue, gid.rawValue)
+        #endif
+
+        guard result == 0 else {
+            throw Error.current()
+        }
+    }
+}
+
+// MARK: - Typed Convenience
+
+extension ISO_9945.Kernel.File.Chown {
+    /// Changes the ownership of an open file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `fchown(fd:uid:gid:)` SPI via
+    /// `descriptor._rawValue`.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor.
+    ///   - uid: The new user ID.
+    ///   - gid: The new group ID.
+    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    public static func fchown(
+        _ descriptor: borrowing Kernel.Descriptor,
+        uid: Kernel.User.ID,
+        gid: Kernel.Group.ID
+    ) throws(Error) {
+        try unsafe fchown(fd: descriptor._rawValue, uid: uid, gid: gid)
     }
 }
 

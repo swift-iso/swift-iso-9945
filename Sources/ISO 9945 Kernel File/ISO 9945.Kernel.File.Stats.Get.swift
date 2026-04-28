@@ -20,13 +20,15 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX stat() syscalls
+// MARK: - POSIX fstat() syscall (raw @_spi(Syscall))
 
 extension ISO_9945.Kernel.File.Stats {
-    /// Gets file metadata for an open file descriptor.
+    /// Gets file metadata for a raw file descriptor.
     ///
-    /// Retrieves file size, type, permissions, timestamps, and other metadata
-    /// using fstat.
+    /// Spec-literal raw `fstat(2)`. Retrieves file size, type, permissions,
+    /// timestamps, and other metadata. The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Stats.get(descriptor:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## Threading
     /// This call may briefly block while reading file metadata. Safe to call
@@ -37,27 +39,44 @@ extension ISO_9945.Kernel.File.Stats {
     /// - ``Error/io(_:)``: I/O error reading metadata
     /// - ``Error/platform(_:)``: Platform-specific error
     ///
-    /// - Parameter descriptor: The file descriptor to stat.
+    /// - Parameter fd: The raw file descriptor to stat.
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    public static func get(descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
+    @_spi(Syscall)
+    public static func get(fd: Int32) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
-            guard unsafe (Darwin.fstat(descriptor._rawValue, &sb) == 0) else {
+            guard unsafe (Darwin.fstat(fd, &sb) == 0) else {
                 throw Error(posixErrno: errno)
             }
         #elseif canImport(Musl)
             var sb = Musl.stat()
-            guard Musl.fstat(descriptor._rawValue, &sb) == 0 else {
+            guard unsafe (Musl.fstat(fd, &sb) == 0) else {
                 throw Error(posixErrno: errno)
             }
         #elseif canImport(Glibc)
             var sb = Glibc.stat()
-            guard Glibc.fstat(descriptor._rawValue, &sb) == 0 else {
+            guard unsafe (Glibc.fstat(fd, &sb) == 0) else {
                 throw Error(posixErrno: errno)
             }
         #endif
         return Kernel.File.Stats(from: sb)
+    }
+}
+
+// MARK: - Typed Convenience + path overloads
+
+extension ISO_9945.Kernel.File.Stats {
+    /// Gets file metadata for an open file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `get(fd:)` SPI via
+    /// `descriptor._rawValue`.
+    ///
+    /// - Parameter descriptor: The file descriptor to stat.
+    /// - Returns: File metadata including size, type, permissions, and timestamps.
+    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
+    public static func get(descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
+        try unsafe get(fd: descriptor._rawValue)
     }
 
     /// Gets file metadata for a path (follows symlinks).
