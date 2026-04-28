@@ -253,6 +253,7 @@ let package = Package(
             name: "ISO 9945 Kernel Memory",
             dependencies: [
                 "ISO 9945 Core",
+                "ISO 9945 Kernel Descriptor",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Kernel Memory Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),

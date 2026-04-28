@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
 
 #if canImport(Darwin)
     internal import Darwin
@@ -65,6 +66,28 @@ extension ISO_9945.Kernel.Memory.Map {
         }
 
         return unsafe Kernel.Memory.Address(result!)
+    }
+
+    /// Maps memory into the process address space using a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `map(... fd: Int32, ...)`
+    /// SPI via `descriptor._rawValue`.
+    public static func map(
+        addr: Kernel.Memory.Address? = nil,
+        length: Kernel.File.Size,
+        protection: Protection,
+        flags: Options,
+        descriptor: borrowing POSIX.Kernel.Descriptor,
+        offset: Kernel.File.Offset = .zero
+    ) throws(Error) -> Kernel.Memory.Address {
+        try map(
+            addr: addr,
+            length: length,
+            protection: protection,
+            flags: flags,
+            fd: descriptor._rawValue,
+            offset: offset
+        )
     }
 
     /// Unmaps a previously mapped region.
