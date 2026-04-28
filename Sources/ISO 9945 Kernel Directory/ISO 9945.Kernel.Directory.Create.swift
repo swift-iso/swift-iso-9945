@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -98,11 +98,9 @@ extension ISO_9945.Kernel.Directory.Create {
 
     /// Creates a directory relative to a typed descriptor.
     ///
-    /// Phase 1.5 typed L2 form per
-    /// `swift-institute/Research/posix-descriptor-l2-vs-l3policy.md` v1.0.0.
-    /// Composes the L2 raw `mkdirat(2)` SPI form with errno-to-error mapping.
-    /// The raw form is retained alongside as `@_spi(Syscall)` for
-    /// spec-coverage callers.
+    /// Phase 1.5 typed L2 form. Composes the L2 raw `mkdirat(2)` SPI form
+    /// with errno-to-error mapping. The raw form is retained alongside as
+    /// `@_spi(Syscall)` for spec-coverage callers.
     ///
     /// - Parameters:
     ///   - path: The path of the directory to create.
@@ -112,7 +110,7 @@ extension ISO_9945.Kernel.Directory.Create {
     /// - Throws: ``Error`` on failure.
     public static func create(
         _ path: borrowing Kernel.Path.Borrowed,
-        relativeTo descriptor: borrowing POSIX.Kernel.Descriptor,
+        relativeTo descriptor: borrowing Kernel.Descriptor,
         permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         let raw = descriptor._rawValue

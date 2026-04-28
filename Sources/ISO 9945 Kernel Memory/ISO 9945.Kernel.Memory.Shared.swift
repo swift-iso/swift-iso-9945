@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Memory_Primitives
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -99,23 +99,23 @@ extension ISO_9945.Kernel.Memory.Shared {
     /// Opens or creates a POSIX shared memory object, returning a typed descriptor.
     ///
     /// Phase 1.5 typed L2 form. Composes the raw `shm_open` SPI form with
-    /// `POSIX.Kernel.Descriptor(_rawValue:)` construction. § 5.6 handle-returning
+    /// `Kernel.Descriptor(_rawValue:)` construction. § 5.6 handle-returning
     /// bifurcation case: the kernel produces the fd; this typed form wraps it
-    /// in the L2 descriptor type.
+    /// in the L1 descriptor type.
     @unsafe
     public static func open(
         name: UnsafePointer<CChar>,
         access: Kernel.Memory.Shared.Access,
         options: Kernel.Memory.Shared.Options = [],
         permissions: Kernel.File.Permissions = .ownerReadWrite
-    ) throws(Kernel.Memory.Shared.Error) -> POSIX.Kernel.Descriptor {
+    ) throws(Kernel.Memory.Shared.Error) -> Kernel.Descriptor {
         let fd = try unsafe shm_open(
             name: name,
             access: access,
             options: options,
             permissions: permissions
         )
-        return POSIX.Kernel.Descriptor(_rawValue: fd)
+        return unsafe Kernel.Descriptor(_rawValue: fd)
     }
 
     /// Removes a POSIX shared memory object.

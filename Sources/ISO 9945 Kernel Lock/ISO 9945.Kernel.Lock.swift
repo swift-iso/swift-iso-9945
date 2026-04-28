@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -115,7 +115,7 @@ extension ISO_9945.Kernel.Lock {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `lock(fd:range:kind:)` SPI.
     public static func lock(
-        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind
     ) throws(Kernel.Lock.Error) {
@@ -126,7 +126,7 @@ extension ISO_9945.Kernel.Lock {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `unlock(fd:range:)` SPI.
     public static func unlock(
-        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range
     ) throws(Kernel.Lock.Error) {
         try unlock(fd: descriptor._rawValue, range: range)
@@ -176,7 +176,7 @@ extension ISO_9945.Kernel.Lock.Immediate {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `lock(fd:range:kind:)` SPI.
     public static func lock(
-        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         range: Kernel.Lock.Range,
         kind: Kernel.Lock.Kind
     ) throws(Kernel.Lock.Error) {

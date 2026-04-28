@@ -1,5 +1,5 @@
 @_spi(Syscall) import Kernel_Socket_Primitives
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -113,14 +113,14 @@ extension ISO_9945.Kernel.Socket.Bind {
 // MARK: - Typed Convenience (Phase 1.5)
 
 extension ISO_9945.Kernel.Socket.Bind {
-    /// Binds a socket to a local address using a typed POSIX descriptor.
+    /// Binds a socket to a local address using a typed descriptor.
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `bind(fd:address:length:)`
     /// SPI. For typed callers using socket-specific subtypes, the
     /// `Kernel.Socket.Descriptor` overloads (Storage / IPv4 / IPv6 / Unix) above
     /// remain available.
     public static func bind(
-        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         address: Kernel.Socket.Address.Storage,
         length: Kernel.Socket.Address.Length
     ) throws(Kernel.Socket.Error) {

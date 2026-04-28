@@ -11,7 +11,6 @@
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives  // for Kernel.Descriptor.Validity.Error in error mapping
 @_spi(Syscall) import Kernel_Socket_Primitives
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
 
 #if canImport(Darwin)
     internal import Darwin
@@ -59,7 +58,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `shutdown(fd:how:)` SPI.
     public static func shutdown(
-        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        _ descriptor: borrowing Kernel.Descriptor,
         how: How
     ) throws(Error) {
         try shutdown(fd: descriptor._rawValue, how: how)

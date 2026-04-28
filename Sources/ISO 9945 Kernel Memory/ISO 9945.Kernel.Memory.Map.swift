@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Memory_Primitives
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -77,7 +77,7 @@ extension ISO_9945.Kernel.Memory.Map {
         length: Kernel.File.Size,
         protection: Protection,
         flags: Options,
-        descriptor: borrowing POSIX.Kernel.Descriptor,
+        descriptor: borrowing Kernel.Descriptor,
         offset: Kernel.File.Offset = .zero
     ) throws(Error) -> Kernel.Memory.Address {
         try map(

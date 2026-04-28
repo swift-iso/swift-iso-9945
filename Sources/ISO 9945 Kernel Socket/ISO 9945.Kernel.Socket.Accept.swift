@@ -1,5 +1,5 @@
 @_spi(Syscall) import Kernel_Socket_Primitives
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -108,11 +108,11 @@ extension ISO_9945.Kernel.Socket.Accept {
 // MARK: - Typed Convenience (Phase 1.5)
 
 extension ISO_9945.Kernel.Socket.Accept {
-    /// Accepts an incoming connection on a listening socket via a typed POSIX descriptor.
+    /// Accepts an incoming connection on a listening socket via a typed descriptor.
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `accept(fd:)` SPI.
     public static func accept(
-        _ descriptor: borrowing POSIX.Kernel.Descriptor
+        _ descriptor: borrowing Kernel.Descriptor
     ) throws(Kernel.Socket.Error) -> Result {
         try accept(fd: descriptor._rawValue)
     }

@@ -24,10 +24,6 @@ let package = Package(
             targets: ["ISO 9945 Kernel File"]
         ),
         .library(
-            name: "ISO 9945 Kernel Descriptor",
-            targets: ["ISO 9945 Kernel Descriptor"]
-        ),
-        .library(
             name: "ISO 9945 Kernel Directory",
             targets: ["ISO 9945 Kernel Directory"]
         ),
@@ -171,39 +167,12 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Descriptor (L2 — Phase 1.5)
-        //
-        // Hosts `POSIX.Kernel.Descriptor` — the per-platform descriptor type
-        // with native `Int32` storage and POSIX `close(2)`-on-deinit. Per
-        // `swift-institute/Research/posix-descriptor-l2-vs-l3policy.md` v1.0.0
-        // RECOMMENDATION (commit 1bddfe6): the type-level commitment (RAII close)
-        // belongs WITH the type definition; iso-9945 owns the spec-mirroring
-        // namespace and IS the canonical home for POSIX-spec types. The L1
-        // exception in `swift-kernel-primitives` was eliminated 2026-04-26;
-        // the L3-policy placement at swift-posix was structurally redundant.
-        //
-        // The cross-platform name `Kernel.Descriptor` continues to be unified at
-        // the L3-unifier (`swift-kernel`) via `#if`-gated typealias resolving to
-        // this type on POSIX platforms. swift-posix retains policy-bearing
-        // extensions (Validity, Close.Error, +Equation, +Hash, Interest,
-        // Duplicate) on this type at L3-policy.
-
-        .target(
-            name: "ISO 9945 Kernel Descriptor",
-            dependencies: [
-                "ISO 9945 Core",
-                "ISO 9945 Kernel File",
-                .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
-            ]
-        ),
-
         // MARK: - Directory
 
         .target(
             name: "ISO 9945 Kernel Directory",
             dependencies: [
                 "ISO 9945 Core",
-                "ISO 9945 Kernel Descriptor",
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ]
@@ -216,7 +185,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 "ISO 9945 Kernel Clock",
-                "ISO 9945 Kernel Descriptor",
                 "ISO 9945 Kernel System",
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
@@ -240,7 +208,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 "ISO 9945 Kernel File",
-                "ISO 9945 Kernel Descriptor",
                 "ISO 9945 Kernel Poll",
                 "ISO 9945 Kernel Socket Address",
                 .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
@@ -254,7 +221,6 @@ let package = Package(
             name: "ISO 9945 Kernel Memory",
             dependencies: [
                 "ISO 9945 Core",
-                "ISO 9945 Kernel Descriptor",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Kernel Memory Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
@@ -301,7 +267,6 @@ let package = Package(
             name: "ISO 9945 Kernel Terminal",
             dependencies: [
                 "ISO 9945 Core",
-                "ISO 9945 Kernel Descriptor",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Kernel Terminal Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel IO Primitives", package: "swift-kernel-primitives"),
@@ -371,7 +336,6 @@ let package = Package(
             name: "ISO 9945 Kernel Poll",
             dependencies: [
                 "ISO 9945 Core",
-                "ISO 9945 Kernel Descriptor",
             ]
         ),
 
@@ -393,7 +357,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 "ISO 9945 Kernel File",
-                "ISO 9945 Kernel Descriptor",
                 "ISO 9945 Kernel Directory",
                 "ISO 9945 Kernel Lock",
                 "ISO 9945 Kernel Socket Address",

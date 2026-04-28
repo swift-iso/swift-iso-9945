@@ -12,7 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Terminal_Primitives
-@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -74,7 +74,7 @@ extension ISO_9945.Kernel.TTY {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `isTTY(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func isTTY(_ descriptor: borrowing POSIX.Kernel.Descriptor) -> Bool {
+    public static func isTTY(_ descriptor: borrowing Kernel.Descriptor) -> Bool {
         isTTY(fd: descriptor._rawValue)
     }
 }
@@ -84,7 +84,7 @@ extension ISO_9945.Kernel.TTY.Size {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `query(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func query(_ descriptor: borrowing POSIX.Kernel.Descriptor) throws(Kernel.Error) -> Self {
+    public static func query(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
         try query(fd: descriptor._rawValue)
     }
 }
