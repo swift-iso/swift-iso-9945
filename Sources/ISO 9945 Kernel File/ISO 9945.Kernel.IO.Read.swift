@@ -112,13 +112,17 @@ extension ISO_9945.Kernel.IO.Read {
     /// Reads bytes from a file descriptor.
     ///
     /// Typed L2 form. Delegates to the raw `read(fd:into:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check.
+    /// `descriptor._rawValue` after a fast-fail validity check. Marked
+    /// `@_disfavoredOverload` so the L3-unifier `Kernel.IO.Read.read(_:into:)`
+    /// (EINTR-retry policy) wins overload resolution at consumer sites that
+    /// see both layers — raw spec access is reachable via this L2 form.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to read from.
     ///   - buffer: The buffer to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer
@@ -132,7 +136,10 @@ extension ISO_9945.Kernel.IO.Read {
     /// Reads bytes from a file descriptor at a specific offset.
     ///
     /// Typed L2 form. Delegates to the raw `pread(fd:into:at:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check.
+    /// `descriptor._rawValue` after a fast-fail validity check. Marked
+    /// `@_disfavoredOverload` so the L3-unifier
+    /// `Kernel.IO.Read.pread(_:into:at:)` (EINTR-retry policy) wins overload
+    /// resolution.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to read from.
@@ -140,6 +147,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer,
@@ -162,6 +170,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - span: The mutable span to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>
@@ -179,6 +188,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>,

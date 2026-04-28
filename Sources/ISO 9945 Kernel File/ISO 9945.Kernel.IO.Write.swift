@@ -134,13 +134,17 @@ extension ISO_9945.Kernel.IO.Write {
     /// Writes bytes to a file descriptor at the current file offset.
     ///
     /// Typed L2 form. Delegates to the raw `write(fd:from:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check.
+    /// `descriptor._rawValue` after a fast-fail validity check. Marked
+    /// `@_disfavoredOverload` so the L3-unifier `Kernel.IO.Write.write(_:from:)`
+    /// (EINTR-retry policy) wins overload resolution at consumer sites that
+    /// see both layers — raw spec access is reachable via this L2 form.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to write to.
     ///   - buffer: The buffer to write from.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
+    @_disfavoredOverload
     public static func write(
         _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
@@ -154,7 +158,10 @@ extension ISO_9945.Kernel.IO.Write {
     /// Writes bytes to a file descriptor at a specific offset without changing the file position.
     ///
     /// Typed L2 form. Delegates to the raw `pwrite(fd:from:at:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check.
+    /// `descriptor._rawValue` after a fast-fail validity check. Marked
+    /// `@_disfavoredOverload` so the L3-unifier
+    /// `Kernel.IO.Write.pwrite(_:from:at:)` (EINTR-retry policy) wins overload
+    /// resolution.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to write to.
@@ -162,6 +169,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
+    @_disfavoredOverload
     public static func pwrite(
         _ descriptor: borrowing Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer,
@@ -184,6 +192,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - span: The span containing bytes to write.
     /// - Returns: Number of bytes written.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
+    @_disfavoredOverload
     public static func write(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>
@@ -201,6 +210,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
+    @_disfavoredOverload
     public static func pwrite(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>,
