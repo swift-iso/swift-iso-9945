@@ -20,49 +20,119 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX read() syscall
+// MARK: - POSIX read() syscall (raw @_spi(Syscall))
 
 extension ISO_9945.Kernel.IO.Read {
-    /// Reads bytes from a file descriptor.
+    /// Reads bytes from a raw file descriptor.
+    ///
+    /// Spec-literal raw `read(2)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.IO.Read.read(_:into:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
+    ///   - fd: The raw file descriptor to read from.
     ///   - buffer: The buffer to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func read(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         into buffer: UnsafeMutableRawBufferPointer
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
             return 0
         }
-        guard descriptor.isValid else {
-            throw .handle(.invalid)
-        }
         #if canImport(Darwin)
             return try Kernel.Syscall.require(
-                unsafe Darwin.read(descriptor._rawValue, baseAddress, buffer.count),
+                unsafe Darwin.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Musl)
             return try Kernel.Syscall.require(
-                unsafe Musl.read(descriptor._rawValue, baseAddress, buffer.count),
+                unsafe Musl.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Glibc)
             return try Kernel.Syscall.require(
-                unsafe Glibc.read(descriptor._rawValue, baseAddress, buffer.count),
+                unsafe Glibc.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #endif
     }
 
+    /// Reads bytes from a raw file descriptor at a specific offset.
+    ///
+    /// Spec-literal raw `pread(2)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.IO.Read.pread(_:into:at:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - fd: The raw file descriptor to read from.
+    ///   - buffer: The buffer to read into.
+    ///   - offset: The file offset to read from.
+    /// - Returns: Number of bytes read. Returns 0 on EOF.
+    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    @_spi(Syscall)
+    public static func pread(
+        fd: Int32,
+        into buffer: UnsafeMutableRawBufferPointer,
+        at offset: Kernel.File.Offset
+    ) throws(Error) -> Int {
+        guard let baseAddress = buffer.baseAddress else {
+            return 0
+        }
+        #if canImport(Darwin)
+            return try Kernel.Syscall.require(
+                unsafe Darwin.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
+                .nonNegative,
+                orThrow: Error.current()
+            )
+        #elseif canImport(Musl)
+            return try Kernel.Syscall.require(
+                unsafe Musl.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
+                .nonNegative,
+                orThrow: Error.current()
+            )
+        #elseif canImport(Glibc)
+            return try Kernel.Syscall.require(
+                unsafe Glibc.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
+                .nonNegative,
+                orThrow: Error.current()
+            )
+        #endif
+    }
+}
+
+// MARK: - Typed Convenience
+
+extension ISO_9945.Kernel.IO.Read {
+    /// Reads bytes from a file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `read(fd:into:)` SPI via
+    /// `descriptor._rawValue` after a fast-fail validity check.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to read from.
+    ///   - buffer: The buffer to read into.
+    /// - Returns: Number of bytes read. Returns 0 on EOF.
+    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    public static func read(
+        _ descriptor: borrowing Kernel.Descriptor,
+        into buffer: UnsafeMutableRawBufferPointer
+    ) throws(Error) -> Int {
+        guard descriptor.isValid else {
+            throw .handle(.invalid)
+        }
+        return try unsafe read(fd: descriptor._rawValue, into: buffer)
+    }
+
     /// Reads bytes from a file descriptor at a specific offset.
+    ///
+    /// Typed L2 form. Delegates to the raw `pread(fd:into:at:)` SPI via
+    /// `descriptor._rawValue` after a fast-fail validity check.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to read from.
@@ -70,37 +140,15 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
-    @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
-        guard let baseAddress = buffer.baseAddress else {
-            return 0
-        }
         guard descriptor.isValid else {
             throw .handle(.invalid)
         }
-        #if canImport(Darwin)
-            return try Kernel.Syscall.require(
-                unsafe Darwin.pread(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
-        #elseif canImport(Musl)
-            return try Kernel.Syscall.require(
-                unsafe Musl.pread(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
-        #elseif canImport(Glibc)
-            return try Kernel.Syscall.require(
-                unsafe Glibc.pread(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
-        #endif
+        return try unsafe pread(fd: descriptor._rawValue, into: buffer, at: offset)
     }
 }
 
@@ -114,8 +162,6 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - span: The mutable span to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
-
-    @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>
@@ -133,8 +179,6 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `Kernel.IO.Read.Error` on failure.
-
-    @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>,

@@ -20,14 +20,16 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX write() syscall
+// MARK: - POSIX write() syscall (raw @_spi(Syscall))
 
 extension ISO_9945.Kernel.IO.Write {
-    /// Writes bytes to a file descriptor at the current file offset.
+    /// Writes bytes to a raw file descriptor at the current file offset.
     ///
     /// This is the raw POSIX `write(2)` syscall. It does NOT automatically retry
-    /// on EINTR - callers must handle signal interruption explicitly. For automatic
-    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    /// on EINTR — callers must handle signal interruption explicitly. For automatic
+    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`. The typed L2
+    /// convenience (`ISO_9945.Kernel.IO.Write.write(_:from:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## Threading
     /// This call blocks until at least one byte is written or an error occurs.
@@ -35,7 +37,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// sequential writes require external synchronization.
     ///
     /// ## Partial Writes
-    /// May return fewer bytes than `buffer.count`. This is not an error—loop until
+    /// May return fewer bytes than `buffer.count`. This is not an error — loop until
     /// all data is written. Returns 0 only for zero-length buffers.
     ///
     /// ## EINTR
@@ -44,28 +46,25 @@ extension ISO_9945.Kernel.IO.Write {
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
-    ///   - descriptor: The file descriptor to write to.
+    ///   - fd: The raw file descriptor to write to.
     ///   - buffer: The buffer to write from.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func write(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         from buffer: UnsafeRawBufferPointer
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
             return 0
         }
-        guard descriptor.isValid else {
-            throw .handle(.invalid)
-        }
 
         #if canImport(Darwin)
-            let result = unsafe Darwin.write(descriptor._rawValue, baseAddress, buffer.count)
+            let result = unsafe Darwin.write(fd, baseAddress, buffer.count)
         #elseif canImport(Musl)
-            let result = unsafe Musl.write(descriptor._rawValue, baseAddress, buffer.count)
+            let result = unsafe Musl.write(fd, baseAddress, buffer.count)
         #elseif canImport(Glibc)
-            let result = unsafe Glibc.write(descriptor._rawValue, baseAddress, buffer.count)
+            let result = unsafe Glibc.write(fd, baseAddress, buffer.count)
         #endif
 
         if result >= 0 {
@@ -75,11 +74,13 @@ extension ISO_9945.Kernel.IO.Write {
         throw Error.current()
     }
 
-    /// Writes bytes to a file descriptor at a specific offset without changing the file position.
+    /// Writes bytes to a raw file descriptor at a specific offset without changing the file position.
     ///
     /// This is the raw POSIX `pwrite(2)` syscall. It does NOT automatically retry
-    /// on EINTR - callers must handle signal interruption explicitly. For automatic
-    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`.
+    /// on EINTR — callers must handle signal interruption explicitly. For automatic
+    /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`. The typed L2
+    /// convenience (`ISO_9945.Kernel.IO.Write.pwrite(_:from:at:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## Threading
     /// This call blocks until at least one byte is written or an error occurs.
@@ -87,7 +88,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// threads when writing to non-overlapping regions.
     ///
     /// ## Partial Writes
-    /// May return fewer bytes than `buffer.count`. This is not an error—loop until
+    /// May return fewer bytes than `buffer.count`. This is not an error — loop until
     /// all data is written, adjusting the offset accordingly.
     ///
     /// ## EINTR
@@ -96,30 +97,27 @@ extension ISO_9945.Kernel.IO.Write {
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
-    ///   - descriptor: The file descriptor to write to.
+    ///   - fd: The raw file descriptor to write to.
     ///   - buffer: The buffer to write from.
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func pwrite(
-        _ descriptor: borrowing Kernel.Descriptor,
+        fd: Int32,
         from buffer: UnsafeRawBufferPointer,
         at offset: Kernel.File.Offset
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
             return 0
         }
-        guard descriptor.isValid else {
-            throw .handle(.invalid)
-        }
 
         #if canImport(Darwin)
-            let result = unsafe Darwin.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue))
+            let result = unsafe Darwin.pwrite(fd, baseAddress, buffer.count, off_t(offset.rawValue))
         #elseif canImport(Musl)
-            let result = unsafe Musl.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue))
+            let result = unsafe Musl.pwrite(fd, baseAddress, buffer.count, off_t(offset.rawValue))
         #elseif canImport(Glibc)
-            let result = unsafe Glibc.pwrite(descriptor._rawValue, baseAddress, buffer.count, off_t(offset.rawValue))
+            let result = unsafe Glibc.pwrite(fd, baseAddress, buffer.count, off_t(offset.rawValue))
         #endif
 
         if result >= 0 {
@@ -127,6 +125,52 @@ extension ISO_9945.Kernel.IO.Write {
         }
 
         throw Error.current()
+    }
+}
+
+// MARK: - Typed Convenience
+
+extension ISO_9945.Kernel.IO.Write {
+    /// Writes bytes to a file descriptor at the current file offset.
+    ///
+    /// Typed L2 form. Delegates to the raw `write(fd:from:)` SPI via
+    /// `descriptor._rawValue` after a fast-fail validity check.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to write to.
+    ///   - buffer: The buffer to write from.
+    /// - Returns: Number of bytes written (may be less than `buffer.count`).
+    /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
+    public static func write(
+        _ descriptor: borrowing Kernel.Descriptor,
+        from buffer: UnsafeRawBufferPointer
+    ) throws(Error) -> Int {
+        guard descriptor.isValid else {
+            throw .handle(.invalid)
+        }
+        return try unsafe write(fd: descriptor._rawValue, from: buffer)
+    }
+
+    /// Writes bytes to a file descriptor at a specific offset without changing the file position.
+    ///
+    /// Typed L2 form. Delegates to the raw `pwrite(fd:from:at:)` SPI via
+    /// `descriptor._rawValue` after a fast-fail validity check.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to write to.
+    ///   - buffer: The buffer to write from.
+    ///   - offset: The file offset to write at.
+    /// - Returns: Number of bytes written (may be less than `buffer.count`).
+    /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
+    public static func pwrite(
+        _ descriptor: borrowing Kernel.Descriptor,
+        from buffer: UnsafeRawBufferPointer,
+        at offset: Kernel.File.Offset
+    ) throws(Error) -> Int {
+        guard descriptor.isValid else {
+            throw .handle(.invalid)
+        }
+        return try unsafe pwrite(fd: descriptor._rawValue, from: buffer, at: offset)
     }
 }
 
@@ -140,8 +184,6 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - span: The span containing bytes to write.
     /// - Returns: Number of bytes written.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
-
-    @_disfavoredOverload
     public static func write(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>
@@ -159,8 +201,6 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written.
     /// - Throws: `Kernel.IO.Write.Error` on failure.
-
-    @_disfavoredOverload
     public static func pwrite(
         _ descriptor: borrowing Kernel.Descriptor,
         from span: Span<UInt8>,
@@ -170,7 +210,6 @@ extension ISO_9945.Kernel.IO.Write {
             try unsafe pwrite(descriptor, from: buffer, at: offset)
         }
     }
-
 }
 
 // MARK: - Error Conversion
