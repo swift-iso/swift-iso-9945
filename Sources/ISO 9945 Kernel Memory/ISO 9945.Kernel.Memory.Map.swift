@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Memory_Primitives
 
 #if canImport(Darwin)
@@ -23,24 +22,29 @@
 // MARK: - POSIX mmap() syscalls
 
 extension ISO_9945.Kernel.Memory.Map {
-    /// Maps memory into the process address space.
+    /// Maps memory into the process address space (raw `mmap(2)`).
+    ///
+    /// Spec-literal: takes a raw fd, returns the mapped region or throws on
+    /// failure. The L3-policy typed-descriptor convenience lives on the
+    /// unified `Kernel.Memory.Map` namespace at swift-posix per
+    /// [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameters:
     ///   - addr: Suggested address, or `nil` for kernel to choose.
     ///   - length: Number of bytes to map (must be > 0).
     ///   - protection: Memory protection flags.
     ///   - flags: Mapping flags.
-    ///   - fd: File descriptor to map, or -1 for anonymous.
+    ///   - fd: Raw file descriptor to map, or `-1` for anonymous.
     ///   - offset: Offset into the file (must be page-aligned).
     /// - Returns: Pointer to the mapped region.
     /// - Throws: `Error.map` on failure.
-
+    @_spi(Syscall)
     public static func map(
         addr: Kernel.Memory.Address? = nil,
         length: Kernel.File.Size,
         protection: Protection,
         flags: Options,
-        fd: borrowing Kernel.Descriptor = .invalid,
+        fd: Int32 = -1,
         offset: Kernel.File.Offset = .zero
     ) throws(Error) -> Kernel.Memory.Address {
         guard length.isPositive else {
@@ -52,7 +56,7 @@ extension ISO_9945.Kernel.Memory.Map {
             Int(length),
             protection.rawValue,
             flags.rawValue,
-            fd._rawValue,
+            fd,
             off_t(offset.rawValue)
         )
 

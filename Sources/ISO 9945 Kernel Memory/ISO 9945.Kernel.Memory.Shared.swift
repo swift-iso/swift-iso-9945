@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Memory_Primitives
 
 #if canImport(Darwin)
@@ -51,13 +50,19 @@ extension ISO_9945.Kernel.Memory.Shared {
     /// - Returns: A file descriptor for the shared memory object.
     /// - Throws: ``Kernel/Memory/Shared/Error`` on failure.
 
-    @unsafe
+    /// Raw POSIX `shm_open(3)` syscall.
+    ///
+    /// Spec-literal: returns the raw `Int32` fd. Zero descriptor construction:
+    /// the L3-policy wrapper at swift-posix wraps the result in
+    /// `POSIX.Kernel.Descriptor(_rawValue:)` per [PLAT-ARCH-005] /
+    /// [PLAT-ARCH-008e]. § 5.6 handle-returning bifurcation case.
+    @_spi(Syscall) @unsafe
     public static func open(
         name: UnsafePointer<CChar>,
         access: Kernel.Memory.Shared.Access,
         options: Kernel.Memory.Shared.Options = [],
         permissions: Kernel.File.Permissions = .ownerReadWrite
-    ) throws(Kernel.Memory.Shared.Error) -> Kernel.Descriptor {
+    ) throws(Kernel.Memory.Shared.Error) -> Int32 {
         // Convert Access to POSIX flags at syscall boundary
         let accessMode: Int32 = switch (access.read, access.write) {
         case (true, false):  O_RDONLY
@@ -78,7 +83,7 @@ extension ISO_9945.Kernel.Memory.Shared {
         guard fd >= 0 else {
             throw .open(Kernel.Error.Code.captureErrno())
         }
-        return Kernel.Descriptor(_rawValue: fd)
+        return fd
     }
 
     /// Removes a POSIX shared memory object.
