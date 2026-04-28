@@ -85,9 +85,25 @@ extension ISO_9945.Kernel.Thread {
         /// `PTHREAD_DESTRUCTOR_ITERATIONS` times — typically 4. A
         /// destructor that only releases (and does not re-set) avoids
         /// re-entry.
-        public init(destructor: @convention(c) (UnsafeMutableRawPointer?) -> Void) {
+        public init(destructor: @convention(c) (UnsafeMutableRawPointer) -> Void) {
             self.key = pthread_key_t()
-            unsafe pthread_key_create(&self.key, destructor)
+            #if canImport(Darwin)
+                unsafe pthread_key_create(&self.key, destructor)
+            #else
+                // Linux/Musl glibc imports pthread_key_create's destructor as
+                // `(UnsafeMutableRawPointer?) -> Void` (Optional input), while
+                // Darwin imports it as non-Optional. The C ABI is identical; only
+                // the Swift importer's nullability decision differs. unsafeBitCast
+                // converts between the Swift representations without changing the
+                // bits. The kernel only invokes the destructor with non-nil values
+                // per POSIX semantics (the slot value is non-nil at thread exit),
+                // so the (NonOpt) closure is correctly invoked at runtime.
+                let optDestructor = unsafe unsafeBitCast(
+                    destructor,
+                    to: (@convention(c) (UnsafeMutableRawPointer?) -> Void).self
+                )
+                unsafe pthread_key_create(&self.key, optDestructor)
+            #endif
         }
 
         deinit {
