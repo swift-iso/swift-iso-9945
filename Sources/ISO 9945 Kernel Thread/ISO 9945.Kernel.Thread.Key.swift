@@ -85,7 +85,7 @@ extension ISO_9945.Kernel.Thread {
         /// `PTHREAD_DESTRUCTOR_ITERATIONS` times — typically 4. A
         /// destructor that only releases (and does not re-set) avoids
         /// re-entry.
-        public init(destructor: @convention(c) (UnsafeMutableRawPointer) -> Void) {
+        public init(destructor: @convention(c) (UnsafeMutableRawPointer?) -> Void) {
             self.key = pthread_key_t()
             unsafe pthread_key_create(&self.key, destructor)
         }

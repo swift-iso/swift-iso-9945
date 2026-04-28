@@ -82,8 +82,11 @@ extension ISO_9945.Kernel.Memory.Shared {
         #if canImport(Darwin)
             // Use shim because Darwin declares shm_open as variadic
             let fd = unsafe iso9945_shm_open(name, flags, mode_t(permissions.rawValue))
-        #else
-            let fd = unsafe shm_open(name, flags, mode_t(permissions.rawValue))
+        #elseif canImport(Glibc)
+            // Module-qualify to disambiguate from the enclosing static method.
+            let fd = unsafe Glibc.shm_open(name, flags, mode_t(permissions.rawValue))
+        #elseif canImport(Musl)
+            let fd = unsafe Musl.shm_open(name, flags, mode_t(permissions.rawValue))
         #endif
 
         guard fd >= 0 else {
