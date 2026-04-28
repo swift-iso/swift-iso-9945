@@ -52,12 +52,18 @@ extension ISO_9945.Kernel.Memory.Shared {
 
     /// Raw POSIX `shm_open(3)` syscall.
     ///
-    /// Spec-literal: returns the raw `Int32` fd. Zero descriptor construction:
-    /// the L3-policy wrapper at swift-posix wraps the result in
-    /// `POSIX.Kernel.Descriptor(_rawValue:)` per [PLAT-ARCH-005] /
-    /// [PLAT-ARCH-008e]. § 5.6 handle-returning bifurcation case.
+    /// Spec-literal name (`shm_open`) matching the C function. Returns the
+    /// raw `Int32` fd. Zero descriptor construction: the L3-policy wrapper
+    /// at swift-posix (`Kernel.Memory.Shared.open(...) -> Kernel.Descriptor`)
+    /// wraps the result in `Kernel.Descriptor(_rawValue:)` per
+    /// [PLAT-ARCH-005] / [PLAT-ARCH-008e]. § 5.6 handle-returning
+    /// bifurcation case.
+    ///
+    /// The spec-literal rename (`open` → `shm_open`) frees the intent name
+    /// `open` for the L3-policy entry per [PLAT-ARCH-008e]'s namespace-
+    /// identity disambiguation rule (Phase-A-rename pattern).
     @_spi(Syscall) @unsafe
-    public static func open(
+    public static func shm_open(
         name: UnsafePointer<CChar>,
         access: Kernel.Memory.Shared.Access,
         options: Kernel.Memory.Shared.Options = [],
