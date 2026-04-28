@@ -20,10 +20,78 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX dup() syscalls
+// MARK: - POSIX dup() syscalls (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.Descriptor.Duplicate {
+    /// Duplicates a raw file descriptor.
+    ///
+    /// Spec-literal raw `dup(2)`. Creates a copy of the file descriptor using
+    /// the lowest-numbered available file descriptor. The typed L2 convenience
+    /// (`ISO_9945.Kernel.Descriptor.Duplicate.duplicate(_:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameter fd: The raw file descriptor to duplicate.
+    /// - Returns: The new raw file descriptor.
+    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
+    @_spi(Syscall)
+    public static func duplicate(fd: Int32) throws(Error) -> Int32 {
+        #if canImport(Darwin)
+            let result = unsafe Darwin.dup(fd)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.dup(fd)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.dup(fd)
+        #endif
+
+        guard result >= 0 else {
+            throw Error.current()
+        }
+        return result
+    }
+
+    /// Duplicates a raw file descriptor into an existing slot, atomically
+    /// replacing the kernel resource at that slot.
+    ///
+    /// Spec-literal raw `dup2(2)`. The kernel resource previously held at
+    /// `newFd`'s slot is closed atomically, and the slot is repointed to a
+    /// duplicate of `fd`'s resource. The typed L2 convenience
+    /// (`ISO_9945.Kernel.Descriptor.Duplicate.duplicate(_:to:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - fd: The raw file descriptor to duplicate.
+    ///   - newFd: The target slot. After return, this slot refers to the
+    ///     duplicated kernel resource.
+    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure. On throw,
+    ///   `newFd`'s slot is unchanged and still refers to its original
+    ///   resource.
+    @_spi(Syscall)
+    public static func duplicate(
+        fd: Int32,
+        toFd newFd: Int32
+    ) throws(Error) {
+        #if canImport(Darwin)
+            let result = unsafe Darwin.dup2(fd, newFd)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.dup2(fd, newFd)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.dup2(fd, newFd)
+        #endif
+
+        guard result >= 0 else {
+            throw Error.current()
+        }
+    }
+}
+
+// MARK: - Typed Convenience
 
 extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// Duplicates a file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `duplicate(fd:)` SPI via
+    /// `descriptor._rawValue` and wraps the returned raw fd in a typed
+    /// `Kernel.Descriptor`.
     ///
     /// Creates a copy of the file descriptor using the lowest-numbered
     /// available file descriptor.
@@ -32,22 +100,15 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// - Returns: The new file descriptor.
     /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
     public static func duplicate(_ descriptor: borrowing Kernel.Descriptor) throws(Error) -> Kernel.Descriptor {
-        #if canImport(Darwin)
-            let result = Darwin.dup(descriptor._rawValue)
-        #elseif canImport(Musl)
-            let result = Musl.dup(descriptor._rawValue)
-        #elseif canImport(Glibc)
-            let result = Glibc.dup(descriptor._rawValue)
-        #endif
-
-        guard result >= 0 else {
-            throw Error.current()
-        }
-        return Kernel.Descriptor(_rawValue: result)
+        let rawNew = try unsafe duplicate(fd: descriptor._rawValue)
+        return Kernel.Descriptor(_rawValue: rawNew)
     }
 
     /// Duplicates a file descriptor into an existing descriptor slot, atomically
     /// replacing the kernel resource at that slot.
+    ///
+    /// Typed L2 form. Delegates to the raw `duplicate(fd:toFd:)` SPI via
+    /// `descriptor._rawValue`.
     ///
     /// `dup2(2)` semantics: the kernel resource previously held at `newDescriptor`'s
     /// slot is closed atomically, and the slot is repointed to a duplicate of
@@ -70,23 +131,12 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         _ descriptor: borrowing Kernel.Descriptor,
         to newDescriptor: inout Kernel.Descriptor
     ) throws(Error) {
-        #if canImport(Darwin)
-            let result = Darwin.dup2(descriptor._rawValue, newDescriptor._rawValue)
-        #elseif canImport(Musl)
-            let result = Musl.dup2(descriptor._rawValue, newDescriptor._rawValue)
-        #elseif canImport(Glibc)
-            let result = Glibc.dup2(descriptor._rawValue, newDescriptor._rawValue)
-        #endif
-
-        guard result >= 0 else {
-            throw Error.current()
-        }
+        try unsafe duplicate(fd: descriptor._rawValue, toFd: newDescriptor._rawValue)
         // dup2 returns newDescriptor's slot — the wrapper's _raw is already
         // correct. No state change. The kernel resource at that slot has been
         // replaced atomically by the kernel; from Swift's view, newDescriptor
         // simply refers to a different (duplicated) resource now.
     }
-
 }
 
 // MARK: - Error
