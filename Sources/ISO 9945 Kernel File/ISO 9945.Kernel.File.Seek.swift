@@ -20,10 +20,64 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX lseek() syscall
+// MARK: - POSIX lseek() syscall (raw @_spi(Syscall))
+
+extension ISO_9945.Kernel.File.Seek {
+    /// Repositions the offset of a raw file descriptor.
+    ///
+    /// Spec-literal raw `lseek(2)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Seek.seek(_:offset:whence:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - fd: The raw file descriptor.
+    ///   - offset: The offset value.
+    ///   - whence: The reference point for the offset.
+    /// - Returns: The resulting offset from the beginning of the file.
+    /// - Throws: `Kernel.File.Seek.Error` on failure.
+    @discardableResult
+    @_spi(Syscall)
+    public static func seek(
+        fd: Int32,
+        offset: Int64,
+        whence: Whence
+    ) throws(Error) -> Int64 {
+        #if canImport(Darwin)
+            let result = unsafe Darwin.lseek(fd, offset, whence.rawValue)
+        #elseif canImport(Musl)
+            let result = unsafe Musl.lseek(fd, offset, whence.rawValue)
+        #elseif canImport(Glibc)
+            let result = unsafe Glibc.lseek(fd, off_t(offset), whence.rawValue)
+        #endif
+
+        guard result >= 0 else {
+            throw Error.current()
+        }
+        return Int64(result)
+    }
+
+    /// Gets the current file offset of a raw file descriptor.
+    ///
+    /// Equivalent to `seek(fd:, offset: 0, whence: .current)`. The typed L2
+    /// convenience (`ISO_9945.Kernel.File.Seek.tell(_:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameter fd: The raw file descriptor.
+    /// - Returns: The current offset from the beginning of the file.
+    /// - Throws: `Kernel.File.Seek.Error` on failure.
+    @_spi(Syscall)
+    public static func tell(fd: Int32) throws(Error) -> Int64 {
+        try unsafe seek(fd: fd, offset: 0, whence: .current)
+    }
+}
+
+// MARK: - Typed Convenience
 
 extension ISO_9945.Kernel.File.Seek {
     /// Repositions the file offset of a file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `seek(fd:offset:whence:)` SPI via
+    /// `descriptor._rawValue`.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor.
@@ -37,27 +91,19 @@ extension ISO_9945.Kernel.File.Seek {
         offset: Int64,
         whence: Whence
     ) throws(Error) -> Int64 {
-        #if canImport(Darwin)
-            let result = Darwin.lseek(descriptor._rawValue, offset, whence.rawValue)
-        #elseif canImport(Musl)
-            let result = Musl.lseek(descriptor._rawValue, offset, whence.rawValue)
-        #elseif canImport(Glibc)
-            let result = Glibc.lseek(descriptor._rawValue, off_t(offset), whence.rawValue)
-        #endif
-
-        guard result >= 0 else {
-            throw Error.current()
-        }
-        return Int64(result)
+        try unsafe seek(fd: descriptor._rawValue, offset: offset, whence: whence)
     }
 
     /// Gets the current file offset.
+    ///
+    /// Typed L2 form. Delegates to the raw `tell(fd:)` SPI via
+    /// `descriptor._rawValue`.
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Returns: The current offset from the beginning of the file.
     /// - Throws: `Kernel.File.Seek.Error` on failure.
     public static func tell(_ descriptor: borrowing Kernel.Descriptor) throws(Error) -> Int64 {
-        try seek(descriptor, offset: 0, whence: .current)
+        try unsafe tell(fd: descriptor._rawValue)
     }
 }
 

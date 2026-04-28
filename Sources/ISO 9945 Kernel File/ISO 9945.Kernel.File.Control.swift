@@ -20,77 +20,115 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX fcntl() operations
+// MARK: - POSIX fcntl() operations (raw @_spi(Syscall))
 
 extension ISO_9945.Kernel.File.Control {
-    /// Sets non-blocking mode on a file descriptor.
+    /// Sets non-blocking mode on a raw file descriptor.
     ///
-    /// - Parameter descriptor: The file descriptor to modify.
+    /// Spec-literal raw `fcntl(F_GETFL)` + `fcntl(F_SETFL, flags | O_NONBLOCK)`.
+    /// The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Control.setNonBlocking(_:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameter fd: The raw file descriptor to modify.
     /// - Throws: `Error` if fcntl fails.
-    public static func setNonBlocking(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Control.Error) {
+    @_spi(Syscall)
+    public static func setNonBlocking(fd: Int32) throws(Kernel.File.Control.Error) {
         #if canImport(Darwin)
-            var flags = Darwin.fcntl(descriptor._rawValue, F_GETFL)
+            let flags = unsafe Darwin.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = Darwin.fcntl(descriptor._rawValue, F_SETFL, flags | O_NONBLOCK)
+            let result = unsafe Darwin.fcntl(fd, F_SETFL, flags | O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
         #elseif canImport(Musl)
-            var flags = Musl.fcntl(descriptor._rawValue, F_GETFL)
+            let flags = unsafe Musl.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = Musl.fcntl(descriptor._rawValue, F_SETFL, flags | O_NONBLOCK)
+            let result = unsafe Musl.fcntl(fd, F_SETFL, flags | O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
         #elseif canImport(Glibc)
-            var flags = Glibc.fcntl(descriptor._rawValue, F_GETFL)
+            let flags = unsafe Glibc.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = Glibc.fcntl(descriptor._rawValue, F_SETFL, flags | O_NONBLOCK)
+            let result = unsafe Glibc.fcntl(fd, F_SETFL, flags | O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
         #endif
     }
 
-    /// Clears non-blocking mode on a file descriptor.
+    /// Clears non-blocking mode on a raw file descriptor.
     ///
-    /// - Parameter descriptor: The file descriptor to modify.
+    /// Spec-literal raw `fcntl(F_GETFL)` + `fcntl(F_SETFL, flags & ~O_NONBLOCK)`.
+    /// The typed L2 convenience
+    /// (`ISO_9945.Kernel.File.Control.setBlocking(_:)` taking
+    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    ///
+    /// - Parameter fd: The raw file descriptor to modify.
     /// - Throws: `Error` if fcntl fails.
-    public static func setBlocking(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Control.Error) {
+    @_spi(Syscall)
+    public static func setBlocking(fd: Int32) throws(Kernel.File.Control.Error) {
         #if canImport(Darwin)
-            var flags = Darwin.fcntl(descriptor._rawValue, F_GETFL)
+            let flags = unsafe Darwin.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = Darwin.fcntl(descriptor._rawValue, F_SETFL, flags & ~O_NONBLOCK)
+            let result = unsafe Darwin.fcntl(fd, F_SETFL, flags & ~O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
         #elseif canImport(Musl)
-            var flags = Musl.fcntl(descriptor._rawValue, F_GETFL)
+            let flags = unsafe Musl.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = Musl.fcntl(descriptor._rawValue, F_SETFL, flags & ~O_NONBLOCK)
+            let result = unsafe Musl.fcntl(fd, F_SETFL, flags & ~O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
         #elseif canImport(Glibc)
-            var flags = Glibc.fcntl(descriptor._rawValue, F_GETFL)
+            let flags = unsafe Glibc.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = Glibc.fcntl(descriptor._rawValue, F_SETFL, flags & ~O_NONBLOCK)
+            let result = unsafe Glibc.fcntl(fd, F_SETFL, flags & ~O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
         #endif
+    }
+}
+
+// MARK: - Typed Convenience
+
+extension ISO_9945.Kernel.File.Control {
+    /// Sets non-blocking mode on a file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `setNonBlocking(fd:)` SPI via
+    /// `descriptor._rawValue`.
+    ///
+    /// - Parameter descriptor: The file descriptor to modify.
+    /// - Throws: `Error` if fcntl fails.
+    public static func setNonBlocking(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Control.Error) {
+        try unsafe setNonBlocking(fd: descriptor._rawValue)
+    }
+
+    /// Clears non-blocking mode on a file descriptor.
+    ///
+    /// Typed L2 form. Delegates to the raw `setBlocking(fd:)` SPI via
+    /// `descriptor._rawValue`.
+    ///
+    /// - Parameter descriptor: The file descriptor to modify.
+    /// - Throws: `Error` if fcntl fails.
+    public static func setBlocking(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Control.Error) {
+        try unsafe setBlocking(fd: descriptor._rawValue)
     }
 }
 
