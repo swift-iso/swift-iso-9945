@@ -11,7 +11,6 @@
 
 #if !os(Windows)
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Terminal_Primitives
 
 #if canImport(Darwin)
@@ -26,20 +25,12 @@
 // MARK: - Termios Attributes Get
 
 extension ISO_9945.Kernel.Termios.Attributes {
-    /// Get terminal attributes for the given descriptor.
-    ///
-    /// Wraps `tcgetattr(fd, &termios)`.
-    ///
-    /// - Parameter descriptor: The descriptor (must refer to a terminal).
-    /// - Returns: Current terminal attributes
-    /// - Throws: ``Kernel.Error`` if the syscall fails
-    public static func get(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
-        try get(fd: descriptor._rawValue)
-    }
-
     /// Get terminal attributes for the given raw file descriptor (syscall variant).
     ///
-    /// Wraps `tcgetattr(fd, &termios)`.
+    /// Wraps `tcgetattr(fd, &termios)`. Spec-literal: zero policy (errno
+    /// still surfaces via `Kernel.Error.current`). The L3-policy typed-
+    /// descriptor convenience lives at `POSIX.Kernel.Termios.Attributes.get(_:)`
+    /// in swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameter fd: File descriptor (must refer to a terminal)
     /// - Returns: Current terminal attributes

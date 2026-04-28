@@ -11,7 +11,6 @@
 
 #if !os(Windows)
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Terminal_Primitives
 
 #if canImport(Darwin)
@@ -29,21 +28,11 @@
 // MARK: - TTY Check
 
 extension ISO_9945.Kernel.TTY {
-    /// Check if a descriptor refers to a terminal.
-    ///
-    /// Wraps `isatty(fd)`.
-    ///
-    /// - Parameter descriptor: The descriptor to check.
-    /// - Returns: `true` if the descriptor refers to a terminal, `false` otherwise
-    ///
-    /// This is a pure observation - returns `false` on error rather than throwing.
-    public static func isTTY(_ descriptor: borrowing Kernel.Descriptor) -> Bool {
-        isTTY(fd: descriptor._rawValue)
-    }
-
     /// Check if a raw file descriptor refers to a terminal (syscall variant).
     ///
-    /// Wraps `isatty(fd)`.
+    /// Wraps `isatty(fd)`. Spec-literal: zero policy. The L3-policy typed-
+    /// descriptor convenience lives at `POSIX.Kernel.TTY.isTTY(_:)` in
+    /// swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameter fd: File descriptor to check (typically 0=stdin, 1=stdout, 2=stderr)
     /// - Returns: `true` if the descriptor refers to a terminal, `false` otherwise
@@ -56,20 +45,12 @@ extension ISO_9945.Kernel.TTY {
 // MARK: - TTY Size Query
 
 extension ISO_9945.Kernel.TTY.Size {
-    /// Query terminal size for the given descriptor.
-    ///
-    /// Wraps `ioctl(fd, TIOCGWINSZ, &winsize)`.
-    ///
-    /// - Parameter descriptor: The descriptor to query.
-    /// - Returns: Terminal size in rows and columns
-    /// - Throws: ``Kernel.Error`` if the ioctl call fails (e.g., not a terminal)
-    public static func query(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
-        try query(fd: descriptor._rawValue)
-    }
-
     /// Query terminal size for the given raw file descriptor (syscall variant).
     ///
-    /// Wraps `ioctl(fd, TIOCGWINSZ, &winsize)`.
+    /// Wraps `ioctl(fd, TIOCGWINSZ, &winsize)`. Spec-literal: zero policy
+    /// (errno still surfaces via `Kernel.Error.current`). The L3-policy
+    /// typed-descriptor convenience lives at `POSIX.Kernel.TTY.Size.query(_:)`
+    /// in swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameter fd: File descriptor (typically 0=stdin, 1=stdout, 2=stderr)
     /// - Returns: Terminal size in rows and columns
