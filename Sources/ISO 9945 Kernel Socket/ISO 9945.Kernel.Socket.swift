@@ -11,6 +11,7 @@
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives  // for Kernel.Descriptor.Validity.Error in error mapping
 @_spi(Syscall) import Kernel_Socket_Primitives
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
 
 #if canImport(Darwin)
     internal import Darwin
@@ -86,6 +87,19 @@ extension ISO_9945.Kernel.Socket {
         }
 
         return .posix(err)
+    }
+}
+
+// MARK: - Typed Convenience (Phase 1.5)
+
+extension ISO_9945.Kernel.Socket {
+    /// Gets and clears the pending socket error using a typed POSIX descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `getError(fd:)` SPI.
+    public static func getError(
+        _ descriptor: borrowing POSIX.Kernel.Descriptor
+    ) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
+        try getError(fd: descriptor._rawValue)
     }
 }
 

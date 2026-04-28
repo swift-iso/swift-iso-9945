@@ -1,4 +1,5 @@
 @_spi(Syscall) import Kernel_Socket_Primitives
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
 
 #if canImport(Darwin)
     internal import Darwin
@@ -111,5 +112,23 @@ extension ISO_9945.Kernel.Socket.Name {
         }
 
         return (address: storage, length: Kernel.Socket.Address.Length(addrLen))
+    }
+}
+
+// MARK: - Typed Convenience (Phase 1.5)
+
+extension ISO_9945.Kernel.Socket.Name {
+    /// Gets the local address of a socket using a typed POSIX descriptor.
+    public static func local(
+        _ descriptor: borrowing POSIX.Kernel.Descriptor
+    ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: Kernel.Socket.Address.Length) {
+        try local(fd: descriptor._rawValue)
+    }
+
+    /// Gets the remote address of a connected socket using a typed POSIX descriptor.
+    public static func peer(
+        _ descriptor: borrowing POSIX.Kernel.Descriptor
+    ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: Kernel.Socket.Address.Length) {
+        try peer(fd: descriptor._rawValue)
     }
 }
