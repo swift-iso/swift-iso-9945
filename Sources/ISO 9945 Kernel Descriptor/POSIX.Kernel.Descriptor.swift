@@ -99,7 +99,13 @@ extension POSIX.Kernel.Descriptor {
     /// The raw POSIX file-descriptor value.
     ///
     /// Available only via `@_spi(Syscall)` for syscall-implementation layers.
+    /// Setter is the disarm path used by L3-policy `close(_:)` wrappers that
+    /// need to prevent the RAII deinit-close from firing alongside an explicit
+    /// close (which would double-close the kernel fd).
     @_spi(Syscall)
     @inlinable
-    public var _rawValue: Int32 { _raw }
+    public var _rawValue: Int32 {
+        get { _raw }
+        set { _raw = newValue }
+    }
 }
