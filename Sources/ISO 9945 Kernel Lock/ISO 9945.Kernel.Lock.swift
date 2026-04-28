@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Kernel_Descriptor
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -106,6 +108,31 @@ extension ISO_9945.Kernel.Lock {
     }
 }
 
+// MARK: - Typed Convenience (Phase 1.5)
+
+extension ISO_9945.Kernel.Lock {
+    /// Acquires a lock on a byte range (blocking) using a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `lock(fd:range:kind:)` SPI.
+    public static func lock(
+        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        range: Kernel.Lock.Range,
+        kind: Kernel.Lock.Kind
+    ) throws(Kernel.Lock.Error) {
+        try lock(fd: descriptor._rawValue, range: range, kind: kind)
+    }
+
+    /// Releases a lock on a byte range using a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `unlock(fd:range:)` SPI.
+    public static func unlock(
+        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        range: Kernel.Lock.Range
+    ) throws(Kernel.Lock.Error) {
+        try unlock(fd: descriptor._rawValue, range: range)
+    }
+}
+
 // MARK: - Immediate (Non-blocking)
 
 extension ISO_9945.Kernel.Lock {
@@ -141,6 +168,19 @@ extension ISO_9945.Kernel.Lock {
                 throw Kernel.Lock.Error(Kernel.Error.Code.captureErrno())
             }
         }
+    }
+}
+
+extension ISO_9945.Kernel.Lock.Immediate {
+    /// Attempts to acquire a non-blocking lock using a typed descriptor.
+    ///
+    /// Phase 1.5 typed L2 form. Delegates to the raw `lock(fd:range:kind:)` SPI.
+    public static func lock(
+        _ descriptor: borrowing POSIX.Kernel.Descriptor,
+        range: Kernel.Lock.Range,
+        kind: Kernel.Lock.Kind
+    ) throws(Kernel.Lock.Error) {
+        try lock(fd: descriptor._rawValue, range: range, kind: kind)
     }
 }
 
