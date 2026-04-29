@@ -14,7 +14,7 @@
 extension Kernel.Descriptor.Validity.Error {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .invalid:
             return .POSIX.EBADF
@@ -27,7 +27,7 @@ extension Kernel.Descriptor.Validity.Error {
 extension Kernel.Descriptor.Validity.Error.Limit {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .process:
             return .POSIX.EMFILE
@@ -47,7 +47,7 @@ extension Kernel.Descriptor.Validity.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: A handle error, or `nil` if not applicable.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         switch code {
         case .POSIX.EBADF:
             self = .invalid

@@ -194,7 +194,7 @@ extension ISO_9945.Kernel.File.Stats {
 
 extension ISO_9945.Kernel.File.Stats.Error {
     internal init(posixErrno code: Int32) {
-        let errorCode = Kernel.Error.Code.posix(code)
+        let errorCode = Error_Primitives.Error.Code.posix(code)
         if let e = Kernel.Descriptor.Validity.Error(code: errorCode) {
             self = .handle(e)
             return
@@ -203,7 +203,7 @@ extension ISO_9945.Kernel.File.Stats.Error {
             self = .io(e)
             return
         }
-        self = .platform(Kernel.Error(code: errorCode))
+        self = .platform(Error_Primitives.Error(code: errorCode))
     }
 }
 

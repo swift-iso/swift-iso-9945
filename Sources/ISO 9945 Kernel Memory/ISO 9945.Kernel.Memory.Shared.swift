@@ -91,7 +91,7 @@ extension ISO_9945.Kernel.Memory.Shared {
         #endif
 
         guard fd >= 0 else {
-            throw .open(Kernel.Error.Code.captureErrno())
+            throw .open(Error_Primitives.Error.Code.captureErrno())
         }
         return fd
     }
@@ -126,7 +126,7 @@ extension ISO_9945.Kernel.Memory.Shared {
     @unsafe
     public static func unlink(name: UnsafePointer<CChar>) throws(Kernel.Memory.Shared.Error) {
         guard unsafe shm_unlink(name) == 0 else {
-            throw .unlink(Kernel.Error.Code.captureErrno())
+            throw .unlink(Error_Primitives.Error.Code.captureErrno())
         }
     }
 }

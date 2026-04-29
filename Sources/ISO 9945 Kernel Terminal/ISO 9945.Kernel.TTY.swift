@@ -49,19 +49,19 @@ extension ISO_9945.Kernel.TTY.Size {
     /// Query terminal size for the given raw file descriptor (syscall variant).
     ///
     /// Wraps `ioctl(fd, TIOCGWINSZ, &winsize)`. Spec-literal: zero policy
-    /// (errno still surfaces via `Kernel.Error.current`). The L3-policy
+    /// (errno still surfaces via `Error_Primitives.Error.current`). The L3-policy
     /// typed-descriptor convenience lives at `POSIX.Kernel.TTY.Size.query(_:)`
     /// in swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameter fd: File descriptor (typically 0=stdin, 1=stdout, 2=stderr)
     /// - Returns: Terminal size in rows and columns
-    /// - Throws: ``Kernel.Error`` if the ioctl call fails (e.g., not a terminal)
+    /// - Throws: ``Error_Primitives.Error`` if the ioctl call fails (e.g., not a terminal)
     @_spi(Syscall)
-    public static func query(fd: Int32) throws(Kernel.Error) -> Self {
+    public static func query(fd: Int32) throws(Error_Primitives.Error) -> Self {
         var ws = winsize()
         let result = unsafe iso9945_ioctl_tiocgwinsz(fd, &ws)
         guard result == 0 else {
-            throw Kernel.Error.current(operation: "ioctl(TIOCGWINSZ)")
+            throw Error_Primitives.Error.current(operation: "ioctl(TIOCGWINSZ)")
         }
         return Self(rows: ws.ws_row, columns: ws.ws_col)
     }
@@ -84,7 +84,7 @@ extension ISO_9945.Kernel.TTY.Size {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `query(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func query(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
+    public static func query(_ descriptor: borrowing Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
         try query(fd: descriptor._rawValue)
     }
 }

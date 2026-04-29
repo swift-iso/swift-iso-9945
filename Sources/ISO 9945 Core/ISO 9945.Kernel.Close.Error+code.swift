@@ -14,7 +14,7 @@
 extension Kernel.Close.Error {
     /// Creates an error from a POSIX error code.
     @inlinable
-    public init(code: Kernel.Error.Code) {
+    public init(code: Error_Primitives.Error.Code) {
         if let e = Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return
@@ -23,6 +23,6 @@ extension Kernel.Close.Error {
             self = .io(e)
             return
         }
-        self = .platform(Kernel.Error(code: code))
+        self = .platform(Error_Primitives.Error(code: code))
     }
 }

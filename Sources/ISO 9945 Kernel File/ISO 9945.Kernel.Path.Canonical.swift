@@ -140,13 +140,13 @@ extension ISO_9945.Kernel.Path.Canonical.Error {
 
     static func current() -> Kernel.Path.Canonical.Error {
         let e = errno
-        let code = Kernel.Error.Code.posix(e)
+        let code = Error_Primitives.Error.Code.posix(e)
         if let pathError = Kernel.Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
         if let permError = Kernel.Permission.Error(code: code) {
             return .permission(permError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

@@ -14,7 +14,7 @@
 extension Kernel.Memory.Error {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .fault:
             return .POSIX.EFAULT
@@ -34,7 +34,7 @@ extension Kernel.Memory.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: A memory error, or `nil` if not applicable.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         switch code {
         case .POSIX.EFAULT:
             self = .fault

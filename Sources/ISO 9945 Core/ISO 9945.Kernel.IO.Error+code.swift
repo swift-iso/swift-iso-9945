@@ -14,7 +14,7 @@
 extension Kernel.IO.Error {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .broken:
             return .POSIX.EPIPE
@@ -44,11 +44,11 @@ extension Kernel.IO.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: An I/O error, or `nil` if not applicable.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         switch code {
         case .POSIX.EPIPE:
             self = .broken
-        case _ where Kernel.Error.Code.POSIX.isECONNRESET(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isECONNRESET(code):
             self = .reset
         case .POSIX.EIO:
             self = .hardware
@@ -58,7 +58,7 @@ extension Kernel.IO.Error {
             self = .deviceUnsupported
         case .POSIX.ENXIO:
             self = .deviceUnavailable
-        case _ where Kernel.Error.Code.POSIX.isENOTSUP(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
             self = .unsupported
         default:
             return nil

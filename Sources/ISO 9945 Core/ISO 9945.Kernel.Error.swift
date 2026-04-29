@@ -17,22 +17,22 @@
     internal import Musl
 #endif
 
-extension ISO_9945.Kernel.Error {
-    /// Captures current errno as a `Kernel.Error.Code`.
+extension Error_Primitives.Error {
+    /// Captures current errno as a `Error_Primitives.Error.Code`.
     ///
     /// Must be called immediately after a failing syscall, before any other libc call.
-    public static func captureErrno() -> Kernel.Error.Code {
+    public static func captureErrno() -> Error_Primitives.Error.Code {
         .posix(errno)
     }
 }
 
-extension ISO_9945.Kernel.Error {
-    /// Captures current errno and creates a Kernel.Error with operation context.
+extension Error_Primitives.Error {
+    /// Captures current errno and creates a Error_Primitives.Error with operation context.
     ///
     /// Must be called immediately after a failing syscall, before any other libc call.
     ///
     /// - Parameter operation: Description of the failing operation.
-    /// - Returns: A throwable Kernel.Error with errno captured.
+    /// - Returns: A throwable Error_Primitives.Error with errno captured.
     public static func current(
         operation: StaticString,
         function: StaticString = #function,

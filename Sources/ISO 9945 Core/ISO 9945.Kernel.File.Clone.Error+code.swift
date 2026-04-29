@@ -27,7 +27,7 @@ extension Kernel.File.Clone.Error {
     ///
     /// - Note: This is SPI for platform-specific packages.
     @_spi(Syscall)
-    public init(code: Kernel.Error.Code, operation: Operation) {
+    public init(code: Error_Primitives.Error.Code, operation: Operation) {
         switch code {
         case _ where code == .POSIX.ENOENT:
             self = .sourceNotFound
@@ -40,7 +40,7 @@ extension Kernel.File.Clone.Error {
             self = .crossDevice
         case _ where code == .POSIX.EISDIR:
             self = .isDirectory
-        case _ where Kernel.Error.Code.POSIX.isENOTSUP(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
             self = .notSupported
         default:
             self = .platform(code: code, operation: operation)

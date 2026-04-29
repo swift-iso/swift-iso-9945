@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.Process.Session {
     public static func create() throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = setsid()
         guard result != -1 else {
-            throw .session(ISO_9945.Kernel.Error.captureErrno())
+            throw .session(Error_Primitives.Error.captureErrno())
         }
         return ID(__unchecked: (), result)
     }
@@ -107,7 +107,7 @@ extension ISO_9945.Kernel.Process.Session {
     public static func id(of pid: Kernel.Process.ID) throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = getsid(pid.rawValue)
         guard result != -1 else {
-            throw .session(ISO_9945.Kernel.Error.captureErrno())
+            throw .session(Error_Primitives.Error.captureErrno())
         }
         return ID(__unchecked: (), result)
     }

@@ -11,7 +11,7 @@
 
 // MARK: - EINTR Detection
 
-extension Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     /// Returns `true` if this error code represents EINTR (interrupted by signal).
     ///
     /// EINTR indicates a blocking syscall was interrupted by a signal before

@@ -17,7 +17,7 @@ extension Kernel.Permission.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: The semantic error, or nil if the code doesn't map to a permission error.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         switch code {
         case .POSIX.EACCES:
             self = .denied

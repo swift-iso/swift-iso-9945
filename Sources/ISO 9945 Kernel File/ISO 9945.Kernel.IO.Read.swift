@@ -205,7 +205,7 @@ extension ISO_9945.Kernel.IO.Read {
 extension ISO_9945.Kernel.IO.Read.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
@@ -218,6 +218,6 @@ extension ISO_9945.Kernel.IO.Read.Error {
         if let memoryError = Kernel.Memory.Error(code: code) {
             return .memory(memoryError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

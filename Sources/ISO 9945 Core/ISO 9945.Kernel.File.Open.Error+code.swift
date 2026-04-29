@@ -17,7 +17,7 @@ extension Kernel.File.Open.Error {
     /// Available via `@_spi(Syscall)` for platform-specific packages.
     @_spi(Syscall)
     @inlinable
-    public init(code: Kernel.Error.Code) {
+    public init(code: Error_Primitives.Error.Code) {
         if let e = Kernel.Path.Resolution.Error(code: code) {
             self = .path(e)
             return
@@ -38,6 +38,6 @@ extension Kernel.File.Open.Error {
             self = .io(e)
             return
         }
-        self = .platform(Kernel.Error(code: code))
+        self = .platform(Error_Primitives.Error(code: code))
     }
 }

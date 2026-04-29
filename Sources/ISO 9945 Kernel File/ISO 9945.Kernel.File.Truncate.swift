@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.File.Truncate {
     /// - Parameters:
     ///   - fd: The raw file descriptor (must be open for writing).
     ///   - length: The new file size in bytes.
-    /// - Throws: `Kernel.Error` on failure.
+    /// - Throws: `Error_Primitives.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -38,11 +38,11 @@ extension ISO_9945.Kernel.File.Truncate {
     public static func truncate(
         fd: Int32,
         to length: Kernel.File.Size
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         let rc = unsafe ftruncate(fd, off_t(length.rawValue))
 
         guard rc == 0 else {
-            throw ISO_9945.Kernel.Error.current(operation: "ftruncate")
+            throw Error_Primitives.Error.current(operation: "ftruncate")
         }
     }
 }
@@ -61,11 +61,11 @@ extension ISO_9945.Kernel.File.Truncate {
     /// - Parameters:
     ///   - descriptor: The file descriptor (must be open for writing).
     ///   - length: The new file size in bytes.
-    /// - Throws: `Kernel.Error` on failure.
+    /// - Throws: `Error_Primitives.Error` on failure.
     public static func truncate(
         _ descriptor: borrowing Kernel.Descriptor,
         to length: Kernel.File.Size
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         try unsafe truncate(fd: descriptor._rawValue, to: length)
     }
 
@@ -74,15 +74,15 @@ extension ISO_9945.Kernel.File.Truncate {
     /// - Parameters:
     ///   - path: The file path.
     ///   - length: The new file size in bytes.
-    /// - Throws: `Kernel.Error` on failure.
+    /// - Throws: `Error_Primitives.Error` on failure.
     public static func truncate(
         path: UnsafePointer<CChar>,
         to length: Kernel.File.Size
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         let rc = unsafe Darwin_or_Glibc_truncate(path, off_t(length.rawValue))
 
         guard rc == 0 else {
-            throw ISO_9945.Kernel.Error.current(operation: "truncate")
+            throw Error_Primitives.Error.current(operation: "truncate")
         }
     }
 }

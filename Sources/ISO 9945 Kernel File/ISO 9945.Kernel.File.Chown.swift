@@ -176,7 +176,7 @@ extension ISO_9945.Kernel.File.Chown.Error {
     /// Creates an error from the current errno.
     @usableFromInline
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         switch code {
         case .ENOENT:
             return .path(.notFound)
@@ -193,7 +193,7 @@ extension ISO_9945.Kernel.File.Chown.Error {
         case .EIO:
             return .io(.hardware)
         default:
-            return .platform(Kernel.Error(code: code))
+            return .platform(Error_Primitives.Error(code: code))
         }
     }
 }

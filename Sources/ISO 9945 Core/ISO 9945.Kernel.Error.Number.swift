@@ -19,22 +19,22 @@
 
 // MARK: - POSIX error number type
 //
-// `Kernel.Error.Number` is the POSIX errno-shaped (Int32) tagged wrapper.
+// `Error_Primitives.Error.Number` is the POSIX errno-shaped (Int32) tagged wrapper.
 // The Windows (UInt32) counterpart is declared by `swift-windows-standard`.
 // Each platform package contributes the typealias that is correct for its
 // platform per [PLAT-ARCH-008c]; consumers see a single unified name via
 // the re-export chain exposed by `import Kernel`.
 
-extension Kernel.Error {
+extension Error_Primitives.Error {
     /// Platform error number (POSIX errno).
     ///
     /// A type-safe wrapper for POSIX errno values.
-    public typealias Number = Tagged<Kernel.Error, Int32>
+    public typealias Number = Tagged<Error_Primitives.Error, Int32>
 }
 
 // MARK: - POSIX error number constants
 
-extension ISO_9945.Kernel.Error.Number {
+extension Error_Primitives.Error.Number {
     /// File or directory does not exist (ENOENT).
     public static var noEntry: Self { Self(__unchecked: (),ENOENT) }
 

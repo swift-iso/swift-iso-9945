@@ -13,7 +13,7 @@
 import Testing
 import Kernel_Primitives_Test_Support
 
-@testable import Kernel_Error_Primitives
+@testable import Error_Primitives
 import Kernel_Path_Primitives
 import Kernel_Permission_Primitives
 import Kernel_Descriptor_Primitives
@@ -24,8 +24,8 @@ import Kernel_Memory_Primitives
 // L2 init?(code:) extensions live in ISO 9945 Core
 @_spi(Syscall) import ISO_9945_Core
 
-// Kernel.Error.Mapping.swift contains extension initializers for error mapping.
-// These tests verify the error mapping functionality using Kernel.Error.Code.
+// Error_Primitives.Error.Mapping.swift contains extension initializers for error mapping.
+// These tests verify the error mapping functionality using Error_Primitives.Error.Code.
 
 #if !os(Windows)
 
@@ -222,13 +222,13 @@ import Kernel_Memory_Primitives
         }
     }
 
-    // MARK: - Kernel.Error Tests
+    // MARK: - Error_Primitives.Error Tests
 
-    @Suite("Kernel.Error")
+    @Suite("Error_Primitives.Error")
     struct KernelErrorTests {
         @Test
         func `creates error from errno code`() {
-            let error = Kernel.Error(code: .posix(EINTR))
+            let error = Error_Primitives.Error(code: .posix(EINTR))
             if case .posix(let value) = error.code {
                 #expect(value == EINTR)
             } else {
@@ -238,25 +238,25 @@ import Kernel_Memory_Primitives
 
         @Test
         func `error is Sendable`() {
-            let error: any Sendable = Kernel.Error(code: .posix(EINTR))
-            #expect(error is Kernel.Error)
+            let error: any Sendable = Error_Primitives.Error(code: .posix(EINTR))
+            #expect(error is Error_Primitives.Error)
         }
 
         @Test
         func `error is Equatable`() {
-            let a = Kernel.Error(code: .posix(EINTR))
-            let b = Kernel.Error(code: .posix(EINTR))
-            let c = Kernel.Error(code: .posix(ENOENT))
+            let a = Error_Primitives.Error(code: .posix(EINTR))
+            let b = Error_Primitives.Error(code: .posix(EINTR))
+            let c = Error_Primitives.Error(code: .posix(ENOENT))
             #expect(a == b)
             #expect(a != c)
         }
 
         @Test
         func `error is Hashable`() {
-            var set = Set<Kernel.Error>()
-            set.insert(Kernel.Error(code: .posix(1)))
-            set.insert(Kernel.Error(code: .posix(2)))
-            set.insert(Kernel.Error(code: .posix(1)))  // duplicate
+            var set = Set<Error_Primitives.Error>()
+            set.insert(Error_Primitives.Error(code: .posix(1)))
+            set.insert(Error_Primitives.Error(code: .posix(2)))
+            set.insert(Error_Primitives.Error(code: .posix(1)))  // duplicate
             #expect(set.count == 2)
         }
     }

@@ -23,12 +23,12 @@ extension ISO_9945.Kernel.Group.Real {
 
     /// Sets the real group ID of the calling process.
     ///
-    /// - Throws: `Kernel.Error` on failure (EPERM if not privileged).
+    /// - Throws: `Error_Primitives.Error` on failure (EPERM if not privileged).
     public static func set(
         _ gid: Kernel.Group.ID
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         guard setgid(gid.rawValue) == 0 else {
-            throw ISO_9945.Kernel.Error.current(operation: "setgid")
+            throw Error_Primitives.Error.current(operation: "setgid")
         }
     }
 }

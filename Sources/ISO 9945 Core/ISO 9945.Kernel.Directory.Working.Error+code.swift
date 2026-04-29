@@ -14,7 +14,7 @@
 extension Kernel.Directory.Working.Error {
     /// Creates an error from a POSIX error code.
     @usableFromInline
-    internal init(code: Kernel.Error.Code) {
+    internal init(code: Error_Primitives.Error.Code) {
         if let e = Kernel.Path.Resolution.Error(code: code) {
             self = .path(e)
             return
@@ -23,6 +23,6 @@ extension Kernel.Directory.Working.Error {
             self = .permission(e)
             return
         }
-        self = .platform(Kernel.Error(code: code))
+        self = .platform(Error_Primitives.Error(code: code))
     }
 }

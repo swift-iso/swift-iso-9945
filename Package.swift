@@ -114,6 +114,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-string-primitives"),
         .package(path: "../../swift-primitives/swift-clock-primitives"),
         .package(path: "../../swift-primitives/swift-terminal-primitives"),
+        .package(path: "../../swift-primitives/swift-error-primitives"),
         .package(path: "../swift-iso-9899")
     ],
     targets: [
@@ -124,7 +125,6 @@ let package = Package(
             dependencies: [
                 .product(name: "Kernel Primitives Core", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Error Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel IO Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Memory Primitives", package: "swift-kernel-primitives"),
@@ -132,6 +132,7 @@ let package = Package(
                 .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
         ),
@@ -416,7 +417,7 @@ let package = Package(
                 .product(name: "Kernel Environment Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Thread Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Error Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives")
             ],

@@ -31,16 +31,16 @@ extension ISO_9945.Kernel.Signal {
         case interrupted
 
         /// Signal set operation failed (sigaddset/sigdelset/sigismember).
-        case set(Kernel.Error.Code)
+        case set(Error_Primitives.Error.Code)
 
         /// Signal mask operation failed (pthread_sigmask/sigpending).
-        case mask(Kernel.Error.Code)
+        case mask(Error_Primitives.Error.Code)
 
         /// Signal action operation failed (sigaction).
-        case action(Kernel.Error.Code)
+        case action(Error_Primitives.Error.Code)
 
         /// Signal send operation failed (kill/raise).
-        case send(Kernel.Error.Code)
+        case send(Error_Primitives.Error.Code)
     }
 }
 
@@ -50,7 +50,7 @@ extension ISO_9945.Kernel.Signal.Error {
     /// Creates a signal error from an error code.
     ///
     /// Maps EINTR to `.interrupted`. Returns `nil` for non-signal error codes.
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         guard case .posix(let errno) = code else { return nil }
         switch errno {
         case EINTR:
@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Signal.Error {
 
 extension ISO_9945.Kernel.Signal.Error {
     /// The underlying error code, if any.
-    public var code: Kernel.Error.Code? {
+    public var code: Error_Primitives.Error.Code? {
         switch self {
         case .interrupted:
             return nil

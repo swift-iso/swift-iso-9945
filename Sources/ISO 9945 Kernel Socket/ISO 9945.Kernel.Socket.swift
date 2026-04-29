@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Socket {
     /// - Returns: The error code (`.posix(0)` if no pending error).
     /// - Throws: `Kernel.Socket.Error` if getsockopt fails.
     @_spi(Syscall)
-    public static func getError(fd: Int32) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
+    public static func getError(fd: Int32) throws(Kernel.Socket.Error) -> Error_Primitives.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
@@ -69,7 +69,7 @@ extension ISO_9945.Kernel.Socket {
     /// - Parameter descriptor: The socket descriptor.
     /// - Returns: The error code (`.posix(0)` if no pending error).
     /// - Throws: `Kernel.Socket.Error` if getsockopt fails.
-    public static func getError(_ descriptor: borrowing Kernel.Socket.Descriptor) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
+    public static func getError(_ descriptor: borrowing Kernel.Socket.Descriptor) throws(Kernel.Socket.Error) -> Error_Primitives.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
@@ -97,7 +97,7 @@ extension ISO_9945.Kernel.Socket {
     /// Phase 1.5 typed L2 form. Delegates to the raw `getError(fd:)` SPI.
     public static func getError(
         _ descriptor: borrowing Kernel.Descriptor
-    ) throws(Kernel.Socket.Error) -> Kernel.Error.Code {
+    ) throws(Kernel.Socket.Error) -> Error_Primitives.Error.Code {
         try getError(fd: descriptor._rawValue)
     }
 }
@@ -107,10 +107,10 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

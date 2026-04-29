@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
@@ -93,7 +93,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameters:
@@ -227,7 +227,7 @@ extension ISO_9945.Kernel.IO.Write {
 extension ISO_9945.Kernel.IO.Write.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
@@ -243,6 +243,6 @@ extension ISO_9945.Kernel.IO.Write.Error {
         if let memoryError = Kernel.Memory.Error(code: code) {
             return .memory(memoryError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

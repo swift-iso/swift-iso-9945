@@ -14,7 +14,7 @@
 extension Kernel.IO.Blocking.Error {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .wouldBlock:
             return .POSIX.EAGAIN
@@ -32,8 +32,8 @@ extension Kernel.IO.Blocking.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: A blocking error, or `nil` if not applicable.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
-        if Kernel.Error.Code.POSIX.isEAGAIN(code) {
+    public init?(code: Error_Primitives.Error.Code) {
+        if Error_Primitives.Error.Code.POSIX.isEAGAIN(code) {
             self = .wouldBlock
         } else {
             return nil

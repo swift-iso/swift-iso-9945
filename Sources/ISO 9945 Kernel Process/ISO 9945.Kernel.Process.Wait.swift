@@ -89,7 +89,7 @@ extension ISO_9945.Kernel.Process.Wait {
         let result = unsafe waitpid(pid, &status, options.rawValue)
 
         if result == -1 {
-            throw .wait(ISO_9945.Kernel.Error.captureErrno())
+            throw .wait(Error_Primitives.Error.captureErrno())
         }
 
         // WNOHANG: returns 0 if no child changed state

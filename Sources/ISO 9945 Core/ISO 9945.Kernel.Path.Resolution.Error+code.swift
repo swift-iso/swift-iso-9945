@@ -19,7 +19,7 @@ extension Path.Resolution.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: The semantic error, or nil if the code doesn't map to a path resolution error.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         switch code {
         case .POSIX.ENOENT:
             self = .notFound
@@ -29,13 +29,13 @@ extension Path.Resolution.Error {
             self = .isDirectory
         case .POSIX.ENOTDIR:
             self = .notDirectory
-        case _ where Kernel.Error.Code.POSIX.isENOTEMPTY(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isENOTEMPTY(code):
             self = .notEmpty
-        case _ where Kernel.Error.Code.POSIX.isELOOP(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isELOOP(code):
             self = .loop
         case .POSIX.EXDEV:
             self = .crossDevice
-        case _ where Kernel.Error.Code.POSIX.isENAMETOOLONG(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isENAMETOOLONG(code):
             self = .nameTooLong
         default:
             return nil

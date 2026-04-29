@@ -29,19 +29,19 @@ extension ISO_9945.Kernel.Termios.Attributes {
     /// Get terminal attributes for the given raw file descriptor (syscall variant).
     ///
     /// Wraps `tcgetattr(fd, &termios)`. Spec-literal: zero policy (errno
-    /// still surfaces via `Kernel.Error.current`). The L3-policy typed-
+    /// still surfaces via `Error_Primitives.Error.current`). The L3-policy typed-
     /// descriptor convenience lives at `POSIX.Kernel.Termios.Attributes.get(_:)`
     /// in swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameter fd: File descriptor (must refer to a terminal)
     /// - Returns: Current terminal attributes
-    /// - Throws: ``Kernel.Error`` if the syscall fails
+    /// - Throws: ``Error_Primitives.Error`` if the syscall fails
     @_spi(Syscall)
-    public static func get(fd: Int32) throws(Kernel.Error) -> Self {
+    public static func get(fd: Int32) throws(Error_Primitives.Error) -> Self {
         var t = termios()
         let result = unsafe tcgetattr(fd, &t)
         guard result == 0 else {
-            throw Kernel.Error.current(operation: "tcgetattr")
+            throw Error_Primitives.Error.current(operation: "tcgetattr")
         }
 
         // Copy termios to opaque storage
@@ -66,12 +66,12 @@ extension ISO_9945.Kernel.Termios.Attributes {
     ///   - attributes: Terminal attributes to apply
     ///   - fd: File descriptor (must refer to a terminal)
     ///   - action: When to apply the changes (default: `.now`)
-    /// - Throws: ``Kernel.Error`` if the syscall fails
+    /// - Throws: ``Error_Primitives.Error`` if the syscall fails
     public static func set(
         _ attributes: Self,
         fd: Int32,
         action: Action = .now
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         var t = termios()
         unsafe attributes.withUnsafeStorageBytes { buffer in
             unsafe withUnsafeMutableBytes(of: &t) { dest in
@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
         }
         let result = unsafe tcsetattr(fd, action.rawValue, &t)
         guard result == 0 else {
-            throw Kernel.Error.current(operation: "tcsetattr")
+            throw Error_Primitives.Error.current(operation: "tcsetattr")
         }
     }
 }
@@ -92,7 +92,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `get(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func get(_ descriptor: borrowing Kernel.Descriptor) throws(Kernel.Error) -> Self {
+    public static func get(_ descriptor: borrowing Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
         try get(fd: descriptor._rawValue)
     }
 
@@ -104,7 +104,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
         _ attributes: Self,
         on descriptor: borrowing Kernel.Descriptor,
         action: Action = .now
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         try set(attributes, fd: descriptor._rawValue, action: action)
     }
 }

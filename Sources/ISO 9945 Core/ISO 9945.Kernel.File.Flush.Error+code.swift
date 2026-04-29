@@ -14,7 +14,7 @@
 extension Kernel.File.Flush.Error {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .handle(let e): return e.code
         case .io(let e): return e.code

@@ -129,7 +129,7 @@ extension ISO_9945.Kernel.File.Seek {
 extension ISO_9945.Kernel.File.Seek.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         switch code {
         case .EBADF:
             return .invalidDescriptor

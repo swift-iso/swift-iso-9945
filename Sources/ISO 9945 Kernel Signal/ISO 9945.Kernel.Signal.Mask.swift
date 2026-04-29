@@ -106,7 +106,7 @@ extension ISO_9945.Kernel.Signal.Mask {
         unsafe sigemptyset(&set)
 
         guard unsafe sigpending(&set) == 0 else {
-            throw .mask(ISO_9945.Kernel.Error.captureErrno())
+            throw .mask(Error_Primitives.Error.captureErrno())
         }
 
         return ISO_9945.Kernel.Signal.Set(storage: set)

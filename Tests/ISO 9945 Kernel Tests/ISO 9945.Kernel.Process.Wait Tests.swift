@@ -23,7 +23,7 @@ import Tagged_Primitives_Test_Support
     import Kernel_Environment_Primitives
     import Kernel_Process_Primitives
     import Kernel_Thread_Primitives
-    import Kernel_Error_Primitives
+    import Error_Primitives
     @testable import ISO_9945_Kernel
 import ISO_9945_Kernel
 

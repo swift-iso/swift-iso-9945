@@ -116,7 +116,7 @@ extension ISO_9945.Kernel.File.Delete {
 extension ISO_9945.Kernel.File.Delete.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -135,7 +135,7 @@ extension ISO_9945.Kernel.File.Delete.Error {
         case .ENAMETOOLONG:
             return .nameTooLong
         default:
-            return .platform(Kernel.Error(code: code))
+            return .platform(Error_Primitives.Error(code: code))
         }
     }
 }

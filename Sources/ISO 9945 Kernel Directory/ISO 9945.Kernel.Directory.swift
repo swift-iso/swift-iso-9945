@@ -143,7 +143,7 @@ extension ISO_9945.Kernel.Directory.Stream {
 extension ISO_9945.Kernel.Directory.Error {
     /// Creates an error from the current errno for open operations.
     internal static func currentOpen() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -154,18 +154,18 @@ extension ISO_9945.Kernel.Directory.Error {
         case .EMFILE, .ENFILE:
             return .tooManyOpenFiles
         default:
-            return .platform(Kernel.Error(code: code))
+            return .platform(Error_Primitives.Error(code: code))
         }
     }
 
     /// Creates an error from the current errno for read operations.
     internal static func currentRead() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         switch code {
         case .EIO:
             return .io
         default:
-            return .platform(Kernel.Error(code: code))
+            return .platform(Error_Primitives.Error(code: code))
         }
     }
 }

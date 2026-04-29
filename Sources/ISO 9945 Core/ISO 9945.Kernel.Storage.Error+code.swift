@@ -14,7 +14,7 @@
 extension Kernel.Storage.Error {
     /// The underlying POSIX error code.
     @inlinable
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .exhausted:
             return .POSIX.ENOSPC
@@ -34,11 +34,11 @@ extension Kernel.Storage.Error {
     /// - Parameter code: The platform error code.
     /// - Returns: A storage error, or `nil` if not applicable.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
+    public init?(code: Error_Primitives.Error.Code) {
         switch code {
         case .POSIX.ENOSPC:
             self = .exhausted
-        case _ where Kernel.Error.Code.POSIX.isEDQUOT(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isEDQUOT(code):
             self = .quota
         default:
             return nil

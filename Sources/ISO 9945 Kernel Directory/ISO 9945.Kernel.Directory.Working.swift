@@ -34,7 +34,7 @@ extension ISO_9945.Kernel.Directory.Working {
         into buffer: UnsafeMutableBufferPointer<CChar>
     ) throws(Error) -> Int {
         guard let base = buffer.baseAddress, buffer.count > 0 else {
-            throw .platform(Kernel.Error(code: .posix(EINVAL)))
+            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
 
         #if canImport(Darwin)
@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
         unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
             guard let base = buffer.baseAddress, buffer.count > 0 else {
-                thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
+                thrown = .platform(Error_Primitives.Error(code: .posix(EINVAL)))
                 return
             }
 
@@ -129,7 +129,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
         unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
             guard let base = buffer.baseAddress, buffer.count > 0 else {
-                thrown = .platform(Kernel.Error(code: .posix(EINVAL)))
+                thrown = .platform(Error_Primitives.Error(code: .posix(EINVAL)))
                 return
             }
 
@@ -180,13 +180,13 @@ extension ISO_9945.Kernel.Directory.Working {
 extension ISO_9945.Kernel.Directory.Working.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         if let pathError = Kernel.Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
         if let permError = Kernel.Permission.Error(code: code) {
             return .permission(permError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

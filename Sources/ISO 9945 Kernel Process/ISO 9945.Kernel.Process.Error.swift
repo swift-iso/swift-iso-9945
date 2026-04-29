@@ -23,28 +23,28 @@ extension ISO_9945.Kernel.Process {
     /// Process-related errors.
     ///
     /// Uses operation carriers with semantic accessors. No dedicated `.interrupted`
-    /// case — EINTR is represented only via `Kernel.Error.Code`.
+    /// case — EINTR is represented only via `Error_Primitives.Error.Code`.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// fork() failed.
-        case fork(Kernel.Error.Code)
+        case fork(Error_Primitives.Error.Code)
 
         /// execute*() failed.
-        case execute(Kernel.Error.Code)
+        case execute(Error_Primitives.Error.Code)
 
         /// wait*() failed.
-        case wait(Kernel.Error.Code)
+        case wait(Error_Primitives.Error.Code)
 
         /// kill() failed.
-        case kill(Kernel.Error.Code)
+        case kill(Error_Primitives.Error.Code)
 
         /// Session operation failed (setsid, getsid).
-        case session(Kernel.Error.Code)
+        case session(Error_Primitives.Error.Code)
 
         /// Process group operation failed (setpgid, getpgid).
-        case group(Kernel.Error.Code)
+        case group(Error_Primitives.Error.Code)
 
         /// posix_spawn() failed.
-        case spawn(Kernel.Error.Code)
+        case spawn(Error_Primitives.Error.Code)
     }
 }
 
@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.Process {
 
 extension ISO_9945.Kernel.Process.Error {
     /// The underlying error code.
-    public var code: Kernel.Error.Code {
+    public var code: Error_Primitives.Error.Code {
         switch self {
         case .fork(let c), .execute(let c), .wait(let c), .kill(let c),
             .session(let c), .group(let c), .spawn(let c):

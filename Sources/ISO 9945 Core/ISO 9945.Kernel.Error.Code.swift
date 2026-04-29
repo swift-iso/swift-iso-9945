@@ -19,7 +19,7 @@
 
 // MARK: - POSIX errno capture
 
-extension ISO_9945.Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     /// Captures current errno (POSIX only).
     ///
     /// Must be called immediately after a failing syscall, before any other libc call.
@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Error.Code {
 // errno constants from the platform module.
 
 #if canImport(Darwin)
-extension ISO_9945.Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     public static let success = Self.posix(0)
     public static let ENOENT = Self.posix(Darwin.ENOENT)
     public static let EACCES = Self.posix(Darwin.EACCES)
@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.Error.Code {
     public static let ENOTSUP = Self.posix(Darwin.ENOTSUP)
 }
 #elseif canImport(Glibc)
-extension ISO_9945.Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     public static let success = Self.posix(0)
     public static let ENOENT = Self.posix(Glibc.ENOENT)
     public static let EACCES = Self.posix(Glibc.EACCES)
@@ -114,7 +114,7 @@ extension ISO_9945.Kernel.Error.Code {
     public static let ENOTSUP = Self.posix(Glibc.ENOTSUP)
 }
 #elseif canImport(Musl)
-extension ISO_9945.Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     public static let success = Self.posix(0)
     public static let ENOENT = Self.posix(Musl.ENOENT)
     public static let EACCES = Self.posix(Musl.EACCES)

@@ -70,13 +70,13 @@ extension ISO_9945.Kernel.Socket.Shutdown {
 extension ISO_9945.Kernel.Socket.Shutdown.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
         if let ioError = Kernel.IO.Error(code: code) {
             return .io(ioError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

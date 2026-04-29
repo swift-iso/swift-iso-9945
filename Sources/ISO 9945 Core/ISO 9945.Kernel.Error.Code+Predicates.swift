@@ -13,8 +13,8 @@
 //
 // These accessors let consumers describe a failure condition in domain terms
 // (`isNotFound`, `isPermissionDenied`, …) instead of hand-switching between
-// `Kernel.Error.Code.POSIX.*` and `Kernel.Error.Code.Windows.*`. The Windows
-// bodies live in `Windows.Kernel.Error.Code+Predicates.swift` in
+// `Error_Primitives.Error.Code.POSIX.*` and `Error_Primitives.Error.Code.Windows.*`. The Windows
+// bodies live in `Error_Primitives.Error.Code+Predicates.swift` in
 // swift-windows-standard; each package contributes the branch that is correct
 // for its platform. Consumers see a single unified API via the re-export chain
 // exposed by `import Kernel`.
@@ -25,7 +25,7 @@
 // }
 // ```
 
-extension Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     /// Returns `true` if this error code indicates that a requested file or directory does not exist.
     ///
     /// Maps to `ENOENT` on POSIX platforms.

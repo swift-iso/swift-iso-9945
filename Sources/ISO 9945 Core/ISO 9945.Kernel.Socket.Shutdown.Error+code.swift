@@ -14,7 +14,7 @@
 extension Kernel.Socket.Shutdown.Error {
     /// Creates an error from a POSIX error code.
     @usableFromInline
-    internal init(code: Kernel.Error.Code) {
+    internal init(code: Error_Primitives.Error.Code) {
         if let e = Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return
@@ -23,6 +23,6 @@ extension Kernel.Socket.Shutdown.Error {
             self = .io(e)
             return
         }
-        self = .platform(Kernel.Error(code: code))
+        self = .platform(Error_Primitives.Error(code: code))
     }
 }

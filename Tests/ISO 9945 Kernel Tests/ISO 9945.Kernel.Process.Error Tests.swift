@@ -27,7 +27,7 @@ import Testing
     import Kernel_Environment_Primitives
     import Kernel_Process_Primitives
     import Kernel_Thread_Primitives
-    import Kernel_Error_Primitives
+    import Error_Primitives
     @testable import ISO_9945_Kernel
 
     extension Kernel.Process.Error {
@@ -57,14 +57,14 @@ import Testing
 
         @Test
         func `error is Equatable`() {
-            let code = Kernel.Error.Code.posix(1)
+            let code = Error_Primitives.Error.Code.posix(1)
             #expect(Kernel.Process.Error.fork(code) == Kernel.Process.Error.fork(code))
             #expect(Kernel.Process.Error.fork(code) != Kernel.Process.Error.wait(code))
         }
 
         @Test
         func `code accessor returns underlying code`() {
-            let code = Kernel.Error.Code.posix(42)
+            let code = Error_Primitives.Error.Code.posix(42)
             let errors: [Kernel.Process.Error] = [
                 .fork(code),
                 .execute(code),
@@ -80,7 +80,7 @@ import Testing
 
         @Test
         func `isInterrupted returns true for EINTR`() {
-            let code = Kernel.Error.Code.posix(EINTR)
+            let code = Error_Primitives.Error.Code.posix(EINTR)
             let error = Kernel.Process.Error.wait(code)
             #expect(error.isInterrupted)
 
@@ -90,7 +90,7 @@ import Testing
 
         @Test
         func `all error cases are distinct`() {
-            let code = Kernel.Error.Code.posix(1)
+            let code = Error_Primitives.Error.Code.posix(1)
             let cases: [Kernel.Process.Error] = [
                 .fork(code),
                 .execute(code),

@@ -23,12 +23,12 @@ extension ISO_9945.Kernel.User.Real {
 
     /// Sets the real user ID of the calling process.
     ///
-    /// - Throws: `Kernel.Error` on failure (EPERM if not privileged).
+    /// - Throws: `Error_Primitives.Error` on failure (EPERM if not privileged).
     public static func set(
         _ uid: Kernel.User.ID
-    ) throws(Kernel.Error) {
+    ) throws(Error_Primitives.Error) {
         guard setuid(uid.rawValue) == 0 else {
-            throw ISO_9945.Kernel.Error.current(operation: "setuid")
+            throw Error_Primitives.Error.current(operation: "setuid")
         }
     }
 }

@@ -17,12 +17,12 @@ extension Kernel.Lock.Error {
     /// - Parameter code: The kernel error code.
     /// - Returns: A lock error, or `nil` if not applicable.
     @inlinable
-    public init?(code: Kernel.Error.Code) {
-        if code == Kernel.Error.Code.POSIX.EAGAIN {
+    public init?(code: Error_Primitives.Error.Code) {
+        if code == Error_Primitives.Error.Code.POSIX.EAGAIN {
             self = .contention
-        } else if code == Kernel.Error.Code.POSIX.EDEADLK {
+        } else if code == Error_Primitives.Error.Code.POSIX.EDEADLK {
             self = .deadlock
-        } else if code == Kernel.Error.Code.POSIX.ENOLCK {
+        } else if code == Error_Primitives.Error.Code.POSIX.ENOLCK {
             self = .unavailable
         } else {
             return nil

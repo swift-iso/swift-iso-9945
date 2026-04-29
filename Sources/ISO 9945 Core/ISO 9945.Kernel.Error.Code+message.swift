@@ -17,7 +17,7 @@
     internal import Musl
 #endif
 
-extension ISO_9945.Kernel.Error.Code {
+extension Error_Primitives.Error.Code {
     /// Returns the platform error message for a POSIX error code.
     ///
     /// Calls `strerror()` (ISO 9945 / POSIX.1) for `.posix` codes.

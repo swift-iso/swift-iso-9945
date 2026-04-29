@@ -31,7 +31,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
@@ -95,7 +95,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
@@ -121,7 +121,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Kernel.Error(code: .posix(EINTR)))`. Callers should check
+    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
@@ -200,13 +200,13 @@ extension ISO_9945.Kernel.File.Flush {
 extension ISO_9945.Kernel.File.Flush.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
-        let code = Kernel.Error.Code.current()
+        let code = Error_Primitives.Error.Code.current()
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
         if let ioError = Kernel.IO.Error(code: code) {
             return .io(ioError)
         }
-        return .platform(Kernel.Error(code: code))
+        return .platform(Error_Primitives.Error(code: code))
     }
 }

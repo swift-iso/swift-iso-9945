@@ -31,13 +31,13 @@ extension Kernel.File.Direct.Error {
 
     /// Maps a POSIX error code to a semantic error.
     @usableFromInline
-    internal init(code: Kernel.Error.Code, operation: Operation) {
+    internal init(code: Error_Primitives.Error.Code, operation: Operation) {
         switch code {
         case _ where code == .POSIX.EINVAL:
             self = .platform(code: code, operation: operation)
         case _ where code == .POSIX.EBADF:
             self = .invalidHandle
-        case _ where Kernel.Error.Code.POSIX.isENOTSUP(code):
+        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
             self = .notSupported
         default:
             self = .platform(code: code, operation: operation)

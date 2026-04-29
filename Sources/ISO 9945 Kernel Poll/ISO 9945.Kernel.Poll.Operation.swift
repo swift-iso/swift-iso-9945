@@ -24,7 +24,7 @@ extension ISO_9945.Kernel.Poll {
     ///     - `0`: Return immediately (non-blocking poll).
     ///     - `> 0`: Wait up to this many milliseconds.
     /// - Returns: The number of entries with events, or 0 on timeout.
-    /// - Throws: `Kernel.Error` on failure.
+    /// - Throws: `Error_Primitives.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -48,7 +48,7 @@ extension ISO_9945.Kernel.Poll {
     public static func poll(
         _ entries: inout [Entry],
         timeout: Int32
-    ) throws(Kernel.Error) -> Int {
+    ) throws(Error_Primitives.Error) -> Int {
         let count = unsafe entries.withUnsafeMutableBufferPointer { buffer in
             guard let base = buffer.baseAddress else { return Int32(0) }
             return unsafe base.withMemoryRebound(to: pollfd.self, capacity: buffer.count) { pollfdPtr in
@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Poll {
         }
 
         guard count >= 0 else {
-            throw ISO_9945.Kernel.Error.current(operation: "poll")
+            throw Error_Primitives.Error.current(operation: "poll")
         }
 
         return Int(count)

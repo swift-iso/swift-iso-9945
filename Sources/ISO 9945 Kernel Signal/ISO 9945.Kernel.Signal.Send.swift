@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.Signal.Send {
         pid: Kernel.Process.ID
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard kill(pid.rawValue, signal.rawValue) == 0 else {
-            throw .send(ISO_9945.Kernel.Error.captureErrno())
+            throw .send(Error_Primitives.Error.captureErrno())
         }
     }
 
@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.Signal.Send {
         _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard raise(signal.rawValue) == 0 else {
-            throw .send(ISO_9945.Kernel.Error.captureErrno())
+            throw .send(Error_Primitives.Error.captureErrno())
         }
     }
 
@@ -111,7 +111,7 @@ extension ISO_9945.Kernel.Signal.Send {
     ) throws(ISO_9945.Kernel.Signal.Error) {
         // Negative PID means process group
         guard kill(-pgid.rawValue, signal.rawValue) == 0 else {
-            throw .send(ISO_9945.Kernel.Error.captureErrno())
+            throw .send(Error_Primitives.Error.captureErrno())
         }
     }
 }
