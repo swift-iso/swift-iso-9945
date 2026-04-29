@@ -17,7 +17,7 @@ import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
-import Kernel_Path_Primitives
+import Path_Primitives
 import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
@@ -32,7 +32,7 @@ struct FileIOIntegrationTests {
     func `open and close file`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test")
 
-        try ISO_9945.Kernel.Path.scope(pathString) { path in
+        try Path.scope(pathString) { path in
             // Create and open
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
@@ -58,7 +58,7 @@ struct FileIOIntegrationTests {
 
         var threwError = false
         do {
-            try ISO_9945.Kernel.Path.scope(pathString) { path in
+            try Path.scope(pathString) { path in
                 _ = try ISO_9945.Kernel.File.Open.open(
                     path: path,
                     mode: .read,
@@ -77,7 +77,7 @@ struct FileIOIntegrationTests {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-rw")
         let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]  // "Hello"
 
-        try ISO_9945.Kernel.Path.scope(pathString) { path in
+        try Path.scope(pathString) { path in
             // Create file
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
@@ -111,7 +111,7 @@ struct FileIOIntegrationTests {
     func `read returns 0 on EOF`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-eof")
 
-        try ISO_9945.Kernel.Path.scope(pathString) { path in
+        try Path.scope(pathString) { path in
             // Create empty file
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,

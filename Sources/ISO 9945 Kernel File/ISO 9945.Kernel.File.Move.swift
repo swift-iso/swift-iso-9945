@@ -51,7 +51,7 @@ extension ISO_9945.Kernel.File.Move {
         }
     }
 
-    /// Moves/renames a file or directory using `Kernel.Path`.
+    /// Moves/renames a file or directory using `Path`.
     ///
     /// This is the preferred entry point.
     ///
@@ -60,8 +60,8 @@ extension ISO_9945.Kernel.File.Move {
     ///   - newPath: The new path.
     /// - Throws: `Kernel.File.Move.Error` on failure.
     public static func move(
-        from oldPath: borrowing Kernel.Path.Borrowed,
-        to newPath: borrowing Kernel.Path.Borrowed
+        from oldPath: borrowing Path.Borrowed,
+        to newPath: borrowing Path.Borrowed
     ) throws(Error) {
         try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Error) in

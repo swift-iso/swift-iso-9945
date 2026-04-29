@@ -22,7 +22,7 @@
 
 // MARK: - Borrow-First APIs
 
-extension ISO_9945.Kernel.Path.Canonical {
+extension Path.Canonical {
 
     /// Canonical primitive: scoped access to canonicalized path bytes.
     ///
@@ -34,12 +34,12 @@ extension ISO_9945.Kernel.Path.Canonical {
     ///   - path: The path to canonicalize.
     ///   - body: A closure that processes the canonical path bytes. Non-throwing.
     /// - Returns: The result of the closure.
-    /// - Throws: ``Kernel.Path.Canonical.Error`` on syscall failure.
+    /// - Throws: ``Path.Canonical.Error`` on syscall failure.
     public static func withCanonicalBytes<R: ~Copyable>(
-        _ path: borrowing Kernel.Path.Borrowed,
+        _ path: borrowing Path.Borrowed,
         _ body: (Span<Path.Char>) -> R
-    ) throws(Kernel.Path.Canonical.Error) -> R {
-        try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
+    ) throws(Path.Canonical.Error) -> R {
+        try unsafe path.withUnsafePointer { cString throws(Path.Canonical.Error) in
             let unsafePath = unsafe UnsafePointer<CChar>(cString)
 
             #if canImport(Darwin)
@@ -78,12 +78,12 @@ extension ISO_9945.Kernel.Path.Canonical {
     ///   - path: The path to canonicalize.
     ///   - body: A closure that processes the canonical path view. Non-throwing.
     /// - Returns: The result of the closure.
-    /// - Throws: ``Kernel.Path.Canonical.Error`` on syscall failure.
+    /// - Throws: ``Path.Canonical.Error`` on syscall failure.
     public static func withCanonical<R: ~Copyable>(
-        _ path: borrowing Kernel.Path.Borrowed,
+        _ path: borrowing Path.Borrowed,
         _ body: (borrowing Kernel.String.Borrowed) -> R
-    ) throws(Kernel.Path.Canonical.Error) -> R {
-        try unsafe path.withUnsafePointer { cString throws(Kernel.Path.Canonical.Error) in
+    ) throws(Path.Canonical.Error) -> R {
+        try unsafe path.withUnsafePointer { cString throws(Path.Canonical.Error) in
             let unsafePath = unsafe UnsafePointer<CChar>(cString)
 
             #if canImport(Darwin)
@@ -123,10 +123,10 @@ extension ISO_9945.Kernel.Path.Canonical {
     ///
     /// - Parameter path: The path to canonicalize.
     /// - Returns: The canonical absolute path as a `Kernel.String`.
-    /// - Throws: ``Kernel.Path.Canonical.Error`` on failure.
+    /// - Throws: ``Path.Canonical.Error`` on failure.
     public static func canonicalize(
-        _ path: borrowing Kernel.Path.Borrowed
-    ) throws(Kernel.Path.Canonical.Error) -> Kernel.String {
+        _ path: borrowing Path.Borrowed
+    ) throws(Path.Canonical.Error) -> Kernel.String {
         try withCanonical(path) { view in
             Kernel.String(copying: view)
         }
@@ -135,17 +135,16 @@ extension ISO_9945.Kernel.Path.Canonical {
 
 // MARK: - Error Current
 
-extension ISO_9945.Kernel.Path.Canonical.Error {
+extension Path.Canonical.Error {
     /// Creates an error from the current errno value.
-
-    static func current() -> Kernel.Path.Canonical.Error {
+    ///
+    /// Permission-denied errors (EACCES, EPERM) surface as `.platform(...)`
+    /// post-Path-X Cycle 8 — see `Path.Canonical.Error+code.swift`.
+    static func current() -> Path.Canonical.Error {
         let e = errno
         let code = Error_Primitives.Error.Code.posix(e)
-        if let pathError = Kernel.Path.Resolution.Error(code: code) {
+        if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
-        }
-        if let permError = Kernel.Permission.Error(code: code) {
-            return .permission(permError)
         }
         return .platform(Error_Primitives.Error(code: code))
     }

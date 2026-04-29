@@ -129,10 +129,10 @@ extension ISO_9945.Kernel.Link.Symbolic {
     }
 }
 
-// MARK: - Ergonomic Kernel.Path Overloads
+// MARK: - Ergonomic Path Overloads
 
 extension ISO_9945.Kernel.Link.Symbolic {
-    /// Creates a symbolic link using `Kernel.Path`.
+    /// Creates a symbolic link using `Path`.
     ///
     /// This is the preferred entry point.
     ///
@@ -141,8 +141,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///   - linkPath: The path where the symlink will be created.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
     public static func create(
-        target: borrowing Kernel.Path.Borrowed,
-        at linkPath: borrowing Kernel.Path.Borrowed
+        target: borrowing Path.Borrowed,
+        at linkPath: borrowing Path.Borrowed
     ) throws(Error) {
         try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
@@ -168,7 +168,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Returns: The result of the closure.
     /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTargetBytes<R: ~Copyable>(
-        at path: borrowing Kernel.Path.Borrowed,
+        at path: borrowing Path.Borrowed,
         _ body: (Span<Path.Char>) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
@@ -214,7 +214,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Returns: The result of the closure.
     /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTarget<R: ~Copyable>(
-        at path: borrowing Kernel.Path.Borrowed,
+        at path: borrowing Path.Borrowed,
         _ body: (borrowing Kernel.String.Borrowed) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
@@ -260,7 +260,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Parameter path: The path to the symbolic link.
     /// - Returns: The target path as a `Kernel.String`.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-    public static func readTarget(at path: borrowing Kernel.Path.Borrowed) throws(Error) -> Kernel.String {
+    public static func readTarget(at path: borrowing Path.Borrowed) throws(Error) -> Kernel.String {
         try withTarget(at: path) { view in
             Kernel.String(copying: view)
         }

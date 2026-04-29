@@ -16,7 +16,7 @@ import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
-import Kernel_Path_Primitives
+import Path_Primitives
 import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
@@ -110,7 +110,7 @@ extension Kernel.File.Open.Test.EdgeCase {
             let fd = try KernelIOTest.open(at: path)
             KernelIOTest.write("test", to: fd)
 
-            let readFd = try ISO_9945.Kernel.Path.scope(path) { p in
+            let readFd = try Path.scope(path) { p in
                 try Kernel.File.Open.open(
                     path: p,
                     mode: .read,
@@ -126,7 +126,7 @@ extension Kernel.File.Open.Test.EdgeCase {
         @Test
         func `open with create creates new file`() throws {
             let pathString = Kernel.Temporary.filePath(prefix: "open-create-test")
-            let fd = try ISO_9945.Kernel.Path.scope(pathString) { path in
+            let fd = try Path.scope(pathString) { path in
                 try Kernel.File.Open.open(
                     path: path,
                     mode: .readWrite,
@@ -156,7 +156,7 @@ extension Kernel.File.Open.Test.EdgeCase {
             }
 
             // Re-open with truncate
-            let truncFd = try ISO_9945.Kernel.Path.scope(path) { p in
+            let truncFd = try Path.scope(path) { p in
                 try Kernel.File.Open.open(
                     path: p,
                     mode: .readWrite,
@@ -182,7 +182,7 @@ extension Kernel.File.Open.Test.EdgeCase {
             }
 
             // Re-open with append
-            let appendFd = try ISO_9945.Kernel.Path.scope(path) { p in
+            let appendFd = try Path.scope(path) { p in
                 try Kernel.File.Open.open(
                     path: p,
                     mode: .write,
@@ -198,7 +198,7 @@ extension Kernel.File.Open.Test.EdgeCase {
             }
 
             // Verify total content by re-reading
-            let readFd = try ISO_9945.Kernel.Path.scope(path) { p in
+            let readFd = try Path.scope(path) { p in
                 try Kernel.File.Open.open(path: p, mode: .read, options: [], permissions: .privateFile)
             }
             var buffer = [UInt8](repeating: 0, count: 20)
@@ -219,13 +219,13 @@ extension Kernel.File.Open.Test.EdgeCase {
                 try Kernel.Close.close(fd)
             }
 
-            // Kernel.Path.scope wraps inner throws into its own error
+            // Path.scope wraps inner throws into its own error
             // type (e.g., .body(inner)), so the caller sees a ScopeError
             // rather than Kernel.File.Open.Error directly. Accept any
             // error — the test's semantic is "open fails", not "open
             // fails with a specific unwrapped type".
             do {
-                _ = try ISO_9945.Kernel.Path.scope(path) { p in
+                _ = try Path.scope(path) { p in
                     try Kernel.File.Open.open(
                         path: p,
                         mode: .readWrite,
@@ -243,7 +243,7 @@ extension Kernel.File.Open.Test.EdgeCase {
     extension Kernel.File.Open.Test.EdgeCase {
         @Test
         func `open nonexistent file without create throws`() throws {
-            try ISO_9945.Kernel.Path.scope("/nonexistent/path/to/file") { path in
+            try Path.scope("/nonexistent/path/to/file") { path in
                 #expect(throws: Kernel.File.Open.Error.self) {
                     _ = try Kernel.File.Open.open(
                         path: path,
@@ -257,7 +257,7 @@ extension Kernel.File.Open.Test.EdgeCase {
 
         @Test
         func `open directory for write throws`() throws {
-            try ISO_9945.Kernel.Path.scope("/tmp") { path in
+            try Path.scope("/tmp") { path in
                 #expect(throws: Kernel.File.Open.Error.self) {
                     _ = try Kernel.File.Open.open(
                         path: path,

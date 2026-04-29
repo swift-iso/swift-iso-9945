@@ -91,7 +91,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func get(path: borrowing Kernel.Path.Borrowed) throws(Error) -> Kernel.File.Stats {
+    public static func get(path: borrowing Path.Borrowed) throws(Error) -> Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe get(unsafePath: UnsafePointer<CChar>(cString))
         }
@@ -145,7 +145,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func lget(path: borrowing Kernel.Path.Borrowed) throws(Error) -> Kernel.File.Stats {
+    public static func lget(path: borrowing Path.Borrowed) throws(Error) -> Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe lget(unsafePath: UnsafePointer<CChar>(cString))
         }

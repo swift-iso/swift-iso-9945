@@ -181,7 +181,7 @@ extension ISO_9945.Kernel.Directory.Working.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
-        if let pathError = Kernel.Path.Resolution.Error(code: code) {
+        if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
         if let permError = Kernel.Permission.Error(code: code) {

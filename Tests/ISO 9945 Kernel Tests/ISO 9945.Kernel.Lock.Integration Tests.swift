@@ -18,7 +18,7 @@ import Kernel_Primitives_Core
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
-import Kernel_Path_Primitives
+import Path_Primitives
 import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
@@ -86,7 +86,7 @@ private enum LockTestHelper {
         let allArgs = [helperPath, filePath, "\(milliseconds)"]
         let envp: [Swift.String] = []
 
-        return try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
+        return try Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
             try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                 path: argvPtr[0]!,
                 argv: argvPtr,
@@ -155,7 +155,7 @@ private func makeLockTestFile(prefix: Swift.String) throws -> Swift.String {
 /// `.exclusive` — the file already exists with data and must not be
 /// recreated or truncated.
 private func openLockTestFile(_ path: Swift.String) throws -> ISO_9945.Kernel.Descriptor {
-    try ISO_9945.Kernel.Path.scope(path) { p in
+    try Path.scope(path) { p in
         try ISO_9945.Kernel.File.Open.open(
             path: p,
             mode: .readWrite,

@@ -19,7 +19,7 @@
     import Kernel_Event_Primitives
     import Kernel_IO_Primitives
     import Kernel_File_Primitives
-    import Kernel_Path_Primitives
+    import Path_Primitives
     import Kernel_Environment_Primitives
     import Kernel_Process_Primitives
     import Kernel_Thread_Primitives
@@ -60,7 +60,7 @@
             let argv = [path]
             let envp: [Swift.String] = []
 
-            let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+            let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,
@@ -79,8 +79,8 @@
             let argv = [path]
             let envp: [Swift.String] = []
 
-            func doSpawn() throws(Kernel.Path.String.Error<ISO_9945.Kernel.Process.Error>) -> Kernel.Process.ID {
-                try Kernel.Path.scope.array(argv, envp) {
+            func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>) -> Kernel.Process.ID {
+                try Path.scope.array(argv, envp) {
                     (argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
                      envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>) throws(ISO_9945.Kernel.Process.Error) -> Kernel.Process.ID in
                     // argv[0] is already the path, use it directly
@@ -110,7 +110,7 @@
             let argv = ["/bin/sh", "-c", "exit 42"]
             let envp: [Swift.String] = []
 
-            let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+            let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,
@@ -130,7 +130,7 @@
             let argv = ["/bin/sh", "-c", "exit ${TEST_EXIT_CODE:-99}"]
             let envp = ["TEST_EXIT_CODE=77"]
 
-            let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+            let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,

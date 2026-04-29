@@ -16,7 +16,7 @@ import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
-import Kernel_Path_Primitives
+import Path_Primitives
 import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
@@ -45,7 +45,7 @@ private func createTempFileWithContent(prefix: Swift.String, content: Swift.Stri
 
 /// Reads content from a file using the Kernel API.
 private func readFileContent(_ path: Swift.String) -> Swift.String? {
-    guard let fd = try? ISO_9945.Kernel.Path.scope(path, { p in
+    guard let fd = try? Path.scope(path, { p in
         try ISO_9945.Kernel.File.Open.open(
             path: p,
             mode: .read,
@@ -64,7 +64,7 @@ private func readFileContent(_ path: Swift.String) -> Swift.String? {
 
 /// Cleans up a temp file.
 private func cleanup(_ path: Swift.String) {
-    try? ISO_9945.Kernel.Path.scope(path) { p in
+    try? Path.scope(path) { p in
         try ISO_9945.Kernel.File.Delete.delete(p)
     }
 }

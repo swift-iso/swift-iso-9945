@@ -32,7 +32,7 @@ public import Kernel_Primitives_Core
 @_spi(Syscall) public import Kernel_Descriptor_Primitives
 public import Kernel_IO_Primitives
 public import Kernel_File_Primitives
-public import Kernel_Path_Primitives
+public import Path_Primitives
 public import Kernel_Environment_Primitives
 public import Kernel_Process_Primitives
 public import Kernel_Thread_Primitives
@@ -57,7 +57,7 @@ struct LockHelper {
         }
 
         do {
-            try ISO_9945.Kernel.Path.scope(path) { kernelPath in
+            try Path.scope(path) { kernelPath in
                 // Open file for reading/writing (required for exclusive locks)
                 let fd = try ISO_9945.Kernel.File.Open.open(
                     path: kernelPath,

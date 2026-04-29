@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.File.Open {
     /// - Throws: ``Kernel/File/Open/Error`` on failure.
     /// - Complexity: O(1) in Swift, O(path length) in kernel.
     public static func open(
-        path: borrowing Kernel.Path.Borrowed,
+        path: borrowing Path.Borrowed,
         mode: Kernel.File.Open.Mode,
         options: Kernel.File.Open.Options,
         permissions: Kernel.File.Permissions

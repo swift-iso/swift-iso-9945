@@ -68,7 +68,7 @@ extension ISO_9945.Kernel.Process.Spawn {
     /// let argv = ["/usr/bin/true"]
     /// let envp: [String] = []
     ///
-    /// let child = try Kernel.Path.scope.array(argv, envp) { argvPtr, envpPtr in
+    /// let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
     ///     try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
     ///         path: argvPtr[0]!,
     ///         argv: argvPtr,
@@ -107,7 +107,7 @@ extension ISO_9945.Kernel.Process.Spawn {
     /// Spawns a new process using `Path.Char` pointers.
     ///
     /// This overload bridges from `Path.Char` (UInt8 on POSIX) to `CChar`
-    /// for syscall compatibility. Use this with `Kernel.Path.scope`.
+    /// for syscall compatibility. Use this with `Path.scope`.
     ///
     /// - Parameters:
     ///   - path: Path to the executable.

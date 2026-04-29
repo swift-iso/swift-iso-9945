@@ -15,7 +15,7 @@
 // This file documents the POSIX errno mappings but does not duplicate the implementations.
 //
 // Mappings defined in Kernel_Primitives:
-// - Kernel.Path.Resolution.Error: ENOENT, EEXIST, EISDIR, ENOTDIR, ENOTEMPTY, ELOOP, EXDEV, ENAMETOOLONG
+// - Path.Resolution.Error: ENOENT, EEXIST, EISDIR, ENOTDIR, ENOTEMPTY, ELOOP, EXDEV, ENAMETOOLONG
 // - Kernel.Permission.Error: EACCES, EPERM, EROFS
 // - Kernel.Descriptor.Validity.Error: EBADF
 // - Kernel.IO.Blocking.Error: EAGAIN, EWOULDBLOCK

@@ -16,7 +16,7 @@ import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
-import Kernel_Path_Primitives
+import Path_Primitives
 import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
@@ -40,7 +40,7 @@ extension Kernel.File.Handle {
 
 /// Deletes the file at path only (Handle owns the descriptor).
 private func cleanup(path: Swift.String) {
-    try? ISO_9945.Kernel.Path.scope(path) { p in
+    try? Path.scope(path) { p in
         try ISO_9945.Kernel.File.Delete.delete(p)
     }
 }
@@ -136,7 +136,7 @@ private func cleanup(path: Swift.String) {
 
             // After explicit close, re-opening confirms the file still exists
             // (close closed the fd, not the file).
-            let fd2 = try ISO_9945.Kernel.Path.scope(path) { p in
+            let fd2 = try Path.scope(path) { p in
                 try Kernel.File.Open.open(
                     path: p,
                     mode: .read,
@@ -186,7 +186,7 @@ private func cleanup(path: Swift.String) {
 
             // After deinit, descriptor should be closed.
             // Re-open to verify the file still exists (handle closed the fd, not the file).
-            let fd2 = try ISO_9945.Kernel.Path.scope(path) { p in
+            let fd2 = try Path.scope(path) { p in
                 try Kernel.File.Open.open(
                     path: p,
                     mode: .read,

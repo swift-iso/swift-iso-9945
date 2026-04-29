@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.File.Chown {
     /// - Throws: `Kernel.File.Chown.Error` on failure.
 
     public static func chown(
-        path: borrowing Kernel.Path.Borrowed,
+        path: borrowing Path.Borrowed,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {
@@ -77,7 +77,7 @@ extension ISO_9945.Kernel.File.Chown {
     /// - Throws: `Kernel.File.Chown.Error` on failure.
 
     public static func lchown(
-        path: borrowing Kernel.Path.Borrowed,
+        path: borrowing Path.Borrowed,
         uid: Kernel.User.ID,
         gid: Kernel.Group.ID
     ) throws(Error) {

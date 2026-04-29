@@ -22,13 +22,13 @@
 // MARK: - POSIX rmdir() syscall
 
 extension ISO_9945.Kernel.Directory.Remove {
-    /// Removes an empty directory using `Kernel.Path`.
+    /// Removes an empty directory using `Path`.
     ///
     /// This is the preferred entry point.
     ///
     /// - Parameter path: The path to remove.
     /// - Throws: `Kernel.Directory.Remove.Error` on failure.
-    public static func remove(_ path: borrowing Kernel.Path.Borrowed) throws(Error) {
+    public static func remove(_ path: borrowing Path.Borrowed) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe _remove(ptr)
         }

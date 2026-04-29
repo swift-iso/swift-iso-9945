@@ -16,7 +16,7 @@
     public import Kernel_Event_Primitives
     public import Kernel_IO_Primitives
     public import Kernel_File_Primitives
-    public import Kernel_Path_Primitives
+    public import Path_Primitives
     public import Kernel_Environment_Primitives
     public import Kernel_Process_Primitives
     public import Kernel_Thread_Primitives
@@ -43,7 +43,7 @@
 
         /// Opens a new file at the given path for read/write.
         public static func open(at path: Swift.String) throws -> Kernel.Descriptor {
-            try ISO_9945.Kernel.Path.scope(path) { p in
+            try Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Open.open(
                     path: p,
                     mode: .readWrite,
@@ -63,7 +63,7 @@
 
         /// Deletes the file at the given path. Safe for defer blocks.
         public static func cleanup(path: Swift.String) {
-            try? ISO_9945.Kernel.Path.scope(path) { p in
+            try? Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Delete.delete(p)
             }
         }

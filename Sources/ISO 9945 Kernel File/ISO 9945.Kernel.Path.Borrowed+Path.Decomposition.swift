@@ -15,7 +15,7 @@
 //
 // parent and component delegate to `Path.Scan.lastSeparatorIndex` for the
 // byte scan; branching (root handling, sub-span construction) is POSIX-specific
-// and lives here. See `ISO 9945.Kernel.Path.Borrowed+Path.Modification.swift`
+// and lives here. See `ISO 9945.Path.Borrowed+Path.Modification.swift`
 // for the appending half of the split.
 
 extension Path.Borrowed: @retroactive Path.Decomposition {

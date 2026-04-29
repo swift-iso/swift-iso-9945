@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.Directory {
         return unsafe Stream(dir: dir)
     }
 
-    /// Opens a directory for iteration using a `Kernel.Path`.
+    /// Opens a directory for iteration using a `Path`.
     ///
     /// This is the preferred entry point. The pointer-based overload exists
     /// for cases where you already have a raw pointer.
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Directory {
     /// - Parameter path: The path to the directory.
     /// - Returns: A directory stream for iteration.
     /// - Throws: `Kernel.Directory.Error` on failure.
-    public static func open(at path: borrowing Kernel.Path.Borrowed) throws(Error) -> Stream {
+    public static func open(at path: borrowing Path.Borrowed) throws(Error) -> Stream {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe open(at: ptr)
         }

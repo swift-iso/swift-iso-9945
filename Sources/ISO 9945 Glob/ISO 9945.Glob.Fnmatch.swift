@@ -23,7 +23,7 @@ extension ISO_9945.Glob {
 extension ISO_9945.Glob {
     /// Wraps `fnmatch(3)`. Returns `true` if `name` matches `pattern`.
     ///
-    /// Both parameters are `Kernel.Path.Borrowed` — null-terminated by invariant.
+    /// Both parameters are `Path.Borrowed` — null-terminated by invariant.
     /// The C `fnmatch()` reads but does not store the pointers. All unsafe
     /// is internal to this function body.
     ///
@@ -33,8 +33,8 @@ extension ISO_9945.Glob {
     ///   - options: `FNM_*` flags controlling match behavior.
     /// - Returns: `true` if the name matches the pattern.
     public static func fnmatch(
-        pattern: borrowing Kernel.Path.Borrowed,
-        name: borrowing Kernel.Path.Borrowed,
+        pattern: borrowing Path.Borrowed,
+        name: borrowing Path.Borrowed,
         options: Fnmatch.Options = []
     ) -> Bool {
         let result = unsafe iso9945_fnmatch(

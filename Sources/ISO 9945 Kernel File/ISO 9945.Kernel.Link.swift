@@ -23,7 +23,7 @@
 // MARK: - POSIX link() syscall
 
 extension ISO_9945.Kernel.Link {
-    /// Creates a hard link using `Kernel.Path`.
+    /// Creates a hard link using `Path`.
     ///
     /// This is the preferred entry point.
     ///
@@ -32,8 +32,8 @@ extension ISO_9945.Kernel.Link {
     ///   - existingPath: The path to the existing file.
     /// - Throws: `Kernel.Link.Error` on failure.
     public static func create(
-        at linkPath: borrowing Kernel.Path.Borrowed,
-        to existingPath: borrowing Kernel.Path.Borrowed
+        at linkPath: borrowing Path.Borrowed,
+        to existingPath: borrowing Path.Borrowed
     ) throws(Error) {
         try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Path.Char>) throws(Error) in

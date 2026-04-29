@@ -15,14 +15,16 @@ public import Path_Primitives
 
 extension Path.Canonical.Error {
     /// Creates an error from a POSIX error code.
+    ///
+    /// Permission-denied errors (EACCES, EPERM) surface as `.platform(...)`
+    /// post-Path-X Cycle 8 — the L1 `Kernel.Permission.Error` wrapper case
+    /// was dropped to break the L1 cross-package dep on Kernel.Permission.
+    /// Consumers that need to distinguish permission errors can pattern-match
+    /// on the platform code.
     @usableFromInline
     internal init(code: Error_Primitives.Error.Code) {
         if let e = Path.Resolution.Error(code: code) {
             self = .path(e)
-            return
-        }
-        if let e = Kernel.Permission.Error(code: code) {
-            self = .permission(e)
             return
         }
         self = .platform(Error_Primitives.Error(code: code))

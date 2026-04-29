@@ -36,7 +36,7 @@
     import Kernel_Event_Primitives
     import Kernel_IO_Primitives
     import Kernel_File_Primitives
-    import Kernel_Path_Primitives
+    import Path_Primitives
     import Kernel_Environment_Primitives
     import Kernel_Process_Primitives
     import Kernel_Thread_Primitives
@@ -150,7 +150,7 @@ import ISO_9945_Kernel
             let allArgs = [path] + args
             let envp: [Swift.String] = []
 
-            return try Kernel.Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
+            return try Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
                 // argv[0] is the path, use it directly
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,

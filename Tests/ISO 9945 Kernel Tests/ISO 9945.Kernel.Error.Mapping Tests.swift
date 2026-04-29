@@ -14,7 +14,7 @@ import Testing
 import Kernel_Primitives_Test_Support
 
 @testable import Error_Primitives
-import Kernel_Path_Primitives
+import Path_Primitives
 import Kernel_Permission_Primitives
 import Kernel_Descriptor_Primitives
 import Kernel_IO_Primitives
@@ -43,31 +43,31 @@ import Kernel_Memory_Primitives
     struct PathResolutionErrorMappingTests {
         @Test
         func `notFound from ENOENT`() {
-            let error = Kernel.Path.Resolution.Error(code: .posix(ENOENT))
+            let error = Path.Resolution.Error(code: .posix(ENOENT))
             #expect(error == .notFound)
         }
 
         @Test
         func `exists from EEXIST`() {
-            let error = Kernel.Path.Resolution.Error(code: .posix(EEXIST))
+            let error = Path.Resolution.Error(code: .posix(EEXIST))
             #expect(error == .exists)
         }
 
         @Test
         func `isDirectory from EISDIR`() {
-            let error = Kernel.Path.Resolution.Error(code: .posix(EISDIR))
+            let error = Path.Resolution.Error(code: .posix(EISDIR))
             #expect(error == .isDirectory)
         }
 
         @Test
         func `notDirectory from ENOTDIR`() {
-            let error = Kernel.Path.Resolution.Error(code: .posix(ENOTDIR))
+            let error = Path.Resolution.Error(code: .posix(ENOTDIR))
             #expect(error == .notDirectory)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.Path.Resolution.Error(code: .posix(EINTR))
+            let error = Path.Resolution.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }
