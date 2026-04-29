@@ -162,7 +162,6 @@ let package = Package(
                 .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel String Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),

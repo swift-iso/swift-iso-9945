@@ -206,7 +206,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// Convenience: scoped access as NUL-terminated view.
     ///
     /// This API adds a NUL terminator internally and provides a
-    /// `Kernel.String.Borrowed` for APIs that expect NUL-terminated strings.
+    /// `String.Borrowed` for APIs that expect NUL-terminated strings.
     ///
     /// - Parameters:
     ///   - path: The path to the symbolic link.
@@ -215,7 +215,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTarget<R: ~Copyable>(
         at path: borrowing Path.Borrowed,
-        _ body: (borrowing Kernel.String.Borrowed) -> R
+        _ body: (borrowing String.Borrowed) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
             var bufferSize = 256
@@ -240,7 +240,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
                 if count < bufferSize {
                     unsafe (buffer[count] = 0)  // NUL terminate
                     let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
-                    let view = unsafe Kernel.String.Borrowed(u8Ptr, count: count)
+                    let view = unsafe String.Borrowed(u8Ptr, count: count)
                     return body(view)
                 }
 
@@ -258,11 +258,11 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// `withTargetBytes` or `withTarget` to avoid intermediate allocations.
     ///
     /// - Parameter path: The path to the symbolic link.
-    /// - Returns: The target path as a `Kernel.String`.
+    /// - Returns: The target path as a `String`.
     /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
-    public static func readTarget(at path: borrowing Path.Borrowed) throws(Error) -> Kernel.String {
+    public static func readTarget(at path: borrowing Path.Borrowed) throws(Error) -> String {
         try withTarget(at: path) { view in
-            Kernel.String(copying: view)
+            String(copying: view)
         }
     }
 }

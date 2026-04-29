@@ -114,7 +114,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
     /// Convenience: scoped access as NUL-terminated view.
     ///
-    /// This API provides a `Kernel.String.Borrowed` for APIs that expect
+    /// This API provides a `String.Borrowed` for APIs that expect
     /// NUL-terminated strings. The underlying buffer already includes
     /// the NUL terminator from `getcwd(2)`.
     ///
@@ -122,7 +122,7 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Returns: The result of the closure.
     /// - Throws: ``Error`` on syscall failure.
     public static func withCurrent<R: ~Copyable>(
-        _ body: (borrowing Kernel.String.Borrowed) -> R
+        _ body: (borrowing String.Borrowed) -> R
     ) throws(Error) -> R {
         var result: R? = nil
         var thrown: Error? = nil
@@ -148,7 +148,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
             // getcwd NUL-terminates; create view directly
             let u8Ptr = unsafe UnsafePointer<UInt8>(base)
-            let view = unsafe Kernel.String.Borrowed(u8Ptr, count: Kernel.String.length(of: u8Ptr))
+            let view = unsafe String.Borrowed(u8Ptr, count: String.length(of: u8Ptr))
             result = body(view)
         }
 
@@ -168,9 +168,9 @@ extension ISO_9945.Kernel.Directory.Working {
     ///
     /// - Returns: The absolute path of the current working directory.
     /// - Throws: ``Error`` on failure.
-    public static func current() throws(Error) -> Kernel.String {
+    public static func current() throws(Error) -> String {
         try withCurrent { view in
-            Kernel.String(copying: view)
+            String(copying: view)
         }
     }
 }

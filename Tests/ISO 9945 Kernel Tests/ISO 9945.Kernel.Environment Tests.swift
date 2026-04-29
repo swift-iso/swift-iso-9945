@@ -54,7 +54,7 @@ extension Kernel.Environment.Test.Unit {
     @Test
     func `get returns nil for unset variable`() {
         let result = Kernel.Environment.get("__KERNEL_TEST_UNSET_VAR_12345__")
-        // Kernel.String is ~Copyable, so we check nil-ness differently
+        // String is ~Copyable, so we check nil-ness differently
         let isNil = (result == nil)
         #expect(isNil)
     }
@@ -63,7 +63,7 @@ extension Kernel.Environment.Test.Unit {
     func `get returns value for PATH`() {
         // PATH should always be set on all platforms
         let result = Kernel.Environment.get("PATH")
-        // Kernel.String is ~Copyable, so we check nil-ness differently
+        // String is ~Copyable, so we check nil-ness differently
         let isNotNil = (result != nil)
         #expect(isNotNil)
     }

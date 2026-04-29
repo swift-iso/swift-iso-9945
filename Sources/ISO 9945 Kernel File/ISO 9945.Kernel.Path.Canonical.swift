@@ -70,7 +70,7 @@ extension Path.Canonical {
 
     /// Convenience: scoped access as NUL-terminated view.
     ///
-    /// This API provides a `Kernel.String.Borrowed` for APIs that expect
+    /// This API provides a `String.Borrowed` for APIs that expect
     /// NUL-terminated strings. The underlying buffer already includes
     /// the NUL terminator from `realpath(3)`.
     ///
@@ -81,7 +81,7 @@ extension Path.Canonical {
     /// - Throws: ``Path.Canonical.Error`` on syscall failure.
     public static func withCanonical<R: ~Copyable>(
         _ path: borrowing Path.Borrowed,
-        _ body: (borrowing Kernel.String.Borrowed) -> R
+        _ body: (borrowing String.Borrowed) -> R
     ) throws(Path.Canonical.Error) -> R {
         try unsafe path.withUnsafePointer { cString throws(Path.Canonical.Error) in
             let unsafePath = unsafe UnsafePointer<CChar>(cString)
@@ -101,7 +101,7 @@ extension Path.Canonical {
             defer { unsafe free(result) }
 
             let u8Ptr = unsafe UnsafePointer<UInt8>(result)
-            let view = unsafe Kernel.String.Borrowed(u8Ptr, count: Kernel.String.length(of: u8Ptr))
+            let view = unsafe String.Borrowed(u8Ptr, count: String.length(of: u8Ptr))
             return body(view)
         }
     }
@@ -122,13 +122,13 @@ extension Path.Canonical {
     /// - `.permission`: Permission denied for a path component
     ///
     /// - Parameter path: The path to canonicalize.
-    /// - Returns: The canonical absolute path as a `Kernel.String`.
+    /// - Returns: The canonical absolute path as a `String`.
     /// - Throws: ``Path.Canonical.Error`` on failure.
     public static func canonicalize(
         _ path: borrowing Path.Borrowed
-    ) throws(Path.Canonical.Error) -> Kernel.String {
+    ) throws(Path.Canonical.Error) -> String {
         try withCanonical(path) { view in
-            Kernel.String(copying: view)
+            String(copying: view)
         }
     }
 }
