@@ -19,7 +19,7 @@
 
 // MARK: - POSIX clock operations
 
-extension ISO_9945.Kernel.Clock.Continuous {
+extension Clock.Continuous {
     /// Returns the current instant on the continuous clock.
     ///
     /// - Darwin: Uses `CLOCK_MONOTONIC_RAW` which advances during system sleep
@@ -27,8 +27,7 @@ extension ISO_9945.Kernel.Clock.Continuous {
     ///   can violate monotonicity on system time changes — the Swift stdlib and Rust
     ///   both use `CLOCK_MONOTONIC_RAW` to avoid this.)
     /// - Linux: Uses `CLOCK_BOOTTIME` which advances during system sleep.
-
-    public static func now() -> Clock.Continuous.Instant {
+    public static var now: Clock.Continuous.Instant {
         #if canImport(Darwin)
         let ns = clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)
         #elseif canImport(Musl)
@@ -44,13 +43,12 @@ extension ISO_9945.Kernel.Clock.Continuous {
     }
 }
 
-extension ISO_9945.Kernel.Clock.Suspending {
+extension Clock.Suspending {
     /// Returns the current instant on the suspending clock.
     ///
     /// - Darwin: Uses `CLOCK_UPTIME_RAW` which pauses during system sleep.
     /// - Linux: Uses `CLOCK_MONOTONIC` which pauses during system sleep.
-
-    public static func now() -> Clock.Suspending.Instant {
+    public static var now: Clock.Suspending.Instant {
         #if canImport(Darwin)
         let ns = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
         #elseif canImport(Musl)

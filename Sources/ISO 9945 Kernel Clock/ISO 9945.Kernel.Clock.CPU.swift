@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.Clock {
+extension Clock {
     /// CPU-time clocks — count CPU consumption (user + system time spent
     /// executing), as opposed to ``Continuous`` and ``Suspending`` which
     /// count wall-clock progression.

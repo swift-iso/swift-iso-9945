@@ -17,7 +17,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Clock.CPU {
+extension Clock.CPU {
     /// Process-wide CPU time (`CLOCK_PROCESS_CPUTIME_ID`, IEEE 1003.1-2001).
     ///
     /// Aggregates user + system CPU time across all threads in the process.
@@ -26,16 +26,16 @@ extension Kernel.Clock.CPU {
     public enum Process {}
 }
 
-extension Kernel.Clock.CPU.Process {
+extension Clock.CPU.Process {
     /// A phantom-tagged instant on the process-wide CPU clock.
     ///
     /// Type-distinct from `Clock.Continuous.Instant` and
     /// `Clock.Suspending.Instant`: mixing CPU-time with wall-clock time
     /// is a compile error.
-    public typealias Instant = Tagged<Kernel.Clock.CPU.Process, Clock.Nanoseconds>
+    public typealias Instant = Tagged<Clock.CPU.Process, Clock.Nanoseconds>
 }
 
-extension Kernel.Clock.CPU.Process {
+extension Clock.CPU.Process {
     /// Returns the current instant on the process-wide CPU clock.
     ///
     /// Wraps `clock_gettime(CLOCK_PROCESS_CPUTIME_ID)`. Available on all
@@ -52,9 +52,9 @@ extension Kernel.Clock.CPU.Process {
     /// delta approaching wall-clock delta.
     ///
     /// ```swift
-    /// let before = Kernel.Clock.CPU.Process.now()
+    /// let before = Clock.CPU.Process.now()
     /// try await Task.sleep(for: .milliseconds(50))
-    /// let after = Kernel.Clock.CPU.Process.now()
+    /// let after = Clock.CPU.Process.now()
     /// let delta: Duration = after - before
     /// // If no thread is working, expect ~.zero;
     /// // a hot-spinning thread shows ~.milliseconds(50).

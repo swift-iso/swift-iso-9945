@@ -295,7 +295,7 @@ let package = Package(
             name: "ISO 9945 Kernel Clock",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel Clock Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
             ]
         ),
