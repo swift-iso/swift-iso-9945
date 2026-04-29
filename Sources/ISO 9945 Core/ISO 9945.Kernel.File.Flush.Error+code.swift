@@ -17,7 +17,6 @@ extension Kernel.File.Flush.Error {
     public var code: Error_Primitives.Error.Code {
         switch self {
         case .handle(let e): return e.code
-        case .io(let e): return e.code
         case .platform(let e): return e.code
         }
     }

@@ -17,7 +17,6 @@ import Kernel_Primitives_Test_Support
 import Path_Primitives
 import Kernel_Permission_Primitives
 import Kernel_Descriptor_Primitives
-import Kernel_IO_Primitives
 import Kernel_File_Primitives
 import Memory_Primitives
 

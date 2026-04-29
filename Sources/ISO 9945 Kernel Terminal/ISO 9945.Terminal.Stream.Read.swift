@@ -11,7 +11,6 @@
 
 /// POSIX implementation of Terminal stream read operations.
 
-@_spi(Syscall) import Kernel_IO_Primitives
 
 #if !os(Windows)
 

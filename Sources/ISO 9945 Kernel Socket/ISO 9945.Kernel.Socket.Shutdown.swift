@@ -74,9 +74,6 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error {
         if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
-        if let ioError = Kernel.IO.Error(code: code) {
-            return .io(ioError)
-        }
         return .platform(Error_Primitives.Error(code: code))
     }
 }

@@ -14,7 +14,6 @@ import ISO_9945_Kernel
 import Kernel_Primitives_Core
 import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
-import Kernel_IO_Primitives
 import Kernel_File_Primitives
 import Path_Primitives
 import Kernel_Environment_Primitives
@@ -24,7 +23,6 @@ import Error_Primitives
 @_spi(Syscall) import Kernel_Primitives_Core
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_Event_Primitives
-@_spi(Syscall) import Kernel_IO_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
 @_spi(Syscall) import Path_Primitives
 @_spi(Syscall) import Kernel_Environment_Primitives

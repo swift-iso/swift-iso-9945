@@ -30,7 +30,6 @@
 
 public import Kernel_Primitives_Core
 @_spi(Syscall) public import Kernel_Descriptor_Primitives
-public import Kernel_IO_Primitives
 public import Kernel_File_Primitives
 public import Path_Primitives
 public import Kernel_Environment_Primitives

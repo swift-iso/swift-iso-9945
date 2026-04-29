@@ -18,7 +18,6 @@ extension Kernel.IO.Read.Error {
         switch self {
         case .handle(let e): return e.code
         case .blocking(let e): return e.code
-        case .io(let e): return e.code
         case .platform(let e): return e.code
         }
     }
@@ -36,10 +35,6 @@ extension Kernel.IO.Read.Error {
         }
         if let e = Kernel.IO.Blocking.Error(code: code) {
             self = .blocking(e)
-            return
-        }
-        if let e = Kernel.IO.Error(code: code) {
-            self = .io(e)
             return
         }
         self = .platform(Error_Primitives.Error(code: code))

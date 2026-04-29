@@ -14,7 +14,6 @@
 public import Kernel_Primitives_Core
 public import Kernel_Descriptor_Primitives
 public import Kernel_Event_Primitives
-public import Kernel_IO_Primitives
 public import Kernel_File_Primitives
 public import Path_Primitives
 public import Kernel_Environment_Primitives

@@ -18,7 +18,6 @@ extension Kernel.IO.Write.Error {
         switch self {
         case .handle(let e): return e.code
         case .blocking(let e): return e.code
-        case .io(let e): return e.code
         case .space(let e): return e.code
         case .platform(let e): return e.code
         }
@@ -37,10 +36,6 @@ extension Kernel.IO.Write.Error {
         }
         if let e = Kernel.IO.Blocking.Error(code: code) {
             self = .blocking(e)
-            return
-        }
-        if let e = Kernel.IO.Error(code: code) {
-            self = .io(e)
             return
         }
         if let e = Kernel.Storage.Error(code: code) {

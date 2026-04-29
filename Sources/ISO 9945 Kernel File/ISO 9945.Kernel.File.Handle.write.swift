@@ -11,7 +11,6 @@
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
-@_spi(Syscall) import Kernel_IO_Primitives
 import Algebra_Primitives
 
 // MARK: - POSIX write operations on Kernel.File.Handle

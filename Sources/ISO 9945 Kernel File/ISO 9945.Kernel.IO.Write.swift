@@ -234,9 +234,6 @@ extension ISO_9945.Kernel.IO.Write.Error {
         if let blockingError = Kernel.IO.Blocking.Error(code: code) {
             return .blocking(blockingError)
         }
-        if let ioError = Kernel.IO.Error(code: code) {
-            return .io(ioError)
-        }
         if let spaceError = Kernel.Storage.Error(code: code) {
             return .space(spaceError)
         }

@@ -78,9 +78,6 @@ extension ISO_9945.Kernel.IO.Read.Error {
         if let blockingError = Kernel.IO.Blocking.Error(code: code) {
             return .blocking(blockingError)
         }
-        if let ioError = Kernel.IO.Error(code: code) {
-            return .io(ioError)
-        }
         return .platform(Error_Primitives.Error(code: code))
     }
 }

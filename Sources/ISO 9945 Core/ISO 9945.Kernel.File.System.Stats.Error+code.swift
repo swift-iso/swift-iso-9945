@@ -27,10 +27,6 @@ extension Kernel.File.System.Stats.Error {
             self = .permission(e)
             return
         }
-        if let e = Kernel.IO.Error(code: code) {
-            self = .io(e)
-            return
-        }
         self = .platform(Error_Primitives.Error(code: code))
     }
 }
