@@ -16,7 +16,6 @@ import Kernel_Descriptor_Primitives
 import Kernel_Event_Primitives
 import Kernel_File_Primitives
 import Path_Primitives
-import Kernel_Environment_Primitives
 import Kernel_Process_Primitives
 import Kernel_Thread_Primitives
 import Error_Primitives
@@ -25,7 +24,6 @@ import Error_Primitives
 @_spi(Syscall) import Kernel_Event_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
 @_spi(Syscall) import Path_Primitives
-@_spi(Syscall) import Kernel_Environment_Primitives
 @_spi(Syscall) import Kernel_Process_Primitives
 @_spi(Syscall) import Kernel_Thread_Primitives
 @_spi(Syscall) import Error_Primitives

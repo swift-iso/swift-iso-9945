@@ -32,7 +32,6 @@ public import Kernel_Primitives_Core
 @_spi(Syscall) public import Kernel_Descriptor_Primitives
 public import Kernel_File_Primitives
 public import Path_Primitives
-public import Kernel_Environment_Primitives
 public import Kernel_Process_Primitives
 public import Kernel_Thread_Primitives
 public import Error_Primitives

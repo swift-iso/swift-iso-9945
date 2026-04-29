@@ -278,7 +278,6 @@ let package = Package(
             name: "ISO 9945 Kernel Environment",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel Environment Primitives", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ]
         ),
@@ -408,7 +407,6 @@ let package = Package(
                 .product(name: "Kernel Event Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Kernel Environment Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Thread Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
