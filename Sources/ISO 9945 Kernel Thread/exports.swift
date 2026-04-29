@@ -1,2 +1,3 @@
 @_exported public import ISO_9945_Core
-@_spi(Syscall) @_exported public import Kernel_Thread_Primitives
+@_exported public import Kernel_Primitives_Core
+@_exported public import Error_Primitives

@@ -17,7 +17,6 @@
     public import Kernel_File_Primitives
     public import Path_Primitives
     public import Kernel_Process_Primitives
-    public import Kernel_Thread_Primitives
     public import Error_Primitives
     public import ISO_9945_Kernel
     public import ISO_9945_Kernel

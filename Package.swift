@@ -119,6 +119,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-path-primitives"),
         .package(path: "../../swift-primitives/swift-system-primitives"),
         .package(path: "../../swift-primitives/swift-memory-primitives"),
+        .package(path: "../../swift-primitives/swift-ascii-primitives"),
         .package(path: "../swift-iso-9899")
     ],
     targets: [
@@ -132,7 +133,6 @@ let package = Package(
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
@@ -158,7 +158,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
@@ -255,7 +254,6 @@ let package = Package(
             name: "ISO 9945 Kernel Thread",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel Thread Primitives", package: "swift-kernel-primitives"),
             ]
         ),
 
@@ -342,6 +340,7 @@ let package = Package(
                 "ISO 9945 Core",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
+                .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
             ]
         ),
 
@@ -408,7 +407,6 @@ let package = Package(
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Thread Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives")

@@ -22,10 +22,6 @@ extension Kernel.File.Open.Error {
             self = .path(e)
             return
         }
-        if let e = Kernel.Permission.Error(code: code) {
-            self = .permission(e)
-            return
-        }
         if let e = Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return

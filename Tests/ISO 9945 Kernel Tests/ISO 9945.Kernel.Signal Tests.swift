@@ -15,7 +15,6 @@ import Kernel_Event_Primitives
 import Kernel_File_Primitives
 import Path_Primitives
 import Kernel_Process_Primitives
-import Kernel_Thread_Primitives
 import Error_Primitives
 import Testing
 

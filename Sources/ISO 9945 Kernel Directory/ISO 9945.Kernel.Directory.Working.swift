@@ -184,9 +184,6 @@ extension ISO_9945.Kernel.Directory.Working.Error {
         if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
-        if let permError = Kernel.Permission.Error(code: code) {
-            return .permission(permError)
-        }
         return .platform(Error_Primitives.Error(code: code))
     }
 }

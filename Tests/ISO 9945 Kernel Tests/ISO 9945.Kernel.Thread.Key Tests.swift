@@ -11,7 +11,6 @@
 
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
-import Kernel_Thread_Primitives
 import Testing
 
 @testable import ISO_9945_Kernel
