@@ -11,7 +11,7 @@
 
 // MARK: - Shared Memory Access Mode
 
-extension ISO_9945.Kernel.Memory.Shared {
+extension Memory.Shared {
     /// Access mode for shared memory objects.
     ///
     /// A simple struct with two boolean flags indicating the desired access.
@@ -20,13 +20,13 @@ extension ISO_9945.Kernel.Memory.Shared {
     /// ## Usage
     /// ```swift
     /// // Read only
-    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .read, ...)
+    /// let fd = try Memory.Shared.open(name: "/myshm", access: .read, ...)
     ///
     /// // Write only
-    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .write, ...)
+    /// let fd = try Memory.Shared.open(name: "/myshm", access: .write, ...)
     ///
     /// // Read and write
-    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .readWrite, ...)
+    /// let fd = try Memory.Shared.open(name: "/myshm", access: .readWrite, ...)
     /// ```
     public struct Access: Sendable, Hashable {
         /// Whether to open for reading.
@@ -50,7 +50,7 @@ extension ISO_9945.Kernel.Memory.Shared {
 
 // MARK: - Standard Access Modes
 
-extension ISO_9945.Kernel.Memory.Shared.Access {
+extension Memory.Shared.Access {
     /// Opens the shared memory for reading only.
     public static let read = Self(read: true, write: false)
 

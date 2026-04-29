@@ -12,7 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -24,7 +24,7 @@
 
 // MARK: - POSIX madvise Constants
 
-extension ISO_9945.Kernel.Memory.Map.Advice {
+extension Memory.Map.Advice {
     /// Normal access pattern (default).
     ///
     /// No special treatment - the system will read-ahead and free pages as normal.
@@ -67,12 +67,12 @@ extension ISO_9945.Kernel.Memory.Map.Advice {
 }
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
 // MARK: - Darwin-specific Advice
 
-extension ISO_9945.Kernel.Memory.Map.Advice {
+extension Memory.Map.Advice {
     /// Free pages immediately (Darwin).
     ///
     /// Similar to `dontNeed` but guarantees the pages are freed immediately.
@@ -92,7 +92,7 @@ extension ISO_9945.Kernel.Memory.Map.Advice {
 #if canImport(Glibc) || canImport(Musl)
 // MARK: - Linux-specific Advice
 
-extension ISO_9945.Kernel.Memory.Map.Advice {
+extension Memory.Map.Advice {
     /// Remove pages from memory (Linux).
     ///
     /// For shared memory or file mappings, removes the pages from memory

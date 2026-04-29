@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -20,12 +20,12 @@
     internal import Musl
 #endif
 
-extension Kernel.Memory.Lock {
+extension Memory.Lock {
     /// Namespace for lock-all operations (mlockall).
     public enum All {}
 }
 
-extension ISO_9945.Kernel.Memory.Lock {
+extension Memory.Lock {
     /// Locks all current and/or future pages in the process address space.
     ///
     /// - Parameter flags: Raw flags for mlockall (MCL_CURRENT, MCL_FUTURE, etc.).

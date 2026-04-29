@@ -215,9 +215,6 @@ extension ISO_9945.Kernel.IO.Read.Error {
         if let ioError = Kernel.IO.Error(code: code) {
             return .io(ioError)
         }
-        if let memoryError = Kernel.Memory.Error(code: code) {
-            return .memory(memoryError)
-        }
         return .platform(Error_Primitives.Error(code: code))
     }
 }

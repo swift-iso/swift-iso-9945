@@ -240,9 +240,6 @@ extension ISO_9945.Kernel.IO.Write.Error {
         if let spaceError = Kernel.Storage.Error(code: code) {
             return .space(spaceError)
         }
-        if let memoryError = Kernel.Memory.Error(code: code) {
-            return .memory(memoryError)
-        }
         return .platform(Error_Primitives.Error(code: code))
     }
 }

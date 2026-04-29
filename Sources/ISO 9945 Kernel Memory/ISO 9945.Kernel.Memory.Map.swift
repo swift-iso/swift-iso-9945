@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
@@ -22,12 +22,12 @@
 
 // MARK: - POSIX mmap() syscalls
 
-extension ISO_9945.Kernel.Memory.Map {
+extension Memory.Map {
     /// Maps memory into the process address space (raw `mmap(2)`).
     ///
     /// Spec-literal: takes a raw fd, returns the mapped region or throws on
     /// failure. The L3-policy typed-descriptor convenience lives on the
-    /// unified `Kernel.Memory.Map` namespace at swift-posix per
+    /// unified `Memory.Map` namespace at swift-posix per
     /// [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameters:
@@ -41,20 +41,20 @@ extension ISO_9945.Kernel.Memory.Map {
     /// - Throws: `Error.map` on failure.
     @_spi(Syscall)
     public static func map(
-        addr: Kernel.Memory.Address? = nil,
-        length: Kernel.File.Size,
+        addr: Memory.Address? = nil,
+        length: Memory.Address.Count,
         protection: Protection,
         flags: Options,
         fd: Int32 = -1,
         offset: Kernel.File.Offset = .zero
-    ) throws(Error) -> Kernel.Memory.Address {
-        guard length.isPositive else {
+    ) throws(Error) -> Memory.Address {
+        guard length.rawValue.rawValue > 0 else {
             throw .invalid(.length)
         }
 
         let result = unsafe mmap(
             addr?.mutablePointer,
-            Int(length),
+            Int(bitPattern: length.rawValue.rawValue),
             protection.rawValue,
             flags.rawValue,
             fd,
@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Memory.Map {
             throw .map(.captureErrno())
         }
 
-        return unsafe Kernel.Memory.Address(result!)
+        return unsafe Memory.Address(result!)
     }
 
     /// Maps memory into the process address space using a typed descriptor.
@@ -73,13 +73,13 @@ extension ISO_9945.Kernel.Memory.Map {
     /// Phase 1.5 typed L2 form. Delegates to the raw `map(... fd: Int32, ...)`
     /// SPI via `descriptor._rawValue`.
     public static func map(
-        addr: Kernel.Memory.Address? = nil,
-        length: Kernel.File.Size,
+        addr: Memory.Address? = nil,
+        length: Memory.Address.Count,
         protection: Protection,
         flags: Options,
         descriptor: borrowing Kernel.Descriptor,
         offset: Kernel.File.Offset = .zero
-    ) throws(Error) -> Kernel.Memory.Address {
+    ) throws(Error) -> Memory.Address {
         try map(
             addr: addr,
             length: length,
@@ -98,10 +98,10 @@ extension ISO_9945.Kernel.Memory.Map {
     /// - Throws: `Error.unmap` on failure.
 
     public static func unmap(
-        addr: Kernel.Memory.Address,
-        length: Kernel.File.Size
+        addr: Memory.Address,
+        length: Memory.Address.Count
     ) throws(Error) {
-        guard unsafe munmap(addr.mutablePointer, Int(length)) == 0 else {
+        guard unsafe munmap(addr.mutablePointer, Int(bitPattern: length.rawValue.rawValue)) == 0 else {
             throw .unmap(.captureErrno())
         }
     }
@@ -124,11 +124,11 @@ extension ISO_9945.Kernel.Memory.Map {
     /// - Throws: `Error.sync` on failure.
 
     public static func sync(
-        addr: Kernel.Memory.Address,
-        length: Kernel.File.Size,
+        addr: Memory.Address,
+        length: Memory.Address.Count,
         flags: Sync.Options = .sync
     ) throws(Error) {
-        guard unsafe msync(addr.mutablePointer, Int(length), flags.rawValue) == 0 else {
+        guard unsafe msync(addr.mutablePointer, Int(bitPattern: length.rawValue.rawValue), flags.rawValue) == 0 else {
             throw .sync(.captureErrno())
         }
     }
@@ -142,11 +142,11 @@ extension ISO_9945.Kernel.Memory.Map {
     /// - Throws: `Error.protect` on failure.
 
     public static func protect(
-        addr: Kernel.Memory.Address,
-        length: Kernel.File.Size,
+        addr: Memory.Address,
+        length: Memory.Address.Count,
         protection: Protection
     ) throws(Error) {
-        guard unsafe mprotect(addr.mutablePointer, Int(length), protection.rawValue) == 0 else {
+        guard unsafe mprotect(addr.mutablePointer, Int(bitPattern: length.rawValue.rawValue), protection.rawValue) == 0 else {
             throw .protect(.captureErrno())
         }
     }
@@ -161,10 +161,10 @@ extension ISO_9945.Kernel.Memory.Map {
     ///   - advice: The advice type.
 
     public static func advise(
-        addr: Kernel.Memory.Address,
-        length: Kernel.File.Size,
+        addr: Memory.Address,
+        length: Memory.Address.Count,
         advice: Advice
     ) {
-        unsafe _ = madvise(addr.mutablePointer, Int(length), advice.rawValue)
+        unsafe _ = madvise(addr.mutablePointer, Int(bitPattern: length.rawValue.rawValue), advice.rawValue)
     }
 }

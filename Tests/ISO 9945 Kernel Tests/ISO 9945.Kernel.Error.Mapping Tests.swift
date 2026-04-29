@@ -19,7 +19,7 @@ import Kernel_Permission_Primitives
 import Kernel_Descriptor_Primitives
 import Kernel_IO_Primitives
 import Kernel_File_Primitives
-import Kernel_Memory_Primitives
+import Memory_Primitives
 
 // L2 init?(code:) extensions live in ISO 9945 Core
 @_spi(Syscall) import ISO_9945_Core
@@ -176,19 +176,19 @@ import Kernel_Memory_Primitives
     struct MemoryErrorMappingTests {
         @Test
         func `fault from EFAULT`() {
-            let error = Kernel.Memory.Error(code: .posix(EFAULT))
+            let error = Memory.Error(code: .posix(EFAULT))
             #expect(error == .fault)
         }
 
         @Test
         func `exhausted from ENOMEM`() {
-            let error = Kernel.Memory.Error(code: .posix(ENOMEM))
+            let error = Memory.Error(code: .posix(ENOMEM))
             #expect(error == .exhausted)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.Memory.Error(code: .posix(EINTR))
+            let error = Memory.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }

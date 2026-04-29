@@ -11,7 +11,7 @@
 
 // MARK: - POSIX-Specific Typed API
 
-extension ISO_9945.Kernel.Memory.Lock {
+extension Memory.Lock {
     /// Locks all current and/or future pages using typed flags.
     ///
     /// - Parameter flags: Typed flags for mlockall.

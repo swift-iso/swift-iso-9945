@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -22,7 +22,7 @@
 
 // MARK: - Shared Memory Options
 
-extension ISO_9945.Kernel.Memory.Shared {
+extension Memory.Shared {
     /// Creation options for shared memory objects.
     ///
     /// An OptionSet using POSIX flag values directly. Multiple options
@@ -31,10 +31,10 @@ extension ISO_9945.Kernel.Memory.Shared {
     /// ## Usage
     /// ```swift
     /// // Create if doesn't exist
-    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .readWrite, options: .create, ...)
+    /// let fd = try Memory.Shared.open(name: "/myshm", access: .readWrite, options: .create, ...)
     ///
     /// // Create exclusively (fail if exists)
-    /// let fd = try Kernel.Memory.Shared.open(name: "/myshm", access: .readWrite, options: [.create, .exclusive], ...)
+    /// let fd = try Memory.Shared.open(name: "/myshm", access: .readWrite, options: [.create, .exclusive], ...)
     /// ```
     public struct Options: OptionSet, Sendable, Hashable {
         /// The POSIX open flags.
@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.Memory.Shared {
 
 // MARK: - Standard Options
 
-extension ISO_9945.Kernel.Memory.Shared.Options {
+extension Memory.Shared.Options {
     /// Create the shared memory object if it doesn't exist (O_CREAT).
     public static let create = Self(rawValue: O_CREAT)
 

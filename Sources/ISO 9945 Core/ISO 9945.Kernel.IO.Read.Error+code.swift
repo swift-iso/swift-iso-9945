@@ -19,7 +19,6 @@ extension Kernel.IO.Read.Error {
         case .handle(let e): return e.code
         case .blocking(let e): return e.code
         case .io(let e): return e.code
-        case .memory(let e): return e.code
         case .platform(let e): return e.code
         }
     }
@@ -41,10 +40,6 @@ extension Kernel.IO.Read.Error {
         }
         if let e = Kernel.IO.Error(code: code) {
             self = .io(e)
-            return
-        }
-        if let e = Kernel.Memory.Error(code: code) {
-            self = .memory(e)
             return
         }
         self = .platform(Error_Primitives.Error(code: code))

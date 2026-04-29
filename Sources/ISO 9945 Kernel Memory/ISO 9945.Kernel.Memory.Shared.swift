@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
@@ -23,7 +23,7 @@
 
 // MARK: - POSIX Shared Memory
 
-extension ISO_9945.Kernel.Memory.Shared {
+extension Memory.Shared {
     /// Opens or creates a POSIX shared memory object.
     ///
     /// ## Threading
@@ -55,7 +55,7 @@ extension ISO_9945.Kernel.Memory.Shared {
     ///
     /// Spec-literal name (`shm_open`) matching the C function. Returns the
     /// raw `Int32` fd. Zero descriptor construction: the L3-policy wrapper
-    /// at swift-posix (`Kernel.Memory.Shared.open(...) -> Kernel.Descriptor`)
+    /// at swift-posix (`Memory.Shared.open(...) -> Kernel.Descriptor`)
     /// wraps the result in `Kernel.Descriptor(_rawValue:)` per
     /// [PLAT-ARCH-005] / [PLAT-ARCH-008e]. § 5.6 handle-returning
     /// bifurcation case.
@@ -66,10 +66,10 @@ extension ISO_9945.Kernel.Memory.Shared {
     @_spi(Syscall) @unsafe
     public static func shm_open(
         name: UnsafePointer<CChar>,
-        access: Kernel.Memory.Shared.Access,
-        options: Kernel.Memory.Shared.Options = [],
+        access: Memory.Shared.Access,
+        options: Memory.Shared.Options = [],
         permissions: Kernel.File.Permissions = .ownerReadWrite
-    ) throws(Kernel.Memory.Shared.Error) -> Int32 {
+    ) throws(Memory.Shared.Error) -> Int32 {
         // Convert Access to POSIX flags at syscall boundary
         let accessMode: Int32 = switch (access.read, access.write) {
         case (true, false):  O_RDONLY
@@ -105,10 +105,10 @@ extension ISO_9945.Kernel.Memory.Shared {
     @unsafe
     public static func open(
         name: UnsafePointer<CChar>,
-        access: Kernel.Memory.Shared.Access,
-        options: Kernel.Memory.Shared.Options = [],
+        access: Memory.Shared.Access,
+        options: Memory.Shared.Options = [],
         permissions: Kernel.File.Permissions = .ownerReadWrite
-    ) throws(Kernel.Memory.Shared.Error) -> Kernel.Descriptor {
+    ) throws(Memory.Shared.Error) -> Kernel.Descriptor {
         let fd = try unsafe shm_open(
             name: name,
             access: access,
@@ -124,7 +124,7 @@ extension ISO_9945.Kernel.Memory.Shared {
     /// - Throws: `Error.unlink` on failure.
 
     @unsafe
-    public static func unlink(name: UnsafePointer<CChar>) throws(Kernel.Memory.Shared.Error) {
+    public static func unlink(name: UnsafePointer<CChar>) throws(Memory.Shared.Error) {
         guard unsafe shm_unlink(name) == 0 else {
             throw .unlink(Error_Primitives.Error.Code.captureErrno())
         }

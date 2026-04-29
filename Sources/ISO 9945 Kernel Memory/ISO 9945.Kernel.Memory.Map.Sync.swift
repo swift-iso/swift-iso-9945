@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -20,7 +20,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Memory.Map {
+extension Memory.Map {
     /// Flags for msync operation.
     public enum Sync: Sendable, Equatable, Hashable {}
 }

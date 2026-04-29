@@ -26,7 +26,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Memory.Map.Anonymous {
+extension Memory.Map.Anonymous {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -36,26 +36,26 @@ extension Kernel.Memory.Map.Anonymous {
 
 // MARK: - Unit Tests
 
-extension Kernel.Memory.Map.Anonymous.Test.Unit {
+extension Memory.Map.Anonymous.Test.Unit {
     @Test
     func `Anonymous namespace exists`() {
-        _ = Kernel.Memory.Map.Anonymous.self
+        _ = Memory.Map.Anonymous.self
     }
 
     @Test
     func `Anonymous is an enum`() {
-        let _: Kernel.Memory.Map.Anonymous.Type = Kernel.Memory.Map.Anonymous.self
+        let _: Memory.Map.Anonymous.Type = Memory.Map.Anonymous.self
     }
 }
 
 // MARK: - Functional Tests
 
-    extension Kernel.Memory.Map.Anonymous.Test.Unit {
+    extension Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map creates a valid region`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             #expect(region.base != .null)
             #expect(region.length == pageSize)
@@ -64,11 +64,11 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map with custom protection`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(
+            let region = try Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .read
             )
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            defer { try? Memory.Map.unmap(region) }
 
             #expect(region.base != .null)
         }
@@ -76,8 +76,8 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map private by default`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             // Should succeed (private is default)
             #expect(region.base != .null)
@@ -86,11 +86,11 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map shared when specified`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(
+            let region = try Memory.Map.Anonymous.map(
                 length: pageSize,
                 shared: true
             )
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            defer { try? Memory.Map.unmap(region) }
 
             #expect(region.base != .null)
         }
@@ -99,12 +99,12 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
 // MARK: - Windows Tests
 
 #if os(Windows)
-    extension Kernel.Memory.Map.Anonymous.Test.Unit {
+    extension Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map creates a valid region on Windows`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             #expect(region.base != nil)
             #expect(region.length == pageSize)

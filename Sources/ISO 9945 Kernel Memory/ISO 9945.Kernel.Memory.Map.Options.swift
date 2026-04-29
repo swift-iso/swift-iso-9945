@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -22,7 +22,7 @@
 
 // MARK: - POSIX mmap options
 
-extension ISO_9945.Kernel.Memory.Map.Options {
+extension Memory.Map.Options {
     /// Shares modifications with other processes mapping the same file.
     public static let shared = Self(rawValue: MAP_SHARED)
 

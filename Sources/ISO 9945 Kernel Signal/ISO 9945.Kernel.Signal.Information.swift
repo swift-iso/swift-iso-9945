@@ -155,19 +155,19 @@ extension ISO_9945.Kernel.Signal.Information {
     /// signals or when the kernel left `si_addr` as null.
     ///
     /// To recover a typed address at a consumer site that imports
-    /// `Kernel_Memory_Primitives`, use:
+    /// `Memory_Primitives`, use:
     ///
     /// ```swift
-    /// import Kernel_Memory_Primitives
+    /// import Memory_Primitives
     /// if let bits = info.fault, let ptr = UnsafeMutableRawPointer(bitPattern: bits) {
-    ///     let addr = unsafe Kernel.Memory.Address(ptr)
+    ///     let addr = unsafe Memory.Address(ptr)
     /// }
     /// ```
     ///
-    /// The weaker `UInt?` typing here avoids pulling `Kernel_Memory_Primitives`
+    /// The weaker `UInt?` typing here avoids pulling `Memory_Primitives`
     /// into the Signal target's public-import closure, which triggers an
     /// `Optic.Prism` namespace cascade at enum-pattern-match sites. Upgrading
-    /// `.fault` to return `Kernel.Memory.Address?` is a candidate for a future
+    /// `.fault` to return `Memory.Address?` is a candidate for a future
     /// cycle once the ecosystem resolves the cascade.
     ///
     /// - POSIX: `si_addr`

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -20,7 +20,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Memory.Map.Sync {
+extension Memory.Map.Sync {
     /// Options for msync operation.
     public struct Options: Sendable, Equatable, Hashable {
         public let rawValue: Int32
@@ -32,15 +32,15 @@ extension Kernel.Memory.Map.Sync {
 
         /// Combines multiple flags.
         @inlinable
-        public static func | (lhs: Kernel.Memory.Map.Sync.Options, rhs: Kernel.Memory.Map.Sync.Options) -> Kernel.Memory.Map.Sync.Options {
-            Kernel.Memory.Map.Sync.Options(rawValue: lhs.rawValue | rhs.rawValue)
+        public static func | (lhs: Memory.Map.Sync.Options, rhs: Memory.Map.Sync.Options) -> Memory.Map.Sync.Options {
+            Memory.Map.Sync.Options(rawValue: lhs.rawValue | rhs.rawValue)
         }
     }
 }
 
 // MARK: - POSIX msync flags
 
-extension Kernel.Memory.Map.Sync.Options {
+extension Memory.Map.Sync.Options {
     /// Synchronous sync - wait for I/O to complete.
     public static let sync = Self(rawValue: MS_SYNC)
 

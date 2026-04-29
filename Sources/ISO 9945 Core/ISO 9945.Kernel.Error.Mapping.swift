@@ -20,6 +20,6 @@
 // - Kernel.Descriptor.Validity.Error: EBADF
 // - Kernel.IO.Blocking.Error: EAGAIN, EWOULDBLOCK
 // - Kernel.Storage.Error: ENOSPC, EDQUOT
-// - Kernel.Memory.Error: EFAULT, ENOMEM
+// - Memory.Error: EFAULT, ENOMEM
 // - Kernel.IO.Error: EIO, EPIPE, EINTR
 // - Kernel.Lock.Error: ENOLCK, EDEADLK

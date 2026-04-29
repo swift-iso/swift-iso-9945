@@ -12,7 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -24,7 +24,7 @@
 
 // MARK: - madvise Syscall
 
-extension ISO_9945.Kernel.Memory.Map {
+extension Memory.Map {
     /// Advises the kernel about expected memory access patterns.
     ///
     /// Uses `madvise(2)` to provide hints to the kernel about how
@@ -41,11 +41,11 @@ extension ISO_9945.Kernel.Memory.Map {
     @unsafe
     public static func advise(
         addr: UnsafeMutableRawPointer,
-        length: Kernel.File.Size,
-        advice: Kernel.Memory.Map.Advice
+        length: Memory.Address.Count,
+        advice: Memory.Map.Advice
     ) {
         // madvise returns -1 on error, but we ignore errors since advice is optional
-        _ = unsafe madvise(addr, Int(length.rawValue), advice.rawValue)
+        _ = unsafe madvise(addr, Int(bitPattern: length.rawValue.rawValue), advice.rawValue)
     }
 
     /// Advises the kernel about expected memory access patterns.
@@ -54,10 +54,10 @@ extension ISO_9945.Kernel.Memory.Map {
     @unsafe
     public static func advise(
         addr: UnsafeRawPointer,
-        length: Kernel.File.Size,
-        advice: Kernel.Memory.Map.Advice
+        length: Memory.Address.Count,
+        advice: Memory.Map.Advice
     ) {
-        _ = unsafe madvise(UnsafeMutableRawPointer(mutating: addr), Int(length.rawValue), advice.rawValue)
+        _ = unsafe madvise(UnsafeMutableRawPointer(mutating: addr), Int(bitPattern: length.rawValue.rawValue), advice.rawValue)
     }
 }
 

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -20,7 +20,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Memory.Lock.All {
+extension Memory.Lock.All {
     /// Options for mlockall/munlockall.
     ///
     /// ## Platform Constants
@@ -47,7 +47,7 @@ extension Kernel.Memory.Lock.All {
 
 // MARK: - POSIX Standard mlockall Options
 
-extension Kernel.Memory.Lock.All.Options {
+extension Memory.Lock.All.Options {
     /// Lock all pages currently mapped into the address space.
     public static let current = Self(rawValue: MCL_CURRENT)
 

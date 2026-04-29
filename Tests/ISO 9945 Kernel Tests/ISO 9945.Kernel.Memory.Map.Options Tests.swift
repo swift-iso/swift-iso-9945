@@ -26,7 +26,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Memory.Map.Options {
+extension Memory.Map.Options {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -37,11 +37,11 @@ extension Kernel.Memory.Map.Options {
 // MARK: - Options Tests
 
 
-    extension Kernel.Memory.Map.Options.Test.Unit {
+    extension Memory.Map.Options.Test.Unit {
         @Test
         func `shared and private are distinct`() {
-            let shared = Kernel.Memory.Map.Options.shared
-            let priv = Kernel.Memory.Map.Options.private
+            let shared = Memory.Map.Options.shared
+            let priv = Memory.Map.Options.private
 
             #expect(shared != priv)
             #expect(shared.rawValue != priv.rawValue)
@@ -49,20 +49,20 @@ extension Kernel.Memory.Map.Options {
 
         @Test
         func `anonymous flag exists`() {
-            let anon = Kernel.Memory.Map.Options.anonymous
+            let anon = Memory.Map.Options.anonymous
             #expect(anon.rawValue != 0)
         }
 
         @Test
         func `fixed flag exists`() {
-            let fixed = Kernel.Memory.Map.Options.fixed
+            let fixed = Memory.Map.Options.fixed
             #expect(fixed.rawValue != 0)
         }
 
         @Test
         func `bitwise OR combines flags`() {
-            let priv = Kernel.Memory.Map.Options.private
-            let anon = Kernel.Memory.Map.Options.anonymous
+            let priv = Memory.Map.Options.private
+            let anon = Memory.Map.Options.anonymous
             let combined = priv | anon
 
             #expect(combined.rawValue == (priv.rawValue | anon.rawValue))
@@ -70,9 +70,9 @@ extension Kernel.Memory.Map.Options {
 
         @Test
         func `Options is Equatable`() {
-            let a = Kernel.Memory.Map.Options.shared
-            let b = Kernel.Memory.Map.Options.shared
-            let c = Kernel.Memory.Map.Options.private
+            let a = Memory.Map.Options.shared
+            let b = Memory.Map.Options.shared
+            let c = Memory.Map.Options.private
 
             #expect(a == b)
             #expect(a != c)
@@ -80,7 +80,7 @@ extension Kernel.Memory.Map.Options {
 
         @Test
         func `Options is Hashable`() {
-            var set = Set<Kernel.Memory.Map.Options>()
+            var set = Set<Memory.Map.Options>()
             set.insert(.shared)
             set.insert(.private)
             set.insert(.shared)  // duplicate
@@ -92,10 +92,10 @@ extension Kernel.Memory.Map.Options {
 
         @Test
         func `all flags are distinct`() {
-            let shared = Kernel.Memory.Map.Options.shared
-            let priv = Kernel.Memory.Map.Options.private
-            let anon = Kernel.Memory.Map.Options.anonymous
-            let fixed = Kernel.Memory.Map.Options.fixed
+            let shared = Memory.Map.Options.shared
+            let priv = Memory.Map.Options.private
+            let anon = Memory.Map.Options.anonymous
+            let fixed = Memory.Map.Options.fixed
 
             let flags = [shared, priv, anon, fixed]
             let rawValues = flags.map(\.rawValue)

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -22,7 +22,7 @@
 
 // MARK: - POSIX mmap protection
 
-extension ISO_9945.Kernel.Memory.Map.Protection {
+extension Memory.Map.Protection {
     /// Permits reading from mapped pages.
     public static let read = Self(rawValue: PROT_READ)
 

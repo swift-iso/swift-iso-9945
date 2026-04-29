@@ -12,7 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -24,7 +24,7 @@
 
 // MARK: - Individual Range Locking (mlock/munlock)
 
-extension ISO_9945.Kernel.Memory.Lock {
+extension Memory.Lock {
     /// Locks a memory region into physical RAM.
     ///
     /// Prevents the pages from being paged to swap. Uses `mlock(2)`.
@@ -44,9 +44,9 @@ extension ISO_9945.Kernel.Memory.Lock {
     @unsafe
     public static func lock(
         address: UnsafeRawPointer,
-        length: Kernel.File.Size
+        length: Memory.Address.Count
     ) throws(Error) {
-        guard unsafe (mlock(address, Int(length.rawValue)) == 0) else {
+        guard unsafe (mlock(address, Int(bitPattern: length.rawValue.rawValue)) == 0) else {
             throw .lock(.captureErrno())
         }
     }
@@ -62,9 +62,9 @@ extension ISO_9945.Kernel.Memory.Lock {
     @unsafe
     public static func unlock(
         address: UnsafeRawPointer,
-        length: Kernel.File.Size
+        length: Memory.Address.Count
     ) throws(Error) {
-        guard unsafe (munlock(address, Int(length.rawValue)) == 0) else {
+        guard unsafe (munlock(address, Int(bitPattern: length.rawValue.rawValue)) == 0) else {
             throw .unlock(.captureErrno())
         }
     }

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Memory_Primitives
+@_spi(Syscall) import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -22,15 +22,15 @@
 
 // MARK: - POSIX Memory Allocation
 
-extension ISO_9945.Kernel.Memory.Allocation {
+extension Memory.Allocation {
     /// The system's allocation granularity.
     ///
     /// On POSIX systems, this equals the page size.
     ///
     /// Use this for memory mapping offset alignment.
-    public static var system: Kernel.Memory.Allocation.Granularity {
+    public static var system: Memory.Allocation.Granularity {
         let pageSize = Int(sysconf(Int32(_SC_PAGESIZE)))
         // Safe: page size is always a power of 2
-        return Kernel.Memory.Allocation.Granularity(__unchecked: (), try! Memory.Alignment(pageSize))
+        return Memory.Allocation.Granularity(__unchecked: (), try! Memory.Alignment(pageSize))
     }
 }

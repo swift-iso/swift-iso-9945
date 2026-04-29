@@ -26,7 +26,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Memory.Map {
+extension Memory.Map {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -37,12 +37,12 @@ extension Kernel.Memory.Map {
 // MARK: - Map Tests
 
 
-    extension Kernel.Memory.Map.Test.Unit {
+    extension Memory.Map.Test.Unit {
         @Test
         func `anonymous map succeeds`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             #expect(region.base != .null)
             #expect(region.length == pageSize)
@@ -51,10 +51,10 @@ extension Kernel.Memory.Map {
         @Test
         func `map and unmap cycle works`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
 
             // Unmap should succeed
-            try Kernel.Memory.Map.unmap(region)
+            try Memory.Map.unmap(region)
 
             // Note: Accessing the memory after unmap is undefined behavior,
             // so we can't easily verify the unmap worked other than no error.
@@ -63,11 +63,11 @@ extension Kernel.Memory.Map {
         @Test
         func `mapped memory is readable and writable`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(
+            let region = try Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .readWrite
             )
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            defer { try? Memory.Map.unmap(region) }
 
             // Write to the mapped memory via mutableSpan
             var mutableSpan = region.mutableSpan
@@ -82,28 +82,28 @@ extension Kernel.Memory.Map {
         @Test
         func `sync succeeds on mapped region`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             // Sync should succeed (even for anonymous, it's a no-op but shouldn't error)
-            try Kernel.Memory.Map.sync(addr: region.base, length: region.length)
+            try Memory.Map.sync(addr: region.base, length: region.length)
         }
 
         @Test
         func `protect changes memory protection`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(
+            let region = try Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .readWrite
             )
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            defer { try? Memory.Map.unmap(region) }
 
             // Write some data first
             var mutableSpan = region.mutableSpan
             mutableSpan[0] = 99
 
             // Change to read-only (should succeed)
-            try Kernel.Memory.Map.protect(
+            try Memory.Map.protect(
                 addr: region.base,
                 length: region.length,
                 protection: .read
@@ -118,11 +118,11 @@ extension Kernel.Memory.Map {
         @Test
         func `advise does not throw`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             // advise is advisory-only and shouldn't throw
-            Kernel.Memory.Map.advise(
+            Memory.Map.advise(
                 addr: region.base,
                 length: region.length,
                 advice: .normal
@@ -132,8 +132,8 @@ extension Kernel.Memory.Map {
         @Test
         func `multi-page mapping works`() throws {
             let multiPageSize = Kernel.File.Size(pages: 4, pageSize: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: multiPageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: multiPageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             #expect(region.length == multiPageSize)
 
@@ -150,8 +150,8 @@ extension Kernel.Memory.Map {
         @Test
         func `Region struct stores base and length`() throws {
             let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Kernel.Memory.Map.unmap(region) }
+            let region = try Memory.Map.Anonymous.map(length: pageSize)
+            defer { try? Memory.Map.unmap(region) }
 
             // Verify region fields
             #expect(region.base != .null)
@@ -161,18 +161,18 @@ extension Kernel.Memory.Map {
 
     // MARK: - Error Tests
 
-    extension Kernel.Memory.Map.Test.EdgeCase {
+    extension Memory.Map.Test.EdgeCase {
         @Test
         func `map with zero length throws`() {
-            #expect(throws: Kernel.Memory.Map.Error.self) {
-                _ = try Kernel.Memory.Map.Anonymous.map(length: .zero)
+            #expect(throws: Memory.Map.Error.self) {
+                _ = try Memory.Map.Anonymous.map(length: .zero)
             }
         }
 
         @Test
         func `map with zero length throws invalid length error`() {
             do {
-                _ = try Kernel.Memory.Map.Anonymous.map(length: .zero)
+                _ = try Memory.Map.Anonymous.map(length: .zero)
                 Issue.record("Expected error to be thrown")
             } catch {
                 if case .invalid(.length) = error {

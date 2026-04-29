@@ -20,7 +20,6 @@ extension Kernel.IO.Write.Error {
         case .blocking(let e): return e.code
         case .io(let e): return e.code
         case .space(let e): return e.code
-        case .memory(let e): return e.code
         case .platform(let e): return e.code
         }
     }
@@ -46,10 +45,6 @@ extension Kernel.IO.Write.Error {
         }
         if let e = Kernel.Storage.Error(code: code) {
             self = .space(e)
-            return
-        }
-        if let e = Kernel.Memory.Error(code: code) {
-            self = .memory(e)
             return
         }
         self = .platform(Error_Primitives.Error(code: code))
