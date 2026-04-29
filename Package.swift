@@ -160,7 +160,6 @@ let package = Package(
                 "ISO 9945 Core",
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel IO Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Outcome Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),

@@ -6,5 +6,4 @@
 @_exported public import String_Primitives
 @_exported public import String_Primitives
 @_exported public import Algebra_Primitives
-@_exported public import Kernel_Outcome_Primitives
 @_exported public import Tagged_Primitives

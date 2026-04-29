@@ -12,7 +12,6 @@
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
 @_spi(Syscall) import Kernel_IO_Primitives
-import Kernel_Outcome_Primitives
 import Algebra_Primitives
 
 // MARK: - POSIX write operations on Kernel.File.Handle
@@ -26,7 +25,7 @@ extension Kernel.File.Handle {
     ///
     /// - Parameter buffer: The buffer to write from.
     /// - Returns: Number of bytes written.
-    /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
+    /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     ///
     /// ## See Also
@@ -35,7 +34,7 @@ extension Kernel.File.Handle {
     ///   identically to this method.
     public borrowing func write(
         from buffer: UnsafeRawBufferPointer
-    ) throws(Either<Error, Kernel.Interrupt>) -> Int {
+    ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try unsafe ISO_9945.Kernel.IO.Write.write(descriptor, from: buffer)
         } catch {
@@ -56,12 +55,12 @@ extension Kernel.File.Handle {
     ///   - buffer: The buffer to write from.
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written.
-    /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
+    /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pwrite(
         from buffer: UnsafeRawBufferPointer,
         at offset: Kernel.File.Offset
-    ) throws(Either<Error, Kernel.Interrupt>) -> Int {
+    ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try unsafe ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: buffer, at: offset)
         } catch {
@@ -80,7 +79,7 @@ extension Kernel.File.Handle {
     ///
     /// - Parameter span: The span containing bytes to write.
     /// - Returns: Number of bytes written.
-    /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
+    /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     ///
     /// ## See Also
@@ -89,7 +88,7 @@ extension Kernel.File.Handle {
     ///   identically to this method.
     public borrowing func write(
         from span: Span<UInt8>
-    ) throws(Either<Error, Kernel.Interrupt>) -> Int {
+    ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Write.write(descriptor, from: span)
         } catch {
@@ -106,12 +105,12 @@ extension Kernel.File.Handle {
     ///   - span: The span containing bytes to write.
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written.
-    /// - Throws: `Either<Error, Kernel.Interrupt>` — `.left` for domain errors,
+    /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pwrite(
         from span: Span<UInt8>,
         at offset: Kernel.File.Offset
-    ) throws(Either<Error, Kernel.Interrupt>) -> Int {
+    ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: span, at: offset)
         } catch {
