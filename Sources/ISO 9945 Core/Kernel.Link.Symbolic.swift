@@ -1,0 +1,86 @@
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-kernel open source project
+//
+// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
+
+
+extension Kernel.Link {
+    /// Symbolic link operations.
+    ///
+    /// Creates and reads symbolic links (soft links). A symbolic link is a
+    /// special file that contains a path to another file or directory.
+    ///
+    /// Wraps POSIX `symlink()` / Windows `CreateSymbolicLinkW()`.
+    ///
+    /// ## Platform Implementation
+    ///
+    /// Syscall implementations are in platform-specific packages:
+    /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.Link.Symbolic`)
+    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Link.Symbolic`)
+    public enum Symbolic: Sendable {}
+}
+
+// MARK: - Error
+
+extension Kernel.Link.Symbolic {
+    /// Errors that can occur during symbolic link operations.
+    public enum Error: Swift.Error, Sendable, Equatable {
+        /// A component of the path does not exist.
+        case notFound
+
+        /// Permission denied.
+        case permission
+
+        /// The path already exists.
+        case exists
+
+        /// A component of the path is not a directory.
+        case notDirectory
+
+        /// The filesystem is read-only.
+        case readOnly
+
+        /// Not enough space.
+        case noSpace
+
+        /// Too many symbolic links encountered.
+        case loop
+
+        /// Path name is too long.
+        case nameTooLong
+
+        /// The path is not a symbolic link (for readlink).
+        case notSymbolicLink
+
+        /// The buffer is too small (for readlink).
+        case bufferTooSmall
+
+        /// A platform-specific error.
+        case platform(Error_Primitives.Error)
+    }
+}
+
+extension Kernel.Link.Symbolic.Error: CustomStringConvertible {
+    public var description: Swift.String {
+        switch self {
+        case .notFound: return "path not found"
+        case .permission: return "permission denied"
+        case .exists: return "path already exists"
+        case .notDirectory: return "path component is not a directory"
+        case .readOnly: return "read-only filesystem"
+        case .noSpace: return "no space left on device"
+        case .loop: return "too many symbolic links"
+        case .nameTooLong: return "path name too long"
+        case .notSymbolicLink: return "not a symbolic link"
+        case .bufferTooSmall: return "buffer too small"
+        case .platform(let e): return "\(e)"
+        }
+    }
+}
+
