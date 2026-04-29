@@ -115,6 +115,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-clock-primitives"),
         .package(path: "../../swift-primitives/swift-terminal-primitives"),
         .package(path: "../../swift-primitives/swift-error-primitives"),
+        .package(path: "../../swift-primitives/swift-random-primitives"),
         .package(path: "../swift-iso-9899")
     ],
     targets: [
@@ -316,7 +317,7 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Kernel System Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Random Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Random Primitives", package: "swift-random-primitives"),
             ]
         ),
 
