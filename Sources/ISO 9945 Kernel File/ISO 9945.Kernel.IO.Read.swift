@@ -43,19 +43,19 @@ extension ISO_9945.Kernel.IO.Read {
             return 0
         }
         #if canImport(Darwin)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Darwin.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Musl)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Musl.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Glibc)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Glibc.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
@@ -85,19 +85,19 @@ extension ISO_9945.Kernel.IO.Read {
             return 0
         }
         #if canImport(Darwin)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Darwin.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Musl)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Musl.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Glibc)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Glibc.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
                 .nonNegative,
                 orThrow: Error.current()

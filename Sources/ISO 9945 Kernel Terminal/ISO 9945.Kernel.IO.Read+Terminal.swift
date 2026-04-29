@@ -20,7 +20,6 @@
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
-import Kernel_Syscall_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -46,19 +45,19 @@ extension ISO_9945.Kernel.IO.Read {
             return 0
         }
         #if canImport(Darwin)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Darwin.read(stream.rawValue, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Musl)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Musl.read(stream.rawValue, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Glibc)
-            return try Kernel.Syscall.require(
+            return try Syscall.require(
                 unsafe Glibc.read(stream.rawValue, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()

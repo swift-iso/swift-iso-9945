@@ -46,7 +46,7 @@ extension ISO_9945.Kernel.File.Delete {
             let result = Glibc.unlink(cPath)
         #endif
 
-        try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
+        try Syscall.require(result, .equals(0), orThrow: Error.current())
     }
 }
 
@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.File.Delete {
             let result = unsafe Glibc.unlinkat(fd, cPath, flags)
         #endif
 
-        try Kernel.Syscall.require(result, .equals(0), orThrow: Error.current())
+        try Syscall.require(result, .equals(0), orThrow: Error.current())
     }
 }
 

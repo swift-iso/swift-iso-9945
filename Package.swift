@@ -163,7 +163,6 @@ let package = Package(
                 .product(name: "Kernel Outcome Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Permission Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
@@ -238,7 +237,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
             ]
         ),
 
@@ -250,7 +248,6 @@ let package = Package(
                 "ISO 9945 Core",
                 .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
             ]
         ),
@@ -275,7 +272,6 @@ let package = Package(
                 .product(name: "Kernel Terminal Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel IO Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Syscall Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
             ]
         ),
