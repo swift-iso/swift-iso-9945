@@ -26,10 +26,6 @@ extension Kernel.File.Open.Error {
             self = .handle(e)
             return
         }
-        if let e = Kernel.Storage.Error(code: code) {
-            self = .space(e)
-            return
-        }
         self = .platform(Error_Primitives.Error(code: code))
     }
 }
