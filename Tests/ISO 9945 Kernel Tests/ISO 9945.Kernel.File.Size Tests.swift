@@ -60,9 +60,9 @@ struct FileSizeTests {
 
     @Test
     func `Size from pages`() {
-        let pageSizeBytes = UInt(Int(Kernel.System.pageSize))
+        let pageSizeBytes = UInt(Int(System.pageSize))
         let size = Kernel.File.Size(pages: 2, pageSize: pageSizeBytes)
-        let expectedBytes = 2 * Int(Kernel.System.pageSize)
+        let expectedBytes = 2 * Int(System.pageSize)
         #expect(size.rawValue == Int64(expectedBytes))
     }
 
@@ -90,7 +90,7 @@ struct FileSizeTests {
 
     @Test
     func `page constant`() {
-        let pageSizeBytes = UInt(Int(Kernel.System.pageSize))
+        let pageSizeBytes = UInt(Int(System.pageSize))
         let pageSize = Kernel.File.Size.page(size: pageSizeBytes)
         #expect(pageSize.rawValue == Int64(pageSizeBytes))
     }

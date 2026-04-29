@@ -21,14 +21,14 @@
 
 // MARK: - POSIX uname()
 
-extension ISO_9945.Kernel.System {
+extension System {
     /// Operating system identification via POSIX `uname()`.
     ///
     /// Wraps the POSIX `uname()` syscall, extracting `sysname`, `release`,
     /// and `machine` fields from `struct utsname`.
     ///
     /// - Returns: System identification with name, release version, and hardware type.
-    public static var name: Kernel.System.Name {
+    public static var name: System.Name {
         var buf = utsname()
         unsafe uname(&buf)
         let system = unsafe withUnsafePointer(to: &buf.sysname) {
@@ -46,6 +46,6 @@ extension ISO_9945.Kernel.System {
                 unsafe Swift.String(cString: $0)
             }
         }
-        return Kernel.System.Name(system: system, release: release, machine: machine)
+        return System.Name(system: system, release: release, machine: machine)
     }
 }

@@ -113,7 +113,7 @@ private enum LockTestHelper {
                 // We got the lock - release it and try again
                 try? ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
                 // Small delay before retry
-                ISO_9945.Kernel.System.sleep(.milliseconds(5))
+                System.sleep(.milliseconds(5))
             } catch {
                 // Lock contention detected - helper has the lock
                 return true
@@ -385,7 +385,7 @@ extension POSIXLockIntegration {
         let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 100)
 
         // Give helper time to start and block.
-        ISO_9945.Kernel.System.sleep(.milliseconds(50))
+        System.sleep(.milliseconds(50))
 
         // Release our lock — helper should now acquire.
         try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)

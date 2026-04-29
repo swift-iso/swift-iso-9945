@@ -53,7 +53,7 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
     extension Kernel.Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map creates a valid region`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -63,7 +63,7 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
 
         @Test
         func `map with custom protection`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .read
@@ -75,7 +75,7 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
 
         @Test
         func `map private by default`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -85,7 +85,7 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
 
         @Test
         func `map shared when specified`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
                 shared: true
@@ -102,7 +102,7 @@ extension Kernel.Memory.Map.Anonymous.Test.Unit {
     extension Kernel.Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map creates a valid region on Windows`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 

@@ -74,7 +74,7 @@ struct LockHelper {
                 print("LOCKED")
 
                 // Hold lock for specified duration
-                ISO_9945.Kernel.System.sleep(.milliseconds(milliseconds))
+                System.sleep(.milliseconds(milliseconds))
             }
 
             print("RELEASED")

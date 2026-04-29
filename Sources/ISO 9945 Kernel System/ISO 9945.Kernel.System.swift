@@ -21,16 +21,16 @@
 
 // MARK: - POSIX System Information
 
-extension ISO_9945.Kernel.System {
+extension System {
     /// Platform path length limit.
     ///
     /// Falls back to 4096 if the platform constant is undefined.
     /// Note: This is a conservative limit, not a universal truth.
-    public static var pathMax: Kernel.System.Path.Length {
+    public static var pathMax: System.Path.Length {
         #if canImport(Darwin)
-            return Kernel.System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // 1024
+            return System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // 1024
         #else
-            return Kernel.System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // Usually 4096
+            return System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // Usually 4096
         #endif
     }
 

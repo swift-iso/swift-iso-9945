@@ -40,7 +40,7 @@ extension Kernel.Memory.Map {
     extension Kernel.Memory.Map.Test.Unit {
         @Test
         func `anonymous map succeeds`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -50,7 +50,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `map and unmap cycle works`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
 
             // Unmap should succeed
@@ -62,7 +62,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `mapped memory is readable and writable`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .readWrite
@@ -81,7 +81,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `sync succeeds on mapped region`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -91,7 +91,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `protect changes memory protection`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(
                 length: pageSize,
                 protection: .readWrite
@@ -117,7 +117,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `advise does not throw`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -131,7 +131,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `multi-page mapping works`() throws {
-            let multiPageSize = Kernel.File.Size(pages: 4, pageSize: UInt(Int(Kernel.System.pageSize)))
+            let multiPageSize = Kernel.File.Size(pages: 4, pageSize: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: multiPageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
@@ -149,7 +149,7 @@ extension Kernel.Memory.Map {
 
         @Test
         func `Region struct stores base and length`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(Kernel.System.pageSize)))
+            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Kernel.Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Kernel.Memory.Map.unmap(region) }
 
