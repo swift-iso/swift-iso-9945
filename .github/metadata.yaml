@@ -1,0 +1,11 @@
+# .github/metadata.yaml
+# Triaged by AI-assisted bulk pass (2026-04-29).
+description: "Swift implementation of ISO/IEC 9945: Portable Operating System Interface (POSIX)."
+topics:
+  - standards
+  - iso
+  - iso-iec
+  - iso-9945
+  - posix
+  - operating-systems
+homepage: "https://swift-institute.org"
