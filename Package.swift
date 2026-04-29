@@ -18,6 +18,12 @@ let package = Package(
             targets: ["ISO 9945 Kernel"]
         ),
 
+        // MARK: - Core (consumed directly post Cycle 18 absorption)
+        .library(
+            name: "ISO 9945 Core",
+            targets: ["ISO 9945 Core"]
+        ),
+
         // MARK: - Kernel Variants
         .library(
             name: "ISO 9945 Kernel File",

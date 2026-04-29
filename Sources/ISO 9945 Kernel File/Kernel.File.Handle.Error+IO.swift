@@ -22,7 +22,7 @@
 // through this conversion.
 
 extension Kernel.File.Handle.Error {
-    init(from error: Kernel.IO.Read.Error, operation: Kernel.File.Handle.Operation) {
+    public init(from error: Kernel.IO.Read.Error, operation: Kernel.File.Handle.Operation) {
         switch error {
         case .handle(let handleError):
             switch handleError {
@@ -36,7 +36,7 @@ extension Kernel.File.Handle.Error {
         }
     }
 
-    init(from error: Kernel.IO.Write.Error, operation: Kernel.File.Handle.Operation) {
+    public init(from error: Kernel.IO.Write.Error, operation: Kernel.File.Handle.Operation) {
         switch error {
         case .handle(let handleError):
             switch handleError {
