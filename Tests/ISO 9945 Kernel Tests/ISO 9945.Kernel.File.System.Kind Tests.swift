@@ -11,7 +11,6 @@
 
 // Tests use Apple native Testing framework
 import Testing
-import Kernel_Primitives_Test_Support
 
 
 extension Kernel.File.System.Kind {
@@ -169,3 +168,5 @@ extension Kernel.File.System.Kind.Test.EdgeCase {
         #expect(kind1 != kind2)
     }
 }
+
+#endif

@@ -34,7 +34,7 @@
         }
 
         /// Opens a new file at the given path for read/write.
-        public static func open(at path: Swift.String) throws -> Kernel.Descriptor {
+        public static func open(at path: Swift.String) throws -> ISO_9945.Kernel.Descriptor {
             try Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Open.open(
                     path: p,
@@ -46,7 +46,7 @@
         }
 
         /// Writes string content to a descriptor.
-        public static func write(_ content: Swift.String, to fd: borrowing Kernel.Descriptor) {
+        public static func write(_ content: Swift.String, to fd: borrowing ISO_9945.Kernel.Descriptor) {
             var bytes = Array(content.utf8)
             _ = try? bytes.withUnsafeMutableBytes { ptr in
                 try ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))

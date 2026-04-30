@@ -12,7 +12,6 @@
 #if os(Linux)
     // Tests use Apple native Testing framework
 import Testing
-import Kernel_Primitives_Test_Support
 
 
     extension Kernel.Copy.Range {
@@ -40,3 +39,5 @@ import Kernel_Primitives_Test_Support
         // NOTE: Kernel.Copy.Range.copy() is defined at L2 (swift-iso-9945).
         // Signature verification belongs in ISO 9945 Kernel tests.
     }
+
+#endif

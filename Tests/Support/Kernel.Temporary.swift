@@ -17,12 +17,12 @@ public import String_Primitives
 public import ISO_9945_Kernel
 public import ISO_9945_Kernel
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Namespace for temporary path operations in tests.
     public enum Temporary {}
 }
 
-extension Kernel.Temporary {
+extension ISO_9945.Kernel.Temporary {
     /// Returns the system temp directory path.
     ///
     /// Uses platform-appropriate environment variables:

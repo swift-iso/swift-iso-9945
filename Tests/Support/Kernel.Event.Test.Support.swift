@@ -14,7 +14,7 @@ public import Error_Primitives
 public import ISO_9945_Kernel
 public import ISO_9945_Kernel
 
-extension Kernel.Event {
+extension ISO_9945.Kernel.Event {
     /// Test utilities for eventing operations (kqueue, epoll, io_uring).
     public enum Test {
         /// Error thrown when pipe creation fails.
@@ -35,7 +35,7 @@ extension Kernel.Event {
         }
 
         /// Writes one byte to a descriptor.
-        public static func writeByte(_ fd: borrowing Kernel.Descriptor, value: UInt8 = 1) {
+        public static func writeByte(_ fd: borrowing ISO_9945.Kernel.Descriptor, value: UInt8 = 1) {
             var byte = value
             _ = withUnsafeBytes(of: &byte) { buffer in
                 try? ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
@@ -43,7 +43,7 @@ extension Kernel.Event {
         }
 
         /// Drains one byte from a descriptor.
-        public static func readDrain(_ fd: borrowing Kernel.Descriptor) {
+        public static func readDrain(_ fd: borrowing ISO_9945.Kernel.Descriptor) {
             var byte: UInt8 = 0
             _ = withUnsafeMutableBytes(of: &byte) { buffer in
                 try? ISO_9945.Kernel.IO.Read.read(fd, into: buffer)
