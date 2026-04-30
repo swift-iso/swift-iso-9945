@@ -12,7 +12,7 @@
 #if !os(Windows)
 
 @_spi(Syscall) import Kernel_Terminal_Primitives
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+@_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
     internal import Darwin

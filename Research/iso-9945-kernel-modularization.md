@@ -364,7 +364,6 @@ Max depth: **2** (Core → Signal → Process). All other targets at depth 1.
 Core re-exports via `exports.swift`:
 ```swift
 @_exported public import Kernel_Primitives_Core
-@_exported public import Kernel_Descriptor_Primitives
 @_exported public import Kernel_Error_Primitives
 ```
 

@@ -10,7 +10,6 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Primitives_Core
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 extension ISO_9945 {
     /// ISO 9945 (POSIX) kernel mechanisms.

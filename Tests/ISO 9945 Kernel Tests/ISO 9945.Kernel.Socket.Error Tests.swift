@@ -12,7 +12,6 @@
 // Tests use Apple native Testing framework
 import Testing
 import Kernel_Primitives_Test_Support
-import Kernel_Descriptor_Primitives
 
 
 extension Kernel.Socket.Error {

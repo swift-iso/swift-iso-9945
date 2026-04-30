@@ -9,8 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) import ISO_9945_Core
+
 @_spi(Syscall) import Memory_Primitives
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 #if canImport(Darwin)
     internal import Darwin

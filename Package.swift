@@ -135,7 +135,6 @@ let package = Package(
             name: "ISO 9945 Core",
             dependencies: [
                 .product(name: "Kernel Primitives Core", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
@@ -405,7 +404,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Kernel",
                 .product(name: "Kernel Primitives Core", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Descriptor Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel Event Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),

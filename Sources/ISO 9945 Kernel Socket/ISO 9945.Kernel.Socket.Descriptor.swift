@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) public import Kernel_Descriptor_Primitives
 
 extension ISO_9945.Kernel.Socket {
     /// POSIX socket descriptor — typealiased to `Kernel.Descriptor`.

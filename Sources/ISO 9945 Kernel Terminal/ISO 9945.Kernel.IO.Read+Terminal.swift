@@ -18,7 +18,6 @@
 
 #if !os(Windows)
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
 
 #if canImport(Darwin)

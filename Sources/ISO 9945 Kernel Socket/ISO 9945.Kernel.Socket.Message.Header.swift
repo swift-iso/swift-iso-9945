@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 public import ISO_9945_Kernel_File
 
 #if canImport(Darwin)

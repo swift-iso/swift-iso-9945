@@ -9,7 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+@_spi(Syscall) import ISO_9945_Core
+
 @_spi(Syscall) import Kernel_File_Primitives
 
 #if canImport(Darwin)
@@ -141,10 +142,6 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
 
 // MARK: - Error
 
-extension ISO_9945.Kernel.Descriptor.Duplicate {
-    public typealias Error = Kernel.Descriptor.Duplicate.Error
-}
-
 extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
@@ -160,7 +157,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
     }
 }
 
-extension ISO_9945.Kernel.Descriptor.Duplicate.Error: @retroactive CustomStringConvertible {
+extension ISO_9945.Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .handle(let e):

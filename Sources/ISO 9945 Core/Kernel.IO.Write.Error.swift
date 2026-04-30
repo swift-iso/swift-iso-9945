@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Kernel_Descriptor_Primitives
 
 
 extension Kernel.IO.Write {

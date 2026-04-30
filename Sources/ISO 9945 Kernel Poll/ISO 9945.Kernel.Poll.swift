@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
 
 extension ISO_9945.Kernel {
     /// I/O multiplexing via `poll(2)`.
