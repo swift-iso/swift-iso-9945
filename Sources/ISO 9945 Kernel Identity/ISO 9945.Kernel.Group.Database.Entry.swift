@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Process_Primitives
 
 extension ISO_9945.Kernel.Group.Database {
     /// A group database entry (from /etc/group or equivalent).

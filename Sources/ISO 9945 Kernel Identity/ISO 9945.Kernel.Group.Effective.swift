@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Process_Primitives
 
 #if canImport(Darwin)
     internal import Darwin

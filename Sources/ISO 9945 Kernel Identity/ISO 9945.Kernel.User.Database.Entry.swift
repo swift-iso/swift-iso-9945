@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Process_Primitives
 
 extension ISO_9945.Kernel.User.Database {
     /// A user database entry (from /etc/passwd or equivalent).

@@ -31,7 +31,6 @@
 public import Kernel_Primitives_Core
 public import Kernel_File_Primitives
 public import Path_Primitives
-public import Kernel_Process_Primitives
 public import Error_Primitives
 import ISO_9945_Kernel
 @_spi(Syscall) import ISO_9945_Kernel_Lock

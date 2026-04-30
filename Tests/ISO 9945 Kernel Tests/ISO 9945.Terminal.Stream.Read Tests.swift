@@ -16,7 +16,6 @@ import ISO_9945_Kernel
 @_spi(Syscall) import Kernel_Event_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
 @_spi(Syscall) import Path_Primitives
-@_spi(Syscall) import Kernel_Process_Primitives
 @_spi(Syscall) import Error_Primitives
 import Terminal_Primitives
 
