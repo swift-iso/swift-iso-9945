@@ -10,7 +10,6 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
     internal import Darwin

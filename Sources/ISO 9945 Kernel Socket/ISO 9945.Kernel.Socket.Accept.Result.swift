@@ -1,19 +1,30 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Socket_Primitives
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
 extension ISO_9945.Kernel.Socket.Accept {
     /// Result of an accept operation.
     ///
     /// `@frozen` commits the struct's layout so consumers across module
     /// boundaries can partially consume individual stored properties
-    /// (`consume result.descriptor`) without the swap-with-sentinel
-    /// workaround. The layout is stable by construction — the three
-    /// stored properties mirror the POSIX `accept(2)` return shape and
-    /// are not expected to evolve.
+    /// without the swap-with-sentinel workaround. The layout is stable by
+    /// construction — the three stored properties mirror the POSIX
+    /// `accept(2)` return shape and are not expected to evolve.
+    ///
+    /// Per Cycle 21, the descriptor is the raw POSIX fd. L3-policy callers
+    /// at swift-posix wrap into POSIX.Kernel.Socket.Descriptor via the
+    /// `Kernel.Socket.Descriptor` typealias chain at swift-kernel L3.
     @frozen
-    public struct Result: ~Copyable, Sendable {
-        /// The new connected socket descriptor. The caller owns this descriptor.
-        public var descriptor: Kernel.Socket.Descriptor
+    public struct Result: Sendable {
+        /// The new connected socket file descriptor (raw POSIX fd).
+        public var descriptor: Int32
 
         /// The address of the connecting peer.
         public var address: Kernel.Socket.Address.Storage
@@ -23,7 +34,7 @@ extension ISO_9945.Kernel.Socket.Accept {
 
         @inlinable
         internal init(
-            descriptor: consuming Kernel.Socket.Descriptor,
+            descriptor: Int32,
             address: Kernel.Socket.Address.Storage,
             length: Kernel.Socket.Address.Length
         ) {

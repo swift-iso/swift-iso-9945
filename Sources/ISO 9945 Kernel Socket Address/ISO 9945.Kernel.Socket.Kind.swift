@@ -1,4 +1,3 @@
-public import Kernel_Socket_Primitives
 
 #if canImport(Darwin)
     internal import Darwin

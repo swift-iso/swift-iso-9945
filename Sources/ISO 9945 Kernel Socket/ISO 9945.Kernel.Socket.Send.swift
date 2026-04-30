@@ -1,5 +1,13 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Socket_Primitives
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
 #if canImport(Darwin)
     internal import Darwin
@@ -14,13 +22,18 @@ extension ISO_9945.Kernel.Socket {
     public enum Send {}
 }
 
-// MARK: - Send Operations
+// MARK: - Send Operations (raw fd SPI)
+//
+// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
+// Kernel.Socket.Descriptor convenience overloads were dropped per the
+// L1-domain-only architecture. Post-Path-X cleanup will retype L2 to
+// ISO_9945.Kernel.Socket.Descriptor.
 
 extension ISO_9945.Kernel.Socket.Send {
     /// Sends data from a span on a connected socket.
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor (must be connected).
+    ///   - fd: The socket raw fd (must be connected).
     ///   - span: The data to send.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
@@ -32,16 +45,16 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - `.platform(.connectionReset)` (ECONNRESET): Peer reset the connection.
     /// - `.platform(.brokenPipe)` (EPIPE): Peer closed the connection.
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func send(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         from span: Span<UInt8>,
         options: Kernel.Socket.Message.Options = []
     ) throws(Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeBytes { buffer throws(Kernel.Socket.Error) -> Int in
             guard let base = buffer.baseAddress else { return 0 }
             let result = unsafe Darwin_or_Glibc_send(
-                descriptor._rawValue,
+                fd,
                 base,
                 buffer.count,
                 options.rawValue
@@ -56,16 +69,16 @@ extension ISO_9945.Kernel.Socket.Send {
     /// Sends data from a span to a specific address (for connectionless sockets).
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor.
+    ///   - fd: The socket raw fd.
     ///   - span: The data to send.
     ///   - options: Message flags (default: none).
     ///   - address: The destination address.
     ///   - addressLength: The size of the destination address.
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `Kernel.Socket.Error` on failure.
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func to(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         from span: Span<UInt8>,
         options: Kernel.Socket.Message.Options = [],
         address: Kernel.Socket.Address.Storage,
@@ -76,7 +89,7 @@ extension ISO_9945.Kernel.Socket.Send {
             let result = address.withUnsafeBytes { ptr, _ in
                 let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
                 return unsafe sendto(
-                    descriptor._rawValue,
+                    fd,
                     base,
                     buffer.count,
                     options.rawValue,
@@ -94,19 +107,19 @@ extension ISO_9945.Kernel.Socket.Send {
     /// Sends a message with full control over headers and ancillary data.
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor.
+    ///   - fd: The socket raw fd.
     ///   - header: The message header describing buffers, address, and control data.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `Kernel.Socket.Error` on failure.
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func message(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         header: inout Kernel.Socket.Message.Header,
         options: Kernel.Socket.Message.Options = []
     ) throws(Kernel.Socket.Error) -> Int {
         let result = unsafe sendmsg(
-            descriptor._rawValue,
+            fd,
             &header.cValue,
             options.rawValue
         )

@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Socket_Primitives
 
 extension Kernel.Socket.Message.Header {
     /// Ancillary data (control message) component of a message header.

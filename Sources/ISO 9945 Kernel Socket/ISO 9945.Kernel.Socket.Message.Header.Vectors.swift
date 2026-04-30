@@ -1,4 +1,3 @@
-@_spi(Syscall) import Kernel_Socket_Primitives
 public import ISO_9945_Kernel_File
 
 extension Kernel.Socket.Message.Header {

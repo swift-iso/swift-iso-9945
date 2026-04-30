@@ -9,9 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Socket_Primitives
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -42,26 +39,15 @@ extension ISO_9945.Kernel.Socket.Pair {
     /// bidirectional communication. Data written to one socket can be read
     /// from the other, and vice versa.
     ///
-    /// ## Threading
-    /// The socketpair syscall is atomic and does not block. The returned
-    /// descriptors are created in blocking mode by default.
-    ///
-    /// ## Blocking Behavior
-    /// - **Read**: Blocks until data is available or the peer is closed (EOF)
-    /// - **Write**: Blocks if the socket buffer is full
-    ///
-    /// ## Descriptor Lifecycle
-    /// Both descriptors must be closed explicitly. They are independent—closing
-    /// one does not automatically close the other.
-    ///
-    /// ## Errors
-    /// - ``Error/platform(_:)``: socketpair syscall failed
-    ///
-    /// A pair of connected socket descriptors.
-    public typealias Descriptors = Pair<Kernel.Socket.Descriptor, Kernel.Socket.Descriptor>
+    /// Per Cycle 21 (L2-syscalls-level), returns `Pair<Int32, Int32>` of raw
+    /// fds. L3-policy callers at swift-posix wrap into
+    /// `POSIX.Kernel.Socket.Descriptor` via the typealias chain at
+    /// swift-kernel L3.
+    public typealias Descriptors = Pair<Int32, Int32>
 
-    /// - Returns: A pair of connected socket descriptors.
+    /// - Returns: A pair of connected socket descriptors (raw POSIX fds).
     /// - Throws: ``Error`` on failure.
+    @_spi(Syscall)
     public static func create() throws(Error) -> Descriptors {
         var fds: [Int32] = [0, 0]
         #if canImport(Darwin)
@@ -74,9 +60,6 @@ extension ISO_9945.Kernel.Socket.Pair {
         guard result == 0 else {
             throw currentError()
         }
-        return Descriptors(
-            Kernel.Socket.Descriptor(_rawValue: fds[0]),
-            Kernel.Socket.Descriptor(_rawValue: fds[1])
-        )
+        return Descriptors(fds[0], fds[1])
     }
 }

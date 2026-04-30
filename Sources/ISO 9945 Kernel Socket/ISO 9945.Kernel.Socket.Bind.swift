@@ -1,5 +1,13 @@
-@_spi(Syscall) import Kernel_Socket_Primitives
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
 #if canImport(Darwin)
     internal import Darwin
@@ -14,13 +22,19 @@ extension ISO_9945.Kernel.Socket {
     public enum Bind {}
 }
 
-// MARK: - Bind Operation
+// MARK: - Bind raw fd SPI
+//
+// Per Cycle 21, the L2 Kernel Socket API is canonical-raw: takes `fd: Int32`.
+// L3-policy typed-descriptor convenience lives at swift-posix per
+// [PLAT-ARCH-005] / [PLAT-ARCH-008e]. Typed convenience overloads on
+// Kernel.Socket.Descriptor / Kernel.Descriptor were dropped per L1-domain-only
+// architecture.
 
 extension ISO_9945.Kernel.Socket.Bind {
-    /// Binds a socket to a local address.
+    /// Binds a raw socket fd to a local address.
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor.
+    ///   - fd: The socket raw fd.
     ///   - address: The address to bind to, as a `Storage` container.
     ///   - length: The size of the actual address within storage.
     /// - Throws: `Kernel.Socket.Error` on failure.
@@ -30,69 +44,6 @@ extension ISO_9945.Kernel.Socket.Bind {
     /// - `.platform(.addressInUse)` (EADDRINUSE): Address already bound.
     /// - `.platform(.accessDenied)` (EACCES): Privileged port or restricted address.
     /// - `.platform(.invalidArgument)` (EINVAL): Socket already bound.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        address: Kernel.Socket.Address.Storage,
-        length: Kernel.Socket.Address.Length
-    ) throws(Kernel.Socket.Error) {
-        let rc = address.withUnsafeBytes { ptr, _ in
-            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_bind(descriptor._rawValue, sockaddrPtr, socklen_t(length.rawValue.rawValue))
-        }
-
-        guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
-        }
-    }
-
-    /// Binds a socket to an IPv4 address.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The socket descriptor.
-    ///   - address: The IPv4 address to bind to.
-    /// - Throws: `Kernel.Socket.Error` on failure.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        address: Kernel.Socket.Address.IPv4
-    ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
-    }
-
-    /// Binds a socket to an IPv6 address.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The socket descriptor.
-    ///   - address: The IPv6 address to bind to.
-    /// - Throws: `Kernel.Socket.Error` on failure.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        address: Kernel.Socket.Address.IPv6
-    ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
-    }
-
-    /// Binds a socket to a Unix domain address.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The socket descriptor.
-    ///   - address: The Unix domain address to bind to.
-    /// - Throws: `Kernel.Socket.Error` on failure.
-    public static func bind(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
-        address: Kernel.Socket.Address.Unix
-    ) throws(Kernel.Socket.Error) {
-        try bind(descriptor, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
-    }
-}
-
-// MARK: - Bind raw fd SPI
-//
-// Spec-literal raw form taking `fd: Int32`. The L3-policy typed-descriptor
-// convenience for `borrowing Kernel.Descriptor` lives at swift-posix per
-// [PLAT-ARCH-005] / [PLAT-ARCH-008e].
-
-extension ISO_9945.Kernel.Socket.Bind {
-    /// Binds a raw socket fd to a local address.
     @_spi(Syscall)
     public static func bind(
         fd: Int32,
@@ -108,23 +59,32 @@ extension ISO_9945.Kernel.Socket.Bind {
             throw Kernel.Socket.Error.current()
         }
     }
-}
 
-// MARK: - Typed Convenience (Phase 1.5)
-
-extension ISO_9945.Kernel.Socket.Bind {
-    /// Binds a socket to a local address using a typed descriptor.
-    ///
-    /// Phase 1.5 typed L2 form. Delegates to the raw `bind(fd:address:length:)`
-    /// SPI. For typed callers using socket-specific subtypes, the
-    /// `Kernel.Socket.Descriptor` overloads (Storage / IPv4 / IPv6 / Unix) above
-    /// remain available.
+    /// Binds a raw socket fd to an IPv4 address.
+    @_spi(Syscall)
     public static func bind(
-        _ descriptor: borrowing Kernel.Descriptor,
-        address: Kernel.Socket.Address.Storage,
-        length: Kernel.Socket.Address.Length
+        fd: Int32,
+        address: Kernel.Socket.Address.IPv4
     ) throws(Kernel.Socket.Error) {
-        try bind(fd: descriptor._rawValue, address: address, length: length)
+        try bind(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
+    }
+
+    /// Binds a raw socket fd to an IPv6 address.
+    @_spi(Syscall)
+    public static func bind(
+        fd: Int32,
+        address: Kernel.Socket.Address.IPv6
+    ) throws(Kernel.Socket.Error) {
+        try bind(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
+    }
+
+    /// Binds a raw socket fd to a Unix domain address.
+    @_spi(Syscall)
+    public static func bind(
+        fd: Int32,
+        address: Kernel.Socket.Address.Unix
+    ) throws(Kernel.Socket.Error) {
+        try bind(fd: fd, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
     }
 }
 

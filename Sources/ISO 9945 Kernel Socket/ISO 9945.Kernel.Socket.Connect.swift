@@ -1,5 +1,13 @@
-@_spi(Syscall) import Kernel_Descriptor_Primitives
-@_spi(Syscall) import Kernel_Socket_Primitives
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
 #if canImport(Darwin)
     internal import Darwin
@@ -14,7 +22,12 @@ extension ISO_9945.Kernel.Socket {
     public enum Connect {}
 }
 
-// MARK: - Connect Operation
+// MARK: - Connect Operation (raw fd SPI)
+//
+// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
+// Kernel.Socket.Descriptor convenience overloads were dropped; the L3
+// unifier typealias chain at swift-kernel exposes the typed cross-platform
+// name. Post-Path-X cleanup will retype L2 to ISO_9945.Kernel.Socket.Descriptor.
 
 extension ISO_9945.Kernel.Socket.Connect {
     /// Initiates a connection on a socket.
@@ -23,7 +36,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     /// For datagram sockets (SOCK_DGRAM), sets the default destination address.
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor.
+    ///   - fd: The socket raw fd.
     ///   - address: The peer address, as a `Storage` container.
     ///   - length: The size of the actual address within storage.
     /// - Throws: `Kernel.Socket.Error` on failure.
@@ -35,15 +48,15 @@ extension ISO_9945.Kernel.Socket.Connect {
     /// - `.platform(.networkUnreachable)` (ENETUNREACH): Network is unreachable.
     /// - `.platform(.inProgress)` (EINPROGRESS): Non-blocking connect initiated.
     /// - `.platform(.alreadyConnected)` (EISCONN): Socket is already connected.
-    @_disfavoredOverload
+    @_spi(Syscall)
     public static func connect(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         address: Kernel.Socket.Address.Storage,
         length: Kernel.Socket.Address.Length
     ) throws(Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_connect(descriptor._rawValue, sockaddrPtr, socklen_t(length.rawValue.rawValue))
+            return unsafe Darwin_or_Glibc_connect(fd, sockaddrPtr, socklen_t(length.rawValue.rawValue))
         }
 
         guard rc == 0 else {
@@ -51,31 +64,31 @@ extension ISO_9945.Kernel.Socket.Connect {
         }
     }
 
-    /// Connects a socket to an IPv4 address.
-    @_disfavoredOverload
+    /// Connects a raw socket fd to an IPv4 address.
+    @_spi(Syscall)
     public static func connect(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         address: Kernel.Socket.Address.IPv4
     ) throws(Kernel.Socket.Error) {
-        try connect(descriptor, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
+        try connect(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
     }
 
-    /// Connects a socket to an IPv6 address.
-    @_disfavoredOverload
+    /// Connects a raw socket fd to an IPv6 address.
+    @_spi(Syscall)
     public static func connect(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         address: Kernel.Socket.Address.IPv6
     ) throws(Kernel.Socket.Error) {
-        try connect(descriptor, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
+        try connect(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
     }
 
-    /// Connects a socket to a Unix domain address.
-    @_disfavoredOverload
+    /// Connects a raw socket fd to a Unix domain address.
+    @_spi(Syscall)
     public static func connect(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         address: Kernel.Socket.Address.Unix
     ) throws(Kernel.Socket.Error) {
-        try connect(descriptor, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
+        try connect(fd: fd, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
     }
 }
 

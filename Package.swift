@@ -140,7 +140,6 @@ let package = Package(
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Kernel Process Primitives", package: "swift-kernel-primitives"),
-                .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
@@ -202,7 +201,6 @@ let package = Package(
             name: "ISO 9945 Kernel Socket Address",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
             ]
         ),
 
@@ -215,7 +213,6 @@ let package = Package(
                 "ISO 9945 Kernel File",
                 "ISO 9945 Kernel Poll",
                 "ISO 9945 Kernel Socket Address",
-                .product(name: "Kernel Socket Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
             ]
         ),

@@ -9,9 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Descriptor_Primitives  // for Kernel.Descriptor.Validity.Error in error mapping
-@_spi(Syscall) import Kernel_Socket_Primitives
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -20,13 +17,10 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX shutdown() syscall
+// MARK: - POSIX shutdown() syscall (raw fd SPI)
 
 extension ISO_9945.Kernel.Socket.Shutdown {
     /// Shuts down part of a full-duplex connection (raw fd).
-    ///
-    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
-    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
     ///
     /// - Parameters:
     ///   - fd: The socket file descriptor.
@@ -51,29 +45,12 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     }
 }
 
-// MARK: - Typed Convenience (Phase 1.5)
-
-extension ISO_9945.Kernel.Socket.Shutdown {
-    /// Shuts down part of a full-duplex connection using a typed descriptor.
-    ///
-    /// Phase 1.5 typed L2 form. Delegates to the raw `shutdown(fd:how:)` SPI.
-    public static func shutdown(
-        _ descriptor: borrowing Kernel.Descriptor,
-        how: How
-    ) throws(Error) {
-        try shutdown(fd: descriptor._rawValue, how: how)
-    }
-}
-
 // MARK: - Error Conversion
 
 extension ISO_9945.Kernel.Socket.Shutdown.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
-        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
-            return .handle(handleError)
-        }
         return .platform(Error_Primitives.Error(code: code))
     }
 }

@@ -1,5 +1,13 @@
-@_spi(Syscall) import Kernel_Socket_Primitives
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
 #if canImport(Darwin)
     internal import Darwin
@@ -14,13 +22,15 @@ extension ISO_9945.Kernel.Socket {
     public enum Listen {}
 }
 
-// MARK: - Listen Operation
+// MARK: - Listen raw fd SPI
+//
+// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`.
 
 extension ISO_9945.Kernel.Socket.Listen {
-    /// Marks a socket as a passive socket for accepting connections.
+    /// Marks a raw socket fd as a passive listening socket.
     ///
     /// - Parameters:
-    ///   - descriptor: The socket descriptor (must be SOCK_STREAM or SOCK_SEQPACKET).
+    ///   - fd: The socket raw fd (must be SOCK_STREAM or SOCK_SEQPACKET).
     ///   - backlog: Maximum number of pending connections. Defaults to system maximum.
     /// - Throws: `Kernel.Socket.Error` on failure.
     ///
@@ -28,11 +38,12 @@ extension ISO_9945.Kernel.Socket.Listen {
     ///
     /// - `.platform(.operationNotSupported)` (EOPNOTSUPP): Socket type does not support listen.
     /// - `.platform(.addressInUse)` (EADDRINUSE): Another socket is listening on this address.
+    @_spi(Syscall)
     public static func listen(
-        _ descriptor: borrowing Kernel.Socket.Descriptor,
+        fd: Int32,
         backlog: Kernel.Socket.Backlog = .max
     ) throws(Kernel.Socket.Error) {
-        let rc = unsafe Darwin_or_Glibc_listen(descriptor._rawValue, backlog.rawValue)
+        let rc = unsafe Darwin_or_Glibc_listen(fd, backlog.rawValue)
 
         guard rc == 0 else {
             throw Kernel.Socket.Error.current()
@@ -48,38 +59,4 @@ private func Darwin_or_Glibc_listen(_ fd: Int32, _ backlog: Int32) -> Int32 {
     #elseif canImport(Musl)
         unsafe Musl.listen(fd, backlog)
     #endif
-}
-
-// MARK: - Listen raw fd SPI
-
-extension ISO_9945.Kernel.Socket.Listen {
-    /// Marks a raw socket fd as a passive listening socket.
-    ///
-    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
-    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
-    @_spi(Syscall)
-    public static func listen(
-        fd: Int32,
-        backlog: Kernel.Socket.Backlog = .max
-    ) throws(Kernel.Socket.Error) {
-        let rc = unsafe Darwin_or_Glibc_listen(fd, backlog.rawValue)
-
-        guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
-        }
-    }
-}
-
-// MARK: - Typed Convenience (Phase 1.5)
-
-extension ISO_9945.Kernel.Socket.Listen {
-    /// Marks a socket as a passive listener using a typed descriptor.
-    ///
-    /// Phase 1.5 typed L2 form. Delegates to the raw `listen(fd:backlog:)` SPI.
-    public static func listen(
-        _ descriptor: borrowing Kernel.Descriptor,
-        backlog: Kernel.Socket.Backlog = .max
-    ) throws(Kernel.Socket.Error) {
-        try listen(fd: descriptor._rawValue, backlog: backlog)
-    }
 }

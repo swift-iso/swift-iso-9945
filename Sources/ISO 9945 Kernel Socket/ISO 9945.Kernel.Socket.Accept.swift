@@ -1,5 +1,13 @@
-@_spi(Syscall) import Kernel_Socket_Primitives
-@_spi(Syscall) import Kernel_Descriptor_Primitives
+// ===----------------------------------------------------------------------===//
+//
+// This source file is part of the swift-iso-9945 open source project
+//
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
 #if canImport(Darwin)
     internal import Darwin
@@ -14,65 +22,14 @@ extension ISO_9945.Kernel.Socket {
     public enum Accept {}
 }
 
-// MARK: - Accept Operation
-
-extension ISO_9945.Kernel.Socket.Accept {
-    /// Accepts an incoming connection on a listening socket.
-    ///
-    /// Blocks until a connection is available (unless the socket is non-blocking).
-    ///
-    /// - Parameter descriptor: The listening socket descriptor.
-    /// - Returns: A result containing the new connected descriptor and peer address.
-    /// - Throws: `Kernel.Socket.Error` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.platform(.wouldBlock)` (EAGAIN/EWOULDBLOCK): Non-blocking and no pending connections.
-    /// - `.platform(.interrupted)` (EINTR): Signal interrupted the accept.
-    /// - `.platform(.connectionAborted)` (ECONNABORTED): Connection aborted before accept.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// let result = try Socket.Accept.accept(listenFd)
-    /// defer { try? Kernel.Close.close(result.descriptor) }
-    /// // result.address contains the peer's address
-    /// ```
-    @_disfavoredOverload
-    public static func accept(
-        _ descriptor: borrowing Kernel.Socket.Descriptor
-    ) throws(Kernel.Socket.Error) -> Result {
-        var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
-
-        let fd = storage.withUnsafeMutableBytes { ptr, _ in
-            let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_accept(descriptor._rawValue, sockaddrPtr, &addrLen)
-        }
-
-        guard fd >= 0 else {
-            throw Kernel.Socket.Error.current()
-        }
-
-        return Result(
-            descriptor: Kernel.Socket.Descriptor(_rawValue: fd),
-            address: storage,
-            length: Kernel.Socket.Address.Length(addrLen)
-        )
-    }
-}
-
-private func Darwin_or_Glibc_accept(_ fd: Int32, _ addr: UnsafeMutablePointer<sockaddr>, _ len: UnsafeMutablePointer<socklen_t>) -> Int32 {
-    #if canImport(Darwin)
-        unsafe Darwin.accept(fd, addr, len)
-    #elseif canImport(Glibc)
-        unsafe Glibc.accept(fd, addr, len)
-    #elseif canImport(Musl)
-        unsafe Musl.accept(fd, addr, len)
-    #endif
-}
-
 // MARK: - Accept raw fd SPI
+//
+// Per Cycle 21, the L2 Kernel Socket API is canonical-raw: take Int32 fds and
+// return Int32 fds via the Result struct. L3-policy callers at swift-posix
+// wrap into POSIX.Kernel.Socket.Descriptor; the cross-platform name
+// Kernel.Socket.Descriptor resolves through the swift-kernel L3 typealias
+// chain. Typed convenience overloads were dropped per L1-domain-only
+// architecture.
 
 extension ISO_9945.Kernel.Socket.Accept {
     /// Accepts an incoming connection on a raw listening fd.
@@ -98,22 +55,19 @@ extension ISO_9945.Kernel.Socket.Accept {
         }
 
         return Result(
-            descriptor: Kernel.Socket.Descriptor(_rawValue: acceptedFd),
+            descriptor: acceptedFd,
             address: storage,
             length: Kernel.Socket.Address.Length(addrLen)
         )
     }
 }
 
-// MARK: - Typed Convenience (Phase 1.5)
-
-extension ISO_9945.Kernel.Socket.Accept {
-    /// Accepts an incoming connection on a listening socket via a typed descriptor.
-    ///
-    /// Phase 1.5 typed L2 form. Delegates to the raw `accept(fd:)` SPI.
-    public static func accept(
-        _ descriptor: borrowing Kernel.Descriptor
-    ) throws(Kernel.Socket.Error) -> Result {
-        try accept(fd: descriptor._rawValue)
-    }
+private func Darwin_or_Glibc_accept(_ fd: Int32, _ addr: UnsafeMutablePointer<sockaddr>, _ len: UnsafeMutablePointer<socklen_t>) -> Int32 {
+    #if canImport(Darwin)
+        unsafe Darwin.accept(fd, addr, len)
+    #elseif canImport(Glibc)
+        unsafe Glibc.accept(fd, addr, len)
+    #elseif canImport(Musl)
+        unsafe Musl.accept(fd, addr, len)
+    #endif
 }

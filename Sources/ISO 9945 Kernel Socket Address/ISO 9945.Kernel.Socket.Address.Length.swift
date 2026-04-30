@@ -1,4 +1,3 @@
-public import Kernel_Socket_Primitives
 
 extension Kernel.Socket.Address {
     /// The byte length of a socket address.

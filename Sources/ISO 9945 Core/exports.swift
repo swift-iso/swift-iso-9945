@@ -1,5 +1,4 @@
 @_exported public import Kernel_Primitives_Core
 @_exported public import Kernel_File_Primitives
 @_exported public import Kernel_Descriptor_Primitives
-@_exported public import Kernel_Socket_Primitives
 @_exported public import Error_Primitives
