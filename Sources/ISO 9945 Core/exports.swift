@@ -6,3 +6,6 @@
 @_exported public import Dimension_Primitives
 @_exported public import Time_Primitives_Core
 @_exported public import Binary_Primitives_Core
+@_exported public import CPU_Primitives
+@_exported public import Cardinal_Primitives
+@_exported public import ASCII_Primitives

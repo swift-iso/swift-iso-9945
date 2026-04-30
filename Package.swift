@@ -129,6 +129,8 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-system-primitives"),
         .package(path: "../../swift-primitives/swift-memory-primitives"),
         .package(path: "../../swift-primitives/swift-ascii-primitives"),
+        .package(path: "../../swift-primitives/swift-cpu-primitives"),
+        .package(path: "../../swift-primitives/swift-cardinal-primitives"),
         .package(path: "../swift-iso-9899")
     ],
     targets: [
@@ -146,6 +148,9 @@ let package = Package(
                 .product(name: "Time Primitives Core", package: "swift-time-primitives"),
                 .product(name: "Binary Primitives Core", package: "swift-binary-primitives"),
                 .product(name: "Dimension Primitives", package: "swift-dimension-primitives"),
+                .product(name: "CPU Primitives", package: "swift-cpu-primitives"),
+                .product(name: "Cardinal Primitives", package: "swift-cardinal-primitives"),
+                .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
             ]
         ),
 
