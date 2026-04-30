@@ -29,6 +29,11 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
     public var family: ISO_9945.Kernel.Socket.Address.Family {
         get { .unix }
     }
+
+    /// The size of the underlying sockaddr_un structure.
+    public static var size: ISO_9945.Kernel.Socket.Address.Length {
+        ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size))
+    }
 }
 
 // MARK: - Storage Conversion
