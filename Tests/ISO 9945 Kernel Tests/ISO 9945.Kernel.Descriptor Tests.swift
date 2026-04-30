@@ -14,7 +14,6 @@ import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 @_spi(Syscall) import Kernel_Primitives_Core
-@_spi(Syscall) import Kernel_Event_Primitives
 @_spi(Syscall) import Kernel_File_Primitives
 @_spi(Syscall) import Path_Primitives
 @_spi(Syscall) import Error_Primitives
