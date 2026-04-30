@@ -263,7 +263,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
-                .product(name: "Kernel Terminal Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
             ]

@@ -44,46 +44,10 @@ extension Terminal.Size {
     }
 }
 
-// MARK: - Raw Mode
-
-extension Terminal.Mode.Raw {
-    /// Enter raw mode on this stream.
-    ///
-    /// Uses `Kernel.Termios.Attributes.get/set()` which wraps `tcgetattr/tcsetattr`.
-    ///
-    /// Returns a token that must be used to restore the previous mode.
-    /// Call `restore()` on the token to exit raw mode.
-    ///
-    /// - Returns: A token to restore the previous terminal mode
-    /// - Throws: ``Terminal.Error`` if entering raw mode fails
-    public func enter() throws(Terminal.Error) -> Token {
-        do {
-            let original = try Kernel.Termios.Attributes.get(fd: stream.rawValue)
-            let raw = original.withRaw()
-            try Kernel.Termios.Attributes.set(raw, fd: stream.rawValue)
-            return Token(stream: stream, previous: .posix(original))
-        } catch let error {
-            throw Terminal.Error(operation: .enterRaw, underlying: .kernel(error))
-        }
-    }
-}
-
-extension Terminal.Mode.Raw.Token {
-    /// Restore the previous terminal mode.
-    ///
-    /// - Throws: ``Terminal.Error`` if restoration fails
-    public mutating func restore() throws(Terminal.Error) {
-        guard !restored else { return }
-        guard case .posix(let attrs) = previous else {
-            throw Terminal.Error(operation: .exitRaw, underlying: .unsupported)
-        }
-        do {
-            try Kernel.Termios.Attributes.set(attrs, fd: stream.rawValue)
-            restored = true
-        } catch let error {
-            throw Terminal.Error(operation: .exitRaw, underlying: .kernel(error))
-        }
-    }
-}
+// Raw mode enter() and restore() relocated to L3 swift-kernel
+// (Sources/Kernel Terminal/Terminal.Mode.Raw.Token.swift) in Cycle 22:
+// they reference Token + Previous which moved to L3 because Previous's
+// .posix case carries Kernel.Termios.Attributes — an L2 type post-Cycle-22 —
+// so the Token nested type cannot live at L1 swift-terminal-primitives.
 
 #endif
