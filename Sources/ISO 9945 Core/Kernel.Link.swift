@@ -11,7 +11,7 @@
 
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Hard link operations.
     ///
     /// ## Platform Implementation
@@ -24,8 +24,8 @@ extension Kernel {
 
 // MARK: - Count
 
-extension Kernel.Link {
+extension ISO_9945.Kernel.Link {
     /// Hard link count for a file.
-    public typealias Count = Tagged<Kernel.Link, Cardinal>
+    public typealias Count = Tagged<ISO_9945.Kernel.Link, Cardinal>
 }
 

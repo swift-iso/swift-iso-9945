@@ -25,13 +25,13 @@ extension ISO_9945.Kernel.Socket.Backlog {
     ///
     /// Uses `SOMAXCONN` which typically maps to the system's maximum
     /// allowed backlog value.
-    public static var max: Kernel.Socket.Backlog {
+    public static var max: ISO_9945.Kernel.Socket.Backlog {
         #if canImport(Darwin)
-            Kernel.Socket.Backlog(Darwin.SOMAXCONN)
+            ISO_9945.Kernel.Socket.Backlog(Darwin.SOMAXCONN)
         #elseif canImport(Musl)
-            Kernel.Socket.Backlog(Musl.SOMAXCONN)
+            ISO_9945.Kernel.Socket.Backlog(Musl.SOMAXCONN)
         #elseif canImport(Glibc)
-            Kernel.Socket.Backlog(Glibc.SOMAXCONN)
+            ISO_9945.Kernel.Socket.Backlog(Glibc.SOMAXCONN)
         #endif
     }
 }

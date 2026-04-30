@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Storage domain - storage space exhaustion.
     ///
     /// These errors indicate the filesystem cannot allocate

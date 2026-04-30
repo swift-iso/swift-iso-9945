@@ -28,9 +28,9 @@ extension ISO_9945.Kernel.Socket {
     ///
     /// - Parameter fd: The socket file descriptor.
     /// - Returns: The error code (`.posix(0)` if no pending error).
-    /// - Throws: `Kernel.Socket.Error` if getsockopt fails.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` if getsockopt fails.
     @_spi(Syscall)
-    public static func getError(fd: Int32) throws(Kernel.Socket.Error) -> Error_Primitives.Error.Code {
+    public static func getError(fd: Int32) throws(ISO_9945.Kernel.Socket.Error) -> Error_Primitives.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
@@ -43,7 +43,7 @@ extension ISO_9945.Kernel.Socket {
         )
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
         return .posix(err)

@@ -1,12 +1,12 @@
 //
-//  Kernel.Wakeup.Channel.swift
+//  ISO_9945.Kernel.Wakeup.Channel.swift
 //  swift-kernel-primitives
 //
 //  Thread-safe channel for interrupting blocking event waits.
 //  Shared by Readiness (reactor) and Completion (proactor) drivers.
 //
 
-extension Kernel.Wakeup {
+extension ISO_9945.Kernel.Wakeup {
     /// Thread-safe channel for waking an event loop.
     ///
     /// Created by the driver backend. The channel is `Sendable`

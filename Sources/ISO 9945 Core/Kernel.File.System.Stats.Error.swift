@@ -11,16 +11,16 @@
 
 
 
-extension Kernel.File.System.Stats {
+extension ISO_9945.Kernel.File.System.Stats {
     /// Error type for filesystem statistics operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         case path(Path.Resolution.Error)
-        case handle(Kernel.Descriptor.Validity.Error)
+        case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case platform(Error_Primitives.Error)
     }
 }
 
-extension Kernel.File.System.Stats.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.System.Stats.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .path(let e): return "path: \(e)"

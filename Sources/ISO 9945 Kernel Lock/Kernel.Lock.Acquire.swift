@@ -12,7 +12,7 @@
 
 public import Clock_Primitives
 
-extension Kernel.Lock {
+extension ISO_9945.Kernel.Lock {
     /// Lock acquisition strategy.
     public enum Acquire: Sendable, Equatable {
         /// Try once without blocking. Returns immediately.

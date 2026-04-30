@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File attributes operations.
     ///
     /// Provides cross-platform file permission/attributes modification.
@@ -27,7 +27,7 @@ extension Kernel.File {
 
 // MARK: - Error
 
-extension Kernel.File.Attributes {
+extension ISO_9945.Kernel.File.Attributes {
     /// Errors that can occur during file attributes operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The path does not exist.
@@ -63,7 +63,7 @@ extension Kernel.File.Attributes {
     }
 }
 
-extension Kernel.File.Attributes.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Attributes.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .path(let pathError):

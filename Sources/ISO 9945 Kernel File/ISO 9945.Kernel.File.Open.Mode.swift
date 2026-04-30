@@ -20,16 +20,16 @@ extension ISO_9945.Kernel.File.Open {
     /// ## Usage
     /// ```swift
     /// // Read only
-    /// let fd = try Kernel.File.Open.open(path: view, mode: .read, ...)
+    /// let fd = try ISO_9945.Kernel.File.Open.open(path: view, mode: .read, ...)
     ///
     /// // Write only
-    /// let fd = try Kernel.File.Open.open(path: view, mode: .write, ...)
+    /// let fd = try ISO_9945.Kernel.File.Open.open(path: view, mode: .write, ...)
     ///
     /// // Read and write
-    /// let fd = try Kernel.File.Open.open(path: view, mode: .readWrite, ...)
+    /// let fd = try ISO_9945.Kernel.File.Open.open(path: view, mode: .readWrite, ...)
     ///
     /// // Explicit construction
-    /// let fd = try Kernel.File.Open.open(path: view, mode: Mode(read: true, write: true), ...)
+    /// let fd = try ISO_9945.Kernel.File.Open.open(path: view, mode: Mode(read: true, write: true), ...)
     /// ```
     public struct Mode: Sendable, Hashable {
         /// Whether to open the file for reading.

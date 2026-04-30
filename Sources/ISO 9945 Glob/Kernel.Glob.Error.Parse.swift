@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob.Error {
+extension ISO_9945.Kernel.Glob.Error {
     /// Pattern parse error reasons.
     public enum Parse: Sendable, Hashable {
         /// Character class `[...]` was not closed with `]`.

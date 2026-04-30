@@ -31,7 +31,7 @@ extension ISO_9945.Kernel {
     /// This type is intentionally opaque. Raw value access is available only
     /// via `@_spi(Syscall)` for syscall implementation layers. Application
     /// code should use the unified API in swift-kernel, where
-    /// `Kernel.Descriptor` is a typealias to this type on POSIX platforms.
+    /// `ISO_9945.Kernel.Descriptor` is a typealias to this type on POSIX platforms.
     ///
     /// ## Thread Safety
     ///

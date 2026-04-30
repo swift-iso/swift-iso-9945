@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct.Mode {
+extension ISO_9945.Kernel.File.Direct.Mode {
     /// Policy for automatic mode selection.
     public enum Policy: Sendable, Equatable {
         /// Fall back to buffered I/O if direct is unavailable or alignment fails.

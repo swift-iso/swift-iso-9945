@@ -94,7 +94,7 @@ extension ISO_9945.Kernel.Environment.Entries {
     ///
     /// - Note: The returned `Entry` is only valid until the next call to `next()`.
     @_lifetime(copy self)
-    public mutating func next() -> Kernel.Environment.Entry? {
+    public mutating func next() -> ISO_9945.Kernel.Environment.Entry? {
         // Restore previous separator if we modified it
         if let ptr = unsafe separatorPtr {
             unsafe (ptr.pointee = savedSeparator)
@@ -129,7 +129,7 @@ extension ISO_9945.Kernel.Environment.Entries {
         let valuePtr = unsafe UnsafePointer<UInt8>(UnsafePointer(entry + j + 1))
 
         return unsafe _overrideLifetime(
-            Kernel.Environment.Entry(name: namePtr, value: valuePtr),
+            ISO_9945.Kernel.Environment.Entry(name: namePtr, value: valuePtr),
             copying: self
         )
     }

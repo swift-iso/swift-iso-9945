@@ -12,16 +12,16 @@
 
 internal import Cardinal_Primitives
 
-extension Kernel.File.System {
+extension ISO_9945.Kernel.File.System {
     /// Filename namespace for filesystem constraints.
     public enum Name {}
 }
 
-extension Kernel.File.System.Name {
+extension ISO_9945.Kernel.File.System.Name {
     /// Maximum filename length in bytes.
     ///
     /// This represents `f_namelen` on Linux, `NAME_MAX` on Darwin,
     /// or `maxComponentLength` on Windows.
-    public typealias Length = Tagged<Kernel.File.System.Name, Cardinal>
+    public typealias Length = Tagged<ISO_9945.Kernel.File.System.Name, Cardinal>
 }
 

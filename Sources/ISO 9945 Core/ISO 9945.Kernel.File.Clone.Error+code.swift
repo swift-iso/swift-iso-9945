@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Conversion
 
-extension Kernel.File.Clone.Error {
+extension ISO_9945.Kernel.File.Clone.Error {
     /// Creates a semantic error from a raw syscall error.
     public init(from syscall: Syscall) {
         switch syscall {

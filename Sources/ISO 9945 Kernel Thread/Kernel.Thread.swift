@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Raw thread syscall wrappers.
     ///
     /// This namespace provides policy-free wrappers for platform thread primitives.

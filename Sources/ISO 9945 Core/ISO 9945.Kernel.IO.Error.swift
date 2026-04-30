@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.IO {
+extension ISO_9945.Kernel.IO {
     /// I/O operation errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// Broken pipe — peer closed the connection.
@@ -52,7 +52,7 @@ extension Kernel.IO {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.IO.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.IO.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .broken:

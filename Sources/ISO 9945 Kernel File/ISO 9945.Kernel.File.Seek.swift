@@ -27,14 +27,14 @@ extension ISO_9945.Kernel.File.Seek {
     ///
     /// Spec-literal raw `lseek(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Seek.seek(_:offset:whence:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor.
     ///   - offset: The offset value.
     ///   - whence: The reference point for the offset.
     /// - Returns: The resulting offset from the beginning of the file.
-    /// - Throws: `Kernel.File.Seek.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
     @discardableResult
     @_spi(Syscall)
     public static func seek(
@@ -60,11 +60,11 @@ extension ISO_9945.Kernel.File.Seek {
     ///
     /// Equivalent to `seek(fd:, offset: 0, whence: .current)`. The typed L2
     /// convenience (`ISO_9945.Kernel.File.Seek.tell(_:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameter fd: The raw file descriptor.
     /// - Returns: The current offset from the beginning of the file.
-    /// - Throws: `Kernel.File.Seek.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
     @_spi(Syscall)
     public static func tell(fd: Int32) throws(Error) -> Int64 {
         try unsafe seek(fd: fd, offset: 0, whence: .current)
@@ -84,10 +84,10 @@ extension ISO_9945.Kernel.File.Seek {
     ///   - offset: The offset value.
     ///   - whence: The reference point for the offset.
     /// - Returns: The resulting offset from the beginning of the file.
-    /// - Throws: `Kernel.File.Seek.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
     @discardableResult
     public static func seek(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         offset: Int64,
         whence: Whence
     ) throws(Error) -> Int64 {
@@ -101,15 +101,15 @@ extension ISO_9945.Kernel.File.Seek {
     ///
     /// - Parameter descriptor: The file descriptor.
     /// - Returns: The current offset from the beginning of the file.
-    /// - Throws: `Kernel.File.Seek.Error` on failure.
-    public static func tell(_ descriptor: borrowing Kernel.Descriptor) throws(Error) -> Int64 {
+    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
+    public static func tell(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) -> Int64 {
         try unsafe tell(fd: descriptor._rawValue)
     }
 }
 
 // MARK: - POSIX Whence Constants
 
-extension Kernel.File.Seek.Whence {
+extension ISO_9945.Kernel.File.Seek.Whence {
     /// Seek from the beginning of the file (SEEK_SET).
     public static let start = Self(rawValue: SEEK_SET)
 
@@ -123,7 +123,7 @@ extension Kernel.File.Seek.Whence {
 // MARK: - Error
 
 extension ISO_9945.Kernel.File.Seek {
-    public typealias Error = Kernel.File.Seek.Error
+    public typealias Error = ISO_9945.Kernel.File.Seek.Error
 }
 
 extension ISO_9945.Kernel.File.Seek.Error {

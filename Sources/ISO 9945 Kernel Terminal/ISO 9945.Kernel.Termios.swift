@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
         }
 
         // Copy termios to opaque storage
-        var attrs = Kernel.Termios.Attributes(_storage: .init())
+        var attrs = ISO_9945.Kernel.Termios.Attributes(_storage: .init())
         unsafe attrs.withUnsafeMutableStorageBytes { buffer in
             unsafe withUnsafeBytes(of: t) { src in
                 unsafe buffer.copyMemory(from: src)
@@ -91,7 +91,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `get(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func get(_ descriptor: borrowing Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
+    public static func get(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
         try get(fd: descriptor._rawValue)
     }
 
@@ -101,7 +101,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
     /// via `descriptor._rawValue`.
     public static func set(
         _ attributes: Self,
-        on descriptor: borrowing Kernel.Descriptor,
+        on descriptor: borrowing ISO_9945.Kernel.Descriptor,
         action: Action = .now
     ) throws(Error_Primitives.Error) {
         try set(attributes, fd: descriptor._rawValue, action: action)
@@ -170,7 +170,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
             }
         }
 
-        var result = Kernel.Termios.Attributes(_storage: .init())
+        var result = ISO_9945.Kernel.Termios.Attributes(_storage: .init())
         unsafe result.withUnsafeMutableStorageBytes { buffer in
             unsafe withUnsafeBytes(of: t) { src in
                 unsafe buffer.copyMemory(from: src)

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// IO domain - I/O operation errors.
     ///
     /// These errors indicate failures during actual I/O operations,
@@ -20,7 +20,7 @@ extension Kernel {
     }
 }
 
-extension Kernel.IO {
+extension ISO_9945.Kernel.IO {
     /// Read operations.
     public enum Read: Sendable {}
 

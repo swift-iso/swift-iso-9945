@@ -30,11 +30,11 @@ extension ISO_9945.Kernel.File.Times {
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
-    /// - Throws: `Kernel.File.Times.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
 
     public static func set(
-        access accessTime: Kernel.Time,
-        modification modificationTime: Kernel.Time,
+        access accessTime: ISO_9945.Kernel.Time,
+        modification modificationTime: ISO_9945.Kernel.Time,
         at path: borrowing Path.Borrowed,
         followSymlinks: Bool = true
     ) throws(Error) {
@@ -55,11 +55,11 @@ extension ISO_9945.Kernel.File.Times {
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - followSymlinks: If false, operates on the symlink itself (default: true).
-    /// - Throws: `Kernel.File.Times.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
     @usableFromInline
     internal static func _set(
-        access accessTime: Kernel.Time,
-        modification modificationTime: Kernel.Time,
+        access accessTime: ISO_9945.Kernel.Time,
+        modification modificationTime: ISO_9945.Kernel.Time,
         path: UnsafePointer<Path.Char>,
         followSymlinks: Bool = true
     ) throws(Error) {
@@ -97,17 +97,17 @@ extension ISO_9945.Kernel.File.Times {
     ///
     /// Spec-literal raw `futimens(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Times.set(access:modification:on:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - fd: The raw file descriptor.
-    /// - Throws: `Kernel.File.Times.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
     @_spi(Syscall)
     public static func set(
-        access accessTime: Kernel.Time,
-        modification modificationTime: Kernel.Time,
+        access accessTime: ISO_9945.Kernel.Time,
+        modification modificationTime: ISO_9945.Kernel.Time,
         fd: Int32
     ) throws(Error) {
         var times = [timespec](repeating: timespec(), count: 2)
@@ -146,11 +146,11 @@ extension ISO_9945.Kernel.File.Times {
     ///   - accessTime: The new access time.
     ///   - modificationTime: The new modification time.
     ///   - descriptor: The file descriptor.
-    /// - Throws: `Kernel.File.Times.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
     public static func set(
-        access accessTime: Kernel.Time,
-        modification modificationTime: Kernel.Time,
-        on descriptor: borrowing Kernel.Descriptor
+        access accessTime: ISO_9945.Kernel.Time,
+        modification modificationTime: ISO_9945.Kernel.Time,
+        on descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(Error) {
         try unsafe set(
             access: accessTime,

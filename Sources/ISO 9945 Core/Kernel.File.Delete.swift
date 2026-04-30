@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File deletion operations.
     ///
     /// Removes directory entries (file names) from the filesystem. On POSIX,
@@ -32,7 +32,7 @@ extension Kernel.File {
 
 // MARK: - Error
 
-extension Kernel.File.Delete {
+extension ISO_9945.Kernel.File.Delete {
     /// Errors that can occur during file deletion.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The file does not exist.
@@ -64,7 +64,7 @@ extension Kernel.File.Delete {
     }
 }
 
-extension Kernel.File.Delete.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Delete.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "file not found"

@@ -18,7 +18,7 @@
     internal import Musl
 #endif
 
-extension Kernel.File.At {
+extension ISO_9945.Kernel.File.At {
     /// Path resolution flags (AT_* constants).
     ///
     /// Controls how *at() syscall variants resolve paths relative to
@@ -37,7 +37,7 @@ extension Kernel.File.At {
 
 // MARK: - POSIX AT_* Constants
 
-extension Kernel.File.At.Options {
+extension ISO_9945.Kernel.File.At.Options {
     /// Do not follow symbolic links (AT_SYMLINK_NOFOLLOW).
     public static let noFollow = Self(rawValue: Int32(AT_SYMLINK_NOFOLLOW))
 

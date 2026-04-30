@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.System {
+extension ISO_9945.Kernel.File.System {
     /// Filesystem statistics.
     ///
     /// Used by higher layers (swift-io) for Direct I/O capability probing
@@ -42,31 +42,31 @@ extension Kernel.File.System {
         ///
         /// - Important: The semantic meaning differs between platforms. For portable
         ///   filesystem type detection, use `fsTypeName` when available.
-        public let type: Kernel.File.System.Kind
+        public let type: ISO_9945.Kernel.File.System.Kind
 
         /// Optimal transfer block size in bytes.
-        public let blockSize: Kernel.File.System.Block.Size
+        public let blockSize: ISO_9945.Kernel.File.System.Block.Size
 
         /// Total data blocks in filesystem.
-        public let blocks: Kernel.File.System.Block.Count
+        public let blocks: ISO_9945.Kernel.File.System.Block.Count
 
         /// Free blocks in filesystem.
-        public let freeBlocks: Kernel.File.System.Block.Count
+        public let freeBlocks: ISO_9945.Kernel.File.System.Block.Count
 
         /// Free blocks available to unprivileged user.
-        public let availableBlocks: Kernel.File.System.Block.Count
+        public let availableBlocks: ISO_9945.Kernel.File.System.Block.Count
 
         /// Total file nodes (inodes) in filesystem.
-        public let files: Kernel.File.System.File.Count
+        public let files: ISO_9945.Kernel.File.System.File.Count
 
         /// Free file nodes in filesystem.
-        public let freeFiles: Kernel.File.System.File.Count
+        public let freeFiles: ISO_9945.Kernel.File.System.File.Count
 
         /// Filesystem ID.
-        public let fsid: Kernel.File.System.ID
+        public let fsid: ISO_9945.Kernel.File.System.ID
 
         /// Maximum length of filenames.
-        public let nameMax: Kernel.File.System.Name.Length
+        public let nameMax: ISO_9945.Kernel.File.System.Name.Length
 
         /// Filesystem type name.
         ///
@@ -79,15 +79,15 @@ extension Kernel.File.System {
 
         /// Creates filesystem statistics with the given values.
         public init(
-            type: Kernel.File.System.Kind,
-            blockSize: Kernel.File.System.Block.Size,
-            blocks: Kernel.File.System.Block.Count,
-            freeBlocks: Kernel.File.System.Block.Count,
-            availableBlocks: Kernel.File.System.Block.Count,
-            files: Kernel.File.System.File.Count,
-            freeFiles: Kernel.File.System.File.Count,
-            fsid: Kernel.File.System.ID,
-            nameMax: Kernel.File.System.Name.Length,
+            type: ISO_9945.Kernel.File.System.Kind,
+            blockSize: ISO_9945.Kernel.File.System.Block.Size,
+            blocks: ISO_9945.Kernel.File.System.Block.Count,
+            freeBlocks: ISO_9945.Kernel.File.System.Block.Count,
+            availableBlocks: ISO_9945.Kernel.File.System.Block.Count,
+            files: ISO_9945.Kernel.File.System.File.Count,
+            freeFiles: ISO_9945.Kernel.File.System.File.Count,
+            fsid: ISO_9945.Kernel.File.System.ID,
+            nameMax: ISO_9945.Kernel.File.System.Name.Length,
             fsTypeName: Swift.String? = nil
         ) {
             self.type = type

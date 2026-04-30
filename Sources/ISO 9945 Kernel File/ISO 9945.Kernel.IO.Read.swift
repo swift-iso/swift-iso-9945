@@ -27,13 +27,13 @@ extension ISO_9945.Kernel.IO.Read {
     ///
     /// Spec-literal raw `read(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.IO.Read.read(_:into:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor to read from.
     ///   - buffer: The buffer to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_spi(Syscall)
     public static func read(
         fd: Int32,
@@ -67,19 +67,19 @@ extension ISO_9945.Kernel.IO.Read {
     ///
     /// Spec-literal raw `pread(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.IO.Read.pread(_:into:at:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor to read from.
     ///   - buffer: The buffer to read into.
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_spi(Syscall)
     public static func pread(
         fd: Int32,
         into buffer: UnsafeMutableRawBufferPointer,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
             return 0
@@ -113,7 +113,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///
     /// Typed L2 form. Delegates to the raw `read(fd:into:)` SPI via
     /// `descriptor._rawValue` after a fast-fail validity check. Marked
-    /// `@_disfavoredOverload` so the L3-unifier `Kernel.IO.Read.read(_:into:)`
+    /// `@_disfavoredOverload` so the L3-unifier `ISO_9945.Kernel.IO.Read.read(_:into:)`
     /// (EINTR-retry policy) wins overload resolution at consumer sites that
     /// see both layers — raw spec access is reachable via this L2 form.
     ///
@@ -121,10 +121,10 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - descriptor: The file descriptor to read from.
     ///   - buffer: The buffer to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func read(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer
     ) throws(Error) -> Int {
         guard descriptor.isValid else {
@@ -138,7 +138,7 @@ extension ISO_9945.Kernel.IO.Read {
     /// Typed L2 form. Delegates to the raw `pread(fd:into:at:)` SPI via
     /// `descriptor._rawValue` after a fast-fail validity check. Marked
     /// `@_disfavoredOverload` so the L3-unifier
-    /// `Kernel.IO.Read.pread(_:into:at:)` (EINTR-retry policy) wins overload
+    /// `ISO_9945.Kernel.IO.Read.pread(_:into:at:)` (EINTR-retry policy) wins overload
     /// resolution.
     ///
     /// - Parameters:
@@ -146,12 +146,12 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - buffer: The buffer to read into.
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func pread(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         into buffer: UnsafeMutableRawBufferPointer,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
         guard descriptor.isValid else {
             throw .handle(.invalid)
@@ -169,10 +169,10 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - descriptor: The file descriptor to read from.
     ///   - span: The mutable span to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func read(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>
     ) throws(Error) -> Int {
         try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
@@ -187,12 +187,12 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - span: The mutable span to read into.
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func pread(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         into span: inout MutableSpan<UInt8>,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
         try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Error) -> Int in
             try unsafe pread(descriptor, into: buffer, at: offset)
@@ -206,10 +206,10 @@ extension ISO_9945.Kernel.IO.Read.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
-        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
+        if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
-        if let blockingError = Kernel.IO.Blocking.Error(code: code) {
+        if let blockingError = ISO_9945.Kernel.IO.Blocking.Error(code: code) {
             return .blocking(blockingError)
         }
         return .platform(Error_Primitives.Error(code: code))

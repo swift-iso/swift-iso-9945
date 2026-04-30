@@ -6,10 +6,10 @@ extension ISO_9945.Kernel.User.Database {
         public let name: String
 
         /// The user ID.
-        public let uid: Kernel.User.ID
+        public let uid: ISO_9945.Kernel.User.ID
 
         /// The primary group ID.
-        public let gid: Kernel.Group.ID
+        public let gid: ISO_9945.Kernel.Group.ID
 
         /// The user's home directory.
         public let home: String
@@ -17,7 +17,7 @@ extension ISO_9945.Kernel.User.Database {
         /// The user's login shell.
         public let shell: String
 
-        internal init(name: String, uid: Kernel.User.ID, gid: Kernel.Group.ID, home: String, shell: String) {
+        internal init(name: String, uid: ISO_9945.Kernel.User.ID, gid: ISO_9945.Kernel.Group.ID, home: String, shell: String) {
             self.name = name
             self.uid = uid
             self.gid = gid

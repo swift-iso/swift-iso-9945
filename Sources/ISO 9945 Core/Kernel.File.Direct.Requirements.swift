@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct {
+extension ISO_9945.Kernel.File.Direct {
     /// Alignment requirements for Direct I/O operations.
     ///
     /// Direct I/O on Linux and Windows requires strict alignment of:
@@ -50,7 +50,7 @@ extension Kernel.File.Direct {
 
 // MARK: - Portable Initialization (types-only layer)
 
-extension Kernel.File.Direct.Requirements {
+extension ISO_9945.Kernel.File.Direct.Requirements {
     /// Creates requirements for a path.
     ///
     /// This is a placeholder that returns platform-appropriate defaults.

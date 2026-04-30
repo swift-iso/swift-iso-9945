@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Stats.Kind {
+extension ISO_9945.Kernel.File.Stats.Kind {
     /// Device types.
     public enum Device: Sendable, Equatable, Hashable {
         /// Block device.

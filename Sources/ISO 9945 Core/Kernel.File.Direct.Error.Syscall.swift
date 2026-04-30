@@ -10,11 +10,11 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct.Error {
+extension ISO_9945.Kernel.File.Direct.Error {
     /// Raw syscall-level error with platform-specific details.
     ///
     /// This type captures the exact errno/win32 error code from syscalls.
-    /// It is translated to the semantic `Kernel.File.Direct.Error` at API boundaries.
+    /// It is translated to the semantic `ISO_9945.Kernel.File.Direct.Error` at API boundaries.
     public enum Syscall: Swift.Error, Sendable, Equatable {
         /// Platform syscall failure.
         case platform(code: Error_Primitives.Error.Code, operation: Operation)

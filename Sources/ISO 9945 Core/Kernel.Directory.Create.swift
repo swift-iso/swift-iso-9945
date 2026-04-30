@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Directory {
+extension ISO_9945.Kernel.Directory {
     /// Directory creation operations.
     ///
     /// Creates directories in the filesystem. On POSIX, directories are created
@@ -29,7 +29,7 @@ extension Kernel.Directory {
 
 // MARK: - Error
 
-extension Kernel.Directory.Create {
+extension ISO_9945.Kernel.Directory.Create {
     /// Errors that can occur during directory creation.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// A component of the path does not exist.
@@ -61,7 +61,7 @@ extension Kernel.Directory.Create {
     }
 }
 
-extension Kernel.Directory.Create.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Directory.Create.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "path component not found"

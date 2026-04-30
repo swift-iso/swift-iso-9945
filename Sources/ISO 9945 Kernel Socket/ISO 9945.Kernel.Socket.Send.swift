@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Socket {
 // MARK: - Send Operations (raw fd SPI)
 //
 // Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
-// Kernel.Socket.Descriptor convenience overloads were dropped per the
+// ISO_9945.Kernel.Socket.Descriptor convenience overloads were dropped per the
 // L1-domain-only architecture. Post-Path-X cleanup will retype L2 to
 // ISO_9945.Kernel.Socket.Descriptor.
 
@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - span: The data to send.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -49,9 +49,9 @@ extension ISO_9945.Kernel.Socket.Send {
     public static func send(
         fd: Int32,
         from span: Span<UInt8>,
-        options: Kernel.Socket.Message.Options = []
-    ) throws(Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeBytes { buffer throws(Kernel.Socket.Error) -> Int in
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
             guard let base = buffer.baseAddress else { return 0 }
             let result = unsafe Darwin_or_Glibc_send(
                 fd,
@@ -60,7 +60,7 @@ extension ISO_9945.Kernel.Socket.Send {
                 options.rawValue
             )
             guard result >= 0 else {
-                throw Kernel.Socket.Error.current()
+                throw ISO_9945.Kernel.Socket.Error.current()
             }
             return result
         }
@@ -75,16 +75,16 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - address: The destination address.
     ///   - addressLength: The size of the destination address.
     /// - Returns: The number of bytes actually sent.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func to(
         fd: Int32,
         from span: Span<UInt8>,
-        options: Kernel.Socket.Message.Options = [],
-        address: Kernel.Socket.Address.Storage,
-        addressLength: Kernel.Socket.Address.Length
-    ) throws(Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeBytes { buffer throws(Kernel.Socket.Error) -> Int in
+        options: ISO_9945.Kernel.Socket.Message.Options = [],
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        addressLength: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
             guard let base = buffer.baseAddress else { return 0 }
             let result = address.withUnsafeBytes { ptr, _ in
                 let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -98,7 +98,7 @@ extension ISO_9945.Kernel.Socket.Send {
                 )
             }
             guard result >= 0 else {
-                throw Kernel.Socket.Error.current()
+                throw ISO_9945.Kernel.Socket.Error.current()
             }
             return result
         }
@@ -111,13 +111,13 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - header: The message header describing buffers, address, and control data.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func message(
         fd: Int32,
-        header: inout Kernel.Socket.Message.Header,
-        options: Kernel.Socket.Message.Options = []
-    ) throws(Kernel.Socket.Error) -> Int {
+        header: inout ISO_9945.Kernel.Socket.Message.Header,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         let result = unsafe sendmsg(
             fd,
             &header.cValue,
@@ -125,7 +125,7 @@ extension ISO_9945.Kernel.Socket.Send {
         )
 
         guard result >= 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
         return result

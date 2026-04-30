@@ -10,12 +10,12 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// File-related types and operations.
     public enum File {}
 }
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// Phantom type tag for the file byte space.
     ///
     /// Used to parameterize Dimension types for file I/O operations,
@@ -26,8 +26,8 @@ extension Kernel.File {
     /// ## Example
     ///
     /// ```swift
-    /// let start: Kernel.File.Offset = 1000
-    /// let end: Kernel.File.Offset = 5000
+    /// let start: ISO_9945.Kernel.File.Offset = 1000
+    /// let end: ISO_9945.Kernel.File.Offset = 5000
     /// let distance = end - start  // Delta (4000)
     /// let next = end + distance   // Offset (9000)
     /// ```

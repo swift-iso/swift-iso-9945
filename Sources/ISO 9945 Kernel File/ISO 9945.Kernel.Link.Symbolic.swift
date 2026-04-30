@@ -76,14 +76,14 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///
     /// Spec-literal raw `symlinkat(2)`. The typed L2 internal-only convenience
     /// (`ISO_9945.Kernel.Link.Symbolic._create(target:relativeTo:linkPath:)`
-    /// taking `borrowing Kernel.Descriptor`) delegates to this raw SPI
+    /// taking `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI
     /// internally.
     ///
     /// - Parameters:
     ///   - target: The path the symlink points to.
     ///   - fd: Raw directory descriptor for the link path.
     ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on failure.
     @_spi(Syscall)
     public static func create(
         target: UnsafePointer<Path.Char>,
@@ -118,7 +118,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     @usableFromInline
     internal static func _create(
         target: UnsafePointer<Path.Char>,
-        relativeTo descriptor: borrowing Kernel.Descriptor,
+        relativeTo descriptor: borrowing ISO_9945.Kernel.Descriptor,
         linkPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         try unsafe create(
@@ -139,7 +139,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Parameters:
     ///   - target: The path the symlink points to.
     ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on failure.
     public static func create(
         target: borrowing Path.Borrowed,
         at linkPath: borrowing Path.Borrowed
@@ -166,7 +166,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///   - path: The path to the symbolic link.
     ///   - body: A closure that processes the target bytes. Non-throwing.
     /// - Returns: The result of the closure.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTargetBytes<R: ~Copyable>(
         at path: borrowing Path.Borrowed,
         _ body: (Span<Path.Char>) -> R
@@ -212,7 +212,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///   - path: The path to the symbolic link.
     ///   - body: A closure that processes the target view. Non-throwing.
     /// - Returns: The result of the closure.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on syscall failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTarget<R: ~Copyable>(
         at path: borrowing Path.Borrowed,
         _ body: (borrowing String.Borrowed) -> R
@@ -259,7 +259,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ///
     /// - Parameter path: The path to the symbolic link.
     /// - Returns: The target path as a `String`.
-    /// - Throws: `Kernel.Link.Symbolic.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on failure.
     public static func readTarget(at path: borrowing Path.Borrowed) throws(Error) -> String {
         try withTarget(at: path) { view in
             String(copying: view)
@@ -270,7 +270,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
 // MARK: - Error
 
 extension ISO_9945.Kernel.Link.Symbolic {
-    public typealias Error = Kernel.Link.Symbolic.Error
+    public typealias Error = ISO_9945.Kernel.Link.Symbolic.Error
 }
 
 extension ISO_9945.Kernel.Link.Symbolic.Error {

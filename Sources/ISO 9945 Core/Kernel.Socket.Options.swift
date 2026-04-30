@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Socket {
+extension ISO_9945.Kernel.Socket {
     /// Socket creation options.
     ///
     /// Options that can be combined with socket type when creating a socket.

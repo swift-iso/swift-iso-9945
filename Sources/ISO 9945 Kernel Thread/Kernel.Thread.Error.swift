@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Thread {
+extension ISO_9945.Kernel.Thread {
     /// Errors from thread operations.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// Thread creation failed.
@@ -27,7 +27,7 @@ extension Kernel.Thread {
     }
 }
 
-extension Kernel.Thread.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Thread.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .create(let code):

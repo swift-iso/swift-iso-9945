@@ -34,7 +34,7 @@ extension ISO_9945.Kernel.Thread {
     /// key is freed on `deinit`. The slot stores an
     /// `UnsafeMutableRawPointer?` per thread; consumers cast to/from
     /// their typed payload at the boundary (or use the L3 generic
-    /// `Kernel.Thread.Local<Payload>` which encapsulates the cast).
+    /// `ISO_9945.Kernel.Thread.Local<Payload>` which encapsulates the cast).
     ///
     /// ## Threading
     /// - **value (get)**: Returns the calling thread's slot value, or

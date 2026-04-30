@@ -47,7 +47,7 @@ extension Memory.Map {
         protection: Protection,
         flags: Options,
         fd: Int32 = -1,
-        offset: Kernel.File.Offset = .zero
+        offset: ISO_9945.Kernel.File.Offset = .zero
     ) throws(Error) -> Memory.Address {
         guard length.rawValue.rawValue > 0 else {
             throw .invalid(.length)
@@ -78,8 +78,8 @@ extension Memory.Map {
         length: Memory.Address.Count,
         protection: Protection,
         flags: Options,
-        descriptor: borrowing Kernel.Descriptor,
-        offset: Kernel.File.Offset = .zero
+        descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        offset: ISO_9945.Kernel.File.Offset = .zero
     ) throws(Error) -> Memory.Address {
         try map(
             addr: addr,

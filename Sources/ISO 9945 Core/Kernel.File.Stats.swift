@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File metadata from stat/fstat syscalls.
     ///
     /// A minimal, cross-platform representation of file metadata. Platform-specific
@@ -21,15 +21,15 @@ extension Kernel.File {
     ///
     /// ```swift
     /// // Get stats by path
-    /// let stats = try Kernel.File.Stats.get(path: "/tmp/data.txt")
+    /// let stats = try ISO_9945.Kernel.File.Stats.get(path: "/tmp/data.txt")
     /// print("Size: \(stats.size) bytes")
     /// print("Type: \(stats.type)")
     /// print("Permissions: \(stats.permissions)")
     ///
     /// // Get stats by descriptor
-    /// let fd = try Kernel.File.Open.open(path: path, mode: [.read], options: [])
-    /// defer { try? Kernel.Close.close(fd) }
-    /// let fdStats = try Kernel.File.Stats.get(descriptor: fd)
+    /// let fd = try ISO_9945.Kernel.File.Open.open(path: path, mode: [.read], options: [])
+    /// defer { try? ISO_9945.Kernel.Close.close(fd) }
+    /// let fdStats = try ISO_9945.Kernel.File.Stats.get(descriptor: fd)
     /// ```
     ///
     /// ## Platform Notes
@@ -50,7 +50,7 @@ extension Kernel.File {
     /// - ``Kernel/File/Permissions``
     public struct Stats: Sendable, Equatable {
         /// File size in bytes.
-        public let size: Kernel.File.Size
+        public let size: ISO_9945.Kernel.File.Size
 
         /// File type (regular, directory, symlink, etc.).
         public let type: Kind
@@ -58,36 +58,36 @@ extension Kernel.File {
         /// POSIX file permissions (mode_t lower 12 bits).
         ///
         /// On Windows, this is synthesized from file attributes.
-        public let permissions: Kernel.File.Permissions
+        public let permissions: ISO_9945.Kernel.File.Permissions
 
         /// Owner user ID.
         ///
         /// On Windows, this is always 0.
-        public let uid: Kernel.User.ID
+        public let uid: ISO_9945.Kernel.User.ID
 
         /// Owner group ID.
         ///
         /// On Windows, this is always 0.
-        public let gid: Kernel.Group.ID
+        public let gid: ISO_9945.Kernel.Group.ID
 
         /// Inode number.
         ///
         /// On Windows, this is synthesized from file ID.
-        public let inode: Kernel.Inode
+        public let inode: ISO_9945.Kernel.Inode
 
         /// Device ID.
         ///
         /// On Windows, this is synthesized from volume serial number.
-        public let device: Kernel.Device
+        public let device: ISO_9945.Kernel.Device
 
         /// Number of hard links.
-        public let linkCount: Kernel.Link.Count
+        public let linkCount: ISO_9945.Kernel.Link.Count
 
         /// Last access time.
-        public let accessTime: Kernel.Time
+        public let accessTime: ISO_9945.Kernel.Time
 
         /// Last modification time.
-        public let modificationTime: Kernel.Time
+        public let modificationTime: ISO_9945.Kernel.Time
 
         /// Status change time (POSIX) or last write time (Windows).
         ///
@@ -98,7 +98,7 @@ extension Kernel.File {
         /// - Note: This differs from some implementations that use `ftCreationTime`.
         ///   We use `ftLastWriteTime` because it better matches POSIX ctime semantics
         ///   (it updates when the file is modified, whereas creation time never changes).
-        public let changeTime: Kernel.Time
+        public let changeTime: ISO_9945.Kernel.Time
 
         // Note: creationTime/birthtime is NOT included here because it's not available
         // on all platforms. Use platform-specific packages (swift-darwin-primitives,
@@ -107,17 +107,17 @@ extension Kernel.File {
         /// Creates a Stat value.
         @inlinable
         public init(
-            size: Kernel.File.Size,
+            size: ISO_9945.Kernel.File.Size,
             type: Kind,
-            permissions: Kernel.File.Permissions,
-            uid: Kernel.User.ID,
-            gid: Kernel.Group.ID,
-            inode: Kernel.Inode,
-            device: Kernel.Device,
-            linkCount: Kernel.Link.Count,
-            accessTime: Kernel.Time,
-            modificationTime: Kernel.Time,
-            changeTime: Kernel.Time
+            permissions: ISO_9945.Kernel.File.Permissions,
+            uid: ISO_9945.Kernel.User.ID,
+            gid: ISO_9945.Kernel.Group.ID,
+            inode: ISO_9945.Kernel.Inode,
+            device: ISO_9945.Kernel.Device,
+            linkCount: ISO_9945.Kernel.Link.Count,
+            accessTime: ISO_9945.Kernel.Time,
+            modificationTime: ISO_9945.Kernel.Time,
+            changeTime: ISO_9945.Kernel.Time
         ) {
             self.size = size
             self.type = type

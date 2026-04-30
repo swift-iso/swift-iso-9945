@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Copy {
+extension ISO_9945.Kernel.Copy {
     /// Clone operations (copy-on-write).
     ///
     /// Creates copy-on-write clones where supported, sharing data blocks

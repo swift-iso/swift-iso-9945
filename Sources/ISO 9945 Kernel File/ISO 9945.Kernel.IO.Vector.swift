@@ -23,25 +23,25 @@ extension ISO_9945.Kernel.IO.Vector {
     /// in order; the kernel fills each buffer completely before moving to the
     /// next, except on EOF. The typed L2 convenience
     /// (`ISO_9945.Kernel.IO.Vector.read(_:buffers:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor to read from.
     ///   - buffers: Array of ``Segment`` values describing receive buffers.
     /// - Returns: Total number of bytes read across all buffers.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_spi(Syscall)
     public static func read(
         fd: Int32,
         buffers: [Segment]
-    ) throws(Kernel.IO.Read.Error) -> Int {
+    ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
         let iovecs = buffers.map { $0.cValue }
         let result = unsafe iovecs.withUnsafeBufferPointer { buf in
             unsafe readv(fd, buf.baseAddress!, Int32(buf.count))
         }
 
         guard result >= 0 else {
-            throw Kernel.IO.Read.Error.current()
+            throw ISO_9945.Kernel.IO.Read.Error.current()
         }
 
         return result
@@ -57,25 +57,25 @@ extension ISO_9945.Kernel.IO.Vector {
     /// buffers in order; the kernel writes each buffer completely before moving
     /// to the next. The typed L2 convenience
     /// (`ISO_9945.Kernel.IO.Vector.write(_:buffers:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor to write to.
     ///   - buffers: Array of ``Segment`` values describing send buffers.
     /// - Returns: Total number of bytes written across all buffers.
-    /// - Throws: `Kernel.IO.Write.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on failure.
     @_spi(Syscall)
     public static func write(
         fd: Int32,
         buffers: [Segment]
-    ) throws(Kernel.IO.Write.Error) -> Int {
+    ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
         let iovecs = buffers.map { $0.cValue }
         let result = unsafe iovecs.withUnsafeBufferPointer { buf in
             unsafe writev(fd, buf.baseAddress!, Int32(buf.count))
         }
 
         guard result >= 0 else {
-            throw Kernel.IO.Write.Error.current()
+            throw ISO_9945.Kernel.IO.Write.Error.current()
         }
 
         return result
@@ -99,11 +99,11 @@ extension ISO_9945.Kernel.IO.Vector {
     ///   - descriptor: The file descriptor to read from.
     ///   - buffers: Array of ``Segment`` values describing receive buffers.
     /// - Returns: Total number of bytes read across all buffers.
-    /// - Throws: `Kernel.IO.Read.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     public static func read(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         buffers: [Segment]
-    ) throws(Kernel.IO.Read.Error) -> Int {
+    ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
         guard descriptor.isValid else {
             throw .handle(.invalid)
         }
@@ -124,11 +124,11 @@ extension ISO_9945.Kernel.IO.Vector {
     ///   - descriptor: The file descriptor to write to.
     ///   - buffers: Array of ``Segment`` values describing send buffers.
     /// - Returns: Total number of bytes written across all buffers.
-    /// - Throws: `Kernel.IO.Write.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on failure.
     public static func write(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         buffers: [Segment]
-    ) throws(Kernel.IO.Write.Error) -> Int {
+    ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
         guard descriptor.isValid else {
             throw .handle(.invalid)
         }

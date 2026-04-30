@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// POSIX file permissions.
     ///
     /// A type-safe wrapper for POSIX file permission bits (mode_t).
@@ -20,8 +20,8 @@ extension Kernel.File {
     ///
     /// ```swift
     /// // Common presets
-    /// let fd = try Kernel.File.Open.open(path: path, permissions: .standard)
-    /// let exe = try Kernel.File.Open.open(path: path, permissions: .executable)
+    /// let fd = try ISO_9945.Kernel.File.Open.open(path: path, permissions: .standard)
+    /// let exe = try ISO_9945.Kernel.File.Open.open(path: path, permissions: .executable)
     ///
     /// // Combine permissions
     /// let custom = Permissions.ownerReadWrite | .groupRead | .otherRead
@@ -150,11 +150,11 @@ extension Kernel.File {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Kernel.File.Permissions: ExpressibleByIntegerLiteral {
+extension ISO_9945.Kernel.File.Permissions: ExpressibleByIntegerLiteral {
     /// Creates permissions from an octal integer literal.
     ///
     /// ```swift
-    /// let perms: Kernel.File.Permissions = 0o755
+    /// let perms: ISO_9945.Kernel.File.Permissions = 0o755
     /// ```
     @inlinable
     public init(integerLiteral value: UInt16) {
@@ -164,7 +164,7 @@ extension Kernel.File.Permissions: ExpressibleByIntegerLiteral {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.File.Permissions: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Permissions: CustomStringConvertible {
     public var description: Swift.String {
         let owner = "\(rawValue & 0o400 != 0 ? "r" : "-")\(rawValue & 0o200 != 0 ? "w" : "-")\(rawValue & 0o100 != 0 ? "x" : "-")"
         let group = "\(rawValue & 0o040 != 0 ? "r" : "-")\(rawValue & 0o020 != 0 ? "w" : "-")\(rawValue & 0o010 != 0 ? "x" : "-")"

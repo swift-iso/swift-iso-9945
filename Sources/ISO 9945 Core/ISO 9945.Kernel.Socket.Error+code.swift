@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Access
 
-extension Kernel.Socket.Error {
+extension ISO_9945.Kernel.Socket.Error {
     /// The underlying POSIX error code.
     @inlinable
     public var code: Error_Primitives.Error.Code {
@@ -23,7 +23,7 @@ extension Kernel.Socket.Error {
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Socket.Error {
+extension ISO_9945.Kernel.Socket.Error {
     /// Creates an error from a POSIX error code.
     @inlinable
     public init(code: Error_Primitives.Error.Code) {

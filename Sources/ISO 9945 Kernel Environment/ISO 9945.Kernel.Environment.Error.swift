@@ -22,7 +22,7 @@
 
 extension ISO_9945.Kernel.Environment.Error {
     internal init(code: Error_Primitives.Error.Code) {
-        if let e = Kernel.Permission.Error(code: code) {
+        if let e = ISO_9945.Kernel.Permission.Error(code: code) {
             self = .permission(e)
             return
         }

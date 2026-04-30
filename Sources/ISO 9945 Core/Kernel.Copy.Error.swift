@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Copy {
+extension ISO_9945.Kernel.Copy {
     /// Errors from copy operations.
     ///
     /// Each case represents a specific failure mode of `copy_file_range`,
@@ -52,7 +52,7 @@ extension Kernel.Copy {
     }
 }
 
-extension Kernel.Copy.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Copy.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .invalidDescriptor: return "invalid file descriptor"

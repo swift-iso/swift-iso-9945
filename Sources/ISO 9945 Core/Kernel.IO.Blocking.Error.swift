@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.IO.Blocking {
+extension ISO_9945.Kernel.IO.Blocking {
     /// Blocking-related errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// Operation would block on a non-blocking descriptor.
@@ -24,7 +24,7 @@ extension Kernel.IO.Blocking {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.IO.Blocking.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.IO.Blocking.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .wouldBlock:

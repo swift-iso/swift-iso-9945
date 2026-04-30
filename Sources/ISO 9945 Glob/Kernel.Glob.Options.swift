@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// Options for glob pattern matching.
     ///
     /// Options are organized into three categories:

@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.Process.Kill {
     /// try ISO_9945.Kernel.Process.Kill.kill(childPID, .continue)
     /// ```
     public static func kill(
-        _ process: Kernel.Process.ID,
+        _ process: ISO_9945.Kernel.Process.ID,
         _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Process.Error) {
         #if canImport(Darwin)

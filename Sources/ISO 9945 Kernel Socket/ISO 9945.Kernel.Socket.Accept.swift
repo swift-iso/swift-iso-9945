@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Socket {
 // Per Cycle 21, the L2 Kernel Socket API is canonical-raw: take Int32 fds and
 // return Int32 fds via the Result struct. L3-policy callers at swift-posix
 // wrap into POSIX.Kernel.Socket.Descriptor; the cross-platform name
-// Kernel.Socket.Descriptor resolves through the swift-kernel L3 typealias
+// ISO_9945.Kernel.Socket.Descriptor resolves through the swift-kernel L3 typealias
 // chain. Typed convenience overloads were dropped per L1-domain-only
 // architecture.
 
@@ -39,11 +39,11 @@ extension ISO_9945.Kernel.Socket.Accept {
     ///
     /// - Parameter fd: The listening socket raw fd.
     /// - Returns: A result containing the new connected descriptor and peer address.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
-    public static func accept(fd: Int32) throws(Kernel.Socket.Error) -> Result {
-        var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
+    public static func accept(fd: Int32) throws(ISO_9945.Kernel.Socket.Error) -> Result {
+        var storage = ISO_9945.Kernel.Socket.Address.Storage()
+        var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.rawValue.rawValue)
 
         let acceptedFd = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -51,13 +51,13 @@ extension ISO_9945.Kernel.Socket.Accept {
         }
 
         guard acceptedFd >= 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
         return Result(
             descriptor: acceptedFd,
             address: storage,
-            length: Kernel.Socket.Address.Length(addrLen)
+            length: ISO_9945.Kernel.Socket.Address.Length(addrLen)
         )
     }
 }

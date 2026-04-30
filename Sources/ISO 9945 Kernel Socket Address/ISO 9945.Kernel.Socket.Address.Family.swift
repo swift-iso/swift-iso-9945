@@ -7,7 +7,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Socket.Address {
+extension ISO_9945.Kernel.Socket.Address {
     /// Socket address family.
     public struct Family: RawRepresentable, Sendable, Equatable, Hashable {
         public let rawValue: Int32
@@ -20,7 +20,7 @@ extension Kernel.Socket.Address {
 
 // MARK: - Constants
 
-extension Kernel.Socket.Address.Family {
+extension ISO_9945.Kernel.Socket.Address.Family {
     /// IPv4 internet protocols.
     public static let inet = Self(rawValue: Int32(AF_INET))
 

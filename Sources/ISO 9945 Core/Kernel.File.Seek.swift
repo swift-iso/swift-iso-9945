@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File position seeking operations.
     ///
     /// Wraps POSIX `lseek()` / Windows `SetFilePointerEx()`.
@@ -25,7 +25,7 @@ extension Kernel.File {
 
 // MARK: - Whence
 
-extension Kernel.File.Seek {
+extension ISO_9945.Kernel.File.Seek {
     /// The reference point for a seek operation.
     ///
     /// POSIX constants (start, current, end) are in `swift-iso-9945`.
@@ -41,7 +41,7 @@ extension Kernel.File.Seek {
 
 // MARK: - Error
 
-extension Kernel.File.Seek {
+extension ISO_9945.Kernel.File.Seek {
     /// Errors that can occur during seek operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The file descriptor is invalid.
@@ -63,7 +63,7 @@ extension Kernel.File.Seek {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.File.Seek.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Seek.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .invalidDescriptor:

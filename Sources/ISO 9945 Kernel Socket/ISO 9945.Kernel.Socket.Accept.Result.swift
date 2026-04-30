@@ -20,23 +20,23 @@ extension ISO_9945.Kernel.Socket.Accept {
     ///
     /// Per Cycle 21, the descriptor is the raw POSIX fd. L3-policy callers
     /// at swift-posix wrap into POSIX.Kernel.Socket.Descriptor via the
-    /// `Kernel.Socket.Descriptor` typealias chain at swift-kernel L3.
+    /// `ISO_9945.Kernel.Socket.Descriptor` typealias chain at swift-kernel L3.
     @frozen
     public struct Result: Sendable {
         /// The new connected socket file descriptor (raw POSIX fd).
         public var descriptor: Int32
 
         /// The address of the connecting peer.
-        public var address: Kernel.Socket.Address.Storage
+        public var address: ISO_9945.Kernel.Socket.Address.Storage
 
         /// The length of the peer address.
-        public var length: Kernel.Socket.Address.Length
+        public var length: ISO_9945.Kernel.Socket.Address.Length
 
         @inlinable
         internal init(
             descriptor: Int32,
-            address: Kernel.Socket.Address.Storage,
-            length: Kernel.Socket.Address.Length
+            address: ISO_9945.Kernel.Socket.Address.Storage,
+            length: ISO_9945.Kernel.Socket.Address.Length
         ) {
             self.descriptor = descriptor
             self.address = address

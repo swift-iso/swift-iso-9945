@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.File.System.Stats.Error {
+extension ISO_9945.Kernel.File.System.Stats.Error {
     /// Creates an error from a POSIX error code.
     @usableFromInline
     internal init(code: Error_Primitives.Error.Code) {
@@ -19,7 +19,7 @@ extension Kernel.File.System.Stats.Error {
             self = .path(e)
             return
         }
-        if let e = Kernel.Descriptor.Validity.Error(code: code) {
+        if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return
         }

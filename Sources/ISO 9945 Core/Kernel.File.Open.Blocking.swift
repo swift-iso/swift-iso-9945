@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Open {
+extension ISO_9945.Kernel.File.Open {
     /// Blocking behavior options.
     public enum Blocking: Sendable {
         /// Disable blocking I/O.

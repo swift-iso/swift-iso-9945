@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Thread.Affinity {
+extension ISO_9945.Kernel.Thread.Affinity {
     /// The kind of affinity constraint.
     public enum Kind: Sendable, Equatable {
         /// No constraint - OS scheduler decides CPU placement.

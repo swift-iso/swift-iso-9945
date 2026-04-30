@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Access
 
-extension Kernel.File.Flush.Error {
+extension ISO_9945.Kernel.File.Flush.Error {
     /// The underlying POSIX error code.
     @inlinable
     public var code: Error_Primitives.Error.Code {

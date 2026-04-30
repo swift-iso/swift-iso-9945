@@ -11,7 +11,7 @@
 
 @_spi(Internal) public import Tagged_Primitives
 
-extension Kernel.Event {
+extension ISO_9945.Kernel.Event {
     /// Event source identifier.
     ///
     /// Identifies the source of an event, which may be a file descriptor,
@@ -22,12 +22,12 @@ extension Kernel.Event {
     /// - **epoll**: File descriptor (`int`)
     /// - **kqueue**: Identifier type depends on filter (fd, pid, signal, etc.)
     /// - **io_uring**: File descriptor for most operations
-    public typealias ID = Tagged<Kernel.Event, UInt>
+    public typealias ID = Tagged<ISO_9945.Kernel.Event, UInt>
 }
 
 // MARK: - Event.ID Conversions
 
-extension Tagged where Tag == Kernel.Event, RawValue == UInt {
+extension Tagged where Tag == ISO_9945.Kernel.Event, RawValue == UInt {
     /// Creates an identifier from an Int32 (for signals, etc.).
     @inlinable
     public init(_ value: Int32) {

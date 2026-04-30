@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.System {
+extension ISO_9945.Kernel.File.System {
     /// Filesystem type identifier.
     ///
     /// A type-safe wrapper for filesystem type/magic identifiers.
@@ -20,7 +20,7 @@ extension Kernel.File.System {
     /// ## Usage
     ///
     /// ```swift
-    /// let stats = try Kernel.File.System.Stats.get(path)
+    /// let stats = try ISO_9945.Kernel.File.System.Stats.get(path)
     /// #if os(Linux)
     /// if stats.type == .ext4 {
     ///     // ext4 filesystem
@@ -74,7 +74,7 @@ extension Kernel.File.System {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.File.System.Kind: CustomStringConvertible {
+extension ISO_9945.Kernel.File.System.Kind: CustomStringConvertible {
     public var description: Swift.String {
         #if os(Linux)
             switch self {

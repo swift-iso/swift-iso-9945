@@ -16,15 +16,15 @@ extension ISO_9945.Kernel.Group {
 
 extension ISO_9945.Kernel.Group.Effective {
     /// Gets the effective group ID of the calling process.
-    public static func id() -> Kernel.Group.ID {
-        Kernel.Group.ID(__unchecked: (), getegid())
+    public static func id() -> ISO_9945.Kernel.Group.ID {
+        ISO_9945.Kernel.Group.ID(__unchecked: (), getegid())
     }
 
     /// Sets the effective group ID of the calling process.
     ///
     /// - Throws: `Error_Primitives.Error` on failure (EPERM if not privileged).
     public static func set(
-        _ gid: Kernel.Group.ID
+        _ gid: ISO_9945.Kernel.Group.ID
     ) throws(Error_Primitives.Error) {
         guard setegid(gid.rawValue) == 0 else {
             throw Error_Primitives.Error.current(operation: "setegid")

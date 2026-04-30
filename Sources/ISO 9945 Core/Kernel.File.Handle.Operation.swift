@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Operation type for error context.
     public enum Operation: Swift.String, Sendable {
         case read

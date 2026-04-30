@@ -11,9 +11,9 @@
 
 import Algebra_Primitives
 
-// MARK: - POSIX read operations on Kernel.File.Handle
+// MARK: - POSIX read operations on ISO_9945.Kernel.File.Handle
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Reads bytes from the file at the current offset.
     ///
     /// For Direct I/O handles, validates buffer alignment before the syscall.
@@ -49,7 +49,7 @@ extension Kernel.File.Handle {
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pread(
         into buffer: UnsafeMutableRawBufferPointer,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try unsafe ISO_9945.Kernel.IO.Read.pread(descriptor, into: buffer, at: offset)
@@ -64,7 +64,7 @@ extension Kernel.File.Handle {
 
 // MARK: - Span Adapters
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Reads bytes from the file at the current offset into a mutable span.
     ///
     /// - Parameter span: The mutable span to read into.
@@ -94,7 +94,7 @@ extension Kernel.File.Handle {
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pread(
         into span: inout MutableSpan<UInt8>,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Read.pread(descriptor, into: &span, at: offset)

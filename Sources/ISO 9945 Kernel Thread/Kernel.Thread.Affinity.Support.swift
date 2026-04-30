@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Thread.Affinity {
+extension ISO_9945.Kernel.Thread.Affinity {
     /// Platform support level for thread affinity.
     ///
     /// This is a 3-state capability indicator, not a boolean.
@@ -18,7 +18,7 @@ extension Kernel.Thread.Affinity {
     ///
     /// ## Usage
     /// ```swift
-    /// switch Kernel.Thread.affinity.support {
+    /// switch ISO_9945.Kernel.Thread.affinity.support {
     /// case .none:
     ///     print("Affinity not supported on this platform")
     /// case .advisory:

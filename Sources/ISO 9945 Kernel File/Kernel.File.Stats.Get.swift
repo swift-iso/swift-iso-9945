@@ -14,4 +14,4 @@
 // - POSIX: swift-iso-9945 (ISO_9945.Kernel.File.Stats.get)
 // - Windows: swift-windows-primitives (Windows.Kernel.File.Stats.get)
 //
-// The Kernel.File.Stats type definition is in Kernel.File.Stats.swift
+// The ISO_9945.Kernel.File.Stats type definition is in ISO_9945.Kernel.File.Stats.swift

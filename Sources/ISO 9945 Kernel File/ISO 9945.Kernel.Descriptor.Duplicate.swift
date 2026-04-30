@@ -28,11 +28,11 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// Spec-literal raw `dup(2)`. Creates a copy of the file descriptor using
     /// the lowest-numbered available file descriptor. The typed L2 convenience
     /// (`ISO_9945.Kernel.Descriptor.Duplicate.duplicate(_:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameter fd: The raw file descriptor to duplicate.
     /// - Returns: The new raw file descriptor.
-    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure.
     @_spi(Syscall)
     public static func duplicate(fd: Int32) throws(Error) -> Int32 {
         #if canImport(Darwin)
@@ -56,13 +56,13 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// `newFd`'s slot is closed atomically, and the slot is repointed to a
     /// duplicate of `fd`'s resource. The typed L2 convenience
     /// (`ISO_9945.Kernel.Descriptor.Duplicate.duplicate(_:to:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor to duplicate.
     ///   - newFd: The target slot. After return, this slot refers to the
     ///     duplicated kernel resource.
-    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure. On throw,
+    /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure. On throw,
     ///   `newFd`'s slot is unchanged and still refers to its original
     ///   resource.
     @_spi(Syscall)
@@ -91,17 +91,17 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     ///
     /// Typed L2 form. Delegates to the raw `duplicate(fd:)` SPI via
     /// `descriptor._rawValue` and wraps the returned raw fd in a typed
-    /// `Kernel.Descriptor`.
+    /// `ISO_9945.Kernel.Descriptor`.
     ///
     /// Creates a copy of the file descriptor using the lowest-numbered
     /// available file descriptor.
     ///
     /// - Parameter descriptor: The file descriptor to duplicate.
     /// - Returns: The new file descriptor.
-    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure.
-    public static func duplicate(_ descriptor: borrowing Kernel.Descriptor) throws(Error) -> Kernel.Descriptor {
+    /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure.
+    public static func duplicate(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) -> ISO_9945.Kernel.Descriptor {
         let rawNew = try unsafe duplicate(fd: descriptor._rawValue)
-        return Kernel.Descriptor(_rawValue: rawNew)
+        return ISO_9945.Kernel.Descriptor(_rawValue: rawNew)
     }
 
     /// Duplicates a file descriptor into an existing descriptor slot, atomically
@@ -119,17 +119,17 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// no state mutation: its `_raw` still holds the same fd number, which now
     /// refers to the duplicate. The `inout` parameter expresses the exclusive
     /// borrow required for the syscall and prevents aliasing constructions
-    /// (e.g., returning a second `Kernel.Descriptor` wrapping the same slot).
+    /// (e.g., returning a second `ISO_9945.Kernel.Descriptor` wrapping the same slot).
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor to duplicate.
     ///   - newDescriptor: The target slot. Mutated in place: on success, this
     ///     wrapper now refers to the new (duplicated) kernel resource.
-    /// - Throws: `Kernel.Descriptor.Duplicate.Error` on failure. On throw,
+    /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure. On throw,
     ///   `newDescriptor` is unchanged and still refers to its original resource.
     public static func duplicate(
-        _ descriptor: borrowing Kernel.Descriptor,
-        to newDescriptor: inout Kernel.Descriptor
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        to newDescriptor: inout ISO_9945.Kernel.Descriptor
     ) throws(Error) {
         try unsafe duplicate(fd: descriptor._rawValue, toFd: newDescriptor._rawValue)
         // dup2 returns newDescriptor's slot — the wrapper's _raw is already

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Socket operations and types.
     ///
     /// Provides low-level socket syscall wrappers. For higher-level networking,

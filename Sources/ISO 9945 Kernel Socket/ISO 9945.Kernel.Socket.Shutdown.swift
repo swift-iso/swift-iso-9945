@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     /// - Parameters:
     ///   - fd: The socket file descriptor.
     ///   - how: Which half of the connection to shut down.
-    /// - Throws: `Kernel.Socket.Shutdown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Shutdown.Error` on failure.
     @_spi(Syscall)
     public static func shutdown(
         fd: Int32,
@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
         #endif
 
         guard result == 0 else {
-            throw Kernel.Socket.Shutdown.Error.current()
+            throw ISO_9945.Kernel.Socket.Shutdown.Error.current()
         }
     }
 }

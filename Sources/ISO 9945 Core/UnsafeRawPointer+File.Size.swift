@@ -19,7 +19,7 @@ extension UnsafeMutableRawPointer {
     /// - Returns: A pointer advanced by the size's byte count.
     @inlinable
     @unsafe
-    public func advanced(by size: Kernel.File.Size) -> UnsafeMutableRawPointer {
+    public func advanced(by size: ISO_9945.Kernel.File.Size) -> UnsafeMutableRawPointer {
         unsafe advanced(by: Int(size))
     }
 }
@@ -31,7 +31,7 @@ extension UnsafeRawPointer {
     /// - Returns: A pointer advanced by the size's byte count.
     @inlinable
     @unsafe
-    public func advanced(by size: Kernel.File.Size) -> UnsafeRawPointer {
+    public func advanced(by size: ISO_9945.Kernel.File.Size) -> UnsafeRawPointer {
         unsafe advanced(by: Int(size))
     }
 }

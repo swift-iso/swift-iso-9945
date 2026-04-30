@@ -11,11 +11,11 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.File.Control.Error {
+extension ISO_9945.Kernel.File.Control.Error {
     /// Creates an error from a POSIX error code.
     @usableFromInline
     internal init(code: Error_Primitives.Error.Code) {
-        if let e = Kernel.Descriptor.Validity.Error(code: code) {
+        if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return
         }

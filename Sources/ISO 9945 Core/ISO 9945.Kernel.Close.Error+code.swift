@@ -11,11 +11,11 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Close.Error {
+extension ISO_9945.Kernel.Close.Error {
     /// Creates an error from a POSIX error code.
     @inlinable
     public init(code: Error_Primitives.Error.Code) {
-        if let e = Kernel.Descriptor.Validity.Error(code: code) {
+        if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return
         }

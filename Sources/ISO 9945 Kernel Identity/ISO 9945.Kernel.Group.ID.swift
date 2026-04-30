@@ -16,15 +16,15 @@ extension ISO_9945.Kernel.Group {
 
 extension ISO_9945.Kernel.Group.Real {
     /// Gets the real group ID of the calling process.
-    public static func id() -> Kernel.Group.ID {
-        Kernel.Group.ID(__unchecked: (), getgid())
+    public static func id() -> ISO_9945.Kernel.Group.ID {
+        ISO_9945.Kernel.Group.ID(__unchecked: (), getgid())
     }
 
     /// Sets the real group ID of the calling process.
     ///
     /// - Throws: `Error_Primitives.Error` on failure (EPERM if not privileged).
     public static func set(
-        _ gid: Kernel.Group.ID
+        _ gid: ISO_9945.Kernel.Group.ID
     ) throws(Error_Primitives.Error) {
         guard setgid(gid.rawValue) == 0 else {
             throw Error_Primitives.Error.current(operation: "setgid")

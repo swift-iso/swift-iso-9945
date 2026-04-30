@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Thread.Affinity {
+extension ISO_9945.Kernel.Thread.Affinity {
     /// Errors from thread affinity operations.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// Thread affinity not supported on this platform.
@@ -34,7 +34,7 @@ extension Kernel.Thread.Affinity {
     }
 }
 
-extension Kernel.Thread.Affinity.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Thread.Affinity.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .unsupported:

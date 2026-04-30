@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.File.Move {
     /// - Parameters:
     ///   - oldPath: The current path.
     ///   - newPath: The new path.
-    /// - Throws: `Kernel.File.Move.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
 
     @unsafe
     public static func move(
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.File.Move {
     /// - Parameters:
     ///   - oldPath: The current path.
     ///   - newPath: The new path.
-    /// - Throws: `Kernel.File.Move.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
     public static func move(
         from oldPath: borrowing Path.Borrowed,
         to newPath: borrowing Path.Borrowed
@@ -78,14 +78,14 @@ extension ISO_9945.Kernel.File.Move {
     ///
     /// Spec-literal raw `renameat(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Move.move(from:oldPath:to:newPath:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - oldFd: Raw directory descriptor for the old path.
     ///   - oldPath: The current path.
     ///   - newFd: Raw directory descriptor for the new path.
     ///   - newPath: The new path.
-    /// - Throws: `Kernel.File.Move.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
     @_spi(Syscall)
     public static func move(
         from oldFd: Int32,
@@ -123,12 +123,12 @@ extension ISO_9945.Kernel.File.Move {
     ///   - oldPath: The current path.
     ///   - newDescriptor: Directory descriptor for the new path.
     ///   - newPath: The new path.
-    /// - Throws: `Kernel.File.Move.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
 
     public static func move(
-        from oldDescriptor: borrowing Kernel.Descriptor,
+        from oldDescriptor: borrowing ISO_9945.Kernel.Descriptor,
         oldPath: UnsafePointer<Path.Char>,
-        to newDescriptor: borrowing Kernel.Descriptor,
+        to newDescriptor: borrowing ISO_9945.Kernel.Descriptor,
         newPath: UnsafePointer<Path.Char>
     ) throws(Error) {
         try unsafe move(
@@ -143,7 +143,7 @@ extension ISO_9945.Kernel.File.Move {
 // MARK: - Error
 
 extension ISO_9945.Kernel.File.Move {
-    public typealias Error = Kernel.File.Move.Error
+    public typealias Error = ISO_9945.Kernel.File.Move.Error
 }
 
 extension ISO_9945.Kernel.File.Move.Error {

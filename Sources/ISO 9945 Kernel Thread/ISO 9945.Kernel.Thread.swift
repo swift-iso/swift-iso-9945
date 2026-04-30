@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Thread {
 
     public static func create(
         _ body: @escaping @Sendable () -> Void
-    ) throws(Kernel.Thread.Error) -> Kernel.Thread.Handle {
+    ) throws(ISO_9945.Kernel.Thread.Error) -> ISO_9945.Kernel.Thread.Handle {
         let context = UnsafeMutablePointer<(@Sendable () -> Void)>.allocate(capacity: 1)
         unsafe context.initialize(to: body)
 
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.Thread {
             throw .create(.posix(result))
         }
 
-        return unsafe Kernel.Thread.Handle(rawValue: thread)
+        return unsafe ISO_9945.Kernel.Thread.Handle(rawValue: thread)
 
         #else
         // Linux: pthread_t is non-optional
@@ -84,7 +84,7 @@ extension ISO_9945.Kernel.Thread {
             throw .create(.posix(result))
         }
 
-        return Kernel.Thread.Handle(rawValue: thread)
+        return ISO_9945.Kernel.Thread.Handle(rawValue: thread)
         #endif
     }
 }

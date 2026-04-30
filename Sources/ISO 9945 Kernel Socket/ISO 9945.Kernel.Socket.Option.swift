@@ -32,13 +32,13 @@ extension ISO_9945.Kernel.Socket.Option {
     ///   - level: The option level (e.g., `.socket`, `.tcp`).
     ///   - name: The option name (platform constant, e.g., `SO_REUSEADDR`).
     /// - Returns: The option value.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func get(
         fd: Int32,
         level: Level,
         name: Int32
-    ) throws(Kernel.Socket.Error) -> Int32 {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int32 {
         var value: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
@@ -51,7 +51,7 @@ extension ISO_9945.Kernel.Socket.Option {
         )
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
         return value
@@ -64,14 +64,14 @@ extension ISO_9945.Kernel.Socket.Option {
     ///   - level: The option level (e.g., `.socket`, `.tcp`).
     ///   - name: The option name (platform constant, e.g., `SO_REUSEADDR`).
     ///   - value: The option value to set.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func set(
         fd: Int32,
         level: Level,
         name: Int32,
         value: Int32
-    ) throws(Kernel.Socket.Error) {
+    ) throws(ISO_9945.Kernel.Socket.Error) {
         var val = value
         let rc = unsafe setsockopt(
             fd,
@@ -82,7 +82,7 @@ extension ISO_9945.Kernel.Socket.Option {
         )
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
     }
 }
@@ -96,7 +96,7 @@ extension ISO_9945.Kernel.Socket.Option {
         fd: Int32,
         level: Level,
         name: Int32
-    ) throws(Kernel.Socket.Error) -> Bool {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Bool {
         let value: Int32 = try get(fd: fd, level: level, name: name)
         return value != 0
     }
@@ -108,7 +108,7 @@ extension ISO_9945.Kernel.Socket.Option {
         level: Level,
         name: Int32,
         enabled: Bool
-    ) throws(Kernel.Socket.Error) {
+    ) throws(ISO_9945.Kernel.Socket.Error) {
         try set(fd: fd, level: level, name: name, value: enabled ? 1 : 0)
     }
 }

@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Time {
         #endif
     }
 
-    /// Gets the current wall-clock time as a typed `Kernel.Time`.
+    /// Gets the current wall-clock time as a typed `ISO_9945.Kernel.Time`.
     ///
     /// Uses `clock_gettime(CLOCK_REALTIME, ...)` which tracks real-world time.
     /// Subject to NTP adjustments and manual clock changes — NOT suitable for
@@ -48,7 +48,7 @@ extension ISO_9945.Kernel.Time {
     ///
     /// - Returns: The current wall-clock reading as seconds and nanoseconds
     ///   since 1970-01-01 00:00:00 UTC (nanosecond precision).
-    public static func realtime() -> Kernel.Time {
+    public static func realtime() -> ISO_9945.Kernel.Time {
         #if canImport(Darwin)
             var ts = Darwin.timespec()
         #elseif canImport(Musl)
@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Time {
             var ts = Glibc.timespec()
         #endif
         unsafe clock_gettime(CLOCK_REALTIME, &ts)
-        return Kernel.Time(
+        return ISO_9945.Kernel.Time(
             __unchecked: (),
             secondsSinceUnixEpoch: Int64(ts.tv_sec),
             nanosecondFraction: Int32(ts.tv_nsec)

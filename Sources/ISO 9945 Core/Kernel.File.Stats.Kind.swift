@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Stats {
+extension ISO_9945.Kernel.File.Stats {
     /// File type.
     public enum Kind: Sendable, Equatable, Hashable {
         /// Regular file.

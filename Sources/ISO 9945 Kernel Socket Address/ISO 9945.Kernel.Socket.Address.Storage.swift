@@ -7,7 +7,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Socket.Address {
+extension ISO_9945.Kernel.Socket.Address {
     /// Generic socket address container.
     ///
     /// Wraps `sockaddr_storage` — large enough to hold any address family.
@@ -25,21 +25,21 @@ extension Kernel.Socket.Address {
 
 // MARK: - Accessors
 
-extension Kernel.Socket.Address.Storage {
+extension ISO_9945.Kernel.Socket.Address.Storage {
     /// The address family.
-    public var family: Kernel.Socket.Address.Family {
-        get { Kernel.Socket.Address.Family(rawValue: Int32(cValue.ss_family)) }
+    public var family: ISO_9945.Kernel.Socket.Address.Family {
+        get { ISO_9945.Kernel.Socket.Address.Family(rawValue: Int32(cValue.ss_family)) }
     }
 
     /// The size of the underlying `sockaddr_storage` structure.
-    public static var size: Kernel.Socket.Address.Length {
-        Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_storage>.size))
+    public static var size: ISO_9945.Kernel.Socket.Address.Length {
+        ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_storage>.size))
     }
 }
 
 // MARK: - Unsafe Access
 
-extension Kernel.Socket.Address.Storage {
+extension ISO_9945.Kernel.Socket.Address.Storage {
     /// Calls `body` with a raw pointer to the underlying address and its size in bytes.
     ///
     /// Used by syscall wrappers (bind, connect) that need a `sockaddr *` parameter.

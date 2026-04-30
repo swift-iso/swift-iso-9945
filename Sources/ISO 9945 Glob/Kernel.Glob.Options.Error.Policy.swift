@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob.Options.Error {
+extension ISO_9945.Kernel.Glob.Options.Error {
     /// Error handling policy during traversal.
     public enum Policy: Sendable, Hashable {
         /// Stop and throw on first error.

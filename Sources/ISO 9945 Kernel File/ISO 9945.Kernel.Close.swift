@@ -20,7 +20,7 @@
 
 // MARK: - POSIX close() — spec-literal raw
 
-extension Kernel.Close {
+extension ISO_9945.Kernel.Close {
     /// Raw POSIX `close(2)` syscall.
     ///
     /// Spec-literal: takes a file descriptor, returns the C-level result.
@@ -28,7 +28,7 @@ extension Kernel.Close {
     /// inspects the return value and reads `errno` on failure if needed.
     ///
     /// L3-policy throwing wrappers (`POSIX.Kernel.Close.close(_:)` in
-    /// swift-posix) compose this raw call with errno-to-`Kernel.Close.Error`
+    /// swift-posix) compose this raw call with errno-to-`ISO_9945.Kernel.Close.Error`
     /// mapping per [PLAT-ARCH-008e]. L1 syscall callers MUST NOT call this
     /// function directly; the L1 → L3-policy → L2 chain is mandatory.
     ///

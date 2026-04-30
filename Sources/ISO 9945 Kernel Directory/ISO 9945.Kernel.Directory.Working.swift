@@ -45,7 +45,7 @@ extension ISO_9945.Kernel.Directory.Working {
         #endif
 
         guard unsafe (result != nil) else {
-            throw Kernel.Directory.Working.Error.current()
+            throw ISO_9945.Kernel.Directory.Working.Error.current()
         }
 
         // Find null terminator to get length
@@ -92,7 +92,7 @@ extension ISO_9945.Kernel.Directory.Working {
             #endif
 
             guard unsafe (cwdResult != nil) else {
-                thrown = Kernel.Directory.Working.Error.current()
+                thrown = ISO_9945.Kernel.Directory.Working.Error.current()
                 return
             }
 
@@ -141,7 +141,7 @@ extension ISO_9945.Kernel.Directory.Working {
             #endif
 
             guard unsafe (cwdResult != nil) else {
-                thrown = Kernel.Directory.Working.Error.current()
+                thrown = ISO_9945.Kernel.Directory.Working.Error.current()
                 return
             }
 

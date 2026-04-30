@@ -19,7 +19,7 @@
 //
 // The L2 raw classes are spec-literal (POSIX `pthread_key_t` →
 // `Key`; Windows TLS index → `Index`) per [API-NAME-003]. The L3
-// unifier `Kernel.Thread.Local<Payload>` (in `swift-kernel`) wraps
+// unifier `ISO_9945.Kernel.Thread.Local<Payload>` (in `swift-kernel`) wraps
 // either platform raw class with typed payload accessors — per
 // [PLAT-ARCH-008f] solution (a).
 //

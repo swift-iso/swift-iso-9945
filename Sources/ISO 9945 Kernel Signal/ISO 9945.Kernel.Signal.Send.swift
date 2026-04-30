@@ -54,7 +54,7 @@ extension ISO_9945.Kernel.Signal.Send {
 
     public static func toProcess(
         _ signal: ISO_9945.Kernel.Signal.Number,
-        pid: Kernel.Process.ID
+        pid: ISO_9945.Kernel.Process.ID
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard kill(pid.rawValue, signal.rawValue) == 0 else {
             throw .send(Error_Primitives.Error.captureErrno())

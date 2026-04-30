@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.File.Delete {
     /// Removes a file or symbolic link.
     ///
     /// - Parameter path: The path to the file to remove.
-    /// - Throws: `Kernel.File.Delete.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Delete.Error` on failure.
     public static func delete(_ path: borrowing Path.Borrowed) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe _delete(cString)
@@ -57,13 +57,13 @@ extension ISO_9945.Kernel.File.Delete {
     ///
     /// Spec-literal raw `unlinkat(2)`. The typed L2 internal-only convenience
     /// (`ISO_9945.Kernel.File.Delete._delete(relativeTo:path:flags:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: Raw directory descriptor (or AT_FDCWD for current directory).
     ///   - path: The path to the file to remove.
     ///   - flags: Options to control the operation (e.g., AT_REMOVEDIR).
-    /// - Throws: `Kernel.File.Delete.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Delete.Error` on failure.
     @_spi(Syscall)
     public static func delete(
         fd: Int32,
@@ -96,10 +96,10 @@ extension ISO_9945.Kernel.File.Delete {
     ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
     ///   - path: The path to the file to remove.
     ///   - flags: Options to control the operation (e.g., AT_REMOVEDIR).
-    /// - Throws: `Kernel.File.Delete.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Delete.Error` on failure.
     @usableFromInline
     internal static func _delete(
-        relativeTo descriptor: borrowing Kernel.Descriptor,
+        relativeTo descriptor: borrowing ISO_9945.Kernel.Descriptor,
         path: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
@@ -110,7 +110,7 @@ extension ISO_9945.Kernel.File.Delete {
 // MARK: - Error
 
 extension ISO_9945.Kernel.File.Delete {
-    public typealias Error = Kernel.File.Delete.Error
+    public typealias Error = ISO_9945.Kernel.File.Delete.Error
 }
 
 extension ISO_9945.Kernel.File.Delete.Error {

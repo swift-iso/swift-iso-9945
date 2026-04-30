@@ -23,7 +23,7 @@ extension ISO_9945.Glob {
 extension ISO_9945.Glob {
     /// Wraps `glob(3)`. Expands a pattern into matching paths.
     ///
-    /// Allocates internally via `glob_t`. Prefer `Kernel.Glob.match` at L3
+    /// Allocates internally via `glob_t`. Prefer `ISO_9945.Kernel.Glob.match` at L3
     /// for streaming results and `**` support.
     ///
     /// - Parameters:

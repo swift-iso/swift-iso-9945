@@ -11,7 +11,7 @@
 
 // MARK: - POSIX random namespace anchor
 //
-// Re-declares the empty `Kernel.Random` namespace at L2 so that platform
+// Re-declares the empty `ISO_9945.Kernel.Random` namespace at L2 so that platform
 // syscall extensions (`Linux.Kernel.Random.getrandom`,
 // `Darwin.Kernel.Random.arc4random`) compile against a fresh namespace
 // shell after the L1 `swift-kernel-primitives` Kernel Random Primitives
@@ -19,6 +19,6 @@
 // throwable type is `Random_Primitives.Random.Error`; this namespace is
 // purely an extension host for platform-specific syscall wrappers.
 
-extension Kernel {
+extension ISO_9945.Kernel {
     public enum Random {}
 }

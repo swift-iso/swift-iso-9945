@@ -11,16 +11,16 @@
 
 
 
-extension Kernel.File.Direct.Requirements.Alignment {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for offset alignment validation.
     public struct Offset: Sendable {
-        let alignment: Kernel.File.Direct.Requirements.Alignment
+        let alignment: ISO_9945.Kernel.File.Direct.Requirements.Alignment
 
         /// Validates that a file offset is properly aligned.
         ///
         /// - Parameter offset: The file offset to validate.
         /// - Returns: `true` if the offset is a multiple of `offsetAlignment`.
-        public func isAligned(_ offset: Kernel.File.Offset) -> Bool {
+        public func isAligned(_ offset: ISO_9945.Kernel.File.Offset) -> Bool {
             let mask: Int64 = alignment.offsetAlignment.mask()
             return offset.rawValue & mask == 0
         }

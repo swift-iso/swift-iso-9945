@@ -26,14 +26,14 @@ extension ISO_9945.Kernel.Pipe.Close {
     ///
     /// - Parameter descriptors: The pipe descriptors (consumed).
     /// - Returns: The read-end descriptor.
-    /// - Throws: `Kernel.Close.Error` if closing the write end fails.
+    /// - Throws: `ISO_9945.Kernel.Close.Error` if closing the write end fails.
     ///   On error, the read end is also closed (via deinit).
     public static func write(
-        _ descriptors: consuming Kernel.Pipe.Descriptors
-    ) throws(Kernel.Close.Error) -> Kernel.Descriptor {
-        let tagged = try descriptors.map { (pair: consuming Pair<Kernel.Descriptor, Kernel.Descriptor>) throws(Kernel.Close.Error) -> Kernel.Descriptor in
-            try pair.apply { (read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) throws(Kernel.Close.Error) -> Kernel.Descriptor in
-                try Kernel.Close.close(write)
+        _ descriptors: consuming ISO_9945.Kernel.Pipe.Descriptors
+    ) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor {
+        let tagged = try descriptors.map { (pair: consuming Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
+            try pair.apply { (read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
+                try ISO_9945.Kernel.Close.close(write)
                 return read
             }
         }
@@ -48,14 +48,14 @@ extension ISO_9945.Kernel.Pipe.Close {
     ///
     /// - Parameter descriptors: The pipe descriptors (consumed).
     /// - Returns: The write-end descriptor.
-    /// - Throws: `Kernel.Close.Error` if closing the read end fails.
+    /// - Throws: `ISO_9945.Kernel.Close.Error` if closing the read end fails.
     ///   On error, the write end is also closed (via deinit).
     public static func read(
-        _ descriptors: consuming Kernel.Pipe.Descriptors
-    ) throws(Kernel.Close.Error) -> Kernel.Descriptor {
-        let tagged = try descriptors.map { (pair: consuming Pair<Kernel.Descriptor, Kernel.Descriptor>) throws(Kernel.Close.Error) -> Kernel.Descriptor in
-            try pair.apply { (read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) throws(Kernel.Close.Error) -> Kernel.Descriptor in
-                try Kernel.Close.close(read)
+        _ descriptors: consuming ISO_9945.Kernel.Pipe.Descriptors
+    ) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor {
+        let tagged = try descriptors.map { (pair: consuming Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
+            try pair.apply { (read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
+                try ISO_9945.Kernel.Close.close(read)
                 return write
             }
         }

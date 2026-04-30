@@ -21,7 +21,7 @@
 // MARK: - POSIX process ID operations
 
 extension ISO_9945.Kernel.Process {
-    public typealias ID = Kernel.Process.ID
+    public typealias ID = ISO_9945.Kernel.Process.ID
 }
 
 extension ISO_9945.Kernel.Process.ID {

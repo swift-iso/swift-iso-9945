@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Socket.Shutdown.Error {
+extension ISO_9945.Kernel.Socket.Shutdown.Error {
     /// Creates an error from a POSIX error code.
     @usableFromInline
     internal init(code: Error_Primitives.Error.Code) {

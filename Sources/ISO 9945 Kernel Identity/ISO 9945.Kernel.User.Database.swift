@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.User.Database {
     ///
     /// - Parameter uid: The user ID to look up.
     /// - Returns: The user entry, or `nil` if not found.
-    public static func find(uid: Kernel.User.ID) -> Entry? {
+    public static func find(uid: ISO_9945.Kernel.User.ID) -> Entry? {
         guard let pw = unsafe getpwuid(uid.rawValue) else { return nil }
         return unsafe entry(from: pw)
     }
@@ -36,8 +36,8 @@ extension ISO_9945.Kernel.User.Database {
     private static func entry(from pw: UnsafePointer<passwd>) -> Entry {
         unsafe Entry(
             name: String(cString: pw.pointee.pw_name),
-            uid: Kernel.User.ID(__unchecked: (), pw.pointee.pw_uid),
-            gid: Kernel.Group.ID(__unchecked: (), pw.pointee.pw_gid),
+            uid: ISO_9945.Kernel.User.ID(__unchecked: (), pw.pointee.pw_uid),
+            gid: ISO_9945.Kernel.Group.ID(__unchecked: (), pw.pointee.pw_gid),
             home: String(cString: pw.pointee.pw_dir),
             shell: String(cString: pw.pointee.pw_shell)
         )

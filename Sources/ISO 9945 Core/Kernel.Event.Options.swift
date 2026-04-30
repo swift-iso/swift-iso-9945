@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.Event {
+extension ISO_9945.Kernel.Event {
     /// Additional status flags accompanying an event.
     ///
     /// Options provide supplementary information about the event, such as
@@ -40,7 +40,7 @@ extension Kernel.Event {
     }
 }
 
-extension Kernel.Event.Options: CustomStringConvertible {
+extension ISO_9945.Kernel.Event.Options: CustomStringConvertible {
     public var description: Swift.String {
         var parts: [Swift.String] = []
         if contains(.error) { parts.append("error") }

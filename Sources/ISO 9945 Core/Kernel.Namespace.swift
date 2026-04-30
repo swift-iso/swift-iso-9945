@@ -9,12 +9,14 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// G6.D parallel-roots: `Kernel` namespace declared at iso-9945 L2.
-// Per Path X terminal step, swift-kernel-primitives package no longer
-// exists; the Kernel root namespace lives at L2 spec packages directly
-// (parallel declarations at iso-9945 + windows-standard). Cross-platform
-// consumers reach exactly one Kernel via swift-kernel L3's conditional
-// re-export of the platform L2.
+// G6.D typealias-via-L3 namespace anchor (per [PLAT-ARCH-005]):
+// - Canonical POSIX Kernel type is nested under ISO_9945 (`ISO_9945.Kernel`).
+// - swift-kernel L3 declares `public typealias Kernel = ISO_9945.Kernel`
+//   per #if-os to provide the unified cross-platform name.
+// - swift-kernel-primitives package no longer exists; the Kernel root
+//   namespace lives at L2 spec packages.
 
-/// Root namespace for kernel-shaped APIs.
-public enum Kernel: Sendable {}
+extension ISO_9945 {
+    /// Root namespace for kernel-shaped APIs (POSIX canonical).
+    public enum Kernel: Sendable {}
+}

@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Directory.Working.Error {
+extension ISO_9945.Kernel.Directory.Working.Error {
     /// Creates an error from a POSIX error code.
     @usableFromInline
     internal init(code: Error_Primitives.Error.Code) {

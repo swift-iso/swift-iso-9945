@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// Namespace for scalar-level operations.
     public enum Scalar {}
 }

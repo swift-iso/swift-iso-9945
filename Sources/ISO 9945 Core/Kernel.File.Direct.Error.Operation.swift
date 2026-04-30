@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct.Error {
+extension ISO_9945.Kernel.File.Direct.Error {
     /// Direct I/O operation types for syscall error context.
     public enum Operation: Sendable, Equatable {
         case open

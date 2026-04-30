@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct.Requirements {
+extension ISO_9945.Kernel.File.Direct.Requirements {
     /// Reason why requirements could not be determined.
     public enum Reason: Sendable, Equatable, CustomStringConvertible {
         /// The platform does not support strict Direct I/O.

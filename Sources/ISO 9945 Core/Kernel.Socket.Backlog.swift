@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Socket {
+extension ISO_9945.Kernel.Socket {
     /// Listen backlog size.
     ///
     /// Specifies the maximum length of the queue of pending connections
@@ -57,7 +57,7 @@ extension Kernel.Socket {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Kernel.Socket.Backlog: ExpressibleByIntegerLiteral {
+extension ISO_9945.Kernel.Socket.Backlog: ExpressibleByIntegerLiteral {
     @inlinable
     public init(integerLiteral value: Int32) {
         self.rawValue = value
@@ -66,7 +66,7 @@ extension Kernel.Socket.Backlog: ExpressibleByIntegerLiteral {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Socket.Backlog: CustomStringConvertible {
+extension ISO_9945.Kernel.Socket.Backlog: CustomStringConvertible {
     public var description: Swift.String {
         "\(rawValue)"
     }

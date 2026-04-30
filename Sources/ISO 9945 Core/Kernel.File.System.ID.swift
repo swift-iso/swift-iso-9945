@@ -10,11 +10,11 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.System {
+extension ISO_9945.Kernel.File.System {
     /// Filesystem identifier.
     ///
     /// On POSIX systems, this is derived from `f_fsid`.
     /// On Windows, this is the volume serial number.
-    public typealias ID = Tagged<Kernel.File.System, UInt64>
+    public typealias ID = Tagged<ISO_9945.Kernel.File.System, UInt64>
 }
 

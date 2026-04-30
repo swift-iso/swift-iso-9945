@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.Link {
     /// - Parameters:
     ///   - linkPath: The path where the hard link will be created.
     ///   - existingPath: The path to the existing file.
-    /// - Throws: `Kernel.Link.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Error` on failure.
     public static func create(
         at linkPath: borrowing Path.Borrowed,
         to existingPath: borrowing Path.Borrowed
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Link {
     ///
     /// Spec-literal raw `linkat(2)`. The typed L2 internal-only convenience
     /// (`ISO_9945.Kernel.Link._create(from:existingPath:at:linkPath:flags:)`
-    /// taking `borrowing Kernel.Descriptor`) delegates to this raw SPI
+    /// taking `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI
     /// internally.
     ///
     /// - Parameters:
@@ -81,7 +81,7 @@ extension ISO_9945.Kernel.Link {
     ///   - linkFd: Raw directory descriptor for the link path.
     ///   - linkPath: The path where the hard link will be created.
     ///   - flags: Resolution flags (e.g., AT_SYMLINK_FOLLOW).
-    /// - Throws: `Kernel.Link.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Link.Error` on failure.
     @_spi(Syscall)
     public static func create(
         fromFd existingFd: Int32,
@@ -117,9 +117,9 @@ extension ISO_9945.Kernel.Link {
     /// `descriptor._rawValue`.
     @usableFromInline
     internal static func _create(
-        from existingDescriptor: borrowing Kernel.Descriptor,
+        from existingDescriptor: borrowing ISO_9945.Kernel.Descriptor,
         existingPath: UnsafePointer<Path.Char>,
-        at linkDescriptor: borrowing Kernel.Descriptor,
+        at linkDescriptor: borrowing ISO_9945.Kernel.Descriptor,
         linkPath: UnsafePointer<Path.Char>,
         flags: Int32 = 0
     ) throws(Error) {
@@ -136,7 +136,7 @@ extension ISO_9945.Kernel.Link {
 // MARK: - Error
 
 extension ISO_9945.Kernel.Link {
-    public typealias Error = Kernel.Link.Error
+    public typealias Error = ISO_9945.Kernel.Link.Error
 }
 
 extension ISO_9945.Kernel.Link.Error {

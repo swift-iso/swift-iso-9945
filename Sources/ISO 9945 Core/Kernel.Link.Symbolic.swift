@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Link {
+extension ISO_9945.Kernel.Link {
     /// Symbolic link operations.
     ///
     /// Creates and reads symbolic links (soft links). A symbolic link is a
@@ -28,7 +28,7 @@ extension Kernel.Link {
 
 // MARK: - Error
 
-extension Kernel.Link.Symbolic {
+extension ISO_9945.Kernel.Link.Symbolic {
     /// Errors that can occur during symbolic link operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// A component of the path does not exist.
@@ -66,7 +66,7 @@ extension Kernel.Link.Symbolic {
     }
 }
 
-extension Kernel.Link.Symbolic.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Link.Symbolic.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "path not found"

@@ -18,9 +18,9 @@
 extension Terminal.Stream.Interactive {
     /// Check if this stream is attached to an interactive terminal.
     ///
-    /// Uses `Kernel.TTY.isTTY()` which wraps `isatty()`.
+    /// Uses `ISO_9945.Kernel.TTY.isTTY()` which wraps `isatty()`.
     public func callAsFunction() -> Bool {
-        Kernel.TTY.isTTY(fd: stream.rawValue)
+        ISO_9945.Kernel.TTY.isTTY(fd: stream.rawValue)
     }
 }
 
@@ -29,14 +29,14 @@ extension Terminal.Stream.Interactive {
 extension Terminal.Size {
     /// Query terminal dimensions.
     ///
-    /// Uses `Kernel.TTY.Size.query()` which wraps `ioctl(TIOCGWINSZ)`.
+    /// Uses `ISO_9945.Kernel.TTY.Size.query()` which wraps `ioctl(TIOCGWINSZ)`.
     ///
     /// - Parameter stream: Stream to query (default: stdout)
     /// - Returns: Terminal size in rows and columns
     /// - Throws: ``Terminal.Error`` if query fails
     public static func query(stream: Terminal.Stream = .stdout) throws(Terminal.Error) -> Self {
         do {
-            let kernelSize = try Kernel.TTY.Size.query(fd: stream.rawValue)
+            let kernelSize = try ISO_9945.Kernel.TTY.Size.query(fd: stream.rawValue)
             return Terminal.Size(rows: kernelSize.rows, columns: kernelSize.columns)
         } catch let error {
             throw Terminal.Error(operation: .querySize, underlying: .kernel(error))
@@ -47,7 +47,7 @@ extension Terminal.Size {
 // Raw mode enter() and restore() relocated to L3 swift-kernel
 // (Sources/Kernel Terminal/Terminal.Mode.Raw.Token.swift) in Cycle 22:
 // they reference Token + Previous which moved to L3 because Previous's
-// .posix case carries Kernel.Termios.Attributes — an L2 type post-Cycle-22 —
+// .posix case carries ISO_9945.Kernel.Termios.Attributes — an L2 type post-Cycle-22 —
 // so the Token nested type cannot live at L1 swift-terminal-primitives.
 
 #endif

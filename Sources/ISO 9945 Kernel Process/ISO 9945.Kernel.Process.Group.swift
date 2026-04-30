@@ -102,7 +102,7 @@ extension ISO_9945.Kernel.Process.Group {
     /// let pgid = try ISO_9945.Kernel.Process.Group.id(of: childPid)
     /// ```
 
-    public static func id(of pid: Kernel.Process.ID) throws(ISO_9945.Kernel.Process.Error) -> ID {
+    public static func id(of pid: ISO_9945.Kernel.Process.ID) throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = getpgid(pid.rawValue)
         guard result != -1 else {
             throw .group(Error_Primitives.Error.captureErrno())

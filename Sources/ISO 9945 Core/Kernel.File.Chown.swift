@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// Change file ownership.
     ///
     /// Provides cross-platform file ownership modification.
@@ -25,7 +25,7 @@ extension Kernel.File {
 
 // MARK: - Error
 
-extension Kernel.File.Chown {
+extension ISO_9945.Kernel.File.Chown {
     /// Errors that can occur during chown operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The path does not exist.
@@ -61,7 +61,7 @@ extension Kernel.File.Chown {
     }
 }
 
-extension Kernel.File.Chown.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Chown.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .path(let pathError):

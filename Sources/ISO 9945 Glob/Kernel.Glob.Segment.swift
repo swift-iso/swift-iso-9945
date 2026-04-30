@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// A compiled glob pattern segment (between path separators).
     ///
     /// Segments are the top-level units of a compiled pattern,

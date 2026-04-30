@@ -10,10 +10,10 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// A move-only file handle with Direct I/O support.
     ///
-    /// `Kernel.File.Handle` owns a file descriptor and stores the resolved
+    /// `ISO_9945.Kernel.File.Handle` owns a file descriptor and stores the resolved
     /// Direct I/O mode and alignment requirements. These are fixed at
     /// open time and cannot be changed.
     ///
@@ -42,16 +42,16 @@ extension Kernel.File {
     @frozen
     public struct Handle: ~Copyable, Sendable {
         /// The underlying file descriptor.
-        public let descriptor: Kernel.File.Descriptor
+        public let descriptor: ISO_9945.Kernel.File.Descriptor
 
         /// The resolved Direct I/O mode (fixed at open time).
-        public let direct: Kernel.File.Direct.Mode.Resolved
+        public let direct: ISO_9945.Kernel.File.Direct.Mode.Resolved
 
         /// The alignment requirements (fixed at open time).
         ///
         /// For `.direct` mode, this is always `.known(...)`.
         /// For `.uncached` or `.buffered`, this may be `.unknown(...)`.
-        public let requirements: Kernel.File.Direct.Requirements
+        public let requirements: ISO_9945.Kernel.File.Direct.Requirements
 
         /// Creates a handle from a descriptor with Direct I/O state.
         ///
@@ -60,9 +60,9 @@ extension Kernel.File {
         ///   - direct: The resolved Direct I/O mode.
         ///   - requirements: The alignment requirements.
         public init(
-            descriptor: consuming Kernel.File.Descriptor,
-            direct: Kernel.File.Direct.Mode.Resolved,
-            requirements: Kernel.File.Direct.Requirements
+            descriptor: consuming ISO_9945.Kernel.File.Descriptor,
+            direct: ISO_9945.Kernel.File.Direct.Mode.Resolved,
+            requirements: ISO_9945.Kernel.File.Direct.Requirements
         ) {
             self.descriptor = descriptor
             self.direct = direct
@@ -77,19 +77,19 @@ extension Kernel.File {
 
 // MARK: - Alignment Validation
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Validates alignment requirements for Direct I/O.
     ///
     /// - Parameters:
     ///   - buffer: The buffer address.
     ///   - offset: The file offset.
     ///   - length: The transfer length.
-    /// - Throws: `Kernel.File.Handle.Error` on alignment violation.
+    /// - Throws: `ISO_9945.Kernel.File.Handle.Error` on alignment violation.
     private func validateAlignment(
         buffer: Memory.Address,
-        offset: Kernel.File.Offset,
-        length: Kernel.File.Size
-    ) throws(Kernel.File.Handle.Error) {
+        offset: ISO_9945.Kernel.File.Offset,
+        length: ISO_9945.Kernel.File.Size
+    ) throws(ISO_9945.Kernel.File.Handle.Error) {
         guard case .known(let alignment) = requirements else {
             throw .requirementsUnknown
         }

@@ -12,31 +12,31 @@
 
 internal import Cardinal_Primitives
 
-extension Kernel.File.System {
+extension ISO_9945.Kernel.File.System {
     /// Filesystem block types.
     public enum Block {}
 }
 
 // MARK: - Block.Size
 
-extension Kernel.File.System.Block {
+extension ISO_9945.Kernel.File.System.Block {
     /// Filesystem block size.
     ///
     /// A type-safe size value using the Dimension pattern.
-    /// Follows the same pattern as `Kernel.File.Size`.
+    /// Follows the same pattern as `ISO_9945.Kernel.File.Size`.
     ///
     /// ## Usage
     ///
     /// ```swift
-    /// let stats = try Kernel.File.System.Stats.get(path)
+    /// let stats = try ISO_9945.Kernel.File.System.Stats.get(path)
     /// let totalBytes = stats.blocks.rawValue * stats.blockSize.rawValue
     /// ```
-    public typealias Size = Magnitude<Kernel.File.System.Block>.Value<UInt64>
+    public typealias Size = Magnitude<ISO_9945.Kernel.File.System.Block>.Value<UInt64>
 }
 
 // MARK: - Block.Size Constants
 
-extension Kernel.File.System.Block.Size {
+extension ISO_9945.Kernel.File.System.Block.Size {
     /// 512-byte sector (traditional disk sector).
     public static let sector512: Self = Self(512)
 
@@ -46,7 +46,7 @@ extension Kernel.File.System.Block.Size {
 
 // MARK: - Block.Count
 
-extension Kernel.File.System.Block {
+extension ISO_9945.Kernel.File.System.Block {
     /// Block count for filesystem statistics.
     ///
     /// A type-safe wrapper for filesystem block counts (total, free, available).
@@ -55,10 +55,10 @@ extension Kernel.File.System.Block {
     /// ## Usage
     ///
     /// ```swift
-    /// let stats = try Kernel.File.System.Stats.get(path)
+    /// let stats = try ISO_9945.Kernel.File.System.Stats.get(path)
     /// let freeBytes = stats.freeBlocks.rawValue * stats.blockSize.rawValue
     /// ```
-    public typealias Count = Tagged<Kernel.File.System.Block, Cardinal>
+    public typealias Count = Tagged<ISO_9945.Kernel.File.System.Block, Cardinal>
 }
 
 

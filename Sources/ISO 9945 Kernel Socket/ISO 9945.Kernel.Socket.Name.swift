@@ -29,13 +29,13 @@ extension ISO_9945.Kernel.Socket.Name {
     ///
     /// - Parameter fd: The socket raw fd.
     /// - Returns: The local address and its length.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func local(
         fd: Int32
-    ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: Kernel.Socket.Address.Length) {
-        var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+        var storage = ISO_9945.Kernel.Socket.Address.Storage()
+        var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.rawValue.rawValue)
 
         let rc = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -43,17 +43,17 @@ extension ISO_9945.Kernel.Socket.Name {
         }
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
-        return (address: storage, length: Kernel.Socket.Address.Length(addrLen))
+        return (address: storage, length: ISO_9945.Kernel.Socket.Address.Length(addrLen))
     }
 
     /// Gets the remote address of a connected raw socket fd.
     ///
     /// - Parameter fd: The socket raw fd (must be connected).
     /// - Returns: The peer address and its length.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -61,9 +61,9 @@ extension ISO_9945.Kernel.Socket.Name {
     @_spi(Syscall)
     public static func peer(
         fd: Int32
-    ) throws(Kernel.Socket.Error) -> (address: Kernel.Socket.Address.Storage, length: Kernel.Socket.Address.Length) {
-        var storage = Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+        var storage = ISO_9945.Kernel.Socket.Address.Storage()
+        var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.rawValue.rawValue)
 
         let rc = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -71,9 +71,9 @@ extension ISO_9945.Kernel.Socket.Name {
         }
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
-        return (address: storage, length: Kernel.Socket.Address.Length(addrLen))
+        return (address: storage, length: ISO_9945.Kernel.Socket.Address.Length(addrLen))
     }
 }

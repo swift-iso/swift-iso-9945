@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Filesystem inode number.
     ///
     /// A type-safe wrapper for inode identifiers. An inode uniquely identifies
@@ -19,8 +19,8 @@ extension Kernel {
     /// ## Usage
     ///
     /// ```swift
-    /// let stats1 = try Kernel.File.Stats.get(path1)
-    /// let stats2 = try Kernel.File.Stats.get(path2)
+    /// let stats1 = try ISO_9945.Kernel.File.Stats.get(path1)
+    /// let stats2 = try ISO_9945.Kernel.File.Stats.get(path2)
     /// if stats1.inode == stats2.inode && stats1.device == stats2.device {
     ///     // Both paths refer to the same file (hard links or same path)
     /// }
@@ -44,7 +44,7 @@ extension Kernel {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Kernel.Inode: ExpressibleByIntegerLiteral {
+extension ISO_9945.Kernel.Inode: ExpressibleByIntegerLiteral {
     @inlinable
     public init(integerLiteral value: UInt64) {
         self.rawValue = value
@@ -53,7 +53,7 @@ extension Kernel.Inode: ExpressibleByIntegerLiteral {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Inode: CustomStringConvertible {
+extension ISO_9945.Kernel.Inode: CustomStringConvertible {
     public var description: Swift.String {
         "\(rawValue)"
     }

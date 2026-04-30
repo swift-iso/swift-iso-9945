@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.Event {
+extension ISO_9945.Kernel.Event {
     /// Readiness categories for descriptor monitoring.
     ///
     /// Cross-paradigm vocabulary — shared by reactor-style readiness
@@ -43,7 +43,7 @@ extension Kernel.Event {
     }
 }
 
-extension Kernel.Event.Interest: CustomStringConvertible {
+extension ISO_9945.Kernel.Event.Interest: CustomStringConvertible {
     public var description: Swift.String {
         var parts: [Swift.String] = []
         if contains(.read) { parts.append("read") }

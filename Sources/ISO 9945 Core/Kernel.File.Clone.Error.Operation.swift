@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Clone.Error {
+extension ISO_9945.Kernel.File.Clone.Error {
     /// Operation types for error context.
     public enum Operation: Swift.String, Sendable, Equatable {
         case clonefile

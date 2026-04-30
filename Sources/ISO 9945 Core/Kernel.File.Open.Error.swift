@@ -11,15 +11,15 @@
 
 
 
-extension Kernel.File.Open {
+extension ISO_9945.Kernel.File.Open {
     public enum Error: Swift.Error, Sendable {
         case path(Path.Resolution.Error)
-        case handle(Kernel.Descriptor.Validity.Error)
+        case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case platform(Error_Primitives.Error)
     }
 }
 
-extension Kernel.File.Open.Error: Equatable {
+extension ISO_9945.Kernel.File.Open.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.path(let l), .path(let r)): return l == r
@@ -30,7 +30,7 @@ extension Kernel.File.Open.Error: Equatable {
     }
 }
 
-extension Kernel.File.Open.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Open.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .path(let e): return "path: \(e)"

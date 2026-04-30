@@ -16,10 +16,10 @@
 //
 // Mappings defined in Kernel_Primitives:
 // - Path.Resolution.Error: ENOENT, EEXIST, EISDIR, ENOTDIR, ENOTEMPTY, ELOOP, EXDEV, ENAMETOOLONG
-// - Kernel.Permission.Error: EACCES, EPERM, EROFS
-// - Kernel.Descriptor.Validity.Error: EBADF
-// - Kernel.IO.Blocking.Error: EAGAIN, EWOULDBLOCK
-// - Kernel.Storage.Error: ENOSPC, EDQUOT
+// - ISO_9945.Kernel.Permission.Error: EACCES, EPERM, EROFS
+// - ISO_9945.Kernel.Descriptor.Validity.Error: EBADF
+// - ISO_9945.Kernel.IO.Blocking.Error: EAGAIN, EWOULDBLOCK
+// - ISO_9945.Kernel.Storage.Error: ENOSPC, EDQUOT
 // - Memory.Error: EFAULT, ENOMEM
-// - Kernel.IO.Error: EIO, EPIPE, EINTR
-// - Kernel.Lock.Error: ENOLCK, EDEADLK
+// - ISO_9945.Kernel.IO.Error: EIO, EPIPE, EINTR
+// - ISO_9945.Kernel.Lock.Error: ENOLCK, EDEADLK

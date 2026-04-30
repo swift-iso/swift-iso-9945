@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Permission {
+extension ISO_9945.Kernel.Permission {
     /// Permission-related errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// Permission denied - file/directory access control.
@@ -34,7 +34,7 @@ extension Kernel.Permission {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Permission.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Permission.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .denied:

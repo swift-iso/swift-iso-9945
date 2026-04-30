@@ -20,7 +20,7 @@
     internal import Musl
 #endif
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File access pattern advice for `posix_fadvise(2)`.
     ///
     /// Covers the six POSIX.1-2001 access-pattern hints. Platform-specific
@@ -41,12 +41,12 @@ extension Kernel.File {
 // Darwin's fcntl.h does not ship the full POSIX.1-2001 set (notably
 // POSIX_FADV_NOREUSE is absent), so the whole constant block is gated
 // here to match the platforms that actually define the symbols. Darwin
-// may extend Kernel.File.Advice with its own subset separately when a
+// may extend ISO_9945.Kernel.File.Advice with its own subset separately when a
 // need arises.
 
 #if os(Linux) || os(Android) || os(OpenBSD)
 
-extension Kernel.File.Advice {
+extension ISO_9945.Kernel.File.Advice {
     /// No special treatment (default).
     public static let normal = Self(rawValue: UInt32(POSIX_FADV_NORMAL))
 

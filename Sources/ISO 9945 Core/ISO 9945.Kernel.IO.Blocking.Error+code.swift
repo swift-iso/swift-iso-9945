@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Access
 
-extension Kernel.IO.Blocking.Error {
+extension ISO_9945.Kernel.IO.Blocking.Error {
     /// The underlying POSIX error code.
     @inlinable
     public var code: Error_Primitives.Error.Code {
@@ -24,7 +24,7 @@ extension Kernel.IO.Blocking.Error {
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.IO.Blocking.Error {
+extension ISO_9945.Kernel.IO.Blocking.Error {
     /// Creates an error from a POSIX error code, if applicable.
     ///
     /// Returns `nil` if the error code doesn't map to a blocking error.

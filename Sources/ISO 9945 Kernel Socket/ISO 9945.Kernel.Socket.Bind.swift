@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Socket {
 // Per Cycle 21, the L2 Kernel Socket API is canonical-raw: takes `fd: Int32`.
 // L3-policy typed-descriptor convenience lives at swift-posix per
 // [PLAT-ARCH-005] / [PLAT-ARCH-008e]. Typed convenience overloads on
-// Kernel.Socket.Descriptor / Kernel.Descriptor were dropped per L1-domain-only
+// ISO_9945.Kernel.Socket.Descriptor / ISO_9945.Kernel.Descriptor were dropped per L1-domain-only
 // architecture.
 
 extension ISO_9945.Kernel.Socket.Bind {
@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Socket.Bind {
     ///   - fd: The socket raw fd.
     ///   - address: The address to bind to, as a `Storage` container.
     ///   - length: The size of the actual address within storage.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -47,16 +47,16 @@ extension ISO_9945.Kernel.Socket.Bind {
     @_spi(Syscall)
     public static func bind(
         fd: Int32,
-        address: Kernel.Socket.Address.Storage,
-        length: Kernel.Socket.Address.Length
-    ) throws(Kernel.Socket.Error) {
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
             return unsafe Darwin_or_Glibc_bind(fd, sockaddrPtr, socklen_t(length.rawValue.rawValue))
         }
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
     }
 
@@ -64,27 +64,27 @@ extension ISO_9945.Kernel.Socket.Bind {
     @_spi(Syscall)
     public static func bind(
         fd: Int32,
-        address: Kernel.Socket.Address.IPv4
-    ) throws(Kernel.Socket.Error) {
-        try bind(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
+        address: ISO_9945.Kernel.Socket.Address.IPv4
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.IPv4.size)
     }
 
     /// Binds a raw socket fd to an IPv6 address.
     @_spi(Syscall)
     public static func bind(
         fd: Int32,
-        address: Kernel.Socket.Address.IPv6
-    ) throws(Kernel.Socket.Error) {
-        try bind(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
+        address: ISO_9945.Kernel.Socket.Address.IPv6
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.IPv6.size)
     }
 
     /// Binds a raw socket fd to a Unix domain address.
     @_spi(Syscall)
     public static func bind(
         fd: Int32,
-        address: Kernel.Socket.Address.Unix
-    ) throws(Kernel.Socket.Error) {
-        try bind(fd: fd, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
+        address: ISO_9945.Kernel.Socket.Address.Unix
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
     }
 }
 

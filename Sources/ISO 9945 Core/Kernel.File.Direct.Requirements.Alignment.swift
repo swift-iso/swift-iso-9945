@@ -11,7 +11,7 @@
 
 
 
-extension Kernel.File.Direct.Requirements {
+extension ISO_9945.Kernel.File.Direct.Requirements {
     /// Concrete alignment values for Direct I/O.
     public struct Alignment: Sendable, Equatable {
         /// Required alignment for buffer memory addresses.
@@ -61,7 +61,7 @@ extension Kernel.File.Direct.Requirements {
 
 // MARK: - Validation
 
-extension Kernel.File.Direct.Requirements.Alignment {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Validates all alignment requirements for an I/O operation.
     ///
     /// - Parameters:
@@ -71,9 +71,9 @@ extension Kernel.File.Direct.Requirements.Alignment {
     /// - Returns: The first validation failure, or `nil` if all pass.
     public func validate(
         buffer bufferAddress: Memory.Address,
-        offset fileOffset: Kernel.File.Offset,
-        length transferLength: Kernel.File.Size
-    ) -> Kernel.File.Direct.Error? {
+        offset fileOffset: ISO_9945.Kernel.File.Offset,
+        length transferLength: ISO_9945.Kernel.File.Size
+    ) -> ISO_9945.Kernel.File.Direct.Error? {
         if !buffer.isAligned(bufferAddress) {
             return .misalignedBuffer(
                 address: bufferAddress,

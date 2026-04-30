@@ -26,7 +26,7 @@ extension Error_Primitives.Error.Code {
     /// ```swift
     /// while true {
     ///     do {
-    ///         return try Kernel.IO.Write.write(descriptor, from: buffer)
+    ///         return try ISO_9945.Kernel.IO.Write.write(descriptor, from: buffer)
     ///     } catch where error.code.isInterrupted {
     ///         continue
     ///     }

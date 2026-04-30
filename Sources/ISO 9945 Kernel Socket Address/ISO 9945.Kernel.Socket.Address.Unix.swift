@@ -7,7 +7,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Socket.Address {
+extension ISO_9945.Kernel.Socket.Address {
     /// Unix domain socket address.
     ///
     /// Wraps `sockaddr_un`.
@@ -24,19 +24,19 @@ extension Kernel.Socket.Address {
 
 // MARK: - Accessors
 
-extension Kernel.Socket.Address.Unix {
+extension ISO_9945.Kernel.Socket.Address.Unix {
     /// The address family (always `.unix`).
-    public var family: Kernel.Socket.Address.Family {
+    public var family: ISO_9945.Kernel.Socket.Address.Family {
         get { .unix }
     }
 }
 
 // MARK: - Storage Conversion
 
-extension Kernel.Socket.Address.Unix {
+extension ISO_9945.Kernel.Socket.Address.Unix {
     /// Converts to the generic `Storage` container.
-    public var storage: Kernel.Socket.Address.Storage {
-        var result = Kernel.Socket.Address.Storage()
+    public var storage: ISO_9945.Kernel.Socket.Address.Storage {
+        var result = ISO_9945.Kernel.Socket.Address.Storage()
         unsafe withUnsafePointer(to: cValue) { src in
             unsafe withUnsafeMutablePointer(to: &result.cValue) { dst in
                 unsafe UnsafeMutableRawPointer(dst)

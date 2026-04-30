@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File and directory move operations.
     ///
     /// Moves (renames) files and directories atomically within the same
@@ -28,7 +28,7 @@ extension Kernel.File {
 
 // MARK: - Error
 
-extension Kernel.File.Move {
+extension ISO_9945.Kernel.File.Move {
     /// Errors that can occur during file move operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The source path does not exist.
@@ -69,7 +69,7 @@ extension Kernel.File.Move {
     }
 }
 
-extension Kernel.File.Move.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Move.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "source path not found"

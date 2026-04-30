@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Lock {
+extension ISO_9945.Kernel.Lock {
     /// Lock type determining concurrency behavior.
     ///
     /// File locks use reader-writer semantics: multiple readers can proceed
@@ -20,13 +20,13 @@ extension Kernel.Lock {
     ///
     /// ```swift
     /// // Acquire a shared lock for reading
-    /// try Kernel.Lock.lock(fd, range: .file, kind: .shared)
-    /// defer { try? Kernel.Lock.unlock(fd, range: .file) }
+    /// try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .shared)
+    /// defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
     /// // Multiple processes can read concurrently
     ///
     /// // Acquire an exclusive lock for writing
-    /// try Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-    /// defer { try? Kernel.Lock.unlock(fd, range: .file) }
+    /// try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+    /// defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
     /// // Only this process can access the file
     /// ```
     ///

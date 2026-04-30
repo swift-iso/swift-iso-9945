@@ -11,10 +11,10 @@
 
 
 
-extension Kernel.File.Direct.Requirements.Alignment {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for buffer alignment validation.
     public struct Buffer: Sendable {
-        let alignment: Kernel.File.Direct.Requirements.Alignment
+        let alignment: ISO_9945.Kernel.File.Direct.Requirements.Alignment
 
         /// Validates that a buffer address is properly aligned.
         ///

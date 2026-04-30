@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Directory.Working {
+extension ISO_9945.Kernel.Directory.Working {
     /// Errors from working directory operations.
     public enum Error: Swift.Error, Sendable {
         /// Path resolution error (directory not found, etc.).
@@ -23,7 +23,7 @@ extension Kernel.Directory.Working {
 
 // MARK: - Equatable
 
-extension Kernel.Directory.Working.Error: Equatable {
+extension ISO_9945.Kernel.Directory.Working.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.path(let l), .path(let r)): return l == r
@@ -35,7 +35,7 @@ extension Kernel.Directory.Working.Error: Equatable {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Directory.Working.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Directory.Working.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .path(let e): return "working directory: \(e)"

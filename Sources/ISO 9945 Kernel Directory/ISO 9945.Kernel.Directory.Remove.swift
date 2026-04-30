@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.Directory.Remove {
     /// This is the preferred entry point.
     ///
     /// - Parameter path: The path to remove.
-    /// - Throws: `Kernel.Directory.Remove.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Directory.Remove.Error` on failure.
     public static func remove(_ path: borrowing Path.Borrowed) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe _remove(ptr)
@@ -56,7 +56,7 @@ extension ISO_9945.Kernel.Directory.Remove {
 // MARK: - Error
 
 extension ISO_9945.Kernel.Directory.Remove {
-    public typealias Error = Kernel.Directory.Remove.Error
+    public typealias Error = ISO_9945.Kernel.Directory.Remove.Error
 }
 
 extension ISO_9945.Kernel.Directory.Remove.Error {

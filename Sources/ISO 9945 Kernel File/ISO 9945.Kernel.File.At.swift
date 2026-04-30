@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// Path resolution operations for *at() syscall variants.
     ///
     /// ## Platform Implementation

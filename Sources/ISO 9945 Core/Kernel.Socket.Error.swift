@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.Socket {
+extension ISO_9945.Kernel.Socket {
     /// Errors that can occur during socket operations.
     public enum Error: Swift.Error, Sendable {
         /// A platform-specific error.
@@ -19,7 +19,7 @@ extension Kernel.Socket {
 
 // MARK: - Equatable
 
-extension Kernel.Socket.Error: Equatable {
+extension ISO_9945.Kernel.Socket.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.platform(let l), .platform(let r)): return l == r
@@ -29,7 +29,7 @@ extension Kernel.Socket.Error: Equatable {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Socket.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Socket.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .platform(let e): return "\(e)"

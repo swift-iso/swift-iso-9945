@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob.Scalar {
+extension ISO_9945.Kernel.Glob.Scalar {
     /// A character class operating on Unicode scalar values.
     ///
     /// Uses `UInt32` (Unicode scalar values) for deterministic,
@@ -51,7 +51,7 @@ extension Kernel.Glob.Scalar {
     }
 }
 
-extension Kernel.Glob.Scalar.Class {
+extension ISO_9945.Kernel.Glob.Scalar.Class {
     /// Tests whether a scalar matches this class.
     ///
     /// - Parameter scalar: The Unicode scalar to test.

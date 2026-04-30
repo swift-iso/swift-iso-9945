@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// File copy operations using kernel-accelerated mechanisms.
     ///
     /// Provides access to platform-native copy operations that can be significantly
@@ -30,10 +30,10 @@ extension Kernel {
     ///
     /// ```swift
     /// // Copy a file (uses best available mechanism)
-    /// try Kernel.Copy.copy(from: sourcePath, to: destPath)
+    /// try ISO_9945.Kernel.Copy.copy(from: sourcePath, to: destPath)
     ///
     /// // Clone if possible (fails if not supported)
-    /// try Kernel.Copy.clone(from: sourcePath, to: destPath)
+    /// try ISO_9945.Kernel.Copy.clone(from: sourcePath, to: destPath)
     /// ```
     ///
     /// ## See Also

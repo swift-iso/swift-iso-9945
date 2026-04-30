@@ -29,16 +29,16 @@
 ///
 /// ```swift
 /// // Clone with fallback to copy
-/// try Kernel.File.Clone.clone(
+/// try ISO_9945.Kernel.File.Clone.clone(
 ///     from: sourcePath,
 ///     to: destinationPath,
 ///     behavior: .reflinkOrCopy
 /// )
 ///
 /// // Probe capability first
-/// let cap = try Kernel.File.Clone.capability(at: sourcePath)
+/// let cap = try ISO_9945.Kernel.File.Clone.capability(at: sourcePath)
 /// if cap == .reflink {
-///     try Kernel.File.Clone.clone(from: sourcePath, to: destinationPath, behavior: .reflinkOrFail)
+///     try ISO_9945.Kernel.File.Clone.clone(from: sourcePath, to: destinationPath, behavior: .reflinkOrFail)
 /// }
 /// ```
 ///
@@ -47,13 +47,13 @@
 /// Clone operations are in platform-specific packages:
 /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Clone`)
 /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Clone`)
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     public enum Clone {}
 }
 
 // MARK: - Capability Probing
 
-extension Kernel.File.Clone.Capability {
+extension ISO_9945.Kernel.File.Clone.Capability {
     /// Probes whether the filesystem at the given path supports cloning.
     ///
     /// ## Platform Implementation
@@ -63,7 +63,7 @@ extension Kernel.File.Clone.Capability {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Clone.Capability.probe`)
     ///
     /// Returns `.none` by default. Use platform packages for actual probing.
-    public static func probeDefault(at path: borrowing Path) -> Kernel.File.Clone.Capability {
+    public static func probeDefault(at path: borrowing Path) -> ISO_9945.Kernel.File.Clone.Capability {
         _ = path
         return .none
     }
@@ -71,7 +71,7 @@ extension Kernel.File.Clone.Capability {
 
 // MARK: - File Metadata
 
-extension Kernel.File.Clone {
+extension ISO_9945.Kernel.File.Clone {
     /// File metadata operations.
     ///
     /// ## Platform Implementation

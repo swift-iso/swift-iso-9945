@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Open {
+extension ISO_9945.Kernel.File.Open {
     /// Options that modify file opening behavior.
     ///
     /// The raw value is the platform open flag directly (O_CREAT, O_TRUNC, etc.).

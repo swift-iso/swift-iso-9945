@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Socket {
+extension ISO_9945.Kernel.Socket {
     /// Socket message operations and types.
     ///
     /// ## Platform Implementation

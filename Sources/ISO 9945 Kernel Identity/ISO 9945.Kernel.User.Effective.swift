@@ -16,15 +16,15 @@ extension ISO_9945.Kernel.User {
 
 extension ISO_9945.Kernel.User.Effective {
     /// Gets the effective user ID of the calling process.
-    public static func id() -> Kernel.User.ID {
-        Kernel.User.ID(__unchecked: (), geteuid())
+    public static func id() -> ISO_9945.Kernel.User.ID {
+        ISO_9945.Kernel.User.ID(__unchecked: (), geteuid())
     }
 
     /// Sets the effective user ID of the calling process.
     ///
     /// - Throws: `Error_Primitives.Error` on failure (EPERM if not privileged).
     public static func set(
-        _ uid: Kernel.User.ID
+        _ uid: ISO_9945.Kernel.User.ID
     ) throws(Error_Primitives.Error) {
         guard seteuid(uid.rawValue) == 0 else {
             throw Error_Primitives.Error.current(operation: "seteuid")

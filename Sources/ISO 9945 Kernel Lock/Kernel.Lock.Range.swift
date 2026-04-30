@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Lock {
+extension ISO_9945.Kernel.Lock {
     /// The range of bytes to lock within a file.
     ///
     /// File locking operates on byte ranges, allowing fine-grained concurrency
@@ -21,12 +21,12 @@ extension Kernel.Lock {
     ///
     /// ```swift
     /// // Lock entire file (most common)
-    /// try Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-    /// defer { try? Kernel.Lock.unlock(fd, range: .file) }
+    /// try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
+    /// defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
     ///
     /// // Lock specific byte range (database pages, etc.)
     /// let pageRange = Lock.Range.bytes(start: 4096, length: 4096)
-    /// try Kernel.Lock.lock(fd, range: pageRange, kind: .shared)
+    /// try ISO_9945.Kernel.Lock.lock(fd, range: pageRange, kind: .shared)
     ///
     /// // Lock from offset to end of file
     /// let toEnd = Lock.Range.bytes(start: offset, end: .max)
@@ -53,7 +53,7 @@ extension Kernel.Lock {
         /// Follows Swift's `Range` semantics (half-open interval). Locks on
         /// non-overlapping ranges don't conflict, enabling concurrent access
         /// to different parts of a file.
-        case bytes(start: Kernel.File.Offset, end: Kernel.File.Offset)
+        case bytes(start: ISO_9945.Kernel.File.Offset, end: ISO_9945.Kernel.File.Offset)
 
         /// Creates a byte range from start to end offsets.
         ///
@@ -61,7 +61,7 @@ extension Kernel.Lock {
         ///   - start: The starting byte offset (inclusive).
         ///   - length: The number of bytes to lock.
         @inlinable
-        public static func bytes(start: Kernel.File.Offset, length: Kernel.File.Size) -> Range {
+        public static func bytes(start: ISO_9945.Kernel.File.Offset, length: ISO_9945.Kernel.File.Size) -> Range {
             .bytes(start: start, end: start + length)
         }
 
@@ -77,8 +77,8 @@ extension Kernel.Lock {
         ///     `Memory.Allocation.system` from platform packages.
         @inlinable
         public init(
-            forMappingAt offset: Kernel.File.Offset,
-            length: Kernel.File.Size,
+            forMappingAt offset: ISO_9945.Kernel.File.Offset,
+            length: ISO_9945.Kernel.File.Size,
             granularity: Memory.Allocation.Granularity
         ) {
             let endOffset = offset + length

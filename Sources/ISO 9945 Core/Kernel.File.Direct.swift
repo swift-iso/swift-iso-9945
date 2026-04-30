@@ -35,13 +35,13 @@
 /// Syscall implementations are in platform-specific packages:
 /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Direct`)
 /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Direct`)
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     public enum Direct {}
 }
 
 // MARK: - Public Requirements API
 
-extension Kernel.File.Direct {
+extension ISO_9945.Kernel.File.Direct {
     /// Queries alignment requirements for a file path.
     ///
     /// Use this to determine whether Direct I/O is available and what
@@ -75,7 +75,7 @@ extension Kernel.File.Direct {
 
 // MARK: - Requirements Constructors
 
-extension Kernel.File.Direct.Requirements {
+extension ISO_9945.Kernel.File.Direct.Requirements {
     /// Creates known alignment requirements with explicit values.
     ///
     /// Use this when you know the specific alignment requirements for your

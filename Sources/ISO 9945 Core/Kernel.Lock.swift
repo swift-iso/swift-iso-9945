@@ -11,7 +11,7 @@
 
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// File locking types and operations.
     ///
     /// ## Platform Implementation

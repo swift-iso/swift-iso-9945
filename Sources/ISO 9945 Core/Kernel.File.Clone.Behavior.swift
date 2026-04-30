@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Clone {
+extension ISO_9945.Kernel.File.Clone {
     /// The behavior policy for clone operations.
     public enum Behavior: Sendable, Equatable {
         /// Attempt reflink only; fail if unsupported.

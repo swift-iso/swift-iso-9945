@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File timestamp operations.
     ///
     /// Provides cross-platform file timestamp modification.
@@ -27,7 +27,7 @@ extension Kernel.File {
 
 // MARK: - Error
 
-extension Kernel.File.Times {
+extension ISO_9945.Kernel.File.Times {
     /// Errors that can occur during file timestamp operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The path does not exist.
@@ -63,7 +63,7 @@ extension Kernel.File.Times {
     }
 }
 
-extension Kernel.File.Times.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Times.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .path(let pathError):

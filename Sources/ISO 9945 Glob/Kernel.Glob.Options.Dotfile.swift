@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob.Options {
+extension ISO_9945.Kernel.Glob.Options {
     /// Dotfile (hidden file) matching behavior.
     ///
     /// **Normative semantics:**

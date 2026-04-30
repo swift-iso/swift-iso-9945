@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Directory iteration operations.
     ///
     /// Provides iteration over directory contents.

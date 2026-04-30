@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Process.Wait {
         case any
 
         /// Wait for a specific child process.
-        case process(Kernel.Process.ID)
+        case process(ISO_9945.Kernel.Process.ID)
 
         /// Wait for any child in a specific process group.
         case group(ISO_9945.Kernel.Process.Group.ID)

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// Errors that can occur during glob operations.
     ///
     /// Closed error type for typed throws. Platform-specific errors

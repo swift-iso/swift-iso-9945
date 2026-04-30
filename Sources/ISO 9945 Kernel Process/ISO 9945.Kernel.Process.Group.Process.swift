@@ -29,6 +29,6 @@ extension ISO_9945.Kernel.Process.Group {
         case current
 
         /// A specific process.
-        case id(Kernel.Process.ID)
+        case id(ISO_9945.Kernel.Process.ID)
     }
 }

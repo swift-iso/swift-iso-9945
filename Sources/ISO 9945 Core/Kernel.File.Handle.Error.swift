@@ -12,7 +12,7 @@
 
 
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Errors that can occur during file handle operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The file handle is invalid or closed.
@@ -49,7 +49,7 @@ extension Kernel.File.Handle {
         ///
         /// **Note:** This error may occur even if pre-validation passed, because
         /// alignment requirements are not always reliably discoverable, especially
-        /// on Linux. See `Kernel.File.Direct.requirements(for:)` documentation.
+        /// on Linux. See `ISO_9945.Kernel.File.Direct.requirements(for:)` documentation.
         case alignmentViolation(operation: Operation)
 
         /// Platform-specific error.
@@ -59,9 +59,9 @@ extension Kernel.File.Handle {
 
 // MARK: - From Direct Error
 
-extension Kernel.File.Handle.Error {
+extension ISO_9945.Kernel.File.Handle.Error {
     /// Creates a handle error from a Direct I/O error.
-    public init(from directError: Kernel.File.Direct.Error) {
+    public init(from directError: ISO_9945.Kernel.File.Direct.Error) {
         switch directError {
         case .notSupported:
             self = .requirementsUnknown
@@ -93,7 +93,7 @@ extension Kernel.File.Handle.Error {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.File.Handle.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Handle.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .invalidHandle:

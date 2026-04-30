@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Socket.Message {
+extension ISO_9945.Kernel.Socket.Message {
     /// Socket message flags (MSG_* constants).
     ///
     /// Controls behavior of send and receive operations on sockets.

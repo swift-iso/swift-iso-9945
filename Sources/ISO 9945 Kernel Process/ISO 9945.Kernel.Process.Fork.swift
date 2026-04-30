@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Process.Fork {
         case 0:
             return .child
         default:
-            return .parent(child: Kernel.Process.ID(pid))
+            return .parent(child: ISO_9945.Kernel.Process.ID(pid))
         }
     }
 }

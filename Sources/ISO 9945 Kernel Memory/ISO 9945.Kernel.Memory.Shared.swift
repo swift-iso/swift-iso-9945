@@ -56,8 +56,8 @@ extension Memory.Shared {
     ///
     /// Spec-literal name (`shm_open`) matching the C function. Returns the
     /// raw `Int32` fd. Zero descriptor construction: the L3-policy wrapper
-    /// at swift-posix (`Memory.Shared.open(...) -> Kernel.Descriptor`)
-    /// wraps the result in `Kernel.Descriptor(_rawValue:)` per
+    /// at swift-posix (`Memory.Shared.open(...) -> ISO_9945.Kernel.Descriptor`)
+    /// wraps the result in `ISO_9945.Kernel.Descriptor(_rawValue:)` per
     /// [PLAT-ARCH-005] / [PLAT-ARCH-008e]. § 5.6 handle-returning
     /// bifurcation case.
     ///
@@ -69,7 +69,7 @@ extension Memory.Shared {
         name: UnsafePointer<CChar>,
         access: Memory.Shared.Access,
         options: Memory.Shared.Options = [],
-        permissions: Kernel.File.Permissions = .ownerReadWrite
+        permissions: ISO_9945.Kernel.File.Permissions = .ownerReadWrite
     ) throws(Memory.Shared.Error) -> Int32 {
         // Convert Access to POSIX flags at syscall boundary
         let accessMode: Int32 = switch (access.read, access.write) {
@@ -100,7 +100,7 @@ extension Memory.Shared {
     /// Opens or creates a POSIX shared memory object, returning a typed descriptor.
     ///
     /// Phase 1.5 typed L2 form. Composes the raw `shm_open` SPI form with
-    /// `Kernel.Descriptor(_rawValue:)` construction. § 5.6 handle-returning
+    /// `ISO_9945.Kernel.Descriptor(_rawValue:)` construction. § 5.6 handle-returning
     /// bifurcation case: the kernel produces the fd; this typed form wraps it
     /// in the L1 descriptor type.
     @unsafe
@@ -108,15 +108,15 @@ extension Memory.Shared {
         name: UnsafePointer<CChar>,
         access: Memory.Shared.Access,
         options: Memory.Shared.Options = [],
-        permissions: Kernel.File.Permissions = .ownerReadWrite
-    ) throws(Memory.Shared.Error) -> Kernel.Descriptor {
+        permissions: ISO_9945.Kernel.File.Permissions = .ownerReadWrite
+    ) throws(Memory.Shared.Error) -> ISO_9945.Kernel.Descriptor {
         let fd = try unsafe shm_open(
             name: name,
             access: access,
             options: options,
             permissions: permissions
         )
-        return unsafe Kernel.Descriptor(_rawValue: fd)
+        return unsafe ISO_9945.Kernel.Descriptor(_rawValue: fd)
     }
 
     /// Removes a POSIX shared memory object.

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct.Mode {
+extension ISO_9945.Kernel.File.Direct.Mode {
     /// The resolved mode after platform-specific evaluation.
     ///
     /// This represents the actual mode that will be used, after `.auto`

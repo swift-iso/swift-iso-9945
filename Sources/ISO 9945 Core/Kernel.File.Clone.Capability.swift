@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Clone {
+extension ISO_9945.Kernel.File.Clone {
     /// The cloning capability of a filesystem/path.
     ///
     /// Capability is probed per-path because:

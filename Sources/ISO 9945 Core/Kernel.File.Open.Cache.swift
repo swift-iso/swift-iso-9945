@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Open {
+extension ISO_9945.Kernel.File.Open {
     /// Cache behavior options.
     public enum Cache: Sendable {
         /// Disable caching (macOS only).

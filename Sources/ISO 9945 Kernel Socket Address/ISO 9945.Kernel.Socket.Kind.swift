@@ -7,7 +7,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Socket {
+extension ISO_9945.Kernel.Socket {
     /// Socket type.
     ///
     /// Specifies the communication semantics for a socket.
@@ -22,7 +22,7 @@ extension Kernel.Socket {
 
 // MARK: - Constants
 
-extension Kernel.Socket.Kind {
+extension ISO_9945.Kernel.Socket.Kind {
     /// Sequenced, reliable, two-way, connection-based byte streams (SOCK_STREAM).
     #if canImport(Glibc)
     public static let stream = Self(rawValue: Int32(SOCK_STREAM.rawValue))

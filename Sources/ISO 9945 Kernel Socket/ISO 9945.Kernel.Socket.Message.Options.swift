@@ -9,7 +9,7 @@
 
 // MARK: - POSIX Socket Message Flags
 
-extension Kernel.Socket.Message.Options {
+extension ISO_9945.Kernel.Socket.Message.Options {
     /// Send or receive out-of-band data (MSG_OOB).
     public static let outOfBand = Self(rawValue: Int32(MSG_OOB))
 

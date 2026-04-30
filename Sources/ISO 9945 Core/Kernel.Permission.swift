@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Permission domain - access control errors.
     ///
     /// These errors indicate the calling process lacks sufficient

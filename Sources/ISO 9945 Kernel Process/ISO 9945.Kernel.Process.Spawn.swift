@@ -75,7 +75,7 @@ extension ISO_9945.Kernel.Process.Spawn {
     ///     )
     /// }
     ///
-    /// let result = try Kernel.Process.Wait.wait(.process(child))
+    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
     /// ```
     @unsafe
     @_spi(Syscall)
@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.Process.Spawn {
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
         envp: UnsafePointer<UnsafePointer<CChar>?>
-    ) throws(ISO_9945.Kernel.Process.Error) -> Kernel.Process.ID {
+    ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         var pid: pid_t = 0
 
         let rc = unsafe swift_posix_spawn(
@@ -100,7 +100,7 @@ extension ISO_9945.Kernel.Process.Spawn {
             throw .spawn(.posix(rc))
         }
 
-        return Kernel.Process.ID(pid)
+        return ISO_9945.Kernel.Process.ID(pid)
     }
 
     /// Spawns a new process using `Path.Char` pointers.
@@ -119,7 +119,7 @@ extension ISO_9945.Kernel.Process.Spawn {
         path: UnsafePointer<Path.Char>,
         argv: UnsafePointer<UnsafePointer<Path.Char>?>,
         envp: UnsafePointer<UnsafePointer<Path.Char>?>
-    ) throws(ISO_9945.Kernel.Process.Error) -> Kernel.Process.ID {
+    ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         // Bridge UInt8 pointers to CChar pointers
         let pathCChar = unsafe UnsafePointer<CChar>(path)
         let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)

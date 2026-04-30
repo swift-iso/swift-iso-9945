@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.File.Open.Error {
+extension ISO_9945.Kernel.File.Open.Error {
     /// Creates an error by mapping a POSIX error code to the appropriate case.
     ///
     /// Available via `@_spi(Syscall)` for platform-specific packages.
@@ -22,7 +22,7 @@ extension Kernel.File.Open.Error {
             self = .path(e)
             return
         }
-        if let e = Kernel.Descriptor.Validity.Error(code: code) {
+        if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             self = .handle(e)
             return
         }

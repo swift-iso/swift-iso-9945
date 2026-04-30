@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel.Socket.Shutdown {
+extension ISO_9945.Kernel.Socket.Shutdown {
     /// Errors that can occur during shutdown operations.
     public enum Error: Swift.Error, Sendable {
         /// A platform-specific error.
@@ -19,7 +19,7 @@ extension Kernel.Socket.Shutdown {
 
 // MARK: - Equatable
 
-extension Kernel.Socket.Shutdown.Error: Equatable {
+extension ISO_9945.Kernel.Socket.Shutdown.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.platform(let l), .platform(let r)): return l == r
@@ -29,7 +29,7 @@ extension Kernel.Socket.Shutdown.Error: Equatable {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Socket.Shutdown.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Socket.Shutdown.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .platform(let e): return "\(e)"

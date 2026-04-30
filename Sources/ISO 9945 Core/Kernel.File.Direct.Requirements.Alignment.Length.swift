@@ -11,16 +11,16 @@
 
 
 
-extension Kernel.File.Direct.Requirements.Alignment {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for length validation.
     public struct Length: Sendable {
-        let alignment: Kernel.File.Direct.Requirements.Alignment
+        let alignment: ISO_9945.Kernel.File.Direct.Requirements.Alignment
 
         /// Validates that an I/O length is a valid multiple.
         ///
         /// - Parameter length: The transfer length to validate.
         /// - Returns: `true` if the length is a multiple of `lengthMultiple`.
-        public func isValid(_ length: Kernel.File.Size) -> Bool {
+        public func isValid(_ length: ISO_9945.Kernel.File.Size) -> Bool {
             let mask: Int64 = alignment.lengthMultiple.mask()
             return length.rawValue & mask == 0
         }

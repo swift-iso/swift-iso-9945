@@ -16,17 +16,17 @@
 /// - Source validation (exists, not a directory)
 /// - Destination handling (overwrite or fail)
 /// - Symbolic link preservation
-/// - Efficient data copying via `Kernel.File.Clone`
+/// - Efficient data copying via `ISO_9945.Kernel.File.Clone`
 /// - Attribute preservation (permissions, timestamps)
 ///
 /// ## Usage
 ///
 /// ```swift
 /// // Copy with default options
-/// try Kernel.File.Copy.copy(from: sourcePath, to: destinationPath)
+/// try ISO_9945.Kernel.File.Copy.copy(from: sourcePath, to: destinationPath)
 ///
 /// // Copy with options
-/// try Kernel.File.Copy.copy(
+/// try ISO_9945.Kernel.File.Copy.copy(
 ///     from: sourcePath,
 ///     to: destinationPath,
 ///     options: .init(overwrite: true, copyAttributes: true)
@@ -36,12 +36,12 @@
 /// ## Platform Implementation
 ///
 /// Copy operations use cross-platform Kernel APIs:
-/// - `Kernel.File.Stats` for metadata
-/// - `Kernel.File.Clone` for data copying
-/// - `Kernel.Link.Symbolic` for symlink handling
-/// - `Kernel.File.Attributes` for permissions
-/// - `Kernel.File.Times` for timestamps
-extension Kernel.File {
+/// - `ISO_9945.Kernel.File.Stats` for metadata
+/// - `ISO_9945.Kernel.File.Clone` for data copying
+/// - `ISO_9945.Kernel.Link.Symbolic` for symlink handling
+/// - `ISO_9945.Kernel.File.Attributes` for permissions
+/// - `ISO_9945.Kernel.File.Times` for timestamps
+extension ISO_9945.Kernel.File {
     public enum Copy {}
 }
 

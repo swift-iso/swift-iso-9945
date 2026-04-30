@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Directory {
+extension ISO_9945.Kernel.Directory {
     /// Working directory operations.
     ///
     /// ## Platform Implementation

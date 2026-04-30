@@ -7,7 +7,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Socket.Address {
+extension ISO_9945.Kernel.Socket.Address {
     /// IPv4 socket address.
     ///
     /// Wraps `sockaddr_in`. Port and address are stored in network byte order
@@ -31,9 +31,9 @@ extension Kernel.Socket.Address {
 
 // MARK: - Accessors
 
-extension Kernel.Socket.Address.IPv4 {
+extension ISO_9945.Kernel.Socket.Address.IPv4 {
     /// The address family (always `.inet`).
-    public var family: Kernel.Socket.Address.Family {
+    public var family: ISO_9945.Kernel.Socket.Address.Family {
         get { .inet }
     }
 
@@ -50,14 +50,14 @@ extension Kernel.Socket.Address.IPv4 {
     }
 
     /// The size of the underlying sockaddr_in structure.
-    public static var size: Kernel.Socket.Address.Length {
-        Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_in>.size))
+    public static var size: ISO_9945.Kernel.Socket.Address.Length {
+        ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_in>.size))
     }
 }
 
 // MARK: - Convenience
 
-extension Kernel.Socket.Address.IPv4 {
+extension ISO_9945.Kernel.Socket.Address.IPv4 {
     /// Any address (INADDR_ANY) on the given port.
     public static func any(port: UInt16) -> Self {
         Self(address: UInt32(INADDR_ANY).bigEndian, port: port)
@@ -71,10 +71,10 @@ extension Kernel.Socket.Address.IPv4 {
 
 // MARK: - Storage Conversion
 
-extension Kernel.Socket.Address.IPv4 {
+extension ISO_9945.Kernel.Socket.Address.IPv4 {
     /// Converts to the generic `Storage` container.
-    public var storage: Kernel.Socket.Address.Storage {
-        var result = Kernel.Socket.Address.Storage()
+    public var storage: ISO_9945.Kernel.Socket.Address.Storage {
+        var result = ISO_9945.Kernel.Socket.Address.Storage()
         unsafe withUnsafePointer(to: cValue) { src in
             unsafe withUnsafeMutablePointer(to: &result.cValue) { dst in
                 unsafe UnsafeMutableRawPointer(dst)
@@ -87,7 +87,7 @@ extension Kernel.Socket.Address.IPv4 {
 
 // MARK: - Equatable
 
-extension Kernel.Socket.Address.IPv4 {
+extension ISO_9945.Kernel.Socket.Address.IPv4 {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.cValue.sin_port == rhs.cValue.sin_port &&
         lhs.cValue.sin_addr.s_addr == rhs.cValue.sin_addr.s_addr

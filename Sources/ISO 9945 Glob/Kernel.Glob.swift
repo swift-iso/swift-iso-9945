@@ -12,7 +12,7 @@
 
 public import ASCII_Primitives
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Glob pattern matching primitives.
     ///
     /// Defines the canonical contract for glob pattern matching across platforms.
@@ -33,7 +33,7 @@ extension Kernel {
     public enum Glob {}
 }
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// Returns true if the string contains glob metacharacters.
     ///
     /// Checks for: `*`, `?`, `[`, `\`

@@ -17,8 +17,8 @@ extension Path.Canonical.Error {
     /// Creates an error from a POSIX error code.
     ///
     /// Permission-denied errors (EACCES, EPERM) surface as `.platform(...)`
-    /// post-Path-X Cycle 8 — the L1 `Kernel.Permission.Error` wrapper case
-    /// was dropped to break the L1 cross-package dep on Kernel.Permission.
+    /// post-Path-X Cycle 8 — the L1 `ISO_9945.Kernel.Permission.Error` wrapper case
+    /// was dropped to break the L1 cross-package dep on ISO_9945.Kernel.Permission.
     /// Consumers that need to distinguish permission errors can pattern-match
     /// on the platform code.
     @usableFromInline

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Thread.Affinity {
+extension ISO_9945.Kernel.Thread.Affinity {
     /// Failure handling policy for affinity operations.
     ///
     /// Configures how affinity application failures are handled.

@@ -1,6 +1,6 @@
 public import ISO_9945_Kernel_File
 
-extension Kernel.Socket.Message.Header {
+extension ISO_9945.Kernel.Socket.Message.Header {
     /// I/O vector component of a message header.
     ///
     /// Wraps a borrowed pointer to an array of ``Kernel/IO/Vector/Segment``
@@ -8,7 +8,7 @@ extension Kernel.Socket.Message.Header {
     /// Pointer-equivalent to `msghdr.msg_iov` + `msghdr.msg_iovlen`.
     public struct Vectors: @unchecked Sendable {
         /// Pointer to the I/O vector array.
-        public var pointer: UnsafeMutablePointer<Kernel.IO.Vector.Segment>?
+        public var pointer: UnsafeMutablePointer<ISO_9945.Kernel.IO.Vector.Segment>?
 
         /// Number of I/O vectors.
         public var count: Int
@@ -19,7 +19,7 @@ extension Kernel.Socket.Message.Header {
         ///   - pointer: Pointer to the I/O vector array.
         ///   - count: Number of I/O vectors.
         @unsafe
-        public init(pointer: UnsafeMutablePointer<Kernel.IO.Vector.Segment>? = nil, count: Int = 0) {
+        public init(pointer: UnsafeMutablePointer<ISO_9945.Kernel.IO.Vector.Segment>? = nil, count: Int = 0) {
             unsafe self.pointer = pointer
             self.count = count
         }

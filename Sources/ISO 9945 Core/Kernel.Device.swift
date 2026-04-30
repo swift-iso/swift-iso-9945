@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Device ID.
     ///
     /// A type-safe wrapper for device identifiers. A device ID identifies
@@ -24,8 +24,8 @@ extension Kernel {
     /// ## Usage
     ///
     /// ```swift
-    /// let stats1 = try Kernel.File.Stats.get(path1)
-    /// let stats2 = try Kernel.File.Stats.get(path2)
+    /// let stats1 = try ISO_9945.Kernel.File.Stats.get(path1)
+    /// let stats2 = try ISO_9945.Kernel.File.Stats.get(path2)
     /// if stats1.device == stats2.device {
     ///     // Both files are on the same filesystem
     /// }
@@ -49,7 +49,7 @@ extension Kernel {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Kernel.Device: ExpressibleByIntegerLiteral {
+extension ISO_9945.Kernel.Device: ExpressibleByIntegerLiteral {
     @inlinable
     public init(integerLiteral value: UInt64) {
         self.rawValue = value

@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.File.Truncate {
     /// the extra data is lost. If the file is shorter than `length`, it is
     /// extended with zero bytes. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Truncate.truncate(_:to:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor (must be open for writing).
@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.File.Truncate {
     @_spi(Syscall)
     public static func truncate(
         fd: Int32,
-        to length: Kernel.File.Size
+        to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
         let rc = unsafe ftruncate(fd, off_t(length.rawValue))
 
@@ -63,8 +63,8 @@ extension ISO_9945.Kernel.File.Truncate {
     ///   - length: The new file size in bytes.
     /// - Throws: `Error_Primitives.Error` on failure.
     public static func truncate(
-        _ descriptor: borrowing Kernel.Descriptor,
-        to length: Kernel.File.Size
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
         try unsafe truncate(fd: descriptor._rawValue, to: length)
     }
@@ -77,7 +77,7 @@ extension ISO_9945.Kernel.File.Truncate {
     /// - Throws: `Error_Primitives.Error` on failure.
     public static func truncate(
         path: UnsafePointer<CChar>,
-        to length: Kernel.File.Size
+        to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
         let rc = unsafe Darwin_or_Glibc_truncate(path, off_t(length.rawValue))
 

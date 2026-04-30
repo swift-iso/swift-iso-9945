@@ -97,7 +97,7 @@ extension ISO_9945.Kernel.Process.Wait {
         }
 
         return Result(
-            pid: Kernel.Process.ID(result),
+            pid: ISO_9945.Kernel.Process.ID(result),
             status: ISO_9945.Kernel.Process.Status(rawValue: status)
         )
     }

@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.User {
     /// ## Usage
     ///
     /// ```swift
-    /// let stats = try Kernel.File.Stats.get(path)
+    /// let stats = try ISO_9945.Kernel.File.Stats.get(path)
     /// if stats.uid == .root {
     ///     // File is owned by root
     /// }

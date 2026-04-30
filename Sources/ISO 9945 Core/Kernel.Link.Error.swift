@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Link {
+extension ISO_9945.Kernel.Link {
     /// Errors that can occur during hard link operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// Source file not found.
@@ -51,7 +51,7 @@ extension Kernel.Link {
     }
 }
 
-extension Kernel.Link.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Link.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "source not found"

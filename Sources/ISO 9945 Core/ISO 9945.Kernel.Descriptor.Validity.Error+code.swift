@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Access
 
-extension Kernel.Descriptor.Validity.Error {
+extension ISO_9945.Kernel.Descriptor.Validity.Error {
     /// The underlying POSIX error code.
     @inlinable
     public var code: Error_Primitives.Error.Code {
@@ -24,7 +24,7 @@ extension Kernel.Descriptor.Validity.Error {
     }
 }
 
-extension Kernel.Descriptor.Validity.Error.Limit {
+extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit {
     /// The underlying POSIX error code.
     @inlinable
     public var code: Error_Primitives.Error.Code {
@@ -39,7 +39,7 @@ extension Kernel.Descriptor.Validity.Error.Limit {
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Descriptor.Validity.Error {
+extension ISO_9945.Kernel.Descriptor.Validity.Error {
     /// Creates an error from a POSIX error code, if applicable.
     ///
     /// Returns `nil` if the error code doesn't map to a handle error.

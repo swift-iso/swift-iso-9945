@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// A readiness event from the kernel selector.
     ///
     /// Events are produced by the selector's poll operation and represent
@@ -41,7 +41,7 @@ extension Kernel {
     }
 }
 
-extension Kernel.Event: CustomStringConvertible {
+extension ISO_9945.Kernel.Event: CustomStringConvertible {
     public var description: Swift.String {
         var parts = ["Event(id: \(id), interest: \(interest)"]
         if !flags.isEmpty {

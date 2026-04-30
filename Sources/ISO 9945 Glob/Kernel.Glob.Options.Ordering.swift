@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob.Options {
+extension ISO_9945.Kernel.Glob.Options {
     /// Result ordering policy.
     public enum Ordering: Sendable, Hashable {
         /// Sort results lexicographically for reproducibility.

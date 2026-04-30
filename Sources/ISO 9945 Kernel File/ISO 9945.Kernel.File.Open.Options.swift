@@ -20,7 +20,7 @@
 
 // MARK: - POSIX Standard Open Options
 
-extension Kernel.File.Open.Options {
+extension ISO_9945.Kernel.File.Open.Options {
     /// Creates the file if it does not exist (O_CREAT).
     public static let create = Self(rawValue: O_CREAT)
 

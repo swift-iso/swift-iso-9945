@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Translation from Syscall
 
-extension Kernel.File.Direct.Error {
+extension ISO_9945.Kernel.File.Direct.Error {
     /// Creates a semantic error from a raw syscall error.
     public init(from syscall: Syscall) {
         switch syscall {

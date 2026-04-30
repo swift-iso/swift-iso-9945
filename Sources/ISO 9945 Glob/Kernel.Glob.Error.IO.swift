@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob.Error {
+extension ISO_9945.Kernel.Glob.Error {
     /// Stable I/O error categories (not raw errno/Win32 codes).
     ///
     /// Platform-specific error codes are mapped to these stable categories

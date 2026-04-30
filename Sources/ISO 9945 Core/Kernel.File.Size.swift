@@ -12,7 +12,7 @@
 
 public import Binary_Primitives_Core
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File size as a non-directional magnitude.
     ///
     /// A type-safe wrapper for file sizes and byte counts. Uses the Dimension module
@@ -24,19 +24,19 @@ extension Kernel.File {
     /// ## Usage
     ///
     /// ```swift
-    /// let size: Kernel.File.Size = 4096
-    /// let offset: Kernel.File.Offset = 1000
+    /// let size: ISO_9945.Kernel.File.Size = 4096
+    /// let offset: ISO_9945.Kernel.File.Offset = 1000
     /// let newOffset = offset + size  // File.Offset
     ///
     /// // Create from pages
-    /// let pageSize = Kernel.File.Size(pages: 4)
+    /// let pageSize = ISO_9945.Kernel.File.Size(pages: 4)
     /// ```
     public typealias Size = Magnitude<Space>.Value<Int64>
 }
 
 // MARK: - Size Constants
 
-extension Kernel.File.Size {
+extension ISO_9945.Kernel.File.Size {
     /// Zero bytes.
 //    public static let zero: Self = 0
 
@@ -61,7 +61,7 @@ extension Kernel.File.Size {
 
 // MARK: - Convenience Initializers
 
-extension Kernel.File.Size {
+extension ISO_9945.Kernel.File.Size {
     /// Creates a file size from a number of pages.
     ///
     /// - Parameters:
@@ -97,7 +97,7 @@ extension Kernel.File.Size {
     /// - Parameter delta: The file delta (must be non-negative).
     /// - Precondition: `delta` must be non-negative.
     @inlinable
-    public init(_ delta: Kernel.File.Delta) {
+    public init(_ delta: ISO_9945.Kernel.File.Delta) {
         precondition(delta.rawValue >= 0, "Delta must be non-negative to convert to Size")
         self.init(delta.rawValue)
     }
@@ -105,7 +105,7 @@ extension Kernel.File.Size {
 
 // MARK: - Queries
 
-extension Kernel.File.Size {
+extension ISO_9945.Kernel.File.Size {
     /// Whether this size is zero.
     @inlinable
     public var isZero: Bool {
@@ -121,7 +121,7 @@ extension Kernel.File.Size {
 
 // MARK: - Alignment
 
-extension Kernel.File.Size {
+extension ISO_9945.Kernel.File.Size {
     /// Whether this size is aligned to the given alignment.
     ///
     /// - Parameter alignment: The alignment boundary (power of 2).
@@ -157,7 +157,7 @@ extension Int {
     ///
     /// - Parameter size: The file size.
     @inlinable
-    public init(_ size: Kernel.File.Size) {
+    public init(_ size: ISO_9945.Kernel.File.Size) {
         self = Int(size.rawValue)
     }
 }

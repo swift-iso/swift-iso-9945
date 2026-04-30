@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// on EINTR — callers must handle signal interruption explicitly. For automatic
     /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`. The typed L2
     /// convenience (`ISO_9945.Kernel.IO.Write.write(_:from:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## Threading
     /// This call blocks until at least one byte is written or an error occurs.
@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// on EINTR — callers must handle signal interruption explicitly. For automatic
     /// EINTR retry, use the policy-aware wrapper in `POSIX_Kernel`. The typed L2
     /// convenience (`ISO_9945.Kernel.IO.Write.pwrite(_:from:at:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## Threading
     /// This call blocks until at least one byte is written or an error occurs.
@@ -106,7 +106,7 @@ extension ISO_9945.Kernel.IO.Write {
     public static func pwrite(
         fd: Int32,
         from buffer: UnsafeRawBufferPointer,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
         guard let baseAddress = buffer.baseAddress else {
             return 0
@@ -135,7 +135,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///
     /// Typed L2 form. Delegates to the raw `write(fd:from:)` SPI via
     /// `descriptor._rawValue` after a fast-fail validity check. Marked
-    /// `@_disfavoredOverload` so the L3-unifier `Kernel.IO.Write.write(_:from:)`
+    /// `@_disfavoredOverload` so the L3-unifier `ISO_9945.Kernel.IO.Write.write(_:from:)`
     /// (EINTR-retry policy) wins overload resolution at consumer sites that
     /// see both layers — raw spec access is reachable via this L2 form.
     ///
@@ -146,7 +146,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
     @_disfavoredOverload
     public static func write(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer
     ) throws(Error) -> Int {
         guard descriptor.isValid else {
@@ -160,7 +160,7 @@ extension ISO_9945.Kernel.IO.Write {
     /// Typed L2 form. Delegates to the raw `pwrite(fd:from:at:)` SPI via
     /// `descriptor._rawValue` after a fast-fail validity check. Marked
     /// `@_disfavoredOverload` so the L3-unifier
-    /// `Kernel.IO.Write.pwrite(_:from:at:)` (EINTR-retry policy) wins overload
+    /// `ISO_9945.Kernel.IO.Write.pwrite(_:from:at:)` (EINTR-retry policy) wins overload
     /// resolution.
     ///
     /// - Parameters:
@@ -171,9 +171,9 @@ extension ISO_9945.Kernel.IO.Write {
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
     @_disfavoredOverload
     public static func pwrite(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from buffer: UnsafeRawBufferPointer,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
         guard descriptor.isValid else {
             throw .handle(.invalid)
@@ -191,10 +191,10 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - descriptor: The file descriptor to write to.
     ///   - span: The span containing bytes to write.
     /// - Returns: Number of bytes written.
-    /// - Throws: `Kernel.IO.Write.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on failure.
     @_disfavoredOverload
     public static func write(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from span: Span<UInt8>
     ) throws(Error) -> Int {
         try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
@@ -209,12 +209,12 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - span: The span containing bytes to write.
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written.
-    /// - Throws: `Kernel.IO.Write.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on failure.
     @_disfavoredOverload
     public static func pwrite(
-        _ descriptor: borrowing Kernel.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from span: Span<UInt8>,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
         try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
             try unsafe pwrite(descriptor, from: buffer, at: offset)
@@ -228,10 +228,10 @@ extension ISO_9945.Kernel.IO.Write.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
-        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
+        if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
-        if let blockingError = Kernel.IO.Blocking.Error(code: code) {
+        if let blockingError = ISO_9945.Kernel.IO.Blocking.Error(code: code) {
             return .blocking(blockingError)
         }
         return .platform(Error_Primitives.Error(code: code))

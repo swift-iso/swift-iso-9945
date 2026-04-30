@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.Group.Supplementary {
     ///
     /// - Returns: Array of supplementary group IDs.
     /// - Throws: `Error_Primitives.Error` on failure.
-    public static func get() throws(Error_Primitives.Error) -> [Kernel.Group.ID] {
+    public static func get() throws(Error_Primitives.Error) -> [ISO_9945.Kernel.Group.ID] {
         let count = getgroups(0, nil)
         guard count >= 0 else {
             throw Error_Primitives.Error.current(operation: "getgroups")
@@ -36,6 +36,6 @@ extension ISO_9945.Kernel.Group.Supplementary {
             throw Error_Primitives.Error.current(operation: "getgroups")
         }
 
-        return gids.prefix(Int(result)).map { Kernel.Group.ID(__unchecked: (), $0) }
+        return gids.prefix(Int(result)).map { ISO_9945.Kernel.Group.ID(__unchecked: (), $0) }
     }
 }

@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct {
+extension ISO_9945.Kernel.File.Direct {
     /// The cache mode for file I/O operations.
     ///
     /// This mode is set at handle open time and applies to all operations
@@ -62,7 +62,7 @@ extension Kernel.File.Direct {
 
 // MARK: - Resolution
 
-extension Kernel.File.Direct.Mode {
+extension ISO_9945.Kernel.File.Direct.Mode {
     /// Resolves the requested mode to a concrete mode based on platform and requirements.
     ///
     /// This is the single point of truth for `.auto` policy resolution.
@@ -87,10 +87,10 @@ extension Kernel.File.Direct.Mode {
     ///
     /// - Parameter requirements: The alignment requirements for the file/path.
     /// - Returns: The resolved mode to use.
-    /// - Throws: `Kernel.File.Direct.Error.notSupported` if the requested mode cannot be satisfied.
+    /// - Throws: `ISO_9945.Kernel.File.Direct.Error.notSupported` if the requested mode cannot be satisfied.
     public func resolve(
-        given requirements: Kernel.File.Direct.Requirements
-    ) throws(Kernel.File.Direct.Error) -> Resolved {
+        given requirements: ISO_9945.Kernel.File.Direct.Requirements
+    ) throws(ISO_9945.Kernel.File.Direct.Error) -> Resolved {
         #if os(macOS)
             return try resolveMacOS()
         #else
@@ -100,7 +100,7 @@ extension Kernel.File.Direct.Mode {
 
     #if os(macOS)
         /// macOS resolution: .uncached is the only cache bypass available.
-        private func resolveMacOS() throws(Kernel.File.Direct.Error) -> Resolved {
+        private func resolveMacOS() throws(ISO_9945.Kernel.File.Direct.Error) -> Resolved {
             switch self {
             case .direct:
                 // Strict Direct I/O not available on macOS
@@ -123,8 +123,8 @@ extension Kernel.File.Direct.Mode {
     #if !os(macOS)
         /// Linux/Windows resolution: .direct requires known requirements.
         private func resolveLinuxWindows(
-            requirements: Kernel.File.Direct.Requirements
-        ) throws(Kernel.File.Direct.Error) -> Resolved {
+            requirements: ISO_9945.Kernel.File.Direct.Requirements
+        ) throws(ISO_9945.Kernel.File.Direct.Error) -> Resolved {
             switch self {
             case .direct:
                 // .direct requires known requirements
@@ -148,8 +148,8 @@ extension Kernel.File.Direct.Mode {
         /// Resolves .auto policy on Linux/Windows.
         private func resolveAutoLinuxWindows(
             policy: Policy,
-            requirements: Kernel.File.Direct.Requirements
-        ) throws(Kernel.File.Direct.Error) -> Resolved {
+            requirements: ISO_9945.Kernel.File.Direct.Requirements
+        ) throws(ISO_9945.Kernel.File.Direct.Error) -> Resolved {
             switch requirements {
             case .known:
                 // Requirements known: use .direct

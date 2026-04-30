@@ -1,5 +1,5 @@
 
-extension Kernel.Socket.Address {
+extension ISO_9945.Kernel.Socket.Address {
     /// The byte length of a socket address.
     ///
     /// Mirrors POSIX `socklen_t` as a typed `Cardinal` carrying the
@@ -10,12 +10,12 @@ extension Kernel.Socket.Address {
     ///
     /// Backed by `Cardinal` (machine-word `UInt`); narrows to `socklen_t`
     /// (`UInt32`) at the C-call boundary.
-    public typealias Length = Tagged<Kernel.Socket.Address, Cardinal>
+    public typealias Length = Tagged<ISO_9945.Kernel.Socket.Address, Cardinal>
 }
 
 // MARK: - Convenience Construction
 
-extension Tagged where Tag == Kernel.Socket.Address, RawValue == Cardinal {
+extension Tagged where Tag == ISO_9945.Kernel.Socket.Address, RawValue == Cardinal {
     /// Creates a length from a raw 32-bit unsigned value (POSIX `socklen_t`).
     @inlinable
     public init(_ socklen: UInt32) {

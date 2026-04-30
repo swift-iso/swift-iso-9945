@@ -73,7 +73,7 @@ extension ISO_9945.Kernel.TTY {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `isTTY(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func isTTY(_ descriptor: borrowing Kernel.Descriptor) -> Bool {
+    public static func isTTY(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) -> Bool {
         isTTY(fd: descriptor._rawValue)
     }
 }
@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.TTY.Size {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `query(fd:)` SPI form
     /// via `descriptor._rawValue`.
-    public static func query(_ descriptor: borrowing Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
+    public static func query(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
         try query(fd: descriptor._rawValue)
     }
 }

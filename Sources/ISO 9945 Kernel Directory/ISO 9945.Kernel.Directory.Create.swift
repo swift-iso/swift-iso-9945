@@ -30,10 +30,10 @@ extension ISO_9945.Kernel.Directory.Create {
     /// - Parameters:
     ///   - path: The path to create.
     ///   - permissions: The permissions for the new directory (default: 0o755).
-    /// - Throws: `Kernel.Directory.Create.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Directory.Create.Error` on failure.
     public static func create(
         _ path: borrowing Path.Borrowed,
-        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe _create(ptr, permissions: permissions)
@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Directory.Create {
     @usableFromInline
     internal static func _create(
         _ path: UnsafePointer<Path.Char>,
-        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
@@ -69,7 +69,7 @@ extension ISO_9945.Kernel.Directory.Create {
     ///
     /// L3-policy throwing wrappers (`POSIX.Kernel.Directory.Create.create(relativeTo:path:permissions:)`
     /// in swift-posix) compose this raw call with `errno`-to-
-    /// `Kernel.Directory.Create.Error` mapping per [PLAT-ARCH-008e]. L1
+    /// `ISO_9945.Kernel.Directory.Create.Error` mapping per [PLAT-ARCH-008e]. L1
     /// syscall callers MUST NOT call this function directly; the
     /// L1 → L3-policy → L2 chain is mandatory.
     ///
@@ -82,7 +82,7 @@ extension ISO_9945.Kernel.Directory.Create {
     public static func mkdirat(
         descriptor: Int32,
         path: UnsafePointer<Path.Char>,
-        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
     ) -> Int32 {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
@@ -111,8 +111,8 @@ extension ISO_9945.Kernel.Directory.Create {
     /// - Throws: ``Error`` on failure.
     public static func create(
         _ path: borrowing Path.Borrowed,
-        relativeTo descriptor: borrowing Kernel.Descriptor,
-        permissions: Kernel.File.Permissions = Kernel.File.Permissions(rawValue: 0o755)
+        relativeTo descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
     ) throws(Error) {
         let raw = descriptor._rawValue
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
@@ -127,7 +127,7 @@ extension ISO_9945.Kernel.Directory.Create {
 // MARK: - Error
 
 extension ISO_9945.Kernel.Directory.Create {
-    public typealias Error = Kernel.Directory.Create.Error
+    public typealias Error = ISO_9945.Kernel.Directory.Create.Error
 }
 
 extension ISO_9945.Kernel.Directory.Create.Error {

@@ -11,14 +11,14 @@
 
 
 
-extension Kernel.File.Control {
+extension ISO_9945.Kernel.File.Control {
     public enum Error: Swift.Error, Sendable {
-        case handle(Kernel.Descriptor.Validity.Error)
+        case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case platform(Error_Primitives.Error)
     }
 }
 
-extension Kernel.File.Control.Error: Equatable {
+extension ISO_9945.Kernel.File.Control.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.handle(let l), .handle(let r)): return l == r
@@ -28,7 +28,7 @@ extension Kernel.File.Control.Error: Equatable {
     }
 }
 
-extension Kernel.File.Control.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Control.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .handle(let e): return "handle: \(e)"

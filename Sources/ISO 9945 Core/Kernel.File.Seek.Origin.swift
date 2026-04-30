@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Seek {
+extension ISO_9945.Kernel.File.Seek {
     /// Reference point for seek operations.
     ///
     /// Determines where the offset parameter is measured from when seeking
@@ -21,13 +21,13 @@ extension Kernel.File.Seek {
     ///
     /// ```swift
     /// // Seek to absolute position 100
-    /// let pos = try Kernel.File.Seek.seek(fd, offset: 100, origin: .start)
+    /// let pos = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 100, origin: .start)
     ///
     /// // Move forward 50 bytes from current position
-    /// let newPos = try Kernel.File.Seek.seek(fd, offset: 50, origin: .current)
+    /// let newPos = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 50, origin: .current)
     ///
     /// // Seek to 10 bytes before end of file
-    /// let endPos = try Kernel.File.Seek.seek(fd, offset: -10, origin: .end)
+    /// let endPos = try ISO_9945.Kernel.File.Seek.seek(fd, offset: -10, origin: .end)
     /// ```
     ///
     /// ## See Also

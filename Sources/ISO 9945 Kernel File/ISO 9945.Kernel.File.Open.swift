@@ -52,11 +52,11 @@ extension ISO_9945.Kernel.File.Open {
     /// - Complexity: O(1) in Swift, O(path length) in kernel.
     public static func open(
         path: borrowing Path.Borrowed,
-        mode: Kernel.File.Open.Mode,
-        options: Kernel.File.Open.Options,
-        permissions: Kernel.File.Permissions
-    ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
-        try unsafe path.withUnsafePointer { cString throws(Kernel.File.Open.Error) in
+        mode: ISO_9945.Kernel.File.Open.Mode,
+        options: ISO_9945.Kernel.File.Open.Options,
+        permissions: ISO_9945.Kernel.File.Permissions
+    ) throws(ISO_9945.Kernel.File.Open.Error) -> ISO_9945.Kernel.Descriptor {
+        try unsafe path.withUnsafePointer { cString throws(ISO_9945.Kernel.File.Open.Error) in
             try unsafe _open(unsafePath: cString, mode: mode, options: options, permissions: permissions)
         }
     }
@@ -65,10 +65,10 @@ extension ISO_9945.Kernel.File.Open {
     @usableFromInline
     internal static func _open(
         unsafePath: UnsafePointer<Path.Char>,
-        mode: Kernel.File.Open.Mode,
-        options: Kernel.File.Open.Options,
-        permissions: Kernel.File.Permissions
-    ) throws(Kernel.File.Open.Error) -> Kernel.Descriptor {
+        mode: ISO_9945.Kernel.File.Open.Mode,
+        options: ISO_9945.Kernel.File.Open.Options,
+        permissions: ISO_9945.Kernel.File.Permissions
+    ) throws(ISO_9945.Kernel.File.Open.Error) -> ISO_9945.Kernel.Descriptor {
         let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
         // Convert Mode to POSIX access flags at syscall boundary
@@ -84,23 +84,23 @@ extension ISO_9945.Kernel.File.Open {
 
             let fd = unsafe Darwin.open(cPath, flags, mode_t(permissions.rawValue))
             guard fd >= 0 else {
-                throw Kernel.File.Open.Error.current()
+                throw ISO_9945.Kernel.File.Open.Error.current()
             }
         #elseif canImport(Musl)
             let flags = accessMode | options.rawValue
             let fd = unsafe Musl.open(cPath, flags, mode_t(permissions.rawValue))
             guard fd >= 0 else {
-                throw Kernel.File.Open.Error.current()
+                throw ISO_9945.Kernel.File.Open.Error.current()
             }
         #elseif canImport(Glibc)
             let flags = accessMode | options.rawValue
             let fd = unsafe Glibc.open(cPath, flags, mode_t(permissions.rawValue))
             guard fd >= 0 else {
-                throw Kernel.File.Open.Error.current()
+                throw ISO_9945.Kernel.File.Open.Error.current()
             }
         #endif
 
-        return Kernel.Descriptor(_rawValue: fd)
+        return ISO_9945.Kernel.Descriptor(_rawValue: fd)
     }
 }
 

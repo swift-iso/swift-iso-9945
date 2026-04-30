@@ -24,12 +24,12 @@ extension ISO_9945.Kernel.Process.Wait {
     /// Result of a wait operation.
     public struct Result: Sendable, Equatable {
         /// The process ID that changed state.
-        public let pid: Kernel.Process.ID
+        public let pid: ISO_9945.Kernel.Process.ID
 
         /// The status of the process.
         public let status: ISO_9945.Kernel.Process.Status
 
-        public init(pid: Kernel.Process.ID, status: ISO_9945.Kernel.Process.Status) {
+        public init(pid: ISO_9945.Kernel.Process.ID, status: ISO_9945.Kernel.Process.Status) {
             self.pid = pid
             self.status = status
         }

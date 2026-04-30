@@ -24,23 +24,23 @@
 
 extension ISO_9945.Kernel.Pipe {
     /// The result of creating a pipe, containing read and write descriptors.
-    public typealias Descriptors = Tagged<Kernel.Pipe, Pair<Kernel.Descriptor, Kernel.Descriptor>>
+    public typealias Descriptors = Tagged<ISO_9945.Kernel.Pipe, Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>>
 }
 
-extension Tagged where Tag == Kernel.Pipe, RawValue == Pair<Kernel.Descriptor, Kernel.Descriptor> {
+extension Tagged where Tag == ISO_9945.Kernel.Pipe, RawValue == Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor> {
     /// The read end of the pipe.
-    public var read: Kernel.Descriptor {
+    public var read: ISO_9945.Kernel.Descriptor {
         @inlinable _read { yield rawValue.first }
     }
 
     /// The write end of the pipe.
-    public var write: Kernel.Descriptor {
+    public var write: ISO_9945.Kernel.Descriptor {
         @inlinable _read { yield rawValue.second }
     }
 
     /// Creates pipe descriptors from read and write ends.
     @inlinable
-    internal init(read: consuming Kernel.Descriptor, write: consuming Kernel.Descriptor) {
+    internal init(read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) {
         self.init(__unchecked: (), Pair(read, write))
     }
 }
@@ -54,7 +54,7 @@ extension ISO_9945.Kernel.Pipe {
     /// kernel until read from the read end.
     ///
     /// - Returns: The read and write descriptors for the pipe.
-    /// - Throws: `Kernel.Pipe.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Pipe.Error` on failure.
     public static func pipe() throws(Error) -> Descriptors {
         var fds: (Int32, Int32) = (0, 0)
 
@@ -75,8 +75,8 @@ extension ISO_9945.Kernel.Pipe {
         }
 
         return Descriptors(
-            read: Kernel.Descriptor(_rawValue: fds.0),
-            write: Kernel.Descriptor(_rawValue: fds.1)
+            read: ISO_9945.Kernel.Descriptor(_rawValue: fds.0),
+            write: ISO_9945.Kernel.Descriptor(_rawValue: fds.1)
         )
     }
 
@@ -85,7 +85,7 @@ extension ISO_9945.Kernel.Pipe {
 // MARK: - Error Alias
 
 extension ISO_9945.Kernel.Pipe {
-    public typealias Error = Kernel.Pipe.Error
+    public typealias Error = ISO_9945.Kernel.Pipe.Error
 }
 
 // MARK: - Error Conversion
@@ -94,7 +94,7 @@ extension ISO_9945.Kernel.Pipe.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
-        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
+        if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
         return .platform(Error_Primitives.Error(code: code))

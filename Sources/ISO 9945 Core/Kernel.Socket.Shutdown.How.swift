@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Socket.Shutdown {
+extension ISO_9945.Kernel.Socket.Shutdown {
     /// Specifies which half of the connection to shut down.
     public enum How: Int32, Sendable {
         /// Shut down the read side of the connection.

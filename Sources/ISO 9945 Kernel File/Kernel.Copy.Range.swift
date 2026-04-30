@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Copy {
+extension ISO_9945.Kernel.Copy {
     /// Range-based copy operations.
     ///
     /// Enables efficient kernel-space copying between file descriptors,

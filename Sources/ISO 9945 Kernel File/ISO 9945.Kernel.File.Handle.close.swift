@@ -10,9 +10,9 @@
 // ===----------------------------------------------------------------------===//
 
 
-// MARK: - POSIX close on Kernel.File.Handle
+// MARK: - POSIX close on ISO_9945.Kernel.File.Handle
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Explicitly closes the file handle with error reporting.
     ///
     /// Consumes the handle: after this call, both the handle and its
@@ -22,8 +22,8 @@ extension Kernel.File.Handle {
     /// If you don't call `close()` explicitly, the descriptor's deinit
     /// closes the fd automatically (best-effort, errors swallowed).
     ///
-    /// - Throws: `Kernel.Close.Error` on failure.
-    public consuming func close() throws(Kernel.Close.Error) {
-        try Kernel.Close.close(self.descriptor)
+    /// - Throws: `ISO_9945.Kernel.Close.Error` on failure.
+    public consuming func close() throws(ISO_9945.Kernel.Close.Error) {
+        try ISO_9945.Kernel.Close.close(self.descriptor)
     }
 }

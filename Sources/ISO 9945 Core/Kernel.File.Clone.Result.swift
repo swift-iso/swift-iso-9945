@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Clone {
+extension ISO_9945.Kernel.File.Clone {
     /// Result of a clone operation.
     public enum Result: Sendable, Equatable {
         /// The file was cloned via reflink (zero-copy).

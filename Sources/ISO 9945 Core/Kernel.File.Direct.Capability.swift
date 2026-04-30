@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Direct {
+extension ISO_9945.Kernel.File.Direct {
     /// The Direct I/O capability of a file handle or path.
     ///
     /// Capability indicates whether Direct I/O can be used, not whether
@@ -46,15 +46,15 @@ extension Kernel.File.Direct {
 
 // MARK: - Direct Accessor
 
-extension Kernel.File.Direct.Capability {
+extension ISO_9945.Kernel.File.Direct.Capability {
     /// Accessor for direct I/O properties.
     public var direct: Direct { Direct(capability: self) }
 
     /// Direct I/O properties accessor.
     public struct Direct: Sendable {
-        let capability: Kernel.File.Direct.Capability
+        let capability: ISO_9945.Kernel.File.Direct.Capability
 
-        init(capability: Kernel.File.Direct.Capability) {
+        init(capability: ISO_9945.Kernel.File.Direct.Capability) {
             self.capability = capability
         }
 
@@ -68,15 +68,15 @@ extension Kernel.File.Direct.Capability {
 
 // MARK: - Bypass Accessor
 
-extension Kernel.File.Direct.Capability {
+extension ISO_9945.Kernel.File.Direct.Capability {
     /// Accessor for cache bypass properties.
     public var bypass: Bypass { Bypass(capability: self) }
 
     /// Cache bypass properties accessor.
     public struct Bypass: Sendable {
-        let capability: Kernel.File.Direct.Capability
+        let capability: ISO_9945.Kernel.File.Direct.Capability
 
-        init(capability: Kernel.File.Direct.Capability) {
+        init(capability: ISO_9945.Kernel.File.Direct.Capability) {
             self.capability = capability
         }
 
@@ -94,9 +94,9 @@ extension Kernel.File.Direct.Capability {
 
 // MARK: - Alignment
 
-extension Kernel.File.Direct.Capability {
+extension ISO_9945.Kernel.File.Direct.Capability {
     /// The alignment requirements, if Direct I/O is supported.
-    public var alignment: Kernel.File.Direct.Requirements.Alignment? {
+    public var alignment: ISO_9945.Kernel.File.Direct.Requirements.Alignment? {
         if case .directSupported(let alignment) = self {
             return alignment
         }

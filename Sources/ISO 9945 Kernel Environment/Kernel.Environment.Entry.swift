@@ -13,7 +13,7 @@ public import String_Primitives
 
 
 
-extension Kernel.Environment {
+extension ISO_9945.Kernel.Environment {
     /// A single environment variable entry with borrowed name and value.
     ///
     /// This type is `~Escapable`, meaning it cannot outlive the iterator
@@ -49,7 +49,7 @@ extension Kernel.Environment {
 
 // MARK: - Access
 
-extension Kernel.Environment.Entry {
+extension ISO_9945.Kernel.Environment.Entry {
     /// The name as a Span.
     @inlinable
     public var name: Span<String.Char> {
@@ -71,7 +71,7 @@ extension Kernel.Environment.Entry {
 
 // MARK: - Convenience
 
-extension Kernel.Environment.Entry {
+extension ISO_9945.Kernel.Environment.Entry {
     /// The length of the name in code units, excluding the null terminator.
     @inlinable
     public var nameLength: Int {

@@ -21,8 +21,8 @@
 // MARK: - POSIX directory operations
 
 extension ISO_9945.Kernel.Directory {
-    public typealias Entry = Kernel.Directory.Entry
-    public typealias Error = Kernel.Directory.Error
+    public typealias Entry = ISO_9945.Kernel.Directory.Entry
+    public typealias Error = ISO_9945.Kernel.Directory.Error
 
     /// A directory stream for iterating over directory entries.
     @safe
@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.Directory {
     ///
     /// - Parameter path: The path to the directory.
     /// - Returns: A directory stream for iteration.
-    /// - Throws: `Kernel.Directory.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Directory.Error` on failure.
     @unsafe
     public static func open(at path: UnsafePointer<Path.Char>) throws(Error) -> Stream {
         let cPath = unsafe UnsafePointer<CChar>(path)
@@ -70,7 +70,7 @@ extension ISO_9945.Kernel.Directory {
     ///
     /// - Parameter path: The path to the directory.
     /// - Returns: A directory stream for iteration.
-    /// - Throws: `Kernel.Directory.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Directory.Error` on failure.
     public static func open(at path: borrowing Path.Borrowed) throws(Error) -> Stream {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe open(at: ptr)
@@ -88,7 +88,7 @@ extension ISO_9945.Kernel.Directory.Stream {
     }
 
     /// Returns the next entry, or nil if at end of directory.
-    public func next() throws(Kernel.Directory.Error) -> Kernel.Directory.Entry? {
+    public func next() throws(ISO_9945.Kernel.Directory.Error) -> ISO_9945.Kernel.Directory.Entry? {
         guard let d = unsafe dir else {
             return nil
         }
@@ -98,7 +98,7 @@ extension ISO_9945.Kernel.Directory.Stream {
         guard let entry = unsafe readdir(d) else {
             // Check if this was an error or end of directory
             if errno != 0 {
-                throw Kernel.Directory.Error.currentRead()
+                throw ISO_9945.Kernel.Directory.Error.currentRead()
             }
             return nil
         }
@@ -116,7 +116,7 @@ extension ISO_9945.Kernel.Directory.Stream {
         }
 
         // Map d_type to file type
-        let type: Kernel.File.Stats.Kind? = {
+        let type: ISO_9945.Kernel.File.Stats.Kind? = {
             switch Int(unsafe entry.pointee.d_type) {
             case Int(DT_REG): return .regular
             case Int(DT_DIR): return .directory
@@ -129,9 +129,9 @@ extension ISO_9945.Kernel.Directory.Stream {
             }
         }()
 
-        return Kernel.Directory.Entry(
+        return ISO_9945.Kernel.Directory.Entry(
             rawName: rawName,
-            inode: Kernel.Inode(UInt64(unsafe entry.pointee.d_ino)),
+            inode: ISO_9945.Kernel.Inode(UInt64(unsafe entry.pointee.d_ino)),
             type: type
         )
     }

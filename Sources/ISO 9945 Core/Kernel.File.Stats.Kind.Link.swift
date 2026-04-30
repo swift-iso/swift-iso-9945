@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Stats.Kind {
+extension ISO_9945.Kernel.File.Stats.Kind {
     /// Link types.
     public enum Link: Sendable, Equatable, Hashable {
         /// Symbolic link.

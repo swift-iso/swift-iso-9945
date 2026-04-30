@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Directory {
+extension ISO_9945.Kernel.Directory {
     /// Errors that can occur during directory operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The directory does not exist.
@@ -33,7 +33,7 @@ extension Kernel.Directory {
     }
 }
 
-extension Kernel.Directory.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Directory.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "directory not found"

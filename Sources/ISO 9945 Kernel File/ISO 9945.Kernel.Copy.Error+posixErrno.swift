@@ -20,7 +20,7 @@
 
 // MARK: - POSIX errno to Copy.Error Mapping
 
-extension Kernel.Copy.Error {
+extension ISO_9945.Kernel.Copy.Error {
     /// Creates a copy error from a POSIX errno value.
     ///
     /// Maps standard POSIX error codes to domain-specific copy error cases.

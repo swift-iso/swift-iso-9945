@@ -28,11 +28,11 @@ extension ISO_9945.Kernel.IO.Vector {
     ///
     /// ```swift
     /// var segments = [
-    ///     Kernel.IO.Vector.Segment(base: buf1, length: 4096),
-    ///     Kernel.IO.Vector.Segment(base: buf2, length: 1024),
+    ///     ISO_9945.Kernel.IO.Vector.Segment(base: buf1, length: 4096),
+    ///     ISO_9945.Kernel.IO.Vector.Segment(base: buf2, length: 1024),
     /// ]
     /// segments.withUnsafeBufferPointer { vecs in
-    ///     try Kernel.IO.Vector.read(descriptor, buffers: vecs)
+    ///     try ISO_9945.Kernel.IO.Vector.read(descriptor, buffers: vecs)
     /// }
     /// ```
     public struct Segment: @unchecked Sendable {

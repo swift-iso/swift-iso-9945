@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Socket {
 // MARK: - Receive Operations (raw fd SPI)
 //
 // Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
-// Kernel.Socket.Descriptor convenience overloads were dropped per the
+// ISO_9945.Kernel.Socket.Descriptor convenience overloads were dropped per the
 // L1-domain-only architecture. Post-Path-X cleanup will retype L2 to
 // ISO_9945.Kernel.Socket.Descriptor.
 
@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - span: The mutable span to receive into.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, or 0 for EOF.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -48,9 +48,9 @@ extension ISO_9945.Kernel.Socket.Receive {
     public static func receive(
         fd: Int32,
         into span: inout MutableSpan<UInt8>,
-        options: Kernel.Socket.Message.Options = []
-    ) throws(Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Kernel.Socket.Error) -> Int in
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
             guard let base = buffer.baseAddress else { return 0 }
             let result = unsafe Darwin_or_Glibc_recv(
                 fd,
@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.Socket.Receive {
                 options.rawValue
             )
             guard result >= 0 else {
-                throw Kernel.Socket.Error.current()
+                throw ISO_9945.Kernel.Socket.Error.current()
             }
             return result
         }
@@ -72,19 +72,19 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - span: The mutable span to receive into.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, the sender's address, and address length.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func from(
         fd: Int32,
         into span: inout MutableSpan<UInt8>,
-        options: Kernel.Socket.Message.Options = []
-    ) throws(Kernel.Socket.Error) -> (count: Int, address: Kernel.Socket.Address.Storage, addressLength: Kernel.Socket.Address.Length) {
-        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(Kernel.Socket.Error) -> (count: Int, address: Kernel.Socket.Address.Storage, addressLength: Kernel.Socket.Address.Length) in
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
+        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) in
             guard let base = buffer.baseAddress else {
-                return (count: 0, address: Kernel.Socket.Address.Storage(), addressLength: Kernel.Socket.Address.Length(UInt(0)))
+                return (count: 0, address: ISO_9945.Kernel.Socket.Address.Storage(), addressLength: ISO_9945.Kernel.Socket.Address.Length(UInt(0)))
             }
-            var storage = Kernel.Socket.Address.Storage()
-            var addrLen = socklen_t(Kernel.Socket.Address.Storage.size.rawValue.rawValue)
+            var storage = ISO_9945.Kernel.Socket.Address.Storage()
+            var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.rawValue.rawValue)
 
             let count = storage.withUnsafeMutableBytes { ptr, _ in
                 let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
@@ -99,10 +99,10 @@ extension ISO_9945.Kernel.Socket.Receive {
             }
 
             guard count >= 0 else {
-                throw Kernel.Socket.Error.current()
+                throw ISO_9945.Kernel.Socket.Error.current()
             }
 
-            return (count: count, address: storage, addressLength: Kernel.Socket.Address.Length(addrLen))
+            return (count: count, address: storage, addressLength: ISO_9945.Kernel.Socket.Address.Length(addrLen))
         }
     }
 
@@ -113,13 +113,13 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - header: The message header describing receive buffers and control data.
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     @_spi(Syscall)
     public static func message(
         fd: Int32,
-        header: inout Kernel.Socket.Message.Header,
-        options: Kernel.Socket.Message.Options = []
-    ) throws(Kernel.Socket.Error) -> Int {
+        header: inout ISO_9945.Kernel.Socket.Message.Header,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         let result = unsafe recvmsg(
             fd,
             &header.cValue,
@@ -127,7 +127,7 @@ extension ISO_9945.Kernel.Socket.Receive {
         )
 
         guard result >= 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
         return result

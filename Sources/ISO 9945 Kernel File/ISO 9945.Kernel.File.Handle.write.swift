@@ -11,9 +11,9 @@
 
 import Algebra_Primitives
 
-// MARK: - POSIX write operations on Kernel.File.Handle
+// MARK: - POSIX write operations on ISO_9945.Kernel.File.Handle
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Writes bytes to the file at the current offset.
     ///
     /// For Direct I/O handles, validates buffer alignment before the syscall.
@@ -56,7 +56,7 @@ extension Kernel.File.Handle {
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pwrite(
         from buffer: UnsafeRawBufferPointer,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try unsafe ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: buffer, at: offset)
@@ -71,7 +71,7 @@ extension Kernel.File.Handle {
 
 // MARK: - Span Adapters
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     /// Writes bytes from a span to the file at the current offset.
     ///
     /// - Parameter span: The span containing bytes to write.
@@ -106,7 +106,7 @@ extension Kernel.File.Handle {
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pwrite(
         from span: Span<UInt8>,
-        at offset: Kernel.File.Offset
+        at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: span, at: offset)

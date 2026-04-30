@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Open.Exec {
+extension ISO_9945.Kernel.File.Open.Exec {
     /// Close descriptor options.
     public enum Close: Sendable {
         /// Close the file descriptor on exec.

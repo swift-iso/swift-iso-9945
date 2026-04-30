@@ -25,13 +25,13 @@
 extension ISO_9945.Kernel.Lock {
     /// Acquires a lock on a byte range (blocking).
     ///
-    /// Wraps `fcntl(fd, F_SETLKW, &flock)`. Throws `Kernel.Lock.Error` (the
+    /// Wraps `fcntl(fd, F_SETLKW, &flock)`. Throws `ISO_9945.Kernel.Lock.Error` (the
     /// L1 lock-error type) on failure — error mapping stays at L2 because
     /// the L2 Token type internally consumes this surface and depends on
     /// the typed error throw. Pattern A's typed-descriptor parameter has
     /// been replaced with a raw `fd: Int32`. The typed L2 convenience
     /// (`ISO_9945.Kernel.Lock.lock(_:range:kind:)` taking `borrowing
-    /// Kernel.Descriptor`) and the L3-policy wrapper
+    /// ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
     /// (`POSIX.Kernel.Lock.lock(_:range:kind:)` in swift-posix) both call
     /// this raw SPI internally.
     ///
@@ -44,14 +44,14 @@ extension ISO_9945.Kernel.Lock {
     @_spi(Syscall)
     public static func lock(
         fd: Int32,
-        range: Kernel.Lock.Range,
-        kind: Kernel.Lock.Kind
-    ) throws(Kernel.Lock.Error) {
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         var fl = makeFlock(range: range, kind: kind)
 
         let result = unsafe fcntl(fd, F_SETLKW, &fl)
         guard result != -1 else {
-            throw Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+            throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
         }
     }
 
@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.Lock {
     ///
     /// Wraps `fcntl(fd, F_SETLK, &flock)` with `F_UNLCK`. The typed L2
     /// convenience (`ISO_9945.Kernel.Lock.unlock(_:range:)` taking
-    /// `borrowing Kernel.Descriptor`) and the L3-policy wrapper
+    /// `borrowing ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
     /// (`POSIX.Kernel.Lock.unlock(_:range:)` in swift-posix) both call
     /// this raw SPI internally.
     ///
@@ -70,8 +70,8 @@ extension ISO_9945.Kernel.Lock {
     @_spi(Syscall)
     public static func unlock(
         fd: Int32,
-        range: Kernel.Lock.Range
-    ) throws(Kernel.Lock.Error) {
+        range: ISO_9945.Kernel.Lock.Range
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         var fl = flock()
         fl.l_type = Int16(F_UNLCK)
         fl.l_whence = Int16(SEEK_SET)
@@ -87,13 +87,13 @@ extension ISO_9945.Kernel.Lock {
 
         let result = unsafe fcntl(fd, F_SETLK, &fl)
         guard result != -1 else {
-            throw Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+            throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
         }
     }
 
     /// Creates a flock structure for fcntl.
 
-    static func makeFlock(range: Kernel.Lock.Range, kind: Kernel.Lock.Kind) -> flock {
+    static func makeFlock(range: ISO_9945.Kernel.Lock.Range, kind: ISO_9945.Kernel.Lock.Kind) -> flock {
         var fl = flock()
 
         fl.l_type = kind == .shared ? Int16(F_RDLCK) : Int16(F_WRLCK)
@@ -120,10 +120,10 @@ extension ISO_9945.Kernel.Lock {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `lock(fd:range:kind:)` SPI.
     public static func lock(
-        _ descriptor: borrowing Kernel.Descriptor,
-        range: Kernel.Lock.Range,
-        kind: Kernel.Lock.Kind
-    ) throws(Kernel.Lock.Error) {
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         try lock(fd: descriptor._rawValue, range: range, kind: kind)
     }
 
@@ -131,9 +131,9 @@ extension ISO_9945.Kernel.Lock {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `unlock(fd:range:)` SPI.
     public static func unlock(
-        _ descriptor: borrowing Kernel.Descriptor,
-        range: Kernel.Lock.Range
-    ) throws(Kernel.Lock.Error) {
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         try unlock(fd: descriptor._rawValue, range: range)
     }
 }
@@ -147,7 +147,7 @@ extension ISO_9945.Kernel.Lock {
         ///
         /// Wraps `fcntl(fd, F_SETLK, &flock)`. The typed L2 convenience
         /// (`ISO_9945.Kernel.Lock.Immediate.lock(_:range:kind:)` taking
-        /// `borrowing Kernel.Descriptor`) and the L3-policy wrapper
+        /// `borrowing ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
         /// (`POSIX.Kernel.Lock.Immediate.lock(_:range:kind:)` in swift-posix)
         /// both call this raw SPI internally.
         ///
@@ -161,9 +161,9 @@ extension ISO_9945.Kernel.Lock {
         @_spi(Syscall)
         public static func lock(
             fd: Int32,
-            range: Kernel.Lock.Range,
-            kind: Kernel.Lock.Kind
-        ) throws(Kernel.Lock.Error) {
+            range: ISO_9945.Kernel.Lock.Range,
+            kind: ISO_9945.Kernel.Lock.Kind
+        ) throws(ISO_9945.Kernel.Lock.Error) {
             var fl = ISO_9945.Kernel.Lock.makeFlock(range: range, kind: kind)
 
             let result = unsafe fcntl(fd, F_SETLK, &fl)
@@ -172,7 +172,7 @@ extension ISO_9945.Kernel.Lock {
                 if errno == EAGAIN || errno == EACCES {
                     throw .contention
                 }
-                throw Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+                throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
             }
         }
     }
@@ -183,10 +183,10 @@ extension ISO_9945.Kernel.Lock.Immediate {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `lock(fd:range:kind:)` SPI.
     public static func lock(
-        _ descriptor: borrowing Kernel.Descriptor,
-        range: Kernel.Lock.Range,
-        kind: Kernel.Lock.Kind
-    ) throws(Kernel.Lock.Error) {
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         try lock(fd: descriptor._rawValue, range: range, kind: kind)
     }
 }

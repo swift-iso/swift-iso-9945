@@ -11,7 +11,7 @@
 
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File flush (synchronization) operations.
     ///
     /// Provides fsync functionality for durably persisting file data to storage.
@@ -28,18 +28,18 @@ extension Kernel.File {
 
 // MARK: - Error
 
-extension Kernel.File.Flush {
+extension ISO_9945.Kernel.File.Flush {
     /// Errors that can occur during file flush operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The file descriptor is invalid.
-        case handle(Kernel.Descriptor.Validity.Error)
+        case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
 
         /// Platform-specific error.
         case platform(Error_Primitives.Error)
     }
 }
 
-extension Kernel.File.Flush.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Flush.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .handle(let e): return "handle: \(e)"

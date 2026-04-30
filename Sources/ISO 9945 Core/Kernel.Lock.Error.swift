@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Lock {
+extension ISO_9945.Kernel.Lock {
     /// Lock operation errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
         /// Lock contention - another process holds a conflicting lock.
@@ -19,7 +19,7 @@ extension Kernel.Lock {
         ///
         /// This is only thrown when `wait: false`. Use `try?` pattern:
         /// ```swift
-        /// if (try? Kernel.Lock.lock(fd, range: .file, exclusive: true, wait: false)) != nil {
+        /// if (try? ISO_9945.Kernel.Lock.lock(fd, range: .file, exclusive: true, wait: false)) != nil {
         ///     // Lock acquired
         /// }
         /// ```
@@ -40,7 +40,7 @@ extension Kernel.Lock {
     }
 }
 
-extension Kernel.Lock.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Lock.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .contention: return "lock contention"
@@ -50,7 +50,7 @@ extension Kernel.Lock.Error: CustomStringConvertible {
     }
 }
 
-extension Kernel.Lock.Error {
+extension ISO_9945.Kernel.Lock.Error {
     /// Lock acquisition timed out.
     ///
     /// Thrown when `.deadline(...)` acquisition cannot acquire the lock

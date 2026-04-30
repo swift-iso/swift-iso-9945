@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// An atom within a pattern segment.
     ///
     /// Atoms are the building blocks of pattern segments.

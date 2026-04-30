@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Lock.Error {
+extension ISO_9945.Kernel.Lock.Error {
     /// Creates a lock error from a POSIX error code, if applicable.
     ///
     /// - Parameter code: The kernel error code.

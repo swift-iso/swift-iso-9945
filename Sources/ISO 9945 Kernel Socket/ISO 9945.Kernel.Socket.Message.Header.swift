@@ -8,7 +8,7 @@ public import ISO_9945_Kernel_File
     internal import Musl
 #endif
 
-extension Kernel.Socket.Message {
+extension ISO_9945.Kernel.Socket.Message {
     /// Message header for sendmsg/recvmsg operations.
     ///
     /// Wraps the platform `msghdr` struct. Layout-compatible — an
@@ -27,10 +27,10 @@ extension Kernel.Socket.Message {
 
 // MARK: - Accessors
 
-extension Kernel.Socket.Message.Header {
+extension ISO_9945.Kernel.Socket.Message.Header {
     /// Socket address for the message destination (sendmsg) or source (recvmsg).
     public var name: Name {
-        get { unsafe Name(pointer: cValue.msg_name, length: Kernel.Socket.Address.Length(cValue.msg_namelen)) }
+        get { unsafe Name(pointer: cValue.msg_name, length: ISO_9945.Kernel.Socket.Address.Length(cValue.msg_namelen)) }
         set {
             unsafe cValue.msg_name = newValue.pointer
             unsafe cValue.msg_namelen = socklen_t(newValue.length.rawValue.rawValue)
@@ -41,7 +41,7 @@ extension Kernel.Socket.Message.Header {
     public var vectors: Vectors {
         get {
             unsafe Vectors(
-                pointer: UnsafeMutableRawPointer(cValue.msg_iov)?.assumingMemoryBound(to: Kernel.IO.Vector.Segment.self),
+                pointer: UnsafeMutableRawPointer(cValue.msg_iov)?.assumingMemoryBound(to: ISO_9945.Kernel.IO.Vector.Segment.self),
                 count: Int(cValue.msg_iovlen)
             )
         }
@@ -67,8 +67,8 @@ extension Kernel.Socket.Message.Header {
     }
 
     /// Flags on received message (output only, set by recvmsg).
-    public var flags: Kernel.Socket.Message.Options {
-        get { unsafe Kernel.Socket.Message.Options(rawValue: cValue.msg_flags) }
+    public var flags: ISO_9945.Kernel.Socket.Message.Options {
+        get { unsafe ISO_9945.Kernel.Socket.Message.Options(rawValue: cValue.msg_flags) }
         set { unsafe cValue.msg_flags = newValue.rawValue }
     }
 }

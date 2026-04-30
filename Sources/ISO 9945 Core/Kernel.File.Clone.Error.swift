@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Clone {
+extension ISO_9945.Kernel.File.Clone {
     /// Errors that can occur during clone operations.
     public enum Error: Swift.Error, Sendable, Equatable, CustomStringConvertible {
         /// Reflink is not supported on this filesystem.

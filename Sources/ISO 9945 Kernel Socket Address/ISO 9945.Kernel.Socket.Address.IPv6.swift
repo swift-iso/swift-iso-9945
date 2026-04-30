@@ -7,7 +7,7 @@
     internal import Musl
 #endif
 
-extension Kernel.Socket.Address {
+extension ISO_9945.Kernel.Socket.Address {
     /// IPv6 socket address.
     ///
     /// Wraps `sockaddr_in6`.
@@ -65,9 +65,9 @@ extension Kernel.Socket.Address {
 
 // MARK: - Accessors
 
-extension Kernel.Socket.Address.IPv6 {
+extension ISO_9945.Kernel.Socket.Address.IPv6 {
     /// The address family (always `.inet6`).
-    public var family: Kernel.Socket.Address.Family {
+    public var family: ISO_9945.Kernel.Socket.Address.Family {
         get { .inet6 }
     }
 
@@ -90,14 +90,14 @@ extension Kernel.Socket.Address.IPv6 {
     }
 
     /// The size of the underlying sockaddr_in6 structure.
-    public static var size: Kernel.Socket.Address.Length {
-        Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_in6>.size))
+    public static var size: ISO_9945.Kernel.Socket.Address.Length {
+        ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_in6>.size))
     }
 }
 
 // MARK: - Convenience
 
-extension Kernel.Socket.Address.IPv6 {
+extension ISO_9945.Kernel.Socket.Address.IPv6 {
     /// Any address (in6addr_any) on the given port.
     public static func any(port: UInt16) -> Self {
         Self(port: port)
@@ -113,10 +113,10 @@ extension Kernel.Socket.Address.IPv6 {
 
 // MARK: - Storage Conversion
 
-extension Kernel.Socket.Address.IPv6 {
+extension ISO_9945.Kernel.Socket.Address.IPv6 {
     /// Converts to the generic `Storage` container.
-    public var storage: Kernel.Socket.Address.Storage {
-        var result = Kernel.Socket.Address.Storage()
+    public var storage: ISO_9945.Kernel.Socket.Address.Storage {
+        var result = ISO_9945.Kernel.Socket.Address.Storage()
         unsafe withUnsafePointer(to: cValue) { src in
             unsafe withUnsafeMutablePointer(to: &result.cValue) { dst in
                 unsafe UnsafeMutableRawPointer(dst)

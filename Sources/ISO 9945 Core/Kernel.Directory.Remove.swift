@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Directory {
+extension ISO_9945.Kernel.Directory {
     /// Directory removal operations.
     ///
     /// Removes empty directories from the filesystem.
@@ -30,7 +30,7 @@ extension Kernel.Directory {
 
 // MARK: - Error
 
-extension Kernel.Directory.Remove {
+extension ISO_9945.Kernel.Directory.Remove {
     /// Errors that can occur during directory removal.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// The directory does not exist.
@@ -62,7 +62,7 @@ extension Kernel.Directory.Remove {
     }
 }
 
-extension Kernel.Directory.Remove.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Directory.Remove.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notFound: return "directory not found"

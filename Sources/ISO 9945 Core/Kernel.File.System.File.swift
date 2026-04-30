@@ -12,15 +12,15 @@
 
 public import Cardinal_Primitives
 
-extension Kernel.File.System {
+extension ISO_9945.Kernel.File.System {
     /// File/inode namespace for filesystem statistics.
     public enum File {}
 }
 
-extension Kernel.File.System.File {
+extension ISO_9945.Kernel.File.System.File {
     /// Count of files (inodes) in a filesystem.
     ///
     /// Used for total file count and free file count in `File.System.Stats`.
-    public typealias Count = Tagged<Kernel.File.System.File, Cardinal>
+    public typealias Count = Tagged<ISO_9945.Kernel.File.System.File, Cardinal>
 }
 

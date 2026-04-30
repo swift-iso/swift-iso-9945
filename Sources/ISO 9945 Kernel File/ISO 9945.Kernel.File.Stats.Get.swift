@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// Spec-literal raw `fstat(2)`. Retrieves file size, type, permissions,
     /// timestamps, and other metadata. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Stats.get(descriptor:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## Threading
     /// This call may briefly block while reading file metadata. Safe to call
@@ -43,7 +43,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @_spi(Syscall)
-    public static func get(fd: Int32) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
+    public static func get(fd: Int32) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (Darwin.fstat(fd, &sb) == 0) else {
@@ -60,7 +60,7 @@ extension ISO_9945.Kernel.File.Stats {
                 throw Error(posixErrno: errno)
             }
         #endif
-        return Kernel.File.Stats(from: sb)
+        return ISO_9945.Kernel.File.Stats(from: sb)
     }
 }
 
@@ -75,7 +75,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter descriptor: The file descriptor to stat.
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    public static func get(descriptor: borrowing Kernel.Descriptor) throws(Kernel.File.Stats.Error) -> Kernel.File.Stats {
+    public static func get(descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe get(fd: descriptor._rawValue)
     }
 
@@ -91,7 +91,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func get(path: borrowing Path.Borrowed) throws(Error) -> Kernel.File.Stats {
+    public static func get(path: borrowing Path.Borrowed) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe get(unsafePath: UnsafePointer<CChar>(cString))
         }
@@ -107,7 +107,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @unsafe
-    public static func get(at path: UnsafePointer<Path.Char>) throws(Error) -> Kernel.File.Stats {
+    public static func get(at path: UnsafePointer<Path.Char>) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe get(unsafePath: UnsafePointer<CChar>(path))
     }
 
@@ -116,7 +116,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter unsafePath: Null-terminated path string.
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    internal static func get(unsafePath path: UnsafePointer<CChar>) throws(Error) -> Kernel.File.Stats {
+    internal static func get(unsafePath path: UnsafePointer<CChar>) throws(Error) -> ISO_9945.Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (stat(path, &sb) == 0) else {
@@ -133,7 +133,7 @@ extension ISO_9945.Kernel.File.Stats {
                 throw Error(posixErrno: errno)
             }
         #endif
-        return Kernel.File.Stats(from: sb)
+        return ISO_9945.Kernel.File.Stats(from: sb)
     }
 
     /// Gets file metadata for a path without following symlinks.
@@ -145,7 +145,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func lget(path: borrowing Path.Borrowed) throws(Error) -> Kernel.File.Stats {
+    public static func lget(path: borrowing Path.Borrowed) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe lget(unsafePath: UnsafePointer<CChar>(cString))
         }
@@ -160,7 +160,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @unsafe
-    public static func lget(at path: UnsafePointer<Path.Char>) throws(Error) -> Kernel.File.Stats {
+    public static func lget(at path: UnsafePointer<Path.Char>) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe lget(unsafePath: UnsafePointer<CChar>(path))
     }
 
@@ -169,7 +169,7 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter unsafePath: Null-terminated path string.
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    internal static func lget(unsafePath path: UnsafePointer<CChar>) throws(Error) -> Kernel.File.Stats {
+    internal static func lget(unsafePath path: UnsafePointer<CChar>) throws(Error) -> ISO_9945.Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (Darwin.lstat(path, &sb) == 0) else {
@@ -186,7 +186,7 @@ extension ISO_9945.Kernel.File.Stats {
                 throw Error(posixErrno: errno)
             }
         #endif
-        return Kernel.File.Stats(from: sb)
+        return ISO_9945.Kernel.File.Stats(from: sb)
     }
 }
 
@@ -195,7 +195,7 @@ extension ISO_9945.Kernel.File.Stats {
 extension ISO_9945.Kernel.File.Stats.Error {
     internal init(posixErrno code: Int32) {
         let errorCode = Error_Primitives.Error.Code.posix(code)
-        if let e = Kernel.Descriptor.Validity.Error(code: errorCode) {
+        if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: errorCode) {
             self = .handle(e)
             return
         }
@@ -208,21 +208,21 @@ extension ISO_9945.Kernel.File.Stats.Error {
 
 #if canImport(Darwin)
 extension ISO_9945.Kernel.File.Stats {
-    /// Creates a Kernel.File.Stats from a POSIX stat structure.
+    /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
     internal init(from sb: Darwin.stat) {
-        let atime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec), nanosecondFraction: Int32(sb.st_atimespec.tv_nsec))
-        let mtime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtimespec.tv_sec), nanosecondFraction: Int32(sb.st_mtimespec.tv_nsec))
-        let ctime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctimespec.tv_sec), nanosecondFraction: Int32(sb.st_ctimespec.tv_nsec))
+        let atime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec), nanosecondFraction: Int32(sb.st_atimespec.tv_nsec))
+        let mtime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtimespec.tv_sec), nanosecondFraction: Int32(sb.st_mtimespec.tv_nsec))
+        let ctime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctimespec.tv_sec), nanosecondFraction: Int32(sb.st_ctimespec.tv_nsec))
 
         self.init(
-            size: Kernel.File.Size(Int64(sb.st_size)),
+            size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
             type: Kind(mode: sb.st_mode),
-            permissions: Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
-            uid: Kernel.User.ID(__unchecked: (), UInt32(sb.st_uid)),
-            gid: Kernel.Group.ID(__unchecked: (), UInt32(sb.st_gid)),
-            inode: Kernel.Inode(UInt64(sb.st_ino)),
-            device: Kernel.Device(UInt64(sb.st_dev)),
-            linkCount: Kernel.Link.Count(__unchecked: (), Cardinal(UInt(sb.st_nlink))),
+            permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+            uid: ISO_9945.Kernel.User.ID(__unchecked: (), UInt32(sb.st_uid)),
+            gid: ISO_9945.Kernel.Group.ID(__unchecked: (), UInt32(sb.st_gid)),
+            inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
+            device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
+            linkCount: ISO_9945.Kernel.Link.Count(__unchecked: (), Cardinal(UInt(sb.st_nlink))),
             accessTime: atime,
             modificationTime: mtime,
             changeTime: ctime
@@ -231,21 +231,21 @@ extension ISO_9945.Kernel.File.Stats {
 }
 #elseif canImport(Glibc)
 extension ISO_9945.Kernel.File.Stats {
-    /// Creates a Kernel.File.Stats from a POSIX stat structure.
+    /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
     internal init(from sb: Glibc.stat) {
-        let atime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
-        let mtime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
-        let ctime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
+        let atime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
+        let mtime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
+        let ctime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
 
         self.init(
-            size: Kernel.File.Size(Int64(sb.st_size)),
+            size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
             type: Kind(mode: sb.st_mode),
-            permissions: Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
-            uid: Kernel.User.ID(__unchecked: (), UInt32(sb.st_uid)),
-            gid: Kernel.Group.ID(__unchecked: (), UInt32(sb.st_gid)),
-            inode: Kernel.Inode(UInt64(sb.st_ino)),
-            device: Kernel.Device(UInt64(sb.st_dev)),
-            linkCount: Kernel.Link.Count(__unchecked: (), Cardinal(UInt(sb.st_nlink))),
+            permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+            uid: ISO_9945.Kernel.User.ID(__unchecked: (), UInt32(sb.st_uid)),
+            gid: ISO_9945.Kernel.Group.ID(__unchecked: (), UInt32(sb.st_gid)),
+            inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
+            device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
+            linkCount: ISO_9945.Kernel.Link.Count(__unchecked: (), Cardinal(UInt(sb.st_nlink))),
             accessTime: atime,
             modificationTime: mtime,
             changeTime: ctime
@@ -254,21 +254,21 @@ extension ISO_9945.Kernel.File.Stats {
 }
 #elseif canImport(Musl)
 extension ISO_9945.Kernel.File.Stats {
-    /// Creates a Kernel.File.Stats from a POSIX stat structure.
+    /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
     internal init(from sb: Musl.stat) {
-        let atime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
-        let mtime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
-        let ctime = Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
+        let atime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
+        let mtime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
+        let ctime = ISO_9945.Kernel.Time(__unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
 
         self.init(
-            size: Kernel.File.Size(Int64(sb.st_size)),
+            size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
             type: Kind(mode: sb.st_mode),
-            permissions: Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
-            uid: Kernel.User.ID(__unchecked: (), UInt32(sb.st_uid)),
-            gid: Kernel.Group.ID(__unchecked: (), UInt32(sb.st_gid)),
-            inode: Kernel.Inode(UInt64(sb.st_ino)),
-            device: Kernel.Device(UInt64(sb.st_dev)),
-            linkCount: Kernel.Link.Count(__unchecked: (), Cardinal(UInt(sb.st_nlink))),
+            permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+            uid: ISO_9945.Kernel.User.ID(__unchecked: (), UInt32(sb.st_uid)),
+            gid: ISO_9945.Kernel.Group.ID(__unchecked: (), UInt32(sb.st_gid)),
+            inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
+            device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
+            linkCount: ISO_9945.Kernel.Link.Count(__unchecked: (), Cardinal(UInt(sb.st_nlink))),
             accessTime: atime,
             modificationTime: mtime,
             changeTime: ctime

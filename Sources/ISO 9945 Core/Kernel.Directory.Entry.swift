@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Directory {
+extension ISO_9945.Kernel.Directory {
     /// A directory entry returned by iteration.
     ///
     /// Preserves raw bytes (POSIX) or UTF-16 code units (Windows) to support
@@ -25,19 +25,19 @@ extension Kernel.Directory {
         #endif
 
         /// The inode number (POSIX only, nil on Windows).
-        public let inode: Kernel.Inode?
+        public let inode: ISO_9945.Kernel.Inode?
 
         /// The type of entry, if known.
-        public let type: Kernel.File.Stats.Kind?
+        public let type: ISO_9945.Kernel.File.Stats.Kind?
 
         #if os(Windows)
-        public init(rawName: [UInt16], inode: Kernel.Inode? = nil, type: Kernel.File.Stats.Kind? = nil) {
+        public init(rawName: [UInt16], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
             self.rawName = rawName
             self.inode = inode
             self.type = type
         }
         #else
-        public init(rawName: [UInt8], inode: Kernel.Inode? = nil, type: Kernel.File.Stats.Kind? = nil) {
+        public init(rawName: [UInt8], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
             self.rawName = rawName
             self.inode = inode
             self.type = type

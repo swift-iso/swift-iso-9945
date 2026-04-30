@@ -12,7 +12,7 @@
 
 import ASCII_Primitives
 
-extension Kernel.Glob {
+extension ISO_9945.Kernel.Glob {
     /// A parsed glob pattern compiled into segments.
     ///
     /// ## Escape Semantics
@@ -47,19 +47,19 @@ extension Kernel.Glob {
     }
 }
 
-extension Kernel.Glob.Pattern {
+extension ISO_9945.Kernel.Glob.Pattern {
     /// Creates a pattern from a string.
     ///
     /// - Parameter pattern: The glob pattern string.
-    /// - Throws: `Kernel.Glob.Error` if the pattern is invalid.
-    public init(_ pattern: Swift.String) throws(Kernel.Glob.Error) {
+    /// - Throws: `ISO_9945.Kernel.Glob.Error` if the pattern is invalid.
+    public init(_ pattern: Swift.String) throws(ISO_9945.Kernel.Glob.Error) {
         self.raw = pattern
 
         // Split by canonical separator /
         // Note: Backslash is the escape character, not a path separator.
         // Users must use / as path separator in glob patterns (cross-platform).
         let parts = pattern.split(separator: "/", omittingEmptySubsequences: false)
-        var compiledSegments: [Kernel.Glob.Segment] = []
+        var compiledSegments: [ISO_9945.Kernel.Glob.Segment] = []
         var hasDoubleStar = false
 
         for (index, part) in parts.enumerated() {
@@ -73,7 +73,7 @@ extension Kernel.Glob.Pattern {
             let partString = Swift.String(part)
 
             // Check if segment has any metacharacters
-            if !Kernel.Glob.isPattern(partString) {
+            if !ISO_9945.Kernel.Glob.isPattern(partString) {
                 compiledSegments.append(.literal(Array(part.utf8)))
                 continue
             }
@@ -95,8 +95,8 @@ extension Kernel.Glob.Pattern {
     private static func parseAtoms(
         _ segment: Swift.String,
         segmentIndex: Int
-    ) throws(Kernel.Glob.Error) -> [Kernel.Glob.Atom] {
-        var atoms: [Kernel.Glob.Atom] = []
+    ) throws(ISO_9945.Kernel.Glob.Error) -> [ISO_9945.Kernel.Glob.Atom] {
+        var atoms: [ISO_9945.Kernel.Glob.Atom] = []
         var literal: [UInt8] = []
         var iterator = segment.unicodeScalars.makeIterator()
         var position = 0
@@ -176,7 +176,7 @@ extension Kernel.Glob.Pattern {
         _ iterator: inout Swift.String.UnicodeScalarView.Iterator,
         pattern: Swift.String,
         startPosition: Int
-    ) throws(Kernel.Glob.Error) -> Kernel.Glob.Scalar.Class {
+    ) throws(ISO_9945.Kernel.Glob.Error) -> ISO_9945.Kernel.Glob.Scalar.Class {
         var position = startPosition
         var negated = false
         var scalars: Set<UInt32> = []
@@ -219,7 +219,7 @@ extension Kernel.Glob.Pattern {
                     // Trailing - is literal
                     scalars.insert(Unicode.Scalar("-").value)
                 }
-                return Kernel.Glob.Scalar.Class(
+                return ISO_9945.Kernel.Glob.Scalar.Class(
                     negated: negated,
                     ranges: ranges,
                     scalars: scalars

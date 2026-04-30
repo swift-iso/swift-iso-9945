@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.File.Flush {
     ///
     /// Spec-literal raw `fsync(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Flush.fsync(_:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
     @_spi(Syscall)
     public static func fsync(fd: Int32) throws(Error) {
         #if canImport(Darwin)
@@ -60,7 +60,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// modified metadata unless needed to allow subsequent data retrieval.
     /// The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Flush.fdatasync(_:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
@@ -68,7 +68,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
     @_spi(Syscall)
     public static func fdatasync(fd: Int32) throws(Error) {
         #if canImport(Musl)
@@ -91,7 +91,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// Spec-literal raw `fcntl(F_FULLFSYNC)`. Ensures data is flushed through
     /// disk caches — strongest durability guarantee on Darwin. The typed L2
     /// convenience (`ISO_9945.Kernel.File.Flush.fullFsync(_:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
@@ -99,7 +99,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
     @_spi(Syscall)
     public static func fullFsync(fd: Int32) throws(Error) {
         let result = unsafe Darwin.fcntl(fd, F_FULLFSYNC)
@@ -117,7 +117,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// still provides ordering guarantees: data is flushed to disk and a
     /// barrier is issued to ensure ordering with subsequent writes. The typed
     /// L2 convenience (`ISO_9945.Kernel.File.Flush.barrierFsync(_:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// ## EINTR
     /// This function does NOT retry on EINTR. On signal interruption, throws
@@ -125,7 +125,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// `error.code.isInterrupted` and retry if appropriate.
     ///
     /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
     @_spi(Syscall)
     public static func barrierFsync(fd: Int32) throws(Error) {
         let result = unsafe Darwin.fcntl(fd, F_BARRIERFSYNC)
@@ -148,8 +148,8 @@ extension ISO_9945.Kernel.File.Flush {
     /// `descriptor._rawValue`.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func fsync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+    public static func fsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
         try unsafe fsync(fd: descriptor._rawValue)
     }
 
@@ -160,8 +160,8 @@ extension ISO_9945.Kernel.File.Flush {
     /// `descriptor._rawValue`.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func fdatasync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+    public static func fdatasync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
         try unsafe fdatasync(fd: descriptor._rawValue)
     }
     #endif
@@ -173,8 +173,8 @@ extension ISO_9945.Kernel.File.Flush {
     /// `descriptor._rawValue`.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func fullFsync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+    public static func fullFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
         try unsafe fullFsync(fd: descriptor._rawValue)
     }
 
@@ -184,8 +184,8 @@ extension ISO_9945.Kernel.File.Flush {
     /// `descriptor._rawValue`.
     ///
     /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func barrierFsync(_ descriptor: borrowing Kernel.Descriptor) throws(Error) {
+    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+    public static func barrierFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
         try unsafe barrierFsync(fd: descriptor._rawValue)
     }
     #endif
@@ -194,14 +194,14 @@ extension ISO_9945.Kernel.File.Flush {
 // MARK: - Error
 
 extension ISO_9945.Kernel.File.Flush {
-    public typealias Error = Kernel.File.Flush.Error
+    public typealias Error = ISO_9945.Kernel.File.Flush.Error
 }
 
 extension ISO_9945.Kernel.File.Flush.Error {
     /// Creates an error from the current errno value.
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
-        if let handleError = Kernel.Descriptor.Validity.Error(code: code) {
+        if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
         return .platform(Error_Primitives.Error(code: code))

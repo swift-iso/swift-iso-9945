@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Thread {
+extension ISO_9945.Kernel.Thread {
     /// Thread affinity specification.
     ///
     /// Describes which CPUs a thread should be allowed to execute on.
@@ -20,13 +20,13 @@ extension Kernel.Thread {
     /// ## Usage
     /// ```swift
     /// // Allow OS to schedule freely
-    /// let any = Kernel.Thread.Affinity.any
+    /// let any = ISO_9945.Kernel.Thread.Affinity.any
     ///
     /// // Pin to specific cores
-    /// let pinned = Kernel.Thread.Affinity.cores([0, 1, 2, 3])
+    /// let pinned = ISO_9945.Kernel.Thread.Affinity.cores([0, 1, 2, 3])
     ///
     /// // Pin to a NUMA node (resolved via System.topology())
-    /// let numa = Kernel.Thread.Affinity.numaNode(0)
+    /// let numa = ISO_9945.Kernel.Thread.Affinity.numaNode(0)
     /// ```
     public struct Affinity: Sendable, Equatable {
         /// The affinity specification.

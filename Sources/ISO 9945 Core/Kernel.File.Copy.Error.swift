@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Copy {
+extension ISO_9945.Kernel.File.Copy {
     /// Errors that can occur during copy operations.
     ///
     /// Copy operations involve multiple syscalls (stat, clone, symlink, chmod, utimes).
@@ -35,22 +35,22 @@ extension Kernel.File.Copy {
         // MARK: - Composed Errors
 
         /// Error during file clone/copy operations.
-        case clone(Kernel.File.Clone.Error)
+        case clone(ISO_9945.Kernel.File.Clone.Error)
 
         /// Error during unlink operations.
-        case unlink(Kernel.File.Delete.Error)
+        case unlink(ISO_9945.Kernel.File.Delete.Error)
 
         /// Error during chmod operations.
-        case attributes(Kernel.File.Attributes.Error)
+        case attributes(ISO_9945.Kernel.File.Attributes.Error)
 
         /// Error during utimensat operations.
-        case times(Kernel.File.Times.Error)
+        case times(ISO_9945.Kernel.File.Times.Error)
 
         /// Error during mkdir operations (recursive copy).
-        case mkdir(Kernel.Directory.Create.Error)
+        case mkdir(ISO_9945.Kernel.Directory.Create.Error)
 
         /// Error during rmdir operations (recursive copy).
-        case rmdir(Kernel.Directory.Remove.Error)
+        case rmdir(ISO_9945.Kernel.Directory.Remove.Error)
 
         /// Generic operation failure with a descriptive message.
         ///
@@ -61,7 +61,7 @@ extension Kernel.File.Copy {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.File.Copy.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Copy.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .sourceNotFound:
@@ -92,7 +92,7 @@ extension Kernel.File.Copy.Error: CustomStringConvertible {
 
 // MARK: - Semantic Accessors
 
-extension Kernel.File.Copy.Error {
+extension ISO_9945.Kernel.File.Copy.Error {
     /// Returns `true` if the error indicates the source was not found.
     public var isSourceNotFound: Bool {
         if case .sourceNotFound = self { return true }

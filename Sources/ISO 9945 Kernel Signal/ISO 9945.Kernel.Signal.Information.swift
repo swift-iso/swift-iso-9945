@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Signal {
     ///
     /// let config = Configuration(handler: .customInfo { sig, infoPtr, _ in
     ///     guard let ptr = infoPtr else { return }
-    ///     let info = unsafe Kernel.Signal.Information(pointee: ptr.pointee)
+    ///     let info = unsafe ISO_9945.Kernel.Signal.Information(pointee: ptr.pointee)
     ///     // info.number, info.sender, info.fault, …
     /// })
     /// ```
@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Signal {
     /// fields directly and return stdlib or ecosystem value types without
     /// allocation, locks, or Swift runtime calls beyond primitive value
     /// construction. Matches the non-allocating contract of
-    /// `Kernel.Socket.Address.Storage` and `Kernel.IO.Vector.Segment`.
+    /// `ISO_9945.Kernel.Socket.Address.Storage` and `ISO_9945.Kernel.IO.Vector.Segment`.
     /// Empirical verification of this contract under a live signal-handler
     /// context is a recommended follow-up cycle; consumers relying on
     /// async-signal-safety SHOULD confirm in their own test harnesses
@@ -76,7 +76,7 @@ extension ISO_9945.Kernel.Signal {
         /// of a kernel-provided `siginfo_t` pointer.
         ///
         /// Typically called inside a `Handler.customInfo` handler body:
-        /// `unsafe Kernel.Signal.Information(pointee: infoPtr.pointee)`.
+        /// `unsafe ISO_9945.Kernel.Signal.Information(pointee: infoPtr.pointee)`.
         ///
         /// Gated by `@_spi(Syscall)` per [PLAT-ARCH-005a]'s SPI exception:
         /// the parameter exposes `siginfo_t` (a Darwin/Glibc/Musl C struct),
@@ -104,13 +104,13 @@ extension ISO_9945.Kernel.Signal.Information {
 
     /// The sender process identifier, when the signal carries sender information.
     ///
-    /// Returns the sending process's `Kernel.Process.ID` when `si_code` indicates
+    /// Returns the sending process's `ISO_9945.Kernel.Process.ID` when `si_code` indicates
     /// a user-sent signal (`SI_USER`, `SI_QUEUE`) or a child-state change
     /// (`CLD_*` under `SIGCHLD`). Returns `nil` for fault signals and other
     /// codes that do not populate `si_pid`.
     ///
     /// - POSIX: `si_pid`
-    public var sender: Kernel.Process.ID? {
+    public var sender: ISO_9945.Kernel.Process.ID? {
         let code = unsafe cValue.si_code
 
         #if canImport(Darwin)
@@ -118,7 +118,7 @@ extension ISO_9945.Kernel.Signal.Information {
             switch code {
             case Int32(SI_USER), Int32(SI_QUEUE),
                  Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
-                return Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
+                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
             default:
                 return nil
             }
@@ -128,9 +128,9 @@ extension ISO_9945.Kernel.Signal.Information {
             // the union branch appropriate to the si_code class.
             switch code {
             case Int32(SI_USER), Int32(SI_QUEUE):
-                return Kernel.Process.ID(rawValue: unsafe cValue._sifields._kill.si_pid)
+                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._kill.si_pid)
             case Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
-                return Kernel.Process.ID(rawValue: unsafe cValue._sifields._sigchld.si_pid)
+                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._sigchld.si_pid)
             default:
                 return nil
             }
@@ -140,7 +140,7 @@ extension ISO_9945.Kernel.Signal.Information {
             switch code {
             case Int32(SI_USER), Int32(SI_QUEUE),
                  Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
-                return Kernel.Process.ID(rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid)
+                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid)
             default:
                 return nil
             }

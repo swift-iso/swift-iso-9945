@@ -10,8 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 
-// L2-side conversion factory for L1 Kernel.File.Handle.Error from
-// Kernel.IO.Read.Error / Kernel.IO.Write.Error (both L2 types
+// L2-side conversion factory for L1 ISO_9945.Kernel.File.Handle.Error from
+// ISO_9945.Kernel.IO.Read.Error / ISO_9945.Kernel.IO.Write.Error (both L2 types
 // post-Cycle-18h). Per the L1-domain-only/L3-composes architecture
 // (locked Cycle 10), the factory cannot live at L1 because Handle.Error's
 // init would need to reference L2 IO error types. Hosting the factory at
@@ -19,8 +19,8 @@
 // boundary: L1 Handle.Error knows nothing about L2 IO; L2 callers route
 // through this conversion.
 
-extension Kernel.File.Handle.Error {
-    public init(from error: Kernel.IO.Read.Error, operation: Kernel.File.Handle.Operation) {
+extension ISO_9945.Kernel.File.Handle.Error {
+    public init(from error: ISO_9945.Kernel.IO.Read.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
         switch error {
         case .handle(let handleError):
             switch handleError {
@@ -34,7 +34,7 @@ extension Kernel.File.Handle.Error {
         }
     }
 
-    public init(from error: Kernel.IO.Write.Error, operation: Kernel.File.Handle.Operation) {
+    public init(from error: ISO_9945.Kernel.IO.Write.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
         switch error {
         case .handle(let handleError):
             switch handleError {

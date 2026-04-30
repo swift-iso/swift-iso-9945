@@ -11,7 +11,7 @@
 
 
 
-extension Kernel.File.Direct {
+extension ISO_9945.Kernel.File.Direct {
     /// Errors that can occur during Direct I/O operations.
     public enum Error: Swift.Error, Sendable, Equatable {
         /// Direct I/O is not supported on this platform or filesystem.
@@ -51,7 +51,7 @@ extension Kernel.File.Direct {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.File.Direct.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.File.Direct.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .notSupported:

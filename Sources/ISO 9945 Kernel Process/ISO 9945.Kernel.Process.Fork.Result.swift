@@ -30,6 +30,6 @@ extension ISO_9945.Kernel.Process.Fork {
         /// In parent process with child's PID.
         ///
         /// Label is `child:` not `childPID:` — type already encodes it.
-        case parent(child: Kernel.Process.ID)
+        case parent(child: ISO_9945.Kernel.Process.ID)
     }
 }

@@ -10,10 +10,10 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.Environment {
+extension ISO_9945.Kernel.Environment {
     /// Errors that can occur during environment operations.
     public enum Error: Swift.Error, Sendable {
-        case permission(Kernel.Permission.Error)
+        case permission(ISO_9945.Kernel.Permission.Error)
         case invalid(Invalid)
         case platform(Error_Primitives.Error)
     }
@@ -21,7 +21,7 @@ extension Kernel.Environment {
 
 // MARK: - Invalid
 
-extension Kernel.Environment.Error {
+extension ISO_9945.Kernel.Environment.Error {
     /// Invalid argument errors specific to environment operations.
     public enum Invalid: Swift.Error, Sendable, Equatable, Hashable {
         /// The variable name is empty.
@@ -33,7 +33,7 @@ extension Kernel.Environment.Error {
 
 // MARK: - Equatable
 
-extension Kernel.Environment.Error: Equatable {
+extension ISO_9945.Kernel.Environment.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.permission(let l), .permission(let r)): return l == r
@@ -46,7 +46,7 @@ extension Kernel.Environment.Error: Equatable {
 
 // MARK: - CustomStringConvertible
 
-extension Kernel.Environment.Error: CustomStringConvertible {
+extension ISO_9945.Kernel.Environment.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .permission(let e): return "permission: \(e)"
@@ -56,7 +56,7 @@ extension Kernel.Environment.Error: CustomStringConvertible {
     }
 }
 
-extension Kernel.Environment.Error.Invalid: CustomStringConvertible {
+extension ISO_9945.Kernel.Environment.Error.Invalid: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
         case .emptyName: return "empty variable name"
@@ -68,6 +68,6 @@ extension Kernel.Environment.Error.Invalid: CustomStringConvertible {
 // MARK: - Platform Implementation
 //
 // Error code mapping and current() helpers are in platform-specific packages:
-// - POSIX: `swift-iso-9945` (`Kernel.Environment.Error.current()`)
-// - Windows: `swift-windows-primitives` (`Kernel.Environment.Error.current()`)
+// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Environment.Error.current()`)
+// - Windows: `swift-windows-primitives` (`ISO_9945.Kernel.Environment.Error.current()`)
 

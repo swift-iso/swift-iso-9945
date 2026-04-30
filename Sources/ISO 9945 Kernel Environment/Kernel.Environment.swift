@@ -11,7 +11,7 @@
 
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Environment variable access using platform-native strings.
     ///
     /// Provides a Swift interface to environment variables using `String`

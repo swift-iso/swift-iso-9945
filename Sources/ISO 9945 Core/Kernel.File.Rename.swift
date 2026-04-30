@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// Atomic rename operations.
     ///
     /// Provides cross-platform atomic rename operations with options
@@ -27,7 +27,7 @@ extension Kernel.File {
 // MARK: - Error Type
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD)
-    extension Kernel.File.Rename {
+    extension ISO_9945.Kernel.File.Rename {
         /// Errors from rename operations.
         public enum Error: Swift.Error, Sendable, Equatable, Hashable {
             /// Destination already exists (no-clobber mode).
@@ -44,7 +44,7 @@ extension Kernel.File {
         }
     }
 
-    extension Kernel.File.Rename.Error: CustomStringConvertible {
+    extension ISO_9945.Kernel.File.Rename.Error: CustomStringConvertible {
         public var description: Swift.String {
             switch self {
             case .exists:

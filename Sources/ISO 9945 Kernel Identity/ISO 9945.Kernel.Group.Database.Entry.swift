@@ -6,12 +6,12 @@ extension ISO_9945.Kernel.Group.Database {
         public let name: String
 
         /// The group ID.
-        public let gid: Kernel.Group.ID
+        public let gid: ISO_9945.Kernel.Group.ID
 
         /// The group member names.
         public let members: [String]
 
-        internal init(name: String, gid: Kernel.Group.ID, members: [String]) {
+        internal init(name: String, gid: ISO_9945.Kernel.Group.ID, members: [String]) {
             self.name = name
             self.gid = gid
             self.members = members

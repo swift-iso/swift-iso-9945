@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Socket.Listen {
     /// - Parameters:
     ///   - fd: The socket raw fd (must be SOCK_STREAM or SOCK_SEQPACKET).
     ///   - backlog: Maximum number of pending connections. Defaults to system maximum.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -41,12 +41,12 @@ extension ISO_9945.Kernel.Socket.Listen {
     @_spi(Syscall)
     public static func listen(
         fd: Int32,
-        backlog: Kernel.Socket.Backlog = .max
-    ) throws(Kernel.Socket.Error) {
+        backlog: ISO_9945.Kernel.Socket.Backlog = .max
+    ) throws(ISO_9945.Kernel.Socket.Error) {
         let rc = unsafe Darwin_or_Glibc_listen(fd, backlog.rawValue)
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
     }
 }

@@ -29,12 +29,12 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - path: The path to the file.
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
 
     public static func chown(
         path: borrowing Path.Borrowed,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
+        uid: ISO_9945.Kernel.User.ID,
+        gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe _chown(path: cString, uid: uid, gid: gid)
@@ -47,12 +47,12 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
     @usableFromInline
     internal static func _chown(
         path: UnsafePointer<Path.Char>,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
+        uid: ISO_9945.Kernel.User.ID,
+        gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
@@ -74,12 +74,12 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - path: The path to the symbolic link.
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
 
     public static func lchown(
         path: borrowing Path.Borrowed,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
+        uid: ISO_9945.Kernel.User.ID,
+        gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe _lchown(path: cString, uid: uid, gid: gid)
@@ -92,12 +92,12 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - path: The path as a pointer to Path.Char (UInt8).
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
     @usableFromInline
     internal static func _lchown(
         path: UnsafePointer<Path.Char>,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
+        uid: ISO_9945.Kernel.User.ID,
+        gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
@@ -121,18 +121,18 @@ extension ISO_9945.Kernel.File.Chown {
     ///
     /// Spec-literal raw `fchown(2)`. The typed L2 convenience
     /// (`ISO_9945.Kernel.File.Chown.fchown(_:uid:gid:)` taking
-    /// `borrowing Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
     ///
     /// - Parameters:
     ///   - fd: The raw file descriptor.
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
     @_spi(Syscall)
     public static func fchown(
         fd: Int32,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
+        uid: ISO_9945.Kernel.User.ID,
+        gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         #if canImport(Darwin)
             let result = unsafe Darwin.fchown(fd, uid.rawValue, gid.rawValue)
@@ -160,11 +160,11 @@ extension ISO_9945.Kernel.File.Chown {
     ///   - descriptor: The file descriptor.
     ///   - uid: The new user ID.
     ///   - gid: The new group ID.
-    /// - Throws: `Kernel.File.Chown.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
     public static func fchown(
-        _ descriptor: borrowing Kernel.Descriptor,
-        uid: Kernel.User.ID,
-        gid: Kernel.Group.ID
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        uid: ISO_9945.Kernel.User.ID,
+        gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         try unsafe fchown(fd: descriptor._rawValue, uid: uid, gid: gid)
     }

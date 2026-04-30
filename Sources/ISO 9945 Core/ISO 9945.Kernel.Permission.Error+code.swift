@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Permission.Error {
+extension ISO_9945.Kernel.Permission.Error {
     /// Creates an error from a POSIX error code, if it maps to a permission error.
     ///
     /// - Parameter code: The platform error code.

@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.Lock {
     ///
     /// ## Thread Safety
     ///
-    /// Token stores a `Kernel.Descriptor` which is conditionally `Sendable`.
+    /// Token stores a `ISO_9945.Kernel.Descriptor` which is conditionally `Sendable`.
     /// The mutable `isReleased` state is safe because `~Copyable` ensures
     /// single ownership - only one thread can own the token at a time.
     public struct Token: ~Copyable, Sendable {
@@ -61,11 +61,11 @@ extension ISO_9945.Kernel.Lock {
         /// the descriptor's own `deinit` closes the fd.
         ///
         /// This prevents the double-close that would occur if Token
-        /// stored a new `Kernel.Descriptor` constructed from the caller's
+        /// stored a new `ISO_9945.Kernel.Descriptor` constructed from the caller's
         /// raw value (both the caller's and Token's descriptors would
         /// call `close()` on the same fd).
-        @usableFromInline internal let descriptor: Kernel.Descriptor
-        @usableFromInline internal let range: Kernel.Lock.Range
+        @usableFromInline internal let descriptor: ISO_9945.Kernel.Descriptor
+        @usableFromInline internal let range: ISO_9945.Kernel.Lock.Range
         @usableFromInline internal var isReleased: Bool
 
         /// Creates a lock token by acquiring a lock.
@@ -80,15 +80,15 @@ extension ISO_9945.Kernel.Lock {
         ///   - range: The byte range to lock.
         ///   - kind: The lock kind (shared or exclusive).
         ///   - acquire: The acquisition strategy (default: `.wait`).
-        /// - Throws: `Kernel.Lock.Error` if locking fails. On throw, the
+        /// - Throws: `ISO_9945.Kernel.Lock.Error` if locking fails. On throw, the
         ///   consumed descriptor is destroyed by init cleanup (its deinit
         ///   closes the fd).
         public init(
-            descriptor: consuming Kernel.Descriptor,
-            range: Kernel.Lock.Range = .file,
-            kind: Kernel.Lock.Kind,
-            acquire: Kernel.Lock.Acquire = .wait
-        ) throws(Kernel.Lock.Error) {
+            descriptor: consuming ISO_9945.Kernel.Descriptor,
+            range: ISO_9945.Kernel.Lock.Range = .file,
+            kind: ISO_9945.Kernel.Lock.Kind,
+            acquire: ISO_9945.Kernel.Lock.Acquire = .wait
+        ) throws(ISO_9945.Kernel.Lock.Error) {
             // Acquire the lock first, borrowing the consuming parameter
             // without moving it. If acquireLock throws, the consuming
             // parameter is destroyed on init cleanup.
@@ -113,8 +113,8 @@ extension ISO_9945.Kernel.Lock {
         /// The Token retains ownership of the descriptor after release;
         /// the fd is closed when the Token goes out of scope.
         ///
-        /// - Throws: `Kernel.Lock.Error` if the unlock syscall fails.
-        public mutating func release() throws(Kernel.Lock.Error) {
+        /// - Throws: `ISO_9945.Kernel.Lock.Error` if the unlock syscall fails.
+        public mutating func release() throws(ISO_9945.Kernel.Lock.Error) {
             guard !isReleased else { return }
             try ISO_9945.Kernel.Lock.unlock(fd: descriptor._rawValue, range: range)
             isReleased = true
@@ -135,11 +135,11 @@ extension ISO_9945.Kernel.Lock {
 extension ISO_9945.Kernel.Lock.Token {
     /// Acquires a lock using the specified strategy.
     private static func acquireLock(
-        descriptor: borrowing Kernel.Descriptor,
-        range: Kernel.Lock.Range,
-        kind: Kernel.Lock.Kind,
-        acquire: Kernel.Lock.Acquire
-    ) throws(Kernel.Lock.Error) {
+        descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind,
+        acquire: ISO_9945.Kernel.Lock.Acquire
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         switch acquire {
         case .try:
             try ISO_9945.Kernel.Lock.Immediate.lock(fd: descriptor._rawValue, range: range, kind: kind)
@@ -161,11 +161,11 @@ extension ISO_9945.Kernel.Lock.Token {
     ///
     /// Uses exponential backoff starting at 1ms, capped at 100ms.
     private static func acquireWithDeadline(
-        descriptor: borrowing Kernel.Descriptor,
-        range: Kernel.Lock.Range,
-        kind: Kernel.Lock.Kind,
+        descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind,
         deadline: Clock.Continuous.Instant
-    ) throws(Kernel.Lock.Error) {
+    ) throws(ISO_9945.Kernel.Lock.Error) {
         var backoff: Duration = .milliseconds(1)
         let maxBackoff: Duration = .milliseconds(100)
 
@@ -177,14 +177,14 @@ extension ISO_9945.Kernel.Lock.Token {
             }
 
             // Try to acquire
-            do throws(Kernel.Lock.Error) {
+            do throws(ISO_9945.Kernel.Lock.Error) {
                 try ISO_9945.Kernel.Lock.Immediate.lock(fd: descriptor._rawValue, range: range, kind: kind)
                 // Critical: re-check deadline after acquisition
                 // If deadline passed, unlock and throw to maintain invariant:
                 // "success means lock was acquired before deadline"
                 if Clock.Continuous.now >= deadline {
                     try? ISO_9945.Kernel.Lock.unlock(fd: descriptor._rawValue, range: range)
-                    throw Kernel.Lock.Error.contention
+                    throw ISO_9945.Kernel.Lock.Error.contention
                 }
                 return
             } catch {
@@ -237,9 +237,9 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: The result of the closure.
     /// - Throws: `ISO_9945.Kernel.Lock.Scope.Error` if locking fails or the closure throws.
     public static func withExclusive<T, E: Swift.Error>(
-        _ descriptor: consuming Kernel.Descriptor,
-        range: Kernel.Lock.Range = .file,
-        acquire: Kernel.Lock.Acquire = .wait,
+        _ descriptor: consuming ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range = .file,
+        acquire: ISO_9945.Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
     ) throws(ISO_9945.Kernel.Lock.Scope.Error<E>) -> T {
         var token: Token
@@ -275,9 +275,9 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: The result of the closure.
     /// - Throws: `ISO_9945.Kernel.Lock.Scope.Error` if locking fails or the closure throws.
     public static func withShared<T, E: Swift.Error>(
-        _ descriptor: consuming Kernel.Descriptor,
-        range: Kernel.Lock.Range = .file,
-        acquire: Kernel.Lock.Acquire = .wait,
+        _ descriptor: consuming ISO_9945.Kernel.Descriptor,
+        range: ISO_9945.Kernel.Lock.Range = .file,
+        acquire: ISO_9945.Kernel.Lock.Acquire = .wait,
         _ body: () throws(E) -> T
     ) throws(ISO_9945.Kernel.Lock.Scope.Error<E>) -> T {
         var token: Token

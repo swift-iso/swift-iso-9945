@@ -13,7 +13,7 @@
 public import Binary_Primitives_Core
 public import Dimension_Primitives
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     /// File offset for positional I/O operations.
     ///
     /// A type-safe coordinate for file positions. Provides dimensional arithmetic:
@@ -23,8 +23,8 @@ extension Kernel.File {
     /// ## Usage
     ///
     /// ```swift
-    /// let start: Kernel.File.Offset = 1000
-    /// let end: Kernel.File.Offset = 5000
+    /// let start: ISO_9945.Kernel.File.Offset = 1000
+    /// let end: ISO_9945.Kernel.File.Offset = 5000
     /// let distance = end - start  // Delta (4000 bytes)
     /// let next = start + distance // Offset (5000)
     /// ```
@@ -38,7 +38,7 @@ extension Kernel.File {
 
 // MARK: - Offset Constants
 
-extension Kernel.File.Offset {
+extension ISO_9945.Kernel.File.Offset {
 //    /// Zero offset (beginning of file).
 //    public static let zero: Self = 0
 
@@ -48,7 +48,7 @@ extension Kernel.File.Offset {
 
 // MARK: - Convenience Initializers
 
-extension Kernel.File.Offset {
+extension ISO_9945.Kernel.File.Offset {
     /// Creates a file offset from an Int value.
     @inlinable
     public init(_ value: Int) {

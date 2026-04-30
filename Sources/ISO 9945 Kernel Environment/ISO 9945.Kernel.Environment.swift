@@ -106,13 +106,13 @@ extension ISO_9945.Kernel.Environment {
     ///   - name: Pointer to null-terminated variable name.
     ///   - value: Pointer to null-terminated value.
     ///   - overwrite: If true, overwrite existing value.
-    /// - Throws: `Kernel.Environment.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Environment.Error` on failure.
 
     public static func set(
         _ name: UnsafePointer<String.Char>,
         to value: UnsafePointer<String.Char>,
         overwrite: Bool = true
-    ) throws(Kernel.Environment.Error) {
+    ) throws(ISO_9945.Kernel.Environment.Error) {
         let cName = unsafe UnsafePointer<CChar>(name)
         let cValue = unsafe UnsafePointer<CChar>(value)
         let result = unsafe setenv(cName, cValue, overwrite ? 1 : 0)
@@ -124,11 +124,11 @@ extension ISO_9945.Kernel.Environment {
     /// Unsets an environment variable.
     ///
     /// - Parameter name: Pointer to null-terminated variable name.
-    /// - Throws: `Kernel.Environment.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Environment.Error` on failure.
     ///
     /// - Note: Does not fail if the variable does not exist.
 
-    public static func unset(_ name: UnsafePointer<String.Char>) throws(Kernel.Environment.Error) {
+    public static func unset(_ name: UnsafePointer<String.Char>) throws(ISO_9945.Kernel.Environment.Error) {
         let cName = unsafe UnsafePointer<CChar>(name)
         let result = unsafe unsetenv(cName)
         guard result == 0 else {

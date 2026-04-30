@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Open {
+extension ISO_9945.Kernel.File.Open {
     /// File access mode for open operations.
     ///
     /// Specifies whether a file descriptor is opened for reading, writing,

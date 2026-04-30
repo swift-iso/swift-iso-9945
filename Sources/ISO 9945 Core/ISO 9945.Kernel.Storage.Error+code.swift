@@ -11,7 +11,7 @@
 
 // MARK: - POSIX Error Code Access
 
-extension Kernel.Storage.Error {
+extension ISO_9945.Kernel.Storage.Error {
     /// The underlying POSIX error code.
     @inlinable
     public var code: Error_Primitives.Error.Code {
@@ -26,7 +26,7 @@ extension Kernel.Storage.Error {
 
 // MARK: - POSIX Error Code Mapping
 
-extension Kernel.Storage.Error {
+extension ISO_9945.Kernel.Storage.Error {
     /// Creates an error from a POSIX error code, if applicable.
     ///
     /// Returns `nil` if the error code doesn't map to a storage error.

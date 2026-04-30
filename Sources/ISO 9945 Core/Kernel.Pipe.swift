@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel {
+extension ISO_9945.Kernel {
     /// Anonymous pipe operations for inter-process/inter-thread communication.
     ///
     /// Creates unidirectional byte streams for communication. Data written to the

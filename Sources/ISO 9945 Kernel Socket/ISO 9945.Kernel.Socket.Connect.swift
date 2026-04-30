@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Socket {
 // MARK: - Connect Operation (raw fd SPI)
 //
 // Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
-// Kernel.Socket.Descriptor convenience overloads were dropped; the L3
+// ISO_9945.Kernel.Socket.Descriptor convenience overloads were dropped; the L3
 // unifier typealias chain at swift-kernel exposes the typed cross-platform
 // name. Post-Path-X cleanup will retype L2 to ISO_9945.Kernel.Socket.Descriptor.
 
@@ -39,7 +39,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     ///   - fd: The socket raw fd.
     ///   - address: The peer address, as a `Storage` container.
     ///   - length: The size of the actual address within storage.
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -51,16 +51,16 @@ extension ISO_9945.Kernel.Socket.Connect {
     @_spi(Syscall)
     public static func connect(
         fd: Int32,
-        address: Kernel.Socket.Address.Storage,
-        length: Kernel.Socket.Address.Length
-    ) throws(Kernel.Socket.Error) {
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
             return unsafe Darwin_or_Glibc_connect(fd, sockaddrPtr, socklen_t(length.rawValue.rawValue))
         }
 
         guard rc == 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
     }
 
@@ -68,27 +68,27 @@ extension ISO_9945.Kernel.Socket.Connect {
     @_spi(Syscall)
     public static func connect(
         fd: Int32,
-        address: Kernel.Socket.Address.IPv4
-    ) throws(Kernel.Socket.Error) {
-        try connect(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv4.size)
+        address: ISO_9945.Kernel.Socket.Address.IPv4
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.IPv4.size)
     }
 
     /// Connects a raw socket fd to an IPv6 address.
     @_spi(Syscall)
     public static func connect(
         fd: Int32,
-        address: Kernel.Socket.Address.IPv6
-    ) throws(Kernel.Socket.Error) {
-        try connect(fd: fd, address: address.storage, length: Kernel.Socket.Address.IPv6.size)
+        address: ISO_9945.Kernel.Socket.Address.IPv6
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.IPv6.size)
     }
 
     /// Connects a raw socket fd to a Unix domain address.
     @_spi(Syscall)
     public static func connect(
         fd: Int32,
-        address: Kernel.Socket.Address.Unix
-    ) throws(Kernel.Socket.Error) {
-        try connect(fd: fd, address: address.storage, length: Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
+        address: ISO_9945.Kernel.Socket.Address.Unix
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
     }
 }
 

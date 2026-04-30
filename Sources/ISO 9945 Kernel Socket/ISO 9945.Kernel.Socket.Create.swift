@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.Socket.Create {
     ///   - kind: The socket type (e.g., `.stream`, `.datagram`).
     ///   - protocol: The protocol number (0 for default protocol for the given domain/kind).
     /// - Returns: A new socket file descriptor (raw POSIX fd).
-    /// - Throws: `Kernel.Socket.Error` on failure.
+    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
     ///
@@ -44,14 +44,14 @@ extension ISO_9945.Kernel.Socket.Create {
     /// - `.platform(.tooManyFiles)` (EMFILE/ENFILE): File descriptor limit reached.
     @_spi(Syscall)
     public static func create(
-        domain: Kernel.Socket.Address.Family,
-        kind: Kernel.Socket.Kind,
+        domain: ISO_9945.Kernel.Socket.Address.Family,
+        kind: ISO_9945.Kernel.Socket.Kind,
         protocol: Int32 = 0
-    ) throws(Kernel.Socket.Error) -> Int32 {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int32 {
         let fd = socket(domain.rawValue, kind.rawValue, `protocol`)
 
         guard fd >= 0 else {
-            throw Kernel.Socket.Error.current()
+            throw ISO_9945.Kernel.Socket.Error.current()
         }
 
         return fd

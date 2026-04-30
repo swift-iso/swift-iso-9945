@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-extension Kernel.File.Copy {
+extension ISO_9945.Kernel.File.Copy {
     /// Options for copy operations.
     public struct Options: Sendable, Equatable {
         /// Overwrite existing destination file.
