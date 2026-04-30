@@ -18,7 +18,6 @@
 
 import Testing
 
-    import Kernel_File_Primitives
     import Path_Primitives
     import Error_Primitives
     @testable import ISO_9945_Kernel

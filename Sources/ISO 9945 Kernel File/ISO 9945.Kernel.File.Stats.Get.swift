@@ -11,7 +11,6 @@
 
 @_spi(Syscall) import ISO_9945_Core
 
-@_spi(Syscall) import Kernel_File_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -206,7 +205,6 @@ extension ISO_9945.Kernel.File.Stats.Error {
 
 // MARK: - Stats Construction from POSIX stat
 
-@_spi(Syscall) import Kernel_File_Primitives
 
 #if canImport(Darwin)
 extension ISO_9945.Kernel.File.Stats {

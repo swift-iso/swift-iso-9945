@@ -13,7 +13,6 @@
 import Testing
 import Kernel_Primitives_Test_Support
 
-@testable import Kernel_File_Primitives
 
 // Kernel.File.Offset is a typealias to Coordinate.X<Space>.Value<Int64>
 // #Tests cannot be used on typealiases

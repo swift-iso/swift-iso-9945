@@ -15,7 +15,6 @@ import Kernel_Primitives_Test_Support
 
 @testable import Error_Primitives
 import Path_Primitives
-import Kernel_File_Primitives
 import Memory_Primitives
 
 // L2 init?(code:) extensions live in ISO 9945 Core

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_File_Primitives
 
 // L2-side conversion factory for L1 Kernel.File.Handle.Error from
 // Kernel.IO.Read.Error / Kernel.IO.Write.Error (both L2 types

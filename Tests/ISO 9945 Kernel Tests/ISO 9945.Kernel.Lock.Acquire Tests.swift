@@ -14,7 +14,6 @@ import Testing
 import Kernel_Primitives_Test_Support
 import Clock_Primitives
 
-@testable import Kernel_File_Primitives
 
 extension Kernel.Lock.Acquire {
     @Suite

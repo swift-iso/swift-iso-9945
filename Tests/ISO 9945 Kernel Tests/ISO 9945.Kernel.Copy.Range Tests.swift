@@ -14,7 +14,6 @@
 import Testing
 import Kernel_Primitives_Test_Support
 
-    @testable import Kernel_File_Primitives
 
     extension Kernel.Copy.Range {
         @Suite

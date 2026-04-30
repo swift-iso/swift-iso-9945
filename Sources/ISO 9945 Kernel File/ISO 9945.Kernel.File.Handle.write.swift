@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_File_Primitives
 import Algebra_Primitives
 
 // MARK: - POSIX write operations on Kernel.File.Handle

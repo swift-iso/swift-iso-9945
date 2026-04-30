@@ -14,7 +14,6 @@
 import Testing
 import Tagged_Primitives_Test_Support
 
-    import Kernel_File_Primitives
     import Path_Primitives
     import Error_Primitives
     @testable import ISO_9945_Kernel

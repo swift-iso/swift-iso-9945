@@ -10,12 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 
-public import Kernel_Namespace
-
 extension ISO_9945 {
-    /// ISO 9945 (POSIX) kernel mechanisms.
-    ///
-    /// Typealias to `Kernel_Namespace.Kernel`, allowing POSIX-specific
-    /// extensions to be added to the shared Kernel type.
-    public typealias Kernel = Kernel_Namespace.Kernel
+    /// ISO 9945 (POSIX) kernel mechanisms — typealias to the local
+    /// `Kernel` namespace declared at iso-9945 L2 (G6.D parallel roots).
+    public typealias Kernel = ISO_9945_Core.Kernel
 }

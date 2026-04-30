@@ -11,7 +11,6 @@
 
 #if !os(Windows)
 
-public import Kernel_File_Primitives
 
 #if canImport(Darwin)
     internal import Darwin

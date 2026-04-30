@@ -115,7 +115,6 @@ let package = Package(
     dependencies: [
         .package(path: "../../swift-primitives/swift-algebra-primitives"),
         .package(path: "../../swift-primitives/swift-tagged-primitives"),
-        .package(path: "../../swift-primitives/swift-kernel-primitives"),
         .package(path: "../../swift-primitives/swift-loader-primitives"),
         .package(path: "../../swift-primitives/swift-string-primitives"),
         .package(path: "../../swift-primitives/swift-clock-primitives"),
@@ -139,8 +138,6 @@ let package = Package(
         .target(
             name: "ISO 9945 Core",
             dependencies: [
-                .product(name: "Kernel Namespace", package: "swift-kernel-primitives"),
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
@@ -171,7 +168,6 @@ let package = Package(
             name: "ISO 9945 Kernel File",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
@@ -186,7 +182,6 @@ let package = Package(
             name: "ISO 9945 Kernel Directory",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ]
         ),
@@ -199,7 +194,6 @@ let package = Package(
                 "ISO 9945 Core",
                 "ISO 9945 Kernel Clock",
                 "ISO 9945 Kernel System",
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
             ]
         ),
@@ -234,7 +228,6 @@ let package = Package(
                 "ISO 9945 Core",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
             ]
         ),
 
@@ -274,7 +267,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
             ]
         ),
@@ -409,11 +401,8 @@ let package = Package(
             name: "ISO 9945 Kernel Test Support",
             dependencies: [
                 "ISO 9945 Kernel",
-                .product(name: "Kernel Namespace", package: "swift-kernel-primitives"),
-                .product(name: "Kernel File Primitives", package: "swift-kernel-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
-                .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives")
             ],
             path: "Tests/Support",

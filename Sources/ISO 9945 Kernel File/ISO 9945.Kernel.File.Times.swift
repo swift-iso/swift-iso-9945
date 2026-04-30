@@ -11,7 +11,6 @@
 
 @_spi(Syscall) import ISO_9945_Core
 
-@_spi(Syscall) import Kernel_File_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
