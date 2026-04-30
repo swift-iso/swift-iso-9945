@@ -119,6 +119,7 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-loader-primitives"),
         .package(path: "../../swift-primitives/swift-string-primitives"),
         .package(path: "../../swift-primitives/swift-clock-primitives"),
+        .package(path: "../../swift-primitives/swift-time-primitives"),
         .package(path: "../../swift-primitives/swift-terminal-primitives"),
         .package(path: "../../swift-primitives/swift-error-primitives"),
         .package(path: "../../swift-primitives/swift-random-primitives"),
@@ -140,6 +141,7 @@ let package = Package(
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
+                .product(name: "Time Primitives Core", package: "swift-time-primitives"),
             ]
         ),
 
@@ -295,7 +297,7 @@ let package = Package(
             name: "ISO 9945 Kernel Time",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Kernel Time Primitives", package: "swift-kernel-primitives"),
+                .product(name: "Time Primitives Core", package: "swift-time-primitives"),
             ]
         ),
 

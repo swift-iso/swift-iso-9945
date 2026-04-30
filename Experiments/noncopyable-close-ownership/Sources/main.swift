@@ -204,6 +204,7 @@ enum V5 {
 //             the descriptor (via discard self) AND a deinit backstop that closes
 //             without returning.
 // Result: (pending)
+// Revalidated: Swift 6.3.1 (2026-04-30) — PASSES
 // ============================================================================
 
 enum V6 {
