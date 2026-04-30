@@ -13,7 +13,6 @@
 import ISO_9945_Kernel
 @_spi(Syscall) import ISO_9945_Kernel_Lock
 import ISO_9945_Kernel_Test_Support
-import Kernel_Primitives_Core
 import Kernel_File_Primitives
 import Path_Primitives
 import Error_Primitives

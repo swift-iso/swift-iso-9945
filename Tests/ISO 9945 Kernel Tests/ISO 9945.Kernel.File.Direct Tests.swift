@@ -12,7 +12,6 @@
 import Testing
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
-import Kernel_Primitives_Core
 import Kernel_File_Primitives
 import Path_Primitives
 import Error_Primitives

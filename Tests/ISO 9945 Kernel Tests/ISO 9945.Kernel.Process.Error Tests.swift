@@ -18,7 +18,6 @@
 
 import Testing
 
-    import Kernel_Primitives_Core
     import Kernel_File_Primitives
     import Path_Primitives
     import Error_Primitives

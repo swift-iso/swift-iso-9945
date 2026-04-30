@@ -9,18 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) import Kernel_Primitives_Core
+
+public import Kernel_Namespace
 
 extension ISO_9945 {
     /// ISO 9945 (POSIX) kernel mechanisms.
     ///
-    /// This is a typealias to `Kernel_Primitives_Core.Kernel`, allowing POSIX-specific
+    /// Typealias to `Kernel_Namespace.Kernel`, allowing POSIX-specific
     /// extensions to be added to the shared Kernel type.
-    ///
-    /// Low-level POSIX syscall wrappers for:
-    /// - Signal handling (sigaction, sigprocmask, kill)
-    /// - Process control (fork, exec, wait, exit)
-    /// - Memory locking (mlockall)
-    /// - Dynamic library loading (dlopen, dlsym, dlclose)
-    public typealias Kernel = Kernel_Primitives_Core.Kernel
+    public typealias Kernel = Kernel_Namespace.Kernel
 }

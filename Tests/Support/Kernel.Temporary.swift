@@ -11,7 +11,6 @@
 
 /// Test support for cross-platform temporary file paths.
 
-public import Kernel_Primitives_Core
 public import Kernel_File_Primitives
 public import Path_Primitives
 public import Error_Primitives
