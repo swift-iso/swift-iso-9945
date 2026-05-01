@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.Socket.Shutdown {
+extension ISO_9945.Kernel.Socket.Shutdown {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,28 +24,28 @@ extension Kernel.Socket.Shutdown {
 
 // MARK: - Unit Tests
 
-extension Kernel.Socket.Shutdown.Test.Unit {
+extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
     @Test
     func `Shutdown namespace exists`() {
-        _ = Kernel.Socket.Shutdown.self
+        _ = ISO_9945.Kernel.Socket.Shutdown.self
     }
 
     @Test
     func `Shutdown is an enum`() {
-        let _: Kernel.Socket.Shutdown.Type = Kernel.Socket.Shutdown.self
+        let _: ISO_9945.Kernel.Socket.Shutdown.Type = ISO_9945.Kernel.Socket.Shutdown.self
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.Socket.Shutdown.Test.Unit {
+extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
     @Test
     func `Shutdown.How type exists`() {
-        let _: Kernel.Socket.Shutdown.How.Type = Kernel.Socket.Shutdown.How.self
+        let _: ISO_9945.Kernel.Socket.Shutdown.How.Type = ISO_9945.Kernel.Socket.Shutdown.How.self
     }
 
     @Test
     func `Shutdown.Error type exists`() {
-        let _: Kernel.Socket.Shutdown.Error.Type = Kernel.Socket.Shutdown.Error.self
+        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error.self
     }
 }

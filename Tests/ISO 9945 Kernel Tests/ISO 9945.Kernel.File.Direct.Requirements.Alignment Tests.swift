@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Direct.Requirements.Alignment {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Direct.Requirements.Alignment {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Requirements.Alignment.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
     @Test
     func `init with explicit values`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`512`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`512`
@@ -38,7 +39,7 @@ extension Kernel.File.Direct.Requirements.Alignment.Test.Unit {
 
     @Test
     func `init with uniform alignment`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         #expect(alignment.bufferAlignment == .`4096`)
         #expect(alignment.offsetAlignment == .`4096`)
         #expect(alignment.lengthMultiple == .`4096`)
@@ -46,59 +47,59 @@ extension Kernel.File.Direct.Requirements.Alignment.Test.Unit {
 
     @Test
     func `bufferAlignment property`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`512`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`512`)
         #expect(alignment.bufferAlignment == .`512`)
     }
 
     @Test
     func `offsetAlignment property`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         #expect(alignment.offsetAlignment == .`4096`)
     }
 
     @Test
     func `lengthMultiple property`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         #expect(alignment.lengthMultiple == .`4096`)
     }
 }
 
 // MARK: - Accessor Tests
 
-extension Kernel.File.Direct.Requirements.Alignment.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
     @Test
     func `buffer accessor exists`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let _ = alignment.buffer
     }
 
     @Test
     func `offset accessor exists`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let _ = alignment.offset
     }
 
     @Test
     func `length accessor exists`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let _ = alignment.length
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Direct.Requirements.Alignment.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
     @Test
     func `Alignment is Sendable`() {
-        let alignment: any Sendable = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        #expect(alignment is Kernel.File.Direct.Requirements.Alignment)
+        let alignment: any Sendable = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        #expect(alignment is ISO_9945.Kernel.File.Direct.Requirements.Alignment)
     }
 
     @Test
     func `Alignment is Equatable`() {
-        let a = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let b = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let c = Kernel.File.Direct.Requirements.Alignment(uniform: .`512`)
+        let a = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let b = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let c = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`512`)
         #expect(a == b)
         #expect(a != c)
     }
@@ -106,15 +107,15 @@ extension Kernel.File.Direct.Requirements.Alignment.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Direct.Requirements.Alignment.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.EdgeCase {
     @Test
     func `alignments with different buffer values are distinct`() {
-        let a = Kernel.File.Direct.Requirements.Alignment(
+        let a = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`512`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`4096`
         )
-        let b = Kernel.File.Direct.Requirements.Alignment(
+        let b = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`4096`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`4096`
@@ -124,12 +125,12 @@ extension Kernel.File.Direct.Requirements.Alignment.Test.EdgeCase {
 
     @Test
     func `alignments with different offset values are distinct`() {
-        let a = Kernel.File.Direct.Requirements.Alignment(
+        let a = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`4096`,
             offsetAlignment: .`512`,
             lengthMultiple: .`4096`
         )
-        let b = Kernel.File.Direct.Requirements.Alignment(
+        let b = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`4096`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`4096`
@@ -139,12 +140,12 @@ extension Kernel.File.Direct.Requirements.Alignment.Test.EdgeCase {
 
     @Test
     func `alignments with different length values are distinct`() {
-        let a = Kernel.File.Direct.Requirements.Alignment(
+        let a = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`4096`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`512`
         )
-        let b = Kernel.File.Direct.Requirements.Alignment(
+        let b = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`4096`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`4096`
@@ -154,8 +155,8 @@ extension Kernel.File.Direct.Requirements.Alignment.Test.EdgeCase {
 
     @Test
     func `uniform alignment equals explicit with same values`() {
-        let uniform = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let explicit = Kernel.File.Direct.Requirements.Alignment(
+        let uniform = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let explicit = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
             bufferAlignment: .`4096`,
             offsetAlignment: .`4096`,
             lengthMultiple: .`4096`

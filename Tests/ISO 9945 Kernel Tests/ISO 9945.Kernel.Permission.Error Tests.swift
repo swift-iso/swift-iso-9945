@@ -18,7 +18,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Permission.Error {
+extension ISO_9945.Kernel.Permission.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -28,10 +28,10 @@ extension Kernel.Permission.Error {
 
 // MARK: - Permission.Error Tests
 
-extension Kernel.Permission.Error.Test.Unit {
+extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     @Test
     func `denied case exists`() {
-        let error = Kernel.Permission.Error.denied
+        let error = ISO_9945.Kernel.Permission.Error.denied
         if case .denied = error {
             // Expected
         } else {
@@ -41,7 +41,7 @@ extension Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `notPermitted case exists`() {
-        let error = Kernel.Permission.Error.notPermitted
+        let error = ISO_9945.Kernel.Permission.Error.notPermitted
         if case .notPermitted = error {
             // Expected
         } else {
@@ -51,7 +51,7 @@ extension Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `readOnlyFilesystem case exists`() {
-        let error = Kernel.Permission.Error.readOnlyFilesystem
+        let error = ISO_9945.Kernel.Permission.Error.readOnlyFilesystem
         if case .readOnlyFilesystem = error {
             // Expected
         } else {
@@ -61,9 +61,9 @@ extension Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `all cases are distinct`() {
-        let denied = Kernel.Permission.Error.denied
-        let notPermitted = Kernel.Permission.Error.notPermitted
-        let readOnly = Kernel.Permission.Error.readOnlyFilesystem
+        let denied = ISO_9945.Kernel.Permission.Error.denied
+        let notPermitted = ISO_9945.Kernel.Permission.Error.notPermitted
+        let readOnly = ISO_9945.Kernel.Permission.Error.readOnlyFilesystem
 
         #expect(denied != notPermitted)
         #expect(denied != readOnly)
@@ -72,21 +72,21 @@ extension Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `Permission.Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.Permission.Error.denied
-        #expect(error is Kernel.Permission.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.Permission.Error.denied
+        #expect(error is ISO_9945.Kernel.Permission.Error)
     }
 
     @Test
     func `Permission.Error is Sendable`() {
-        let error: any Sendable = Kernel.Permission.Error.denied
-        #expect(error is Kernel.Permission.Error)
+        let error: any Sendable = ISO_9945.Kernel.Permission.Error.denied
+        #expect(error is ISO_9945.Kernel.Permission.Error)
     }
 
     @Test
     func `Permission.Error is Equatable`() {
-        let a = Kernel.Permission.Error.denied
-        let b = Kernel.Permission.Error.denied
-        let c = Kernel.Permission.Error.notPermitted
+        let a = ISO_9945.Kernel.Permission.Error.denied
+        let b = ISO_9945.Kernel.Permission.Error.denied
+        let c = ISO_9945.Kernel.Permission.Error.notPermitted
 
         #expect(a == b)
         #expect(a != c)
@@ -94,7 +94,7 @@ extension Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `Permission.Error is Hashable`() {
-        var set = Set<Kernel.Permission.Error>()
+        var set = Set<ISO_9945.Kernel.Permission.Error>()
         set.insert(.denied)
         set.insert(.notPermitted)
         set.insert(.readOnlyFilesystem)
@@ -108,27 +108,27 @@ extension Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `denied description is meaningful`() {
-        let error = Kernel.Permission.Error.denied
+        let error = ISO_9945.Kernel.Permission.Error.denied
         #expect(error.description == "permission denied")
     }
 
     @Test
     func `notPermitted description is meaningful`() {
-        let error = Kernel.Permission.Error.notPermitted
+        let error = ISO_9945.Kernel.Permission.Error.notPermitted
         #expect(error.description == "operation not permitted")
     }
 
     @Test
     func `readOnlyFilesystem description is meaningful`() {
-        let error = Kernel.Permission.Error.readOnlyFilesystem
+        let error = ISO_9945.Kernel.Permission.Error.readOnlyFilesystem
         #expect(error.description == "read-only filesystem")
     }
 }
 
-extension Kernel.Permission.Error.Test.Unit {
+extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     @Test
     func `CustomStringConvertible works for all cases`() {
-        let cases: [Kernel.Permission.Error] = [.denied, .notPermitted, .readOnlyFilesystem]
+        let cases: [ISO_9945.Kernel.Permission.Error] = [.denied, .notPermitted, .readOnlyFilesystem]
 
         for error in cases {
             let description = Swift.String(describing: error)

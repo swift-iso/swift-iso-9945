@@ -26,7 +26,7 @@ import Testing
     import Musl
 #endif
 
-extension Kernel.Thread.Mutex {
+extension ISO_9945.Kernel.Thread.Mutex {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -36,30 +36,30 @@ extension Kernel.Thread.Mutex {
 
 // MARK: - API Unit Tests
 
-extension Kernel.Thread.Mutex.Test.Unit {
+extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
     @Test
     func `init creates valid mutex`() {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
         _ = mutex
     }
 
     @Test
     func `lock and unlock complete successfully`() {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
         mutex.lock()
         mutex.unlock()
     }
 
     @Test
     func `lock.immediate succeeds when available`() throws {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
         try mutex.lock.immediate()
         mutex.unlock()
     }
 
     @Test
     func `lock.immediate and unlock cycle works repeatedly`() throws {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
         let iterations = 100
 
         for _ in 0..<iterations {
@@ -70,7 +70,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
     @Test
     func `withLock executes body`() {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
         var executed = false
 
         mutex.withLock {
@@ -82,7 +82,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
     @Test
     func `withLock returns value from body`() {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
 
         let result = mutex.withLock {
             return 42
@@ -93,7 +93,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
     @Test
     func `withLock releases mutex after body`() throws {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
 
         mutex.withLock {}
 
@@ -103,7 +103,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
     @Test
     func `withLock releases mutex on throw`() throws {
-        let mutex = Kernel.Thread.Mutex()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
 
         struct TestError: Swift.Error {}
 
@@ -119,8 +119,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
     @Test
     func `multiple mutexes are independent`() throws {
-        let mutex1 = Kernel.Thread.Mutex()
-        let mutex2 = Kernel.Thread.Mutex()
+        let mutex1 = ISO_9945.Kernel.Thread.Mutex()
+        let mutex2 = ISO_9945.Kernel.Thread.Mutex()
 
         mutex1.lock()
         try mutex2.lock.immediate()
@@ -130,8 +130,8 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
     @Test
     func `nested withLock on different mutexes`() {
-        let mutex1 = Kernel.Thread.Mutex()
-        let mutex2 = Kernel.Thread.Mutex()
+        let mutex1 = ISO_9945.Kernel.Thread.Mutex()
+        let mutex2 = ISO_9945.Kernel.Thread.Mutex()
         var innerExecuted = false
 
         mutex1.withLock {
@@ -154,10 +154,10 @@ extension Kernel.Thread.Mutex.Test.Unit {
 // TODO: Add Linux-compatible threading tests to swift-linux package.
 #if canImport(Darwin)
 
-    extension Kernel.Thread.Mutex.Test.Unit {
+    extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
         @Test
         func `lock.immediate throws contention when held by another thread`() throws {
-            let mutex = Kernel.Thread.Mutex()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
 
             struct State {
                 var workerAttempting = false
@@ -168,10 +168,10 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
             // Context to pass both mutex and harness through the C function pointer
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
+                let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.harness = harness
                 }
@@ -227,7 +227,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
         @Test
         func `lock blocks until mutex is available`() throws {
-            let mutex = Kernel.Thread.Mutex()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
 
             struct State {
                 var workerAttempting = false
@@ -236,10 +236,10 @@ extension Kernel.Thread.Mutex.Test.Unit {
             let harness = KernelThreadTest.Harness(State())
 
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
+                let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.harness = harness
                 }
@@ -294,7 +294,7 @@ extension Kernel.Thread.Mutex.Test.Unit {
 
         @Test
         func `mutex protects shared counter from data races`() throws {
-            let mutex = Kernel.Thread.Mutex()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
 
             struct State {
                 var counter: Int = 0
@@ -303,11 +303,11 @@ extension Kernel.Thread.Mutex.Test.Unit {
             let harness = KernelThreadTest.Harness(State())
 
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
+                let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
                 let iterations: Int
 
-                init(mutex: Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>, iterations: Int) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>, iterations: Int) {
                     self.mutex = mutex
                     self.harness = harness
                     self.iterations = iterations

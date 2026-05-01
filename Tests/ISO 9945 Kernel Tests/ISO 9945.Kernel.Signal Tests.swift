@@ -15,7 +15,7 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Signal {
+extension ISO_9945.Kernel.Signal {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -27,25 +27,25 @@ extension Kernel.Signal {
 
 // MARK: - Unit Tests
 
-extension Kernel.Signal.Test.Unit {
+extension ISO_9945.Kernel.Signal.Test.Unit {
     @Test
     func `Signal namespace exists`() {
-        _ = Kernel.Signal.self
+        _ = ISO_9945.Kernel.Signal.self
     }
 
     @Test
     func `Signal is an enum`() {
-        let _: Kernel.Signal.Type = Kernel.Signal.self
+        let _: ISO_9945.Kernel.Signal.Type = ISO_9945.Kernel.Signal.self
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.Signal.Test.Unit {
+extension ISO_9945.Kernel.Signal.Test.Unit {
     #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
         @Test
         func `Signal.Error type exists`() {
-            let _: Kernel.Signal.Error.Type = Kernel.Signal.Error.self
+            let _: ISO_9945.Kernel.Signal.Error.Type = ISO_9945.Kernel.Signal.Error.self
         }
     #endif
 }

@@ -18,7 +18,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Environment {
+extension ISO_9945.Kernel.Environment {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -28,24 +28,24 @@ extension Kernel.Environment {
 
 // MARK: - Unit Tests
 
-extension Kernel.Environment.Test.Unit {
+extension ISO_9945.Kernel.Environment.Test.Unit {
     @Test
     func `Environment namespace exists`() {
-        _ = Kernel.Environment.self
+        _ = ISO_9945.Kernel.Environment.self
     }
 
     @Test
     func `Environment is an enum`() {
-        let _: Kernel.Environment.Type = Kernel.Environment.self
+        let _: ISO_9945.Kernel.Environment.Type = ISO_9945.Kernel.Environment.self
     }
 }
 
 // MARK: - Get Tests
 
-extension Kernel.Environment.Test.Unit {
+extension ISO_9945.Kernel.Environment.Test.Unit {
     @Test
     func `get returns nil for unset variable`() {
-        let result = Kernel.Environment.get("__KERNEL_TEST_UNSET_VAR_12345__")
+        let result = ISO_9945.Kernel.Environment.get("__KERNEL_TEST_UNSET_VAR_12345__")
         // String is ~Copyable, so we check nil-ness differently
         let isNil = (result == nil)
         #expect(isNil)
@@ -54,7 +54,7 @@ extension Kernel.Environment.Test.Unit {
     @Test
     func `get returns value for PATH`() {
         // PATH should always be set on all platforms
-        let result = Kernel.Environment.get("PATH")
+        let result = ISO_9945.Kernel.Environment.get("PATH")
         // String is ~Copyable, so we check nil-ness differently
         let isNotNil = (result != nil)
         #expect(isNotNil)
@@ -62,26 +62,26 @@ extension Kernel.Environment.Test.Unit {
 }
 
 // MARK: - isSet Tests
-// NOTE: isSet API not yet implemented in Kernel.Environment
+// NOTE: isSet API not yet implemented in ISO_9945.Kernel.Environment
 // These tests are disabled until the API is added.
 
-//extension Kernel.Environment.Test.Unit {
+//extension ISO_9945.Kernel.Environment.Test.Unit {
 //    @Test("isSet returns false for unset variable")
 //    func isSetUnsetVariable() {
-//        let result = Kernel.Environment.isSet("__KERNEL_TEST_UNSET_VAR_12345__")
+//        let result = ISO_9945.Kernel.Environment.isSet("__KERNEL_TEST_UNSET_VAR_12345__")
 //        #expect(result == false)
 //    }
 //
 //    @Test("isSet returns true for PATH")
 //    func isSetPathVariable() {
-//        let result = Kernel.Environment.isSet("PATH")
+//        let result = ISO_9945.Kernel.Environment.isSet("PATH")
 //        #expect(result == true)
 //    }
 //
 //    @Test("isSet with value checks exact match")
 //    func isSetWithValue() {
 //        // Test with a non-existent value
-//        let result = Kernel.Environment.isSet("PATH", to: "__IMPOSSIBLE_VALUE__")
+//        let result = ISO_9945.Kernel.Environment.isSet("PATH", to: "__IMPOSSIBLE_VALUE__")
 //        #expect(result == false)
 //    }
 //}

@@ -19,7 +19,7 @@ import Tagged_Primitives_Test_Support
     @testable import ISO_9945_Kernel
 import ISO_9945_Kernel
 
-    extension Kernel.Process.Wait {
+    extension ISO_9945.Kernel.Process.Wait {
         @Suite
         struct Test {
             @Suite struct Unit {}
@@ -31,13 +31,13 @@ import ISO_9945_Kernel
 
     // MARK: - Selector Tests
 
-    extension Kernel.Process.Wait.Test.Unit {
+    extension ISO_9945.Kernel.Process.Wait.Test.Unit {
         @Test
         func `Selector cases are distinct`() {
-            let pid = Kernel.Process.ID(123)
-            let pgid = Kernel.Process.Group.ID(456)
+            let pid = ISO_9945.Kernel.Process.ID(123)
+            let pgid = ISO_9945.Kernel.Process.Group.ID(456)
 
-            let cases: [Kernel.Process.Wait.Selector] = [
+            let cases: [ISO_9945.Kernel.Process.Wait.Selector] = [
                 .any,
                 .process(pid),
                 .group(pgid),
@@ -55,63 +55,63 @@ import ISO_9945_Kernel
 
         @Test
         func `Selector is Sendable`() {
-            let selector: any Sendable = Kernel.Process.Wait.Selector.any
-            #expect(selector is Kernel.Process.Wait.Selector)
+            let selector: any Sendable = ISO_9945.Kernel.Process.Wait.Selector.any
+            #expect(selector is ISO_9945.Kernel.Process.Wait.Selector)
         }
 
         @Test
         func `Selector is Equatable`() {
-            let pid = Kernel.Process.ID(42)
-            #expect(Kernel.Process.Wait.Selector.any == Kernel.Process.Wait.Selector.any)
+            let pid = ISO_9945.Kernel.Process.ID(42)
+            #expect(ISO_9945.Kernel.Process.Wait.Selector.any == ISO_9945.Kernel.Process.Wait.Selector.any)
             #expect(
-                Kernel.Process.Wait.Selector.process(pid)
-                    == Kernel.Process.Wait.Selector.process(pid)
+                ISO_9945.Kernel.Process.Wait.Selector.process(pid)
+                    == ISO_9945.Kernel.Process.Wait.Selector.process(pid)
             )
         }
     }
 
     // MARK: - Options Tests
 
-    extension Kernel.Process.Wait.Test.Unit {
+    extension ISO_9945.Kernel.Process.Wait.Test.Unit {
         @Test
         func `Options is OptionSet`() {
-            let options: Kernel.Process.Wait.Options = [.untraced, .continued]
+            let options: ISO_9945.Kernel.Process.Wait.Options = [.untraced, .continued]
             #expect(options.contains(.untraced))
             #expect(options.contains(.continued))
         }
 
         @Test
         func `no.hang accessor works`() {
-            let noHang = Kernel.Process.Wait.Options.no.hang
+            let noHang = ISO_9945.Kernel.Process.Wait.Options.no.hang
             #expect(noHang.rawValue != 0)
         }
     }
 
     // MARK: - Result Tests
 
-    extension Kernel.Process.Wait.Test.Unit {
+    extension ISO_9945.Kernel.Process.Wait.Test.Unit {
         @Test
         func `Result is Sendable`() {
-            let result: any Sendable = Kernel.Process.Wait.Result(
-                pid: Kernel.Process.ID(1),
-                status: Kernel.Process.Status(rawValue: 0)
+            let result: any Sendable = ISO_9945.Kernel.Process.Wait.Result(
+                pid: ISO_9945.Kernel.Process.ID(1),
+                status: ISO_9945.Kernel.Process.Status(rawValue: 0)
             )
-            #expect(result is Kernel.Process.Wait.Result)
+            #expect(result is ISO_9945.Kernel.Process.Wait.Result)
         }
 
         @Test
         func `Result is Equatable`() {
-            let result1 = Kernel.Process.Wait.Result(
-                pid: Kernel.Process.ID(42),
-                status: Kernel.Process.Status(rawValue: 0)
+            let result1 = ISO_9945.Kernel.Process.Wait.Result(
+                pid: ISO_9945.Kernel.Process.ID(42),
+                status: ISO_9945.Kernel.Process.Status(rawValue: 0)
             )
-            let result2 = Kernel.Process.Wait.Result(
-                pid: Kernel.Process.ID(42),
-                status: Kernel.Process.Status(rawValue: 0)
+            let result2 = ISO_9945.Kernel.Process.Wait.Result(
+                pid: ISO_9945.Kernel.Process.ID(42),
+                status: ISO_9945.Kernel.Process.Status(rawValue: 0)
             )
-            let result3 = Kernel.Process.Wait.Result(
-                pid: Kernel.Process.ID(99),
-                status: Kernel.Process.Status(rawValue: 0)
+            let result3 = ISO_9945.Kernel.Process.Wait.Result(
+                pid: ISO_9945.Kernel.Process.ID(99),
+                status: ISO_9945.Kernel.Process.Status(rawValue: 0)
             )
 
             #expect(result1 == result2)
@@ -124,14 +124,14 @@ import ISO_9945_Kernel
     // NOTE: These tests use posix_spawn via POSIXTestHelper instead of fork() directly
     // to avoid Swift runtime lock corruption in multithreaded test environments.
 
-    extension Kernel.Process.Wait.Test.Integration {
+    extension ISO_9945.Kernel.Process.Wait.Test.Integration {
         @Test
         func `wait(.process) collects specific child status`() throws {
             // Spawn helper that exits with code 99
             let childPID = try POSIXTestHelper.spawn("exit", "99")
 
             // Use .process(childPID) instead of .any for determinism
-            let result = try Kernel.Process.Wait.wait(.process(childPID))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(childPID))
             #expect(result != nil)
             #expect(result?.pid == childPID)
             #expect(result?.status.exit.code == 99)
@@ -142,7 +142,7 @@ import ISO_9945_Kernel
             // Spawn helper that exits with code 77
             let child = try POSIXTestHelper.spawn("exit", "77")
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result?.pid == child)
             #expect(result?.status.exit.code == 77)
         }
@@ -160,7 +160,7 @@ import ISO_9945_Kernel
             let child = try POSIXTestHelper.spawn("stop-exit", "42")
 
             // Deterministically observe stopped state
-            let stopped = try Kernel.Process.Wait.wait(
+            let stopped = try ISO_9945.Kernel.Process.Wait.wait(
                 .process(child),
                 options: [.untraced]
             )
@@ -168,7 +168,7 @@ import ISO_9945_Kernel
 
             // Child exists but is stopped (not exited); WNOHANG must return nil
             // Note: .no.hang without .untraced means stopped state is not reportable
-            let noHang = try Kernel.Process.Wait.wait(
+            let noHang = try ISO_9945.Kernel.Process.Wait.wait(
                 .process(child),
                 options: [.no.hang]
             )
@@ -178,7 +178,7 @@ import ISO_9945_Kernel
             try ISO_9945.Kernel.Signal.Send.toProcess(.continue, pid: child)
 
             // Reap exited child
-            let exited = try Kernel.Process.Wait.wait(.process(child))
+            let exited = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(exited?.pid == child)
             #expect(exited?.status.exit.code == 42)
         }
@@ -190,11 +190,11 @@ import ISO_9945_Kernel
             let child = try POSIXTestHelper.spawn("exit", "0")
 
             // First collect the child
-            _ = try Kernel.Process.Wait.wait(.process(child))
+            _ = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
 
             // Now try to wait again - should fail with ECHILD
             do {
-                _ = try Kernel.Process.Wait.wait(.process(child))
+                _ = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
                 Issue.record("Expected ECHILD error")
             } catch {
                 #expect(error.semantic == .noSuchProcess)
@@ -206,7 +206,7 @@ import ISO_9945_Kernel
             // Spawn helper that exits with code 55
             let child = try POSIXTestHelper.spawn("exit", "55")
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result != nil)
             if case .exited(let code) = result?.status.classification {
                 #expect(code == 55)

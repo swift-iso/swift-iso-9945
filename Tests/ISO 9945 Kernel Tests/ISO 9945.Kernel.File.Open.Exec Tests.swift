@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Open.Exec {
+extension ISO_9945.Kernel.File.Open.Exec {
     @Suite
     struct Test {
         @Suite struct Unit {}

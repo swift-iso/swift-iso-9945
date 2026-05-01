@@ -19,7 +19,7 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Close {
+extension ISO_9945.Kernel.Close {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -29,31 +29,31 @@ extension Kernel.Close {
 
 // MARK: - Close Tests
 
-extension Kernel.Close.Test.Unit {
+extension ISO_9945.Kernel.Close.Test.Unit {
     @Test
     func `close succeeds on valid descriptor`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "close-test")
         defer { KernelIOTest.cleanup(path: path) }
         let fd = try KernelIOTest.open(at: path)
 
-        try Kernel.Close.close(fd)
+        try ISO_9945.Kernel.Close.close(fd)
     }
 
     @Test
     func `close throws on invalid descriptor`() {
-        #expect(throws: Kernel.Close.Error.self) {
-            try Kernel.Close.close(.invalid)
+        #expect(throws: ISO_9945.Kernel.Close.Error.self) {
+            try ISO_9945.Kernel.Close.close(.invalid)
         }
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.Close.Test.EdgeCase {
+extension ISO_9945.Kernel.Close.Test.EdgeCase {
     @Test
     func `close throws on negative descriptor`() {
-        #expect(throws: Kernel.Close.Error.self) {
-            try Kernel.Close.close(Kernel.Descriptor(_rawValue: -100))
+        #expect(throws: ISO_9945.Kernel.Close.Error.self) {
+            try ISO_9945.Kernel.Close.close(ISO_9945.Kernel.Descriptor(_rawValue: -100))
         }
     }
 }

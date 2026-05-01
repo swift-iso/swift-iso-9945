@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Direct.Error.Syscall {
+extension ISO_9945.Kernel.File.Direct.Error.Syscall {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Direct.Error.Syscall {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Error.Syscall.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     @Test
     func `platform case exists`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
         if case .platform = syscall {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `invalidDescriptor case exists`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
         if case .invalidDescriptor = syscall {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `alignmentViolation case exists`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.alignmentViolation(operation: .write)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.alignmentViolation(operation: .write)
         if case .alignmentViolation = syscall {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `notSupported case exists`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
         if case .notSupported = syscall {
             // Expected
         } else {
@@ -67,24 +68,24 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Direct.Error.Syscall.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     @Test
     func `Syscall conforms to Swift.Error`() {
-        let syscall: any Swift.Error = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
-        #expect(syscall is Kernel.File.Direct.Error.Syscall)
+        let syscall: any Swift.Error = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
+        #expect(syscall is ISO_9945.Kernel.File.Direct.Error.Syscall)
     }
 
     @Test
     func `Syscall is Sendable`() {
-        let syscall: any Sendable = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
-        #expect(syscall is Kernel.File.Direct.Error.Syscall)
+        let syscall: any Sendable = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
+        #expect(syscall is ISO_9945.Kernel.File.Direct.Error.Syscall)
     }
 
     @Test
     func `Syscall is Equatable`() {
-        let a = Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
-        let b = Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
-        let c = Kernel.File.Direct.Error.Syscall.notSupported(operation: .read)
+        let a = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
+        let b = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
+        let c = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .read)
         #expect(a == b)
         #expect(a != c)
     }
@@ -92,10 +93,10 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
 // MARK: - Associated Value Tests
 
-extension Kernel.File.Direct.Error.Syscall.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     @Test
     func `platform stores error code`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.platform(code: .posix(42), operation: .open)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(42), operation: .open)
         if case .platform(let code, _) = syscall {
             if case .posix(let errno) = code {
                 #expect(errno == 42)
@@ -109,7 +110,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `platform stores operation`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .write)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .write)
         if case .platform(_, let operation) = syscall {
             if case .write = operation {
                 // Expected
@@ -123,7 +124,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `invalidDescriptor stores operation`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
         if case .invalidDescriptor(let operation) = syscall {
             if case .read = operation {
                 // Expected
@@ -137,7 +138,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `alignmentViolation stores operation`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.alignmentViolation(operation: .write)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.alignmentViolation(operation: .write)
         if case .alignmentViolation(let operation) = syscall {
             if case .write = operation {
                 // Expected
@@ -151,7 +152,7 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
     @Test
     func `notSupported stores operation`() {
-        let syscall = Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
+        let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
         if case .notSupported(let operation) = syscall {
             if case .open = operation {
                 // Expected
@@ -166,12 +167,12 @@ extension Kernel.File.Direct.Error.Syscall.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Direct.Error.Syscall.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.EdgeCase {
     @Test
     func `different cases with same operation are distinct`() {
-        let invalidDesc = Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
-        let alignment = Kernel.File.Direct.Error.Syscall.alignmentViolation(operation: .read)
-        let notSupp = Kernel.File.Direct.Error.Syscall.notSupported(operation: .read)
+        let invalidDesc = ISO_9945.Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
+        let alignment = ISO_9945.Kernel.File.Direct.Error.Syscall.alignmentViolation(operation: .read)
+        let notSupp = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .read)
         #expect(invalidDesc != alignment)
         #expect(alignment != notSupp)
         #expect(invalidDesc != notSupp)
@@ -179,15 +180,15 @@ extension Kernel.File.Direct.Error.Syscall.Test.EdgeCase {
 
     @Test
     func `platform errors with different codes are distinct`() {
-        let error1 = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
-        let error2 = Kernel.File.Direct.Error.Syscall.platform(code: .posix(2), operation: .open)
+        let error1 = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .open)
+        let error2 = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(2), operation: .open)
         #expect(error1 != error2)
     }
 
     @Test
     func `platform errors with different operations are distinct`() {
-        let error1 = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .read)
-        let error2 = Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .write)
+        let error1 = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .read)
+        let error2 = ISO_9945.Kernel.File.Direct.Error.Syscall.platform(code: .posix(1), operation: .write)
         #expect(error1 != error2)
     }
 }

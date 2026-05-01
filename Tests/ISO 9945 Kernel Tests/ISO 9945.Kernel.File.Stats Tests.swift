@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Stats {
+extension ISO_9945.Kernel.File.Stats {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,11 +24,11 @@ extension Kernel.File.Stats {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Stats.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Test.Unit {
     @Test
     func `Stat stores all fields`() {
-        let time = Kernel.Time(seconds: 1000)
-        let stat = Kernel.File.Stats(
+        let time = ISO_9945.Kernel.Time(seconds: 1000)
+        let stat = ISO_9945.Kernel.File.Stats(
             size: 1024,
             type: .regular,
             permissions: 0o644,
@@ -53,8 +54,8 @@ extension Kernel.File.Stats.Test.Unit {
 
     @Test
     func `Stat is Sendable`() {
-        let time = Kernel.Time(seconds: 0)
-        let stat: any Sendable = Kernel.File.Stats(
+        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let stat: any Sendable = ISO_9945.Kernel.File.Stats(
             size: 0,
             type: .regular,
             permissions: 0,
@@ -67,13 +68,13 @@ extension Kernel.File.Stats.Test.Unit {
             modificationTime: time,
             changeTime: time
         )
-        #expect(stat is Kernel.File.Stats)
+        #expect(stat is ISO_9945.Kernel.File.Stats)
     }
 
     @Test
     func `Stat is Equatable`() {
-        let time = Kernel.Time(seconds: 0)
-        let a = Kernel.File.Stats(
+        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let a = ISO_9945.Kernel.File.Stats(
             size: 100,
             type: .regular,
             permissions: 0o644,
@@ -86,7 +87,7 @@ extension Kernel.File.Stats.Test.Unit {
             modificationTime: time,
             changeTime: time
         )
-        let b = Kernel.File.Stats(
+        let b = ISO_9945.Kernel.File.Stats(
             size: 100,
             type: .regular,
             permissions: 0o644,
@@ -106,10 +107,10 @@ extension Kernel.File.Stats.Test.Unit {
 
 // MARK: - Kind Unit Tests
 
-extension Kernel.File.Stats.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Test.Unit {
     @Test
     func `Kind cases are distinct`() {
-        let cases: [Kernel.File.Stats.Kind] = [
+        let cases: [ISO_9945.Kernel.File.Stats.Kind] = [
             .regular,
             .directory,
             .link(.symbolic),
@@ -131,39 +132,39 @@ extension Kernel.File.Stats.Test.Unit {
 
     @Test
     func `Kind is Sendable`() {
-        let kind: any Sendable = Kernel.File.Stats.Kind.regular
-        #expect(kind is Kernel.File.Stats.Kind)
+        let kind: any Sendable = ISO_9945.Kernel.File.Stats.Kind.regular
+        #expect(kind is ISO_9945.Kernel.File.Stats.Kind)
     }
 
     @Test
     func `Kind is Hashable`() {
-        let a = Kernel.File.Stats.Kind.regular
-        let b = Kernel.File.Stats.Kind.regular
+        let a = ISO_9945.Kernel.File.Stats.Kind.regular
+        let b = ISO_9945.Kernel.File.Stats.Kind.regular
 
         #expect(a.hashValue == b.hashValue)
     }
 
     @Test
     func `Kind.Link cases`() {
-        let symbolic = Kernel.File.Stats.Kind.Link.symbolic
+        let symbolic = ISO_9945.Kernel.File.Stats.Kind.Link.symbolic
         #expect(symbolic == .symbolic)
     }
 
     @Test
     func `Kind.Device cases are distinct`() {
-        let block = Kernel.File.Stats.Kind.Device.block
-        let character = Kernel.File.Stats.Kind.Device.character
+        let block = ISO_9945.Kernel.File.Stats.Kind.Device.block
+        let character = ISO_9945.Kernel.File.Stats.Kind.Device.character
         #expect(block != character)
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Stats.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Test.EdgeCase {
     @Test
     func `zero size file`() {
-        let time = Kernel.Time(seconds: 0)
-        let stat = Kernel.File.Stats(
+        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let stat = ISO_9945.Kernel.File.Stats(
             size: 0,
             type: .regular,
             permissions: 0,
@@ -182,8 +183,8 @@ extension Kernel.File.Stats.Test.EdgeCase {
 
     @Test
     func `maximum permissions`() {
-        let time = Kernel.Time(seconds: 0)
-        let stat = Kernel.File.Stats(
+        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let stat = ISO_9945.Kernel.File.Stats(
             size: 0,
             type: .regular,
             permissions: 0o7777,

@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Clone.Error {
+extension ISO_9945.Kernel.File.Clone.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Clone.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Clone.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `notSupported case exists`() {
-        let error = Kernel.File.Clone.Error.notSupported
+        let error = ISO_9945.Kernel.File.Clone.Error.notSupported
         if case .notSupported = error {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `crossDevice case exists`() {
-        let error = Kernel.File.Clone.Error.crossDevice
+        let error = ISO_9945.Kernel.File.Clone.Error.crossDevice
         if case .crossDevice = error {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `sourceNotFound case exists`() {
-        let error = Kernel.File.Clone.Error.sourceNotFound
+        let error = ISO_9945.Kernel.File.Clone.Error.sourceNotFound
         if case .sourceNotFound = error {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `destinationExists case exists`() {
-        let error = Kernel.File.Clone.Error.destinationExists
+        let error = ISO_9945.Kernel.File.Clone.Error.destinationExists
         if case .destinationExists = error {
             // Expected
         } else {
@@ -66,7 +67,7 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `permissionDenied case exists`() {
-        let error = Kernel.File.Clone.Error.permissionDenied
+        let error = ISO_9945.Kernel.File.Clone.Error.permissionDenied
         if case .permissionDenied = error {
             // Expected
         } else {
@@ -76,7 +77,7 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `isDirectory case exists`() {
-        let error = Kernel.File.Clone.Error.isDirectory
+        let error = ISO_9945.Kernel.File.Clone.Error.isDirectory
         if case .isDirectory = error {
             // Expected
         } else {
@@ -86,7 +87,7 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `platform case exists`() {
-        let error = Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
+        let error = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
         if case .platform = error {
             // Expected
         } else {
@@ -97,101 +98,101 @@ extension Kernel.File.Clone.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.File.Clone.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `notSupported description`() {
-        let error = Kernel.File.Clone.Error.notSupported
+        let error = ISO_9945.Kernel.File.Clone.Error.notSupported
         #expect(error.description == "Reflink not supported on this filesystem")
     }
 
     @Test
     func `crossDevice description`() {
-        let error = Kernel.File.Clone.Error.crossDevice
+        let error = ISO_9945.Kernel.File.Clone.Error.crossDevice
         #expect(error.description == "Source and destination are on different devices")
     }
 
     @Test
     func `sourceNotFound description`() {
-        let error = Kernel.File.Clone.Error.sourceNotFound
+        let error = ISO_9945.Kernel.File.Clone.Error.sourceNotFound
         #expect(error.description == "Source file not found")
     }
 
     @Test
     func `destinationExists description`() {
-        let error = Kernel.File.Clone.Error.destinationExists
+        let error = ISO_9945.Kernel.File.Clone.Error.destinationExists
         #expect(error.description == "Destination already exists")
     }
 
     @Test
     func `permissionDenied description`() {
-        let error = Kernel.File.Clone.Error.permissionDenied
+        let error = ISO_9945.Kernel.File.Clone.Error.permissionDenied
         #expect(error.description == "Permission denied")
     }
 
     @Test
     func `isDirectory description`() {
-        let error = Kernel.File.Clone.Error.isDirectory
+        let error = ISO_9945.Kernel.File.Clone.Error.isDirectory
         #expect(error.description == "Source is a directory")
     }
 
     @Test
     func `platform description includes operation`() {
-        let error = Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
+        let error = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
         #expect(error.description.contains("clonefile"))
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Clone.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.File.Clone.Error.notSupported
-        #expect(error is Kernel.File.Clone.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.File.Clone.Error.notSupported
+        #expect(error is ISO_9945.Kernel.File.Clone.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let error: any Sendable = Kernel.File.Clone.Error.notSupported
-        #expect(error is Kernel.File.Clone.Error)
+        let error: any Sendable = ISO_9945.Kernel.File.Clone.Error.notSupported
+        #expect(error is ISO_9945.Kernel.File.Clone.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = Kernel.File.Clone.Error.notSupported
-        let b = Kernel.File.Clone.Error.notSupported
-        let c = Kernel.File.Clone.Error.crossDevice
+        let a = ISO_9945.Kernel.File.Clone.Error.notSupported
+        let b = ISO_9945.Kernel.File.Clone.Error.notSupported
+        let c = ISO_9945.Kernel.File.Clone.Error.crossDevice
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Error is CustomStringConvertible`() {
-        let error: any CustomStringConvertible = Kernel.File.Clone.Error.notSupported
+        let error: any CustomStringConvertible = ISO_9945.Kernel.File.Clone.Error.notSupported
         #expect(!error.description.isEmpty)
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.File.Clone.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `Operation type exists`() {
-        let _: Kernel.File.Clone.Error.Operation.Type = Kernel.File.Clone.Error.Operation.self
+        let _: ISO_9945.Kernel.File.Clone.Error.Operation.Type = ISO_9945.Kernel.File.Clone.Error.Operation.self
     }
 
     @Test
     func `Syscall type exists`() {
-        let _: Kernel.File.Clone.Error.Syscall.Type = Kernel.File.Clone.Error.Syscall.self
+        let _: ISO_9945.Kernel.File.Clone.Error.Syscall.Type = ISO_9945.Kernel.File.Clone.Error.Syscall.self
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Clone.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Error.Test.EdgeCase {
     @Test
     func `all simple cases are distinct`() {
-        let cases: [Kernel.File.Clone.Error] = [
+        let cases: [ISO_9945.Kernel.File.Clone.Error] = [
             .notSupported,
             .crossDevice,
             .sourceNotFound,
@@ -209,21 +210,21 @@ extension Kernel.File.Clone.Error.Test.EdgeCase {
 
     @Test
     func `platform errors with different codes are distinct`() {
-        let error1 = Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
-        let error2 = Kernel.File.Clone.Error.platform(code: .posix(2), operation: .clonefile)
+        let error1 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
+        let error2 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(2), operation: .clonefile)
         #expect(error1 != error2)
     }
 
     @Test
     func `platform errors with different operations are distinct`() {
-        let error1 = Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
-        let error2 = Kernel.File.Clone.Error.platform(code: .posix(1), operation: .copyfile)
+        let error1 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
+        let error2 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .copyfile)
         #expect(error1 != error2)
     }
 
     @Test
     func `all descriptions are non-empty`() {
-        let cases: [Kernel.File.Clone.Error] = [
+        let cases: [ISO_9945.Kernel.File.Clone.Error] = [
             .notSupported,
             .crossDevice,
             .sourceNotFound,

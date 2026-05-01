@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Stats.Error {
+extension ISO_9945.Kernel.File.Stats.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,11 +24,11 @@ extension Kernel.File.Stats.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Stats.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
     func `handle case stores Descriptor.Validity.Error`() {
-        let handleError = Kernel.Descriptor.Validity.Error.invalid
-        let error = Kernel.File.Stats.Error.handle(handleError)
+        let handleError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
+        let error = ISO_9945.Kernel.File.Stats.Error.handle(handleError)
         if case .handle(let stored) = error {
             #expect(stored == handleError)
         } else {
@@ -37,8 +38,8 @@ extension Kernel.File.Stats.Error.Test.Unit {
 
     @Test
     func `io case stores IO.Error`() {
-        let ioError = Kernel.IO.Error.hardware
-        let error = Kernel.File.Stats.Error.io(ioError)
+        let ioError = ISO_9945.Kernel.IO.Error.hardware
+        let error = ISO_9945.Kernel.File.Stats.Error.io(ioError)
         if case .io(let stored) = error {
             #expect(stored == ioError)
         } else {
@@ -50,7 +51,7 @@ extension Kernel.File.Stats.Error.Test.Unit {
     func `platform case stores Error_Primitives.Error`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmappedError = Error_Primitives.Error(code: code)
-        let error = Kernel.File.Stats.Error.platform(unmappedError)
+        let error = ISO_9945.Kernel.File.Stats.Error.platform(unmappedError)
         if case .platform(let stored) = error {
             #expect(stored == unmappedError)
         } else {
@@ -61,40 +62,40 @@ extension Kernel.File.Stats.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.File.Stats.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
     func `handle description format`() {
-        let error = Kernel.File.Stats.Error.handle(.invalid)
+        let error = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
         #expect(error.description.contains("handle:"))
     }
 
     @Test
     func `io description format`() {
-        let error = Kernel.File.Stats.Error.io(.hardware)
+        let error = ISO_9945.Kernel.File.Stats.Error.io(.hardware)
         #expect(error.description.contains("io:"))
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Stats.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.File.Stats.Error.handle(.invalid)
-        #expect(error is Kernel.File.Stats.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
+        #expect(error is ISO_9945.Kernel.File.Stats.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let error: any Sendable = Kernel.File.Stats.Error.handle(.invalid)
-        #expect(error is Kernel.File.Stats.Error)
+        let error: any Sendable = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
+        #expect(error is ISO_9945.Kernel.File.Stats.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = Kernel.File.Stats.Error.handle(.invalid)
-        let b = Kernel.File.Stats.Error.handle(.invalid)
-        let c = Kernel.File.Stats.Error.io(.hardware)
+        let a = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
+        let b = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
+        let c = ISO_9945.Kernel.File.Stats.Error.io(.hardware)
         #expect(a == b)
         #expect(a != c)
     }
@@ -102,10 +103,10 @@ extension Kernel.File.Stats.Error.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Stats.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Error.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
-        let cases: [Kernel.File.Stats.Error] = [
+        let cases: [ISO_9945.Kernel.File.Stats.Error] = [
             .handle(.invalid),
             .io(.hardware),
             .platform(Error_Primitives.Error(code: .posix(1))),
@@ -120,17 +121,17 @@ extension Kernel.File.Stats.Error.Test.EdgeCase {
 
     @Test
     func `handle invalid vs limit are distinct`() {
-        let invalid = Kernel.File.Stats.Error.handle(.invalid)
-        let processLimit = Kernel.File.Stats.Error.handle(.limit(.process))
-        let systemLimit = Kernel.File.Stats.Error.handle(.limit(.system))
+        let invalid = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
+        let processLimit = ISO_9945.Kernel.File.Stats.Error.handle(.limit(.process))
+        let systemLimit = ISO_9945.Kernel.File.Stats.Error.handle(.limit(.system))
         #expect(invalid != processLimit)
         #expect(processLimit != systemLimit)
     }
 
     @Test
     func `different io errors are distinct`() {
-        let hardware = Kernel.File.Stats.Error.io(.hardware)
-        let broken = Kernel.File.Stats.Error.io(.broken)
+        let hardware = ISO_9945.Kernel.File.Stats.Error.io(.hardware)
+        let broken = ISO_9945.Kernel.File.Stats.Error.io(.broken)
         #expect(hardware != broken)
     }
 }

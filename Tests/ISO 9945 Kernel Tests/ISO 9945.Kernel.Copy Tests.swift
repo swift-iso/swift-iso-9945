@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.Copy {
+extension ISO_9945.Kernel.Copy {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,43 +24,43 @@ extension Kernel.Copy {
 
 // MARK: - Unit Tests
 
-extension Kernel.Copy.Test.Unit {
+extension ISO_9945.Kernel.Copy.Test.Unit {
     @Test
     func `Copy namespace exists`() {
-        // Kernel.Copy is a public enum namespace
-        _ = Kernel.Copy.self
+        // ISO_9945.Kernel.Copy is a public enum namespace
+        _ = ISO_9945.Kernel.Copy.self
     }
 
     @Test
     func `Copy is an enum`() {
-        let _: Kernel.Copy.Type = Kernel.Copy.self
+        let _: ISO_9945.Kernel.Copy.Type = ISO_9945.Kernel.Copy.self
     }
 
     @Test
     func `Copy is Sendable`() {
-        let _: any Sendable.Type = Kernel.Copy.self
+        let _: any Sendable.Type = ISO_9945.Kernel.Copy.self
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.Copy.Test.Unit {
+extension ISO_9945.Kernel.Copy.Test.Unit {
     @Test
     func `Copy.Error type exists`() {
-        let _: Kernel.Copy.Error.Type = Kernel.Copy.Error.self
+        let _: ISO_9945.Kernel.Copy.Error.Type = ISO_9945.Kernel.Copy.Error.self
     }
 
     #if os(Linux) || canImport(Darwin)
         @Test
         func `Copy.Clone namespace exists`() {
-            let _: Kernel.Copy.Clone.Type = Kernel.Copy.Clone.self
+            let _: ISO_9945.Kernel.Copy.Clone.Type = ISO_9945.Kernel.Copy.Clone.self
         }
     #endif
 
     #if os(Linux)
         @Test
         func `Copy.Range namespace exists on Linux`() {
-            let _: Kernel.Copy.Range.Type = Kernel.Copy.Range.self
+            let _: ISO_9945.Kernel.Copy.Range.Type = ISO_9945.Kernel.Copy.Range.self
         }
     #endif
 }

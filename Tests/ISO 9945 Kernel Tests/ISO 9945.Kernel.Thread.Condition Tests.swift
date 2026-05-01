@@ -26,7 +26,7 @@ import Testing
     import Musl
 #endif
 
-extension Kernel.Thread.Condition {
+extension ISO_9945.Kernel.Thread.Condition {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -36,22 +36,22 @@ extension Kernel.Thread.Condition {
 
 // MARK: - API Unit Tests
 
-extension Kernel.Thread.Condition.Test.Unit {
+extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
     @Test
     func `init creates valid condition`() {
-        let condition = Kernel.Thread.Condition()
+        let condition = ISO_9945.Kernel.Thread.Condition()
         _ = condition
     }
 
     @Test
     func `signal with no waiters is no-op`() {
-        let condition = Kernel.Thread.Condition()
+        let condition = ISO_9945.Kernel.Thread.Condition()
         condition.signal()
     }
 
     @Test
     func `broadcast with no waiters is no-op`() {
-        let condition = Kernel.Thread.Condition()
+        let condition = ISO_9945.Kernel.Thread.Condition()
         condition.broadcast()
     }
 
@@ -63,8 +63,8 @@ extension Kernel.Thread.Condition.Test.Unit {
         //
         // This test verifies the timeout path is reachable by attempting multiple
         // short waits. At least one should time out within a reasonable bound.
-        let mutex = Kernel.Thread.Mutex()
-        let condition = Kernel.Thread.Condition()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
+        let condition = ISO_9945.Kernel.Thread.Condition()
 
         var sawTimeout = false
         let attempts = 10
@@ -87,9 +87,9 @@ extension Kernel.Thread.Condition.Test.Unit {
     func `multiple conditions are independent`() {
         // Same note about spurious wakes - we verify independence structurally
         // by checking that signaling one condition doesn't affect the other.
-        let mutex = Kernel.Thread.Mutex()
-        let condition1 = Kernel.Thread.Condition()
-        let condition2 = Kernel.Thread.Condition()
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
+        let condition1 = ISO_9945.Kernel.Thread.Condition()
+        let condition2 = ISO_9945.Kernel.Thread.Condition()
 
         // Both should eventually timeout (allowing for spurious wakes)
         var sawTimeout1 = false
@@ -116,7 +116,7 @@ extension Kernel.Thread.Condition.Test.Unit {
 
     @Test
     func `signal and broadcast can be called repeatedly`() {
-        let condition = Kernel.Thread.Condition()
+        let condition = ISO_9945.Kernel.Thread.Condition()
 
         for _ in 0..<100 {
             condition.signal()
@@ -135,11 +135,11 @@ extension Kernel.Thread.Condition.Test.Unit {
 // TODO: Add Linux-compatible threading tests to swift-linux package.
 #if canImport(Darwin)
 
-    extension Kernel.Thread.Condition.Test.Unit {
+    extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
         @Test
         func `signal wakes waiting thread`() throws {
-            let mutex = Kernel.Thread.Mutex()
-            let condition = Kernel.Thread.Condition()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
+            let condition = ISO_9945.Kernel.Thread.Condition()
 
             struct State {
                 var phase: Phase = .initial
@@ -157,11 +157,11 @@ extension Kernel.Thread.Condition.Test.Unit {
 
             // Pack both mutex, condition, and harness into a context
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
-                let condition: Kernel.Thread.Condition
+                let mutex: ISO_9945.Kernel.Thread.Mutex
+                let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: Kernel.Thread.Mutex, condition: Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -228,8 +228,8 @@ extension Kernel.Thread.Condition.Test.Unit {
 
         @Test
         func `broadcast wakes all waiting threads`() throws {
-            let mutex = Kernel.Thread.Mutex()
-            let condition = Kernel.Thread.Condition()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
+            let condition = ISO_9945.Kernel.Thread.Condition()
             let threadCount = 3
 
             struct State {
@@ -239,11 +239,11 @@ extension Kernel.Thread.Condition.Test.Unit {
             let harness = KernelThreadTest.Harness(State())
 
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
-                let condition: Kernel.Thread.Condition
+                let mutex: ISO_9945.Kernel.Thread.Mutex
+                let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: Kernel.Thread.Mutex, condition: Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -311,8 +311,8 @@ extension Kernel.Thread.Condition.Test.Unit {
 
         @Test
         func `wait releases mutex while waiting`() throws {
-            let mutex = Kernel.Thread.Mutex()
-            let condition = Kernel.Thread.Condition()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
+            let condition = ISO_9945.Kernel.Thread.Condition()
 
             struct State {
                 var phase: Phase = .initial
@@ -328,11 +328,11 @@ extension Kernel.Thread.Condition.Test.Unit {
             let harness = KernelThreadTest.Harness(State())
 
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
-                let condition: Kernel.Thread.Condition
+                let mutex: ISO_9945.Kernel.Thread.Mutex
+                let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: Kernel.Thread.Mutex, condition: Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -405,8 +405,8 @@ extension Kernel.Thread.Condition.Test.Unit {
 
         @Test
         func `wait reacquires mutex before returning`() throws {
-            let mutex = Kernel.Thread.Mutex()
-            let condition = Kernel.Thread.Condition()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
+            let condition = ISO_9945.Kernel.Thread.Condition()
 
             struct State {
                 var phase: Phase = .initial
@@ -423,11 +423,11 @@ extension Kernel.Thread.Condition.Test.Unit {
             let harness = KernelThreadTest.Harness(State())
 
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
-                let condition: Kernel.Thread.Condition
+                let mutex: ISO_9945.Kernel.Thread.Mutex
+                let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: Kernel.Thread.Mutex, condition: Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -514,8 +514,8 @@ extension Kernel.Thread.Condition.Test.Unit {
 
         @Test
         func `producer-consumer pattern works correctly`() throws {
-            let mutex = Kernel.Thread.Mutex()
-            let condition = Kernel.Thread.Condition()
+            let mutex = ISO_9945.Kernel.Thread.Mutex()
+            let condition = ISO_9945.Kernel.Thread.Condition()
             let itemCount = 100
 
             struct State {
@@ -527,12 +527,12 @@ extension Kernel.Thread.Condition.Test.Unit {
             let harness = KernelThreadTest.Harness(State())
 
             final class Context: @unchecked Sendable {
-                let mutex: Kernel.Thread.Mutex
-                let condition: Kernel.Thread.Condition
+                let mutex: ISO_9945.Kernel.Thread.Mutex
+                let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
                 let itemCount: Int
 
-                init(mutex: Kernel.Thread.Mutex, condition: Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>, itemCount: Int) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>, itemCount: Int) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness

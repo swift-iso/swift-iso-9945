@@ -19,7 +19,7 @@
 ///
 /// ```swift
 /// let child = try POSIXTestHelper.spawn("exit", "42")
-/// let result = try Kernel.Process.Wait.wait(.process(child))
+/// let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
 /// #expect(result?.status.exit.code == 42)
 /// ```
 
@@ -117,18 +117,18 @@ import ISO_9945_Kernel
         /// ```swift
         /// // Test exit code handling
         /// let child = try POSIXTestHelper.spawn("exit", "77")
-        /// let result = try Kernel.Process.Wait.wait(.process(child))
+        /// let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
         /// #expect(result?.status.exit.code == 77)
         ///
         /// // Test stop/continue handling
         /// let child = try POSIXTestHelper.spawn("stop-exit", "42")
-        /// let stopped = try Kernel.Process.Wait.wait(.process(child), options: [.untraced])
+        /// let stopped = try ISO_9945.Kernel.Process.Wait.wait(.process(child), options: [.untraced])
         /// #expect(stopped?.status.stopped == true)
         /// try ISO_9945.Kernel.Signal.Send.toProcess(.cont, pid: child)
-        /// let exited = try Kernel.Process.Wait.wait(.process(child))
+        /// let exited = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
         /// #expect(exited?.status.exit.code == 42)
         /// ```
-        static func spawn(_ args: Swift.String...) throws -> Kernel.Process.ID {
+        static func spawn(_ args: Swift.String...) throws -> ISO_9945.Kernel.Process.ID {
             try spawn(args)
         }
 
@@ -137,7 +137,7 @@ import ISO_9945_Kernel
         /// - Parameter args: Command and arguments.
         /// - Returns: The process ID of the spawned helper.
         /// - Throws: `ISO_9945.Kernel.Process.Error.spawn` on failure.
-        static func spawn(_ args: [Swift.String]) throws -> Kernel.Process.ID {
+        static func spawn(_ args: [Swift.String]) throws -> ISO_9945.Kernel.Process.ID {
             let path = executablePath()
             let allArgs = [path] + args
             let envp: [Swift.String] = []

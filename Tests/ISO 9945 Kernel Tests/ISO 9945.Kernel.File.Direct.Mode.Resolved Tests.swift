@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Direct.Mode.Resolved {
+extension ISO_9945.Kernel.File.Direct.Mode.Resolved {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Direct.Mode.Resolved {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Mode.Resolved.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Resolved.Test.Unit {
     @Test
     func `direct case exists`() {
-        let resolved = Kernel.File.Direct.Mode.Resolved.direct
+        let resolved = ISO_9945.Kernel.File.Direct.Mode.Resolved.direct
         if case .direct = resolved {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Direct.Mode.Resolved.Test.Unit {
 
     @Test
     func `uncached case exists`() {
-        let resolved = Kernel.File.Direct.Mode.Resolved.uncached
+        let resolved = ISO_9945.Kernel.File.Direct.Mode.Resolved.uncached
         if case .uncached = resolved {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Direct.Mode.Resolved.Test.Unit {
 
     @Test
     func `buffered case exists`() {
-        let resolved = Kernel.File.Direct.Mode.Resolved.buffered
+        let resolved = ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered
         if case .buffered = resolved {
             // Expected
         } else {
@@ -57,18 +58,18 @@ extension Kernel.File.Direct.Mode.Resolved.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Direct.Mode.Resolved.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Resolved.Test.Unit {
     @Test
     func `Resolved is Sendable`() {
-        let resolved: any Sendable = Kernel.File.Direct.Mode.Resolved.buffered
-        #expect(resolved is Kernel.File.Direct.Mode.Resolved)
+        let resolved: any Sendable = ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered
+        #expect(resolved is ISO_9945.Kernel.File.Direct.Mode.Resolved)
     }
 
     @Test
     func `Resolved is Equatable`() {
-        let a = Kernel.File.Direct.Mode.Resolved.buffered
-        let b = Kernel.File.Direct.Mode.Resolved.buffered
-        let c = Kernel.File.Direct.Mode.Resolved.direct
+        let a = ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered
+        let b = ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered
+        let c = ISO_9945.Kernel.File.Direct.Mode.Resolved.direct
         #expect(a == b)
         #expect(a != c)
     }
@@ -76,10 +77,10 @@ extension Kernel.File.Direct.Mode.Resolved.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Direct.Mode.Resolved.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Mode.Resolved.Test.EdgeCase {
     @Test
     func `all resolved modes are distinct`() {
-        let cases: [Kernel.File.Direct.Mode.Resolved] = [
+        let cases: [ISO_9945.Kernel.File.Direct.Mode.Resolved] = [
             .direct,
             .uncached,
             .buffered,

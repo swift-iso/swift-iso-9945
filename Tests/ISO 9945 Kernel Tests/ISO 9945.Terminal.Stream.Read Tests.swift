@@ -31,7 +31,7 @@ extension Terminal.Stream.Read {
 // MARK: - Integration
 //
 // The original tests in this file stubbed stdin redirection by
-// constructing `Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)`
+// constructing `ISO_9945.Kernel.Descriptor(_rawValue: Terminal.Stream.stdin.rawValue)`
 // — claiming ownership of fd 0. When the ~Copyable Descriptor went out
 // of scope, its deinit called close(0), which closed the test process's
 // own standard input. swift-testing (and any subsequent test) would then
@@ -62,7 +62,7 @@ extension Terminal.Stream.Read.Test.Integration {
         // Read from the pipe with the write end closed — should get EOF (0 bytes).
         var buffer = [UInt8](repeating: 0, count: 16)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try Kernel.IO.Read.read(readEnd, into: ptr)
+            try ISO_9945.Kernel.IO.Read.read(readEnd, into: ptr)
         }
 
         #expect(bytesRead == 0)

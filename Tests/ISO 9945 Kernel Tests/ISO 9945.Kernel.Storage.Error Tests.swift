@@ -18,7 +18,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Storage.Error {
+extension ISO_9945.Kernel.Storage.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -28,15 +28,15 @@ extension Kernel.Storage.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.Storage.Error.Test.Unit {
+extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
     func `Error type exists`() {
-        let _: Kernel.Storage.Error.Type = Kernel.Storage.Error.self
+        let _: ISO_9945.Kernel.Storage.Error.Type = ISO_9945.Kernel.Storage.Error.self
     }
 
     @Test
     func `exhausted case exists`() {
-        let error = Kernel.Storage.Error.exhausted
+        let error = ISO_9945.Kernel.Storage.Error.exhausted
         if case .exhausted = error {
             // Expected
         } else {
@@ -46,7 +46,7 @@ extension Kernel.Storage.Error.Test.Unit {
 
     @Test
     func `quota case exists`() {
-        let error = Kernel.Storage.Error.quota
+        let error = ISO_9945.Kernel.Storage.Error.quota
         if case .quota = error {
             // Expected
         } else {
@@ -57,31 +57,31 @@ extension Kernel.Storage.Error.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.Storage.Error.Test.Unit {
+extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.Storage.Error.exhausted
-        #expect(error is Kernel.Storage.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.Storage.Error.exhausted
+        #expect(error is ISO_9945.Kernel.Storage.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let value: any Sendable = Kernel.Storage.Error.exhausted
-        #expect(value is Kernel.Storage.Error)
+        let value: any Sendable = ISO_9945.Kernel.Storage.Error.exhausted
+        #expect(value is ISO_9945.Kernel.Storage.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = Kernel.Storage.Error.exhausted
-        let b = Kernel.Storage.Error.exhausted
-        let c = Kernel.Storage.Error.quota
+        let a = ISO_9945.Kernel.Storage.Error.exhausted
+        let b = ISO_9945.Kernel.Storage.Error.exhausted
+        let c = ISO_9945.Kernel.Storage.Error.quota
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Error is Hashable`() {
-        var set = Set<Kernel.Storage.Error>()
+        var set = Set<ISO_9945.Kernel.Storage.Error>()
         set.insert(.exhausted)
         set.insert(.quota)
         set.insert(.exhausted)  // duplicate
@@ -91,33 +91,33 @@ extension Kernel.Storage.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.Storage.Error.Test.Unit {
+extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
     func `exhausted description`() {
-        let error = Kernel.Storage.Error.exhausted
+        let error = ISO_9945.Kernel.Storage.Error.exhausted
         #expect(error.description == "no space left on device")
     }
 
     @Test
     func `quota description`() {
-        let error = Kernel.Storage.Error.quota
+        let error = ISO_9945.Kernel.Storage.Error.quota
         #expect(error.description == "disk quota exceeded")
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.Storage.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.Storage.Error.Test.EdgeCase {
     @Test
     func `All cases are distinct`() {
-        let cases: [Kernel.Storage.Error] = [.exhausted, .quota]
+        let cases: [ISO_9945.Kernel.Storage.Error] = [.exhausted, .quota]
         let uniqueCases = Set(cases)
         #expect(uniqueCases.count == cases.count)
     }
 
     @Test
     func `CustomStringConvertible works for all cases`() {
-        let cases: [Kernel.Storage.Error] = [.exhausted, .quota]
+        let cases: [ISO_9945.Kernel.Storage.Error] = [.exhausted, .quota]
         for error in cases {
             let description = Swift.String(describing: error)
             #expect(!description.isEmpty)

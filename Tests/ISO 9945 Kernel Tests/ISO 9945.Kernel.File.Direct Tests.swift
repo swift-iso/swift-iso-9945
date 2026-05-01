@@ -17,7 +17,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.File.Direct {
+extension ISO_9945.Kernel.File.Direct {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -27,57 +27,57 @@ extension Kernel.File.Direct {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
     func `Direct namespace exists`() {
-        _ = Kernel.File.Direct.self
+        _ = ISO_9945.Kernel.File.Direct.self
     }
 
     @Test
     func `Direct is an enum`() {
-        let _: Kernel.File.Direct.Type = Kernel.File.Direct.self
+        let _: ISO_9945.Kernel.File.Direct.Type = ISO_9945.Kernel.File.Direct.self
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.File.Direct.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
     func `Direct.Capability type exists`() {
-        let _: Kernel.File.Direct.Capability.Type = Kernel.File.Direct.Capability.self
+        let _: ISO_9945.Kernel.File.Direct.Capability.Type = ISO_9945.Kernel.File.Direct.Capability.self
     }
 
     @Test
     func `Direct.Mode type exists`() {
-        let _: Kernel.File.Direct.Mode.Type = Kernel.File.Direct.Mode.self
+        let _: ISO_9945.Kernel.File.Direct.Mode.Type = ISO_9945.Kernel.File.Direct.Mode.self
     }
 
     @Test
     func `Direct.Requirements type exists`() {
-        let _: Kernel.File.Direct.Requirements.Type = Kernel.File.Direct.Requirements.self
+        let _: ISO_9945.Kernel.File.Direct.Requirements.Type = ISO_9945.Kernel.File.Direct.Requirements.self
     }
 
     @Test
     func `Direct.Error type exists`() {
-        let _: Kernel.File.Direct.Error.Type = Kernel.File.Direct.Error.self
+        let _: ISO_9945.Kernel.File.Direct.Error.Type = ISO_9945.Kernel.File.Direct.Error.self
     }
 }
 
 // MARK: - Resolved Mode Tests
 
-extension Kernel.File.Direct.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
     func `direct mode resolved is equatable`() {
-        #expect(Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
-        #expect(Kernel.File.Direct.Mode.Resolved.direct == .direct)
-        #expect(Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
-        #expect(Kernel.File.Direct.Mode.Resolved.buffered != .direct)
+        #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
+        #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.direct == .direct)
+        #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
+        #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered != .direct)
     }
 
     @Test
     func `requirements known case`() {
-        let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let requirements = Kernel.File.Direct.Requirements.known(alignment)
+        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let requirements = ISO_9945.Kernel.File.Direct.Requirements.known(alignment)
 
         if case .known(let a) = requirements {
             #expect(a.bufferAlignment == .`4096`)
@@ -88,7 +88,7 @@ extension Kernel.File.Direct.Test.Unit {
 
     @Test
     func `requirements unknown case`() {
-        let requirements = Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
+        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
 
         if case .unknown(let reason) = requirements {
             #expect(reason == .platformUnsupported)

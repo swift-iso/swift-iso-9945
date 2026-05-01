@@ -18,7 +18,7 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.File.Handle {
+extension ISO_9945.Kernel.File.Handle {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -40,7 +40,7 @@ private func cleanup(path: Swift.String) {
 // MARK: - Handle Tests
 
 
-    extension Kernel.File.Handle.Test.Unit {
+    extension ISO_9945.Kernel.File.Handle.Test.Unit {
         @Test
         func `init stores descriptor and mode`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "handle-test")
@@ -48,7 +48,7 @@ private func cleanup(path: Swift.String) {
             // Handle takes ownership of fd; only clean up the file path
             defer { cleanup(path: path) }
 
-            let handle = Kernel.File.Handle(
+            let handle = ISO_9945.Kernel.File.Handle(
                 descriptor: fd,
                 direct: .buffered,
                 requirements: .unknown(reason: .platformUnsupported)
@@ -67,9 +67,9 @@ private func cleanup(path: Swift.String) {
             defer { cleanup(path: path) }
             KernelIOTest.write("Hello, Handle!", to: fd)
 
-            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
+            _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
-            let handle = Kernel.File.Handle(
+            let handle = ISO_9945.Kernel.File.Handle(
                 descriptor: fd,
                 direct: .buffered,
                 requirements: .unknown(reason: .platformUnsupported)
@@ -90,7 +90,7 @@ private func cleanup(path: Swift.String) {
             let fd = try KernelIOTest.open(at: path)
             defer { cleanup(path: path) }
 
-            let handle = Kernel.File.Handle(
+            let handle = ISO_9945.Kernel.File.Handle(
                 descriptor: fd,
                 direct: .buffered,
                 requirements: .unknown(reason: .platformUnsupported)
@@ -104,7 +104,7 @@ private func cleanup(path: Swift.String) {
             #expect(bytesWritten == 13)
 
             // Verify by seeking back and reading via the handle
-            _ = try Kernel.File.Seek.seek(handle.descriptor, offset: 0, whence: .start)
+            _ = try ISO_9945.Kernel.File.Seek.seek(handle.descriptor, offset: 0, whence: .start)
             var buffer = [UInt8](repeating: 0, count: 13)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
                 try handle.read(into: ptr)
@@ -118,7 +118,7 @@ private func cleanup(path: Swift.String) {
             let fd = try KernelIOTest.open(at: path)
             defer { cleanup(path: path) }
 
-            let handle = Kernel.File.Handle(
+            let handle = ISO_9945.Kernel.File.Handle(
                 descriptor: fd,
                 direct: .buffered,
                 requirements: .unknown(reason: .platformUnsupported)
@@ -129,7 +129,7 @@ private func cleanup(path: Swift.String) {
             // After explicit close, re-opening confirms the file still exists
             // (close closed the fd, not the file).
             let fd2 = try Path.scope(path) { p in
-                try Kernel.File.Open.open(
+                try ISO_9945.Kernel.File.Open.open(
                     path: p,
                     mode: .read,
                     options: [],
@@ -146,7 +146,7 @@ private func cleanup(path: Swift.String) {
             let fd = try KernelIOTest.open(at: path)
             defer { cleanup(path: path) }
 
-            let handle = Kernel.File.Handle(
+            let handle = ISO_9945.Kernel.File.Handle(
                 descriptor: fd,
                 direct: .buffered,
                 requirements: .unknown(reason: .platformUnsupported)
@@ -168,7 +168,7 @@ private func cleanup(path: Swift.String) {
 
             // Create and immediately drop handle
             do {
-                let handle = Kernel.File.Handle(
+                let handle = ISO_9945.Kernel.File.Handle(
                     descriptor: fd,
                     direct: .buffered,
                     requirements: .unknown(reason: .platformUnsupported)
@@ -179,7 +179,7 @@ private func cleanup(path: Swift.String) {
             // After deinit, descriptor should be closed.
             // Re-open to verify the file still exists (handle closed the fd, not the file).
             let fd2 = try Path.scope(path) { p in
-                try Kernel.File.Open.open(
+                try ISO_9945.Kernel.File.Open.open(
                     path: p,
                     mode: .read,
                     options: [],
@@ -193,19 +193,19 @@ private func cleanup(path: Swift.String) {
 
     // MARK: - Direct Mode Tests
 
-    extension Kernel.File.Handle.Test.Unit {
+    extension ISO_9945.Kernel.File.Handle.Test.Unit {
         @Test
         func `direct mode enum is equatable`() {
-            #expect(Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
-            #expect(Kernel.File.Direct.Mode.Resolved.direct == .direct)
-            #expect(Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
-            #expect(Kernel.File.Direct.Mode.Resolved.buffered != .direct)
+            #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered == .buffered)
+            #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.direct == .direct)
+            #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.uncached == .uncached)
+            #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered != .direct)
         }
 
         @Test
         func `requirements known case`() {
-            let alignment = Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-            let requirements = Kernel.File.Direct.Requirements.known(alignment)
+            let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+            let requirements = ISO_9945.Kernel.File.Direct.Requirements.known(alignment)
 
             if case .known(let a) = requirements {
                 #expect(a.bufferAlignment == .`4096`)
@@ -216,7 +216,7 @@ private func cleanup(path: Swift.String) {
 
         @Test
         func `requirements unknown case`() {
-            let requirements = Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
+            let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
 
             if case .unknown(let reason) = requirements {
                 #expect(reason == .platformUnsupported)

@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Stats.Kind {
+extension ISO_9945.Kernel.File.Stats.Kind {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Stats.Kind {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Stats.Kind.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
     func `regular case exists`() {
-        let kind = Kernel.File.Stats.Kind.regular
+        let kind = ISO_9945.Kernel.File.Stats.Kind.regular
         if case .regular = kind {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
     @Test
     func `directory case exists`() {
-        let kind = Kernel.File.Stats.Kind.directory
+        let kind = ISO_9945.Kernel.File.Stats.Kind.directory
         if case .directory = kind {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
     @Test
     func `link case exists`() {
-        let kind = Kernel.File.Stats.Kind.link(.symbolic)
+        let kind = ISO_9945.Kernel.File.Stats.Kind.link(.symbolic)
         if case .link = kind {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
     @Test
     func `device case exists`() {
-        let kind = Kernel.File.Stats.Kind.device(.block)
+        let kind = ISO_9945.Kernel.File.Stats.Kind.device(.block)
         if case .device = kind {
             // Expected
         } else {
@@ -66,7 +67,7 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
     @Test
     func `fifo case exists`() {
-        let kind = Kernel.File.Stats.Kind.fifo
+        let kind = ISO_9945.Kernel.File.Stats.Kind.fifo
         if case .fifo = kind {
             // Expected
         } else {
@@ -76,7 +77,7 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
     @Test
     func `socket case exists`() {
-        let kind = Kernel.File.Stats.Kind.socket
+        let kind = ISO_9945.Kernel.File.Stats.Kind.socket
         if case .socket = kind {
             // Expected
         } else {
@@ -86,7 +87,7 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
     @Test
     func `unknown case exists`() {
-        let kind = Kernel.File.Stats.Kind.unknown
+        let kind = ISO_9945.Kernel.File.Stats.Kind.unknown
         if case .unknown = kind {
             // Expected
         } else {
@@ -97,39 +98,39 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
 // MARK: - Nested Types
 
-extension Kernel.File.Stats.Kind.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
     func `Device type exists`() {
-        let _: Kernel.File.Stats.Kind.Device.Type = Kernel.File.Stats.Kind.Device.self
+        let _: ISO_9945.Kernel.File.Stats.Kind.Device.Type = ISO_9945.Kernel.File.Stats.Kind.Device.self
     }
 
     @Test
     func `Link type exists`() {
-        let _: Kernel.File.Stats.Kind.Link.Type = Kernel.File.Stats.Kind.Link.self
+        let _: ISO_9945.Kernel.File.Stats.Kind.Link.Type = ISO_9945.Kernel.File.Stats.Kind.Link.self
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Stats.Kind.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
     func `Kind is Sendable`() {
-        let kind: any Sendable = Kernel.File.Stats.Kind.regular
-        #expect(kind is Kernel.File.Stats.Kind)
+        let kind: any Sendable = ISO_9945.Kernel.File.Stats.Kind.regular
+        #expect(kind is ISO_9945.Kernel.File.Stats.Kind)
     }
 
     @Test
     func `Kind is Equatable`() {
-        let a = Kernel.File.Stats.Kind.regular
-        let b = Kernel.File.Stats.Kind.regular
-        let c = Kernel.File.Stats.Kind.directory
+        let a = ISO_9945.Kernel.File.Stats.Kind.regular
+        let b = ISO_9945.Kernel.File.Stats.Kind.regular
+        let c = ISO_9945.Kernel.File.Stats.Kind.directory
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Kind is Hashable`() {
-        var set = Set<Kernel.File.Stats.Kind>()
+        var set = Set<ISO_9945.Kernel.File.Stats.Kind>()
         set.insert(.regular)
         set.insert(.directory)
         set.insert(.regular)  // duplicate
@@ -139,10 +140,10 @@ extension Kernel.File.Stats.Kind.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Stats.Kind.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Kind.Test.EdgeCase {
     @Test
     func `all simple cases are distinct`() {
-        let cases: [Kernel.File.Stats.Kind] = [
+        let cases: [ISO_9945.Kernel.File.Stats.Kind] = [
             .regular,
             .directory,
             .fifo,
@@ -159,23 +160,23 @@ extension Kernel.File.Stats.Kind.Test.EdgeCase {
 
     @Test
     func `link cases with different types are distinct`() {
-        let symbolic = Kernel.File.Stats.Kind.link(.symbolic)
-        let junction = Kernel.File.Stats.Kind.link(.junction)
+        let symbolic = ISO_9945.Kernel.File.Stats.Kind.link(.symbolic)
+        let junction = ISO_9945.Kernel.File.Stats.Kind.link(.junction)
         #expect(symbolic != junction)
     }
 
     @Test
     func `device cases with different types are distinct`() {
-        let block = Kernel.File.Stats.Kind.device(.block)
-        let character = Kernel.File.Stats.Kind.device(.character)
+        let block = ISO_9945.Kernel.File.Stats.Kind.device(.block)
+        let character = ISO_9945.Kernel.File.Stats.Kind.device(.character)
         #expect(block != character)
     }
 
     @Test
     func `link and device are distinct from simple cases`() {
-        let link = Kernel.File.Stats.Kind.link(.symbolic)
-        let device = Kernel.File.Stats.Kind.device(.block)
-        let regular = Kernel.File.Stats.Kind.regular
+        let link = ISO_9945.Kernel.File.Stats.Kind.link(.symbolic)
+        let device = ISO_9945.Kernel.File.Stats.Kind.device(.block)
+        let regular = ISO_9945.Kernel.File.Stats.Kind.regular
 
         #expect(link != regular)
         #expect(device != regular)

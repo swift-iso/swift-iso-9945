@@ -19,7 +19,7 @@
     @testable import ISO_9945_Kernel
     import ISO_9945_Kernel
 
-    extension Kernel.Process.Execute {
+    extension ISO_9945.Kernel.Process.Execute {
         @Suite
         struct Test {
             @Suite struct Unit {}
@@ -35,7 +35,7 @@
     // lock corruption in multithreaded test environments. posix_spawn does NOT
     // duplicate the parent's address space, making it safe for concurrent tests.
 
-    extension Kernel.Process.Execute.Test.Integration {
+    extension ISO_9945.Kernel.Process.Execute.Test.Integration {
         /// Finds an executable "true" command, trying common paths.
         private static func findTruePath() -> Swift.String {
             for path in ["/usr/bin/true", "/bin/true"] {
@@ -60,7 +60,7 @@
                 )
             }
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result != nil, "Wait should return a result")
             #expect(result?.status.exit.code == 0, "true should exit with 0")
         }
@@ -71,10 +71,10 @@
             let argv = [path]
             let envp: [Swift.String] = []
 
-            func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>) -> Kernel.Process.ID {
+            func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>) -> ISO_9945.Kernel.Process.ID {
                 try Path.scope.array(argv, envp) {
                     (argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
-                     envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>) throws(ISO_9945.Kernel.Process.Error) -> Kernel.Process.ID in
+                     envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID in
                     // argv[0] is already the path, use it directly
                     try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                         path: argvPtr[0]!,
@@ -110,7 +110,7 @@
                 )
             }
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result?.status.exit.code == 42, "Shell should exit with code 42")
         }
 
@@ -130,7 +130,7 @@
                 )
             }
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result?.status.exit.code == 77, "Shell should exit with env value 77")
         }
     }

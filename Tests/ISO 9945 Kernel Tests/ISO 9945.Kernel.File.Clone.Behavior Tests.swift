@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Clone.Behavior {
+extension ISO_9945.Kernel.File.Clone.Behavior {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Clone.Behavior {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Clone.Behavior.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
     @Test
     func `reflinkOrFail case exists`() {
-        let behavior = Kernel.File.Clone.Behavior.reflinkOrFail
+        let behavior = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrFail
         if case .reflinkOrFail = behavior {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Clone.Behavior.Test.Unit {
 
     @Test
     func `reflinkOrCopy case exists`() {
-        let behavior = Kernel.File.Clone.Behavior.reflinkOrCopy
+        let behavior = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrCopy
         if case .reflinkOrCopy = behavior {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Clone.Behavior.Test.Unit {
 
     @Test
     func `copyOnly case exists`() {
-        let behavior = Kernel.File.Clone.Behavior.copyOnly
+        let behavior = ISO_9945.Kernel.File.Clone.Behavior.copyOnly
         if case .copyOnly = behavior {
             // Expected
         } else {
@@ -57,18 +58,18 @@ extension Kernel.File.Clone.Behavior.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Clone.Behavior.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
     @Test
     func `Behavior is Sendable`() {
-        let behavior: any Sendable = Kernel.File.Clone.Behavior.reflinkOrCopy
-        #expect(behavior is Kernel.File.Clone.Behavior)
+        let behavior: any Sendable = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrCopy
+        #expect(behavior is ISO_9945.Kernel.File.Clone.Behavior)
     }
 
     @Test
     func `Behavior is Equatable`() {
-        let a = Kernel.File.Clone.Behavior.reflinkOrCopy
-        let b = Kernel.File.Clone.Behavior.reflinkOrCopy
-        let c = Kernel.File.Clone.Behavior.copyOnly
+        let a = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrCopy
+        let b = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrCopy
+        let c = ISO_9945.Kernel.File.Clone.Behavior.copyOnly
         #expect(a == b)
         #expect(a != c)
     }
@@ -76,10 +77,10 @@ extension Kernel.File.Clone.Behavior.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Clone.Behavior.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Behavior.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
-        let cases: [Kernel.File.Clone.Behavior] = [
+        let cases: [ISO_9945.Kernel.File.Clone.Behavior] = [
             .reflinkOrFail,
             .reflinkOrCopy,
             .copyOnly,

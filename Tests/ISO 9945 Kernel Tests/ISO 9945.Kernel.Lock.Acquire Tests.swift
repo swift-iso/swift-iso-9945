@@ -11,10 +11,11 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 import Clock_Primitives
 
 
-extension Kernel.Lock.Acquire {
+extension ISO_9945.Kernel.Lock.Acquire {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -24,10 +25,10 @@ extension Kernel.Lock.Acquire {
 
 // MARK: - Unit Tests
 
-extension Kernel.Lock.Acquire.Test.Unit {
+extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     @Test
     func `try case exists`() {
-        let acquire = Kernel.Lock.Acquire.try
+        let acquire = ISO_9945.Kernel.Lock.Acquire.try
         if case .try = acquire {
             // Expected
         } else {
@@ -37,7 +38,7 @@ extension Kernel.Lock.Acquire.Test.Unit {
 
     @Test
     func `wait case exists`() {
-        let acquire = Kernel.Lock.Acquire.wait
+        let acquire = ISO_9945.Kernel.Lock.Acquire.wait
         if case .wait = acquire {
             // Expected
         } else {
@@ -48,7 +49,7 @@ extension Kernel.Lock.Acquire.Test.Unit {
     @Test
     func `deadline case exists`() {
         let deadline = Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 5_000_000_000)
-        let acquire = Kernel.Lock.Acquire.deadline(deadline)
+        let acquire = ISO_9945.Kernel.Lock.Acquire.deadline(deadline)
         if case .deadline(let d) = acquire {
             #expect(d == deadline)
         } else {
@@ -59,51 +60,51 @@ extension Kernel.Lock.Acquire.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.Lock.Acquire.Test.Unit {
+extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     @Test
     func `Acquire is Sendable`() {
-        let acquire: any Sendable = Kernel.Lock.Acquire.wait
-        #expect(acquire is Kernel.Lock.Acquire)
+        let acquire: any Sendable = ISO_9945.Kernel.Lock.Acquire.wait
+        #expect(acquire is ISO_9945.Kernel.Lock.Acquire)
     }
 
     @Test
     func `Acquire is Equatable`() {
-        let a = Kernel.Lock.Acquire.wait
-        let b = Kernel.Lock.Acquire.wait
-        let c = Kernel.Lock.Acquire.try
+        let a = ISO_9945.Kernel.Lock.Acquire.wait
+        let b = ISO_9945.Kernel.Lock.Acquire.wait
+        let c = ISO_9945.Kernel.Lock.Acquire.try
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `try and wait are distinct`() {
-        let tryAcquire = Kernel.Lock.Acquire.try
-        let waitAcquire = Kernel.Lock.Acquire.wait
+        let tryAcquire = ISO_9945.Kernel.Lock.Acquire.try
+        let waitAcquire = ISO_9945.Kernel.Lock.Acquire.wait
         #expect(tryAcquire != waitAcquire)
     }
 
     @Test
     func `deadlines with same instant are equal`() {
         let instant = Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 10_000_000_000)
-        let a = Kernel.Lock.Acquire.deadline(instant)
-        let b = Kernel.Lock.Acquire.deadline(instant)
+        let a = ISO_9945.Kernel.Lock.Acquire.deadline(instant)
+        let b = ISO_9945.Kernel.Lock.Acquire.deadline(instant)
         #expect(a == b)
     }
 
     @Test
     func `deadlines with different instants are distinct`() {
-        let a = Kernel.Lock.Acquire.deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 1_000_000_000))
-        let b = Kernel.Lock.Acquire.deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 2_000_000_000))
+        let a = ISO_9945.Kernel.Lock.Acquire.deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 1_000_000_000))
+        let b = ISO_9945.Kernel.Lock.Acquire.deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 2_000_000_000))
         #expect(a != b)
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.Lock.Acquire.Test.EdgeCase {
+extension ISO_9945.Kernel.Lock.Acquire.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
-        let cases: [Kernel.Lock.Acquire] = [
+        let cases: [ISO_9945.Kernel.Lock.Acquire] = [
             .try,
             .wait,
             .deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 42)),
@@ -119,7 +120,7 @@ extension Kernel.Lock.Acquire.Test.EdgeCase {
     @Test
     func `deadline in the past`() {
         let pastInstant = Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 0)
-        let acquire = Kernel.Lock.Acquire.deadline(pastInstant)
+        let acquire = ISO_9945.Kernel.Lock.Acquire.deadline(pastInstant)
         if case .deadline(let deadline) = acquire {
             #expect(deadline == pastInstant)
         } else {

@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File {
+extension ISO_9945.Kernel.File {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Test.Unit {
+extension ISO_9945.Kernel.File.Test.Unit {
     @Test
     func `File namespace exists`() {
-        // Kernel.File is an enum namespace, verify it compiles
-        _ = Kernel.File.self
+        // ISO_9945.Kernel.File is an enum namespace, verify it compiles
+        _ = ISO_9945.Kernel.File.self
     }
 }

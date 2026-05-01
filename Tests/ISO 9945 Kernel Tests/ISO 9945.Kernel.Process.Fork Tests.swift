@@ -17,7 +17,7 @@ import Testing
     import Error_Primitives
     @testable import ISO_9945_Kernel
 
-    extension Kernel.Process.Fork {
+    extension ISO_9945.Kernel.Process.Fork {
         @Suite
         struct Test {
             @Suite struct Unit {}
@@ -29,32 +29,32 @@ import Testing
 
     // MARK: - Unit Tests
 
-    extension Kernel.Process.Fork.Test.Unit {
+    extension ISO_9945.Kernel.Process.Fork.Test.Unit {
         @Test
         func `Result.child is distinct from Result.parent`() {
-            let child = Kernel.Process.Fork.Result.child
-            let parent = Kernel.Process.Fork.Result.parent(child: Kernel.Process.ID(123))
+            let child = ISO_9945.Kernel.Process.Fork.Result.child
+            let parent = ISO_9945.Kernel.Process.Fork.Result.parent(child: ISO_9945.Kernel.Process.ID(123))
 
             #expect(child != parent)
         }
 
         @Test
         func `Result is Sendable`() {
-            let result: any Sendable = Kernel.Process.Fork.Result.child
-            #expect(result is Kernel.Process.Fork.Result)
+            let result: any Sendable = ISO_9945.Kernel.Process.Fork.Result.child
+            #expect(result is ISO_9945.Kernel.Process.Fork.Result)
         }
 
         @Test
         func `Result is Equatable`() {
-            let pid = Kernel.Process.ID(42)
-            #expect(Kernel.Process.Fork.Result.child == Kernel.Process.Fork.Result.child)
+            let pid = ISO_9945.Kernel.Process.ID(42)
+            #expect(ISO_9945.Kernel.Process.Fork.Result.child == ISO_9945.Kernel.Process.Fork.Result.child)
             #expect(
-                Kernel.Process.Fork.Result.parent(child: pid)
-                    == Kernel.Process.Fork.Result.parent(child: pid)
+                ISO_9945.Kernel.Process.Fork.Result.parent(child: pid)
+                    == ISO_9945.Kernel.Process.Fork.Result.parent(child: pid)
             )
             #expect(
-                Kernel.Process.Fork.Result.parent(child: pid)
-                    != Kernel.Process.Fork.Result.parent(child: Kernel.Process.ID(99))
+                ISO_9945.Kernel.Process.Fork.Result.parent(child: pid)
+                    != ISO_9945.Kernel.Process.Fork.Result.parent(child: ISO_9945.Kernel.Process.ID(99))
             )
         }
     }
@@ -64,14 +64,14 @@ import Testing
     // NOTE: These tests use posix_spawn via POSIXTestHelper instead of fork() directly
     // to avoid Swift runtime lock corruption in multithreaded test environments.
 
-    extension Kernel.Process.Fork.Test.Integration {
+    extension ISO_9945.Kernel.Process.Fork.Test.Integration {
         @Test
         func `spawned child process can exit with code`() throws {
             // Spawn helper that exits with code 42
             let child = try POSIXTestHelper.spawn("exit", "42")
 
             // Wait for child and verify exit code
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result != nil)
             #expect(result?.pid == child)
             #expect(result?.status.exited == true)
@@ -87,7 +87,7 @@ import Testing
             #expect(child.rawValue > 0)
 
             // Clean up
-            _ = try? Kernel.Process.Wait.wait(.process(child))
+            _ = try? ISO_9945.Kernel.Process.Wait.wait(.process(child))
         }
 
         @Test
@@ -95,7 +95,7 @@ import Testing
             // Spawn helper that exits with code 0
             let child = try POSIXTestHelper.spawn("exit", "0")
 
-            let result = try Kernel.Process.Wait.wait(.process(child))
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result?.pid == child)
         }
     }

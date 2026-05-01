@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.IO.Blocking {
+extension ISO_9945.Kernel.IO.Blocking {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,29 +24,29 @@ extension Kernel.IO.Blocking {
 
 // MARK: - Unit Tests
 
-extension Kernel.IO.Blocking.Test.Unit {
+extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
     @Test
     func `Blocking namespace exists`() {
-        // Kernel.IO.Blocking is a public enum namespace
-        _ = Kernel.IO.Blocking.self
+        // ISO_9945.Kernel.IO.Blocking is a public enum namespace
+        _ = ISO_9945.Kernel.IO.Blocking.self
     }
 
     @Test
     func `Blocking is an enum`() {
-        let _: Kernel.IO.Blocking.Type = Kernel.IO.Blocking.self
+        let _: ISO_9945.Kernel.IO.Blocking.Type = ISO_9945.Kernel.IO.Blocking.self
     }
 
     @Test
     func `Blocking is Sendable`() {
-        let _: any Sendable.Type = Kernel.IO.Blocking.self
+        let _: any Sendable.Type = ISO_9945.Kernel.IO.Blocking.self
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.IO.Blocking.Test.Unit {
+extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
     @Test
     func `Blocking.Error type exists`() {
-        let _: Kernel.IO.Blocking.Error.Type = Kernel.IO.Blocking.Error.self
+        let _: ISO_9945.Kernel.IO.Blocking.Error.Type = ISO_9945.Kernel.IO.Blocking.Error.self
     }
 }

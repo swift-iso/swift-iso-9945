@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Handle.Error {
+extension ISO_9945.Kernel.File.Handle.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Handle.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Handle.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `invalidHandle case exists`() {
-        let error = Kernel.File.Handle.Error.invalidHandle
+        let error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
         if case .invalidHandle = error {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `endOfFile case exists`() {
-        let error = Kernel.File.Handle.Error.endOfFile
+        let error = ISO_9945.Kernel.File.Handle.Error.endOfFile
         if case .endOfFile = error {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `noSpace case exists`() {
-        let error = Kernel.File.Handle.Error.noSpace
+        let error = ISO_9945.Kernel.File.Handle.Error.noSpace
         if case .noSpace = error {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `misalignedBuffer case stores address and alignment`() {
-        let error = Kernel.File.Handle.Error.misalignedBuffer(address: 0x1234, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 0x1234, required: .`512`)
         if case .misalignedBuffer(let addr, let req) = error {
             #expect(addr == 0x1234)
             #expect(req == .`512`)
@@ -67,7 +68,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `misalignedOffset case stores offset and alignment`() {
-        let error = Kernel.File.Handle.Error.misalignedOffset(offset: 1000, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedOffset(offset: 1000, required: .`512`)
         if case .misalignedOffset(let off, let req) = error {
             #expect(off == 1000)
             #expect(req == .`512`)
@@ -78,7 +79,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `invalidLength case stores length and required multiple`() {
-        let error = Kernel.File.Handle.Error.invalidLength(length: 100, requiredMultiple: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.invalidLength(length: 100, requiredMultiple: .`512`)
         if case .invalidLength(let len, let req) = error {
             #expect(len == 100)
             #expect(req == .`512`)
@@ -89,7 +90,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `requirementsUnknown case exists`() {
-        let error = Kernel.File.Handle.Error.requirementsUnknown
+        let error = ISO_9945.Kernel.File.Handle.Error.requirementsUnknown
         if case .requirementsUnknown = error {
             // Expected
         } else {
@@ -99,7 +100,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `alignmentViolation case stores operation`() {
-        let error = Kernel.File.Handle.Error.alignmentViolation(operation: .read)
+        let error = ISO_9945.Kernel.File.Handle.Error.alignmentViolation(operation: .read)
         if case .alignmentViolation(let op) = error {
             #expect(op == .read)
         } else {
@@ -110,7 +111,7 @@ extension Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `platform case stores code and operation`() {
         let code = Error_Primitives.Error.Code.posix(22)
-        let error = Kernel.File.Handle.Error.platform(code: code, operation: .write)
+        let error = ISO_9945.Kernel.File.Handle.Error.platform(code: code, operation: .write)
         if case .platform(let storedCode, let op) = error {
             #expect(storedCode == code)
             #expect(op == .write)
@@ -122,82 +123,82 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.File.Handle.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `invalidHandle description`() {
-        #expect(Kernel.File.Handle.Error.invalidHandle.description == "Invalid file handle")
+        #expect(ISO_9945.Kernel.File.Handle.Error.invalidHandle.description == "Invalid file handle")
     }
 
     @Test
     func `endOfFile description`() {
-        #expect(Kernel.File.Handle.Error.endOfFile.description == "End of file")
+        #expect(ISO_9945.Kernel.File.Handle.Error.endOfFile.description == "End of file")
     }
 
     @Test
     func `noSpace description`() {
-        #expect(Kernel.File.Handle.Error.noSpace.description == "No space left on device")
+        #expect(ISO_9945.Kernel.File.Handle.Error.noSpace.description == "No space left on device")
     }
 
     @Test
     func `misalignedBuffer description contains address`() {
-        let error = Kernel.File.Handle.Error.misalignedBuffer(address: 0x1234, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 0x1234, required: .`512`)
         #expect(error.description.contains("Buffer address"))
         #expect(error.description.contains("not aligned"))
     }
 
     @Test
     func `misalignedOffset description contains offset`() {
-        let error = Kernel.File.Handle.Error.misalignedOffset(offset: 1000, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedOffset(offset: 1000, required: .`512`)
         #expect(error.description.contains("File offset"))
         #expect(error.description.contains("1000"))
     }
 
     @Test
     func `invalidLength description contains length`() {
-        let error = Kernel.File.Handle.Error.invalidLength(length: 100, requiredMultiple: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.invalidLength(length: 100, requiredMultiple: .`512`)
         #expect(error.description.contains("Length"))
         #expect(error.description.contains("100"))
     }
 
     @Test
     func `requirementsUnknown description`() {
-        #expect(Kernel.File.Handle.Error.requirementsUnknown.description == "Direct I/O requirements unknown")
+        #expect(ISO_9945.Kernel.File.Handle.Error.requirementsUnknown.description == "Direct I/O requirements unknown")
     }
 
     @Test
     func `alignmentViolation description contains operation`() {
-        let error = Kernel.File.Handle.Error.alignmentViolation(operation: .read)
+        let error = ISO_9945.Kernel.File.Handle.Error.alignmentViolation(operation: .read)
         #expect(error.description.contains("Alignment violation"))
         #expect(error.description.contains("read"))
     }
 
     @Test
     func `platform description contains operation`() {
-        let error = Kernel.File.Handle.Error.platform(code: .posix(22), operation: .write)
+        let error = ISO_9945.Kernel.File.Handle.Error.platform(code: .posix(22), operation: .write)
         #expect(error.description.contains("write"))
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Handle.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.File.Handle.Error.invalidHandle
-        #expect(error is Kernel.File.Handle.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
+        #expect(error is ISO_9945.Kernel.File.Handle.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let error: any Sendable = Kernel.File.Handle.Error.invalidHandle
-        #expect(error is Kernel.File.Handle.Error)
+        let error: any Sendable = ISO_9945.Kernel.File.Handle.Error.invalidHandle
+        #expect(error is ISO_9945.Kernel.File.Handle.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = Kernel.File.Handle.Error.invalidHandle
-        let b = Kernel.File.Handle.Error.invalidHandle
-        let c = Kernel.File.Handle.Error.endOfFile
+        let a = ISO_9945.Kernel.File.Handle.Error.invalidHandle
+        let b = ISO_9945.Kernel.File.Handle.Error.invalidHandle
+        let c = ISO_9945.Kernel.File.Handle.Error.endOfFile
         #expect(a == b)
         #expect(a != c)
     }
@@ -205,38 +206,38 @@ extension Kernel.File.Handle.Error.Test.Unit {
 
 // MARK: - Operation Enum Tests
 
-extension Kernel.File.Handle.Error.Test.Unit {
+extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `Operation read case`() {
-        let op = Kernel.File.Handle.Operation.read
+        let op = ISO_9945.Kernel.File.Handle.Operation.read
         #expect(op.rawValue == "read")
     }
 
     @Test
     func `Operation write case`() {
-        let op = Kernel.File.Handle.Operation.write
+        let op = ISO_9945.Kernel.File.Handle.Operation.write
         #expect(op.rawValue == "write")
     }
 
     @Test
     func `Operation seek case`() {
-        let op = Kernel.File.Handle.Operation.seek
+        let op = ISO_9945.Kernel.File.Handle.Operation.seek
         #expect(op.rawValue == "seek")
     }
 
     @Test
     func `Operation sync case`() {
-        let op = Kernel.File.Handle.Operation.sync
+        let op = ISO_9945.Kernel.File.Handle.Operation.sync
         #expect(op.rawValue == "sync")
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Handle.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Handle.Error.Test.EdgeCase {
     @Test
     func `simple cases are distinct`() {
-        let cases: [Kernel.File.Handle.Error] = [
+        let cases: [ISO_9945.Kernel.File.Handle.Error] = [
             .invalidHandle,
             .endOfFile,
             .noSpace,
@@ -252,24 +253,24 @@ extension Kernel.File.Handle.Error.Test.EdgeCase {
 
     @Test
     func `different operations are distinct in alignmentViolation`() {
-        let read = Kernel.File.Handle.Error.alignmentViolation(operation: .read)
-        let write = Kernel.File.Handle.Error.alignmentViolation(operation: .write)
-        let seek = Kernel.File.Handle.Error.alignmentViolation(operation: .seek)
+        let read = ISO_9945.Kernel.File.Handle.Error.alignmentViolation(operation: .read)
+        let write = ISO_9945.Kernel.File.Handle.Error.alignmentViolation(operation: .write)
+        let seek = ISO_9945.Kernel.File.Handle.Error.alignmentViolation(operation: .seek)
         #expect(read != write)
         #expect(write != seek)
     }
 
     @Test
     func `different addresses in misalignedBuffer are distinct`() {
-        let a = Kernel.File.Handle.Error.misalignedBuffer(address: 100, required: .`512`)
-        let b = Kernel.File.Handle.Error.misalignedBuffer(address: 200, required: .`512`)
+        let a = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 100, required: .`512`)
+        let b = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 200, required: .`512`)
         #expect(a != b)
     }
 
     @Test
     func `different alignments in misalignedBuffer are distinct`() {
-        let a = Kernel.File.Handle.Error.misalignedBuffer(address: 100, required: .`512`)
-        let b = Kernel.File.Handle.Error.misalignedBuffer(address: 100, required: .`4096`)
+        let a = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 100, required: .`512`)
+        let b = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 100, required: .`4096`)
         #expect(a != b)
     }
 }

@@ -18,7 +18,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Socket.Backlog {
+extension ISO_9945.Kernel.Socket.Backlog {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -28,81 +28,81 @@ extension Kernel.Socket.Backlog {
 
 // MARK: - Unit Tests
 
-extension Kernel.Socket.Backlog.Test.Unit {
+extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
     func `Backlog type exists`() {
-        let _: Kernel.Socket.Backlog.Type = Kernel.Socket.Backlog.self
+        let _: ISO_9945.Kernel.Socket.Backlog.Type = ISO_9945.Kernel.Socket.Backlog.self
     }
 
     @Test
     func `Backlog from rawValue`() {
-        let backlog = Kernel.Socket.Backlog(rawValue: 64)
+        let backlog = ISO_9945.Kernel.Socket.Backlog(rawValue: 64)
         #expect(backlog.rawValue == 64)
     }
 
     @Test
     func `Backlog from Int32`() {
-        let backlog = Kernel.Socket.Backlog(256)
+        let backlog = ISO_9945.Kernel.Socket.Backlog(256)
         #expect(backlog.rawValue == 256)
     }
 }
 
 // MARK: - Constants Tests
 
-extension Kernel.Socket.Backlog.Test.Unit {
+extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
     func `Backlog.default is 128`() {
-        #expect(Kernel.Socket.Backlog.default.rawValue == 128)
+        #expect(ISO_9945.Kernel.Socket.Backlog.default.rawValue == 128)
     }
 
     @Test
     func `Backlog.small is 16`() {
-        #expect(Kernel.Socket.Backlog.small.rawValue == 16)
+        #expect(ISO_9945.Kernel.Socket.Backlog.small.rawValue == 16)
     }
 
     @Test
     func `Backlog.large is 4096`() {
-        #expect(Kernel.Socket.Backlog.large.rawValue == 4096)
+        #expect(ISO_9945.Kernel.Socket.Backlog.large.rawValue == 4096)
     }
 
         @Test
         func `Backlog.max uses SOMAXCONN`() {
-            let max = Kernel.Socket.Backlog.max
+            let max = ISO_9945.Kernel.Socket.Backlog.max
             #expect(max.rawValue > 0)
         }
 }
 
 // MARK: - ExpressibleByIntegerLiteral Tests
 
-extension Kernel.Socket.Backlog.Test.Unit {
+extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
     func `Backlog from integer literal`() {
-        let backlog: Kernel.Socket.Backlog = 512
+        let backlog: ISO_9945.Kernel.Socket.Backlog = 512
         #expect(backlog.rawValue == 512)
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.Socket.Backlog.Test.Unit {
+extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
     func `Backlog is Sendable`() {
-        let value: any Sendable = Kernel.Socket.Backlog.default
-        #expect(value is Kernel.Socket.Backlog)
+        let value: any Sendable = ISO_9945.Kernel.Socket.Backlog.default
+        #expect(value is ISO_9945.Kernel.Socket.Backlog)
     }
 
     @Test
     func `Backlog is Equatable`() {
-        let a = Kernel.Socket.Backlog(128)
-        let b = Kernel.Socket.Backlog(128)
-        let c = Kernel.Socket.Backlog(256)
+        let a = ISO_9945.Kernel.Socket.Backlog(128)
+        let b = ISO_9945.Kernel.Socket.Backlog(128)
+        let c = ISO_9945.Kernel.Socket.Backlog(256)
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Backlog is Hashable`() {
-        var set = Set<Kernel.Socket.Backlog>()
+        var set = Set<ISO_9945.Kernel.Socket.Backlog>()
         set.insert(.default)
         set.insert(.small)
         set.insert(.default)  // duplicate
@@ -112,33 +112,33 @@ extension Kernel.Socket.Backlog.Test.Unit {
 
 // MARK: - CustomStringConvertible Tests
 
-extension Kernel.Socket.Backlog.Test.Unit {
+extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
     func `Backlog description shows raw value`() {
-        let backlog = Kernel.Socket.Backlog(100)
+        let backlog = ISO_9945.Kernel.Socket.Backlog(100)
         #expect(backlog.description == "100")
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.Socket.Backlog.Test.EdgeCase {
+extension ISO_9945.Kernel.Socket.Backlog.Test.EdgeCase {
     @Test
     func `Backlog zero`() {
-        let backlog = Kernel.Socket.Backlog(0)
+        let backlog = ISO_9945.Kernel.Socket.Backlog(0)
         #expect(backlog.rawValue == 0)
     }
 
     @Test
     func `Backlog negative`() {
-        let backlog = Kernel.Socket.Backlog(-1)
+        let backlog = ISO_9945.Kernel.Socket.Backlog(-1)
         #expect(backlog.rawValue == -1)
     }
 
     @Test
     func `Backlog rawValue roundtrip`() {
         for value: Int32 in [0, 1, 16, 128, 4096, Int32.max] {
-            let backlog = Kernel.Socket.Backlog(rawValue: value)
+            let backlog = ISO_9945.Kernel.Socket.Backlog(rawValue: value)
             #expect(backlog.rawValue == value)
         }
     }

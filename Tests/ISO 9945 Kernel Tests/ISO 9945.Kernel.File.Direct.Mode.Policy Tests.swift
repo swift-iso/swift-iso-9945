@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Direct.Mode.Policy {
+extension ISO_9945.Kernel.File.Direct.Mode.Policy {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Direct.Mode.Policy {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Mode.Policy.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
     @Test
     func `fallbackToBuffered case exists`() {
-        let policy = Kernel.File.Direct.Mode.Policy.fallbackToBuffered
+        let policy = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered
         if case .fallbackToBuffered = policy {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Direct.Mode.Policy.Test.Unit {
 
     @Test
     func `errorOnViolation case exists`() {
-        let policy = Kernel.File.Direct.Mode.Policy.errorOnViolation
+        let policy = ISO_9945.Kernel.File.Direct.Mode.Policy.errorOnViolation
         if case .errorOnViolation = policy {
             // Expected
         } else {
@@ -47,18 +48,18 @@ extension Kernel.File.Direct.Mode.Policy.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Direct.Mode.Policy.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
     @Test
     func `Policy is Sendable`() {
-        let policy: any Sendable = Kernel.File.Direct.Mode.Policy.fallbackToBuffered
-        #expect(policy is Kernel.File.Direct.Mode.Policy)
+        let policy: any Sendable = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered
+        #expect(policy is ISO_9945.Kernel.File.Direct.Mode.Policy)
     }
 
     @Test
     func `Policy is Equatable`() {
-        let a = Kernel.File.Direct.Mode.Policy.fallbackToBuffered
-        let b = Kernel.File.Direct.Mode.Policy.fallbackToBuffered
-        let c = Kernel.File.Direct.Mode.Policy.errorOnViolation
+        let a = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered
+        let b = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered
+        let c = ISO_9945.Kernel.File.Direct.Mode.Policy.errorOnViolation
         #expect(a == b)
         #expect(a != c)
     }
@@ -66,11 +67,11 @@ extension Kernel.File.Direct.Mode.Policy.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Direct.Mode.Policy.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.EdgeCase {
     @Test
     func `all policies are distinct`() {
-        let fallback = Kernel.File.Direct.Mode.Policy.fallbackToBuffered
-        let error = Kernel.File.Direct.Mode.Policy.errorOnViolation
+        let fallback = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered
+        let error = ISO_9945.Kernel.File.Direct.Mode.Policy.errorOnViolation
         #expect(fallback != error)
     }
 }

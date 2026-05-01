@@ -18,7 +18,7 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.IO.Read {
+extension ISO_9945.Kernel.IO.Read {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -29,7 +29,7 @@ extension Kernel.IO.Read {
 // MARK: - Read Tests
 
 
-    extension Kernel.IO.Read.Test.Unit {
+    extension ISO_9945.Kernel.IO.Read.Test.Unit {
         @Test
         func `read returns bytes from file`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "read-test")
@@ -38,11 +38,11 @@ extension Kernel.IO.Read {
             KernelIOTest.write("Hello, World!", to: fd)
 
             // Seek to start
-            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
+            _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
             var buffer = [UInt8](repeating: 0, count: 13)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-                try Kernel.IO.Read.read(fd, into: ptr)
+                try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
             }
 
             #expect(bytesRead == 13)
@@ -57,15 +57,15 @@ extension Kernel.IO.Read {
             KernelIOTest.write("Hi", to: fd)
 
             // Seek to start and read all content
-            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
+            _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
             var buffer = [UInt8](repeating: 0, count: 10)
             _ = try buffer.withUnsafeMutableBytes { ptr in
-                try Kernel.IO.Read.read(fd, into: ptr)
+                try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
             }
 
             // Now at EOF, next read should return 0
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-                try Kernel.IO.Read.read(fd, into: ptr)
+                try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
             }
 
             #expect(bytesRead == 0)
@@ -79,7 +79,7 @@ extension Kernel.IO.Read {
             KernelIOTest.write("content", to: fd)
 
             let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
-            let bytesRead = try Kernel.IO.Read.read(fd, into: emptyBuffer)
+            let bytesRead = try ISO_9945.Kernel.IO.Read.read(fd, into: emptyBuffer)
 
             #expect(bytesRead == 0)
         }
@@ -91,12 +91,12 @@ extension Kernel.IO.Read {
             defer { KernelIOTest.cleanup(path: path) }
             KernelIOTest.write("Short", to: fd)
 
-            _ = try Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
+            _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
             // Request more bytes than available
             var buffer = [UInt8](repeating: 0, count: 100)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-                try Kernel.IO.Read.read(fd, into: ptr)
+                try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
             }
 
             #expect(bytesRead == 5)
@@ -111,19 +111,19 @@ extension Kernel.IO.Read {
             KernelIOTest.write("0123456789", to: fd)
 
             // Record initial position
-            let initialPos = try Kernel.File.Seek.tell(fd)
+            let initialPos = try ISO_9945.Kernel.File.Seek.tell(fd)
 
             // Read 3 bytes starting at offset 5
             var buffer = [UInt8](repeating: 0, count: 3)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-                try Kernel.IO.Read.pread(fd, into: ptr, at: Kernel.File.Offset(5))
+                try ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(5))
             }
 
             #expect(bytesRead == 3)
             #expect(Swift.String(decoding: buffer, as: UTF8.self) == "567")
 
             // Position should be unchanged
-            let finalPos = try Kernel.File.Seek.tell(fd)
+            let finalPos = try ISO_9945.Kernel.File.Seek.tell(fd)
             #expect(finalPos == initialPos)
         }
 
@@ -136,7 +136,7 @@ extension Kernel.IO.Read {
 
             var buffer = [UInt8](repeating: 0, count: 10)
             let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-                try Kernel.IO.Read.pread(fd, into: ptr, at: Kernel.File.Offset(100))
+                try ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(100))
             }
 
             #expect(bytesRead == 0)
@@ -150,7 +150,7 @@ extension Kernel.IO.Read {
             KernelIOTest.write("content", to: fd)
 
             let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
-            let bytesRead = try Kernel.IO.Read.pread(fd, into: emptyBuffer, at: Kernel.File.Offset(0))
+            let bytesRead = try ISO_9945.Kernel.IO.Read.pread(fd, into: emptyBuffer, at: ISO_9945.Kernel.File.Offset(0))
 
             #expect(bytesRead == 0)
         }
@@ -158,14 +158,14 @@ extension Kernel.IO.Read {
 
     // MARK: - Error Tests
 
-    extension Kernel.IO.Read.Test.EdgeCase {
+    extension ISO_9945.Kernel.IO.Read.Test.EdgeCase {
         @Test
         func `read throws on invalid descriptor`() {
             var buffer = [UInt8](repeating: 0, count: 10)
 
-            #expect(throws: Kernel.IO.Read.Error.self) {
+            #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
                 try buffer.withUnsafeMutableBytes { ptr in
-                    try Kernel.IO.Read.read(Kernel.Descriptor(_rawValue: -1), into: ptr)
+                    try ISO_9945.Kernel.IO.Read.read(ISO_9945.Kernel.Descriptor(_rawValue: -1), into: ptr)
                 }
             }
         }
@@ -174,9 +174,9 @@ extension Kernel.IO.Read {
         func `pread throws on invalid descriptor`() {
             var buffer = [UInt8](repeating: 0, count: 10)
 
-            #expect(throws: Kernel.IO.Read.Error.self) {
+            #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
                 try buffer.withUnsafeMutableBytes { ptr in
-                    try Kernel.IO.Read.pread(Kernel.Descriptor(_rawValue: -1), into: ptr, at: Kernel.File.Offset(0))
+                    try ISO_9945.Kernel.IO.Read.pread(ISO_9945.Kernel.Descriptor(_rawValue: -1), into: ptr, at: ISO_9945.Kernel.File.Offset(0))
                 }
             }
         }

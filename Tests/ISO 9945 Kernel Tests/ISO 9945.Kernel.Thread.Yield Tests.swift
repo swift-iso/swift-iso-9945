@@ -16,20 +16,20 @@ import Path_Primitives
 import Error_Primitives
 @testable import ISO_9945_Kernel
 
-@Suite("Kernel.Thread.Yield")
+@Suite("ISO_9945.Kernel.Thread.Yield")
 struct KernelThreadYieldTests {
 
     @Test
     func `yield completes without error`() {
         // Basic smoke test - yield should complete without crashing
-        Kernel.Thread.yield()
+        ISO_9945.Kernel.Thread.yield()
     }
 
     @Test
     func `yield can be called repeatedly`() {
         // Verify repeated yields don't cause issues
         for _ in 0..<100 {
-            Kernel.Thread.yield()
+            ISO_9945.Kernel.Thread.yield()
         }
     }
 
@@ -45,7 +45,7 @@ struct KernelThreadYieldTests {
             for _ in 0..<taskCount {
                 group.addTask {
                     for _ in 0..<iterations {
-                        Kernel.Thread.yield()
+                        ISO_9945.Kernel.Thread.yield()
                     }
                 }
             }
@@ -80,7 +80,7 @@ extension KernelThreadYieldTests {
                     let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                     for _ in 0..<ctx.iterations {
-                        Kernel.Thread.yield()
+                        ISO_9945.Kernel.Thread.yield()
                     }
 
                     return nil

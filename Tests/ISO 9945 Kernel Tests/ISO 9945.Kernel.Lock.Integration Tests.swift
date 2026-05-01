@@ -73,7 +73,7 @@ private enum LockTestHelper {
     ///   - filePath: Path to the file to lock.
     ///   - milliseconds: How long to hold the lock.
     /// - Returns: The process ID of the spawned helper.
-    static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> Kernel.Process.ID {
+    static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> ISO_9945.Kernel.Process.ID {
         let helperPath = executablePath()
         let allArgs = [helperPath, filePath, "\(milliseconds)"]
         let envp: [Swift.String] = []
@@ -94,7 +94,7 @@ private enum LockTestHelper {
     ///   - timeout: Maximum time to wait.
     /// - Returns: `true` if lock contention was detected, `false` if timed out.
     static func waitForContention(
-        on fd: borrowing Kernel.Descriptor,
+        on fd: borrowing ISO_9945.Kernel.Descriptor,
         timeout: Duration = .milliseconds(2000)
     ) -> Bool {
         let deadline = Clock.Continuous.now + timeout

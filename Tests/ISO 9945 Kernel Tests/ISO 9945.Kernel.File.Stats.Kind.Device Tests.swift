@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Stats.Kind.Device {
+extension ISO_9945.Kernel.File.Stats.Kind.Device {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Stats.Kind.Device {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Stats.Kind.Device.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     @Test
     func `block case exists`() {
-        let device = Kernel.File.Stats.Kind.Device.block
+        let device = ISO_9945.Kernel.File.Stats.Kind.Device.block
         if case .block = device {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Stats.Kind.Device.Test.Unit {
 
     @Test
     func `character case exists`() {
-        let device = Kernel.File.Stats.Kind.Device.character
+        let device = ISO_9945.Kernel.File.Stats.Kind.Device.character
         if case .character = device {
             // Expected
         } else {
@@ -47,25 +48,25 @@ extension Kernel.File.Stats.Kind.Device.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Stats.Kind.Device.Test.Unit {
+extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     @Test
     func `Device is Sendable`() {
-        let device: any Sendable = Kernel.File.Stats.Kind.Device.block
-        #expect(device is Kernel.File.Stats.Kind.Device)
+        let device: any Sendable = ISO_9945.Kernel.File.Stats.Kind.Device.block
+        #expect(device is ISO_9945.Kernel.File.Stats.Kind.Device)
     }
 
     @Test
     func `Device is Equatable`() {
-        let a = Kernel.File.Stats.Kind.Device.block
-        let b = Kernel.File.Stats.Kind.Device.block
-        let c = Kernel.File.Stats.Kind.Device.character
+        let a = ISO_9945.Kernel.File.Stats.Kind.Device.block
+        let b = ISO_9945.Kernel.File.Stats.Kind.Device.block
+        let c = ISO_9945.Kernel.File.Stats.Kind.Device.character
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Device is Hashable`() {
-        var set = Set<Kernel.File.Stats.Kind.Device>()
+        var set = Set<ISO_9945.Kernel.File.Stats.Kind.Device>()
         set.insert(.block)
         set.insert(.character)
         set.insert(.block)  // duplicate
@@ -75,11 +76,11 @@ extension Kernel.File.Stats.Kind.Device.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Stats.Kind.Device.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.EdgeCase {
     @Test
     func `block and character are distinct`() {
-        let block = Kernel.File.Stats.Kind.Device.block
-        let character = Kernel.File.Stats.Kind.Device.character
+        let block = ISO_9945.Kernel.File.Stats.Kind.Device.block
+        let character = ISO_9945.Kernel.File.Stats.Kind.Device.character
         #expect(block != character)
     }
 }

@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.System.Stats.Error {
+extension ISO_9945.Kernel.File.System.Stats.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.System.Stats.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.System.Stats.Error.Test.Unit {
+extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     @Test
     func `path case exists`() {
-        let error = Kernel.File.System.Stats.Error.path(.notFound)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.path(.notFound)
         if case .path = error {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.System.Stats.Error.Test.Unit {
 
     @Test
     func `handle case exists`() {
-        let error = Kernel.File.System.Stats.Error.handle(.invalid)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
         if case .handle = error {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.System.Stats.Error.Test.Unit {
 
     @Test
     func `permission case exists`() {
-        let error = Kernel.File.System.Stats.Error.permission(.denied)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.permission(.denied)
         if case .permission = error {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.System.Stats.Error.Test.Unit {
 
     @Test
     func `io case exists`() {
-        let error = Kernel.File.System.Stats.Error.io(.hardware)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
         if case .io = error {
             // Expected
         } else {
@@ -68,7 +69,7 @@ extension Kernel.File.System.Stats.Error.Test.Unit {
     func `platform case exists`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmapped = Error_Primitives.Error(code: code)
-        let error = Kernel.File.System.Stats.Error.platform(unmapped)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.platform(unmapped)
         if case .platform = error {
             // Expected
         } else {
@@ -79,72 +80,72 @@ extension Kernel.File.System.Stats.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.File.System.Stats.Error.Test.Unit {
+extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     @Test
     func `path description format`() {
-        let error = Kernel.File.System.Stats.Error.path(.notFound)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.path(.notFound)
         #expect(error.description.contains("path:"))
     }
 
     @Test
     func `handle description format`() {
-        let error = Kernel.File.System.Stats.Error.handle(.invalid)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
         #expect(error.description.contains("handle:"))
     }
 
     @Test
     func `permission description format`() {
-        let error = Kernel.File.System.Stats.Error.permission(.denied)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.permission(.denied)
         #expect(error.description.contains("permission:"))
     }
 
     @Test
     func `io description format`() {
-        let error = Kernel.File.System.Stats.Error.io(.hardware)
+        let error = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
         #expect(error.description.contains("io:"))
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.System.Stats.Error.Test.Unit {
+extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.File.System.Stats.Error.handle(.invalid)
-        #expect(error is Kernel.File.System.Stats.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
+        #expect(error is ISO_9945.Kernel.File.System.Stats.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let error: any Sendable = Kernel.File.System.Stats.Error.handle(.invalid)
-        #expect(error is Kernel.File.System.Stats.Error)
+        let error: any Sendable = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
+        #expect(error is ISO_9945.Kernel.File.System.Stats.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = Kernel.File.System.Stats.Error.handle(.invalid)
-        let b = Kernel.File.System.Stats.Error.handle(.invalid)
-        let c = Kernel.File.System.Stats.Error.io(.hardware)
+        let a = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
+        let b = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
+        let c = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Error is CustomStringConvertible`() {
-        let error: any CustomStringConvertible = Kernel.File.System.Stats.Error.handle(.invalid)
+        let error: any CustomStringConvertible = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
         #expect(!error.description.isEmpty)
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.File.System.Stats.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmapped = Error_Primitives.Error(code: code)
 
-        let cases: [Kernel.File.System.Stats.Error] = [
+        let cases: [ISO_9945.Kernel.File.System.Stats.Error] = [
             .path(.notFound),
             .handle(.invalid),
             .permission(.denied),
@@ -161,22 +162,22 @@ extension Kernel.File.System.Stats.Error.Test.EdgeCase {
 
     @Test
     func `different path errors are distinct`() {
-        let notFound = Kernel.File.System.Stats.Error.path(.notFound)
-        let tooLong = Kernel.File.System.Stats.Error.path(.nameTooLong)
+        let notFound = ISO_9945.Kernel.File.System.Stats.Error.path(.notFound)
+        let tooLong = ISO_9945.Kernel.File.System.Stats.Error.path(.nameTooLong)
         #expect(notFound != tooLong)
     }
 
     @Test
     func `different handle errors are distinct`() {
-        let invalid = Kernel.File.System.Stats.Error.handle(.invalid)
-        let processLimit = Kernel.File.System.Stats.Error.handle(.limit(.process))
+        let invalid = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
+        let processLimit = ISO_9945.Kernel.File.System.Stats.Error.handle(.limit(.process))
         #expect(invalid != processLimit)
     }
 
     @Test
     func `different io errors are distinct`() {
-        let hardware = Kernel.File.System.Stats.Error.io(.hardware)
-        let broken = Kernel.File.System.Stats.Error.io(.broken)
+        let hardware = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
+        let broken = ISO_9945.Kernel.File.System.Stats.Error.io(.broken)
         #expect(hardware != broken)
     }
 
@@ -185,7 +186,7 @@ extension Kernel.File.System.Stats.Error.Test.EdgeCase {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmapped = Error_Primitives.Error(code: code)
 
-        let cases: [Kernel.File.System.Stats.Error] = [
+        let cases: [ISO_9945.Kernel.File.System.Stats.Error] = [
             .path(.notFound),
             .handle(.invalid),
             .permission(.denied),

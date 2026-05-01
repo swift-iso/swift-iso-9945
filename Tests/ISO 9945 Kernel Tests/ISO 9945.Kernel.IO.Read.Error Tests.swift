@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.IO.Read.Error {
+extension ISO_9945.Kernel.IO.Read.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,11 +24,11 @@ extension Kernel.IO.Read.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.IO.Read.Error.Test.Unit {
+extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     @Test
     func `handle case stores Descriptor.Validity.Error`() {
-        let validityError = Kernel.Descriptor.Validity.Error.invalid
-        let error = Kernel.IO.Read.Error.handle(validityError)
+        let validityError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
+        let error = ISO_9945.Kernel.IO.Read.Error.handle(validityError)
         if case .handle(let stored) = error {
             #expect(stored == validityError)
         } else {
@@ -37,8 +38,8 @@ extension Kernel.IO.Read.Error.Test.Unit {
 
     @Test
     func `blocking case stores IO.Blocking.Error`() {
-        let blockingError = Kernel.IO.Blocking.Error.wouldBlock
-        let error = Kernel.IO.Read.Error.blocking(blockingError)
+        let blockingError = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
+        let error = ISO_9945.Kernel.IO.Read.Error.blocking(blockingError)
         if case .blocking(let stored) = error {
             #expect(stored == blockingError)
         } else {
@@ -48,8 +49,8 @@ extension Kernel.IO.Read.Error.Test.Unit {
 
     @Test
     func `io case stores IO.Error`() {
-        let ioError = Kernel.IO.Error.broken
-        let error = Kernel.IO.Read.Error.io(ioError)
+        let ioError = ISO_9945.Kernel.IO.Error.broken
+        let error = ISO_9945.Kernel.IO.Read.Error.io(ioError)
         if case .io(let stored) = error {
             #expect(stored == ioError)
         } else {
@@ -61,7 +62,7 @@ extension Kernel.IO.Read.Error.Test.Unit {
     func `platform case stores Error_Primitives.Error`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmappedError = Error_Primitives.Error(code: code)
-        let error = Kernel.IO.Read.Error.platform(unmappedError)
+        let error = ISO_9945.Kernel.IO.Read.Error.platform(unmappedError)
         if case .platform(let stored) = error {
             #expect(stored == unmappedError)
         } else {
@@ -72,22 +73,22 @@ extension Kernel.IO.Read.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.IO.Read.Error.Test.Unit {
+extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     @Test
     func `handle description format`() {
-        let error = Kernel.IO.Read.Error.handle(.invalid)
+        let error = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
         #expect(error.description.contains("handle:"))
     }
 
     @Test
     func `blocking description format`() {
-        let error = Kernel.IO.Read.Error.blocking(.wouldBlock)
+        let error = ISO_9945.Kernel.IO.Read.Error.blocking(.wouldBlock)
         #expect(error.description.contains("blocking:"))
     }
 
     @Test
     func `io description format`() {
-        let error = Kernel.IO.Read.Error.io(.broken)
+        let error = ISO_9945.Kernel.IO.Read.Error.io(.broken)
         #expect(error.description.contains("io:"))
     }
 
@@ -95,47 +96,47 @@ extension Kernel.IO.Read.Error.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.IO.Read.Error.Test.Unit {
+extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.IO.Read.Error.handle(.invalid)
-        #expect(error is Kernel.IO.Read.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
+        #expect(error is ISO_9945.Kernel.IO.Read.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let error: any Sendable = Kernel.IO.Read.Error.handle(.invalid)
-        #expect(error is Kernel.IO.Read.Error)
+        let error: any Sendable = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
+        #expect(error is ISO_9945.Kernel.IO.Read.Error)
     }
 
     @Test
     func `Error is Equatable - same case same value`() {
-        let a = Kernel.IO.Read.Error.io(.broken)
-        let b = Kernel.IO.Read.Error.io(.broken)
+        let a = ISO_9945.Kernel.IO.Read.Error.io(.broken)
+        let b = ISO_9945.Kernel.IO.Read.Error.io(.broken)
         #expect(a == b)
     }
 
     @Test
     func `Error is Equatable - same case different value`() {
-        let a = Kernel.IO.Read.Error.io(.broken)
-        let b = Kernel.IO.Read.Error.io(.reset)
+        let a = ISO_9945.Kernel.IO.Read.Error.io(.broken)
+        let b = ISO_9945.Kernel.IO.Read.Error.io(.reset)
         #expect(a != b)
     }
 
     @Test
     func `Error is Equatable - different cases`() {
-        let a = Kernel.IO.Read.Error.handle(.invalid)
-        let b = Kernel.IO.Read.Error.io(.broken)
+        let a = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
+        let b = ISO_9945.Kernel.IO.Read.Error.io(.broken)
         #expect(a != b)
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.IO.Read.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.IO.Read.Error.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
-        let cases: [Kernel.IO.Read.Error] = [
+        let cases: [ISO_9945.Kernel.IO.Read.Error] = [
             .handle(.invalid),
             .blocking(.wouldBlock),
             .io(.broken),

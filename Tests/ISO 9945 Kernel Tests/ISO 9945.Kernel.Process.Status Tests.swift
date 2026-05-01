@@ -16,7 +16,7 @@ import Testing
     import Error_Primitives
     @testable import ISO_9945_Kernel
 
-    extension Kernel.Process.Status {
+    extension ISO_9945.Kernel.Process.Status {
         @Suite
         struct Test {
             @Suite struct Unit {}
@@ -28,29 +28,29 @@ import Testing
 
     // MARK: - Unit Tests
 
-    extension Kernel.Process.Status.Test.Unit {
+    extension ISO_9945.Kernel.Process.Status.Test.Unit {
         @Test
         func `status is RawRepresentable`() {
-            let status = Kernel.Process.Status(rawValue: 0)
+            let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
             #expect(status.rawValue == 0)
         }
 
         @Test
         func `status is Sendable`() {
-            let status: any Sendable = Kernel.Process.Status(rawValue: 0)
-            #expect(status is Kernel.Process.Status)
+            let status: any Sendable = ISO_9945.Kernel.Process.Status(rawValue: 0)
+            #expect(status is ISO_9945.Kernel.Process.Status)
         }
 
         @Test
         func `status is Equatable`() {
-            #expect(Kernel.Process.Status(rawValue: 0) == Kernel.Process.Status(rawValue: 0))
-            #expect(Kernel.Process.Status(rawValue: 0) != Kernel.Process.Status(rawValue: 1))
+            #expect(ISO_9945.Kernel.Process.Status(rawValue: 0) == ISO_9945.Kernel.Process.Status(rawValue: 0))
+            #expect(ISO_9945.Kernel.Process.Status(rawValue: 0) != ISO_9945.Kernel.Process.Status(rawValue: 1))
         }
 
         @Test
         func `status is Hashable`() {
-            let status = Kernel.Process.Status(rawValue: 42)
-            var set = Set<Kernel.Process.Status>()
+            let status = ISO_9945.Kernel.Process.Status(rawValue: 42)
+            var set = Set<ISO_9945.Kernel.Process.Status>()
             set.insert(status)
             #expect(set.contains(status))
         }
@@ -58,43 +58,43 @@ import Testing
 
     // MARK: - Nest.Name Accessor Tests
 
-    extension Kernel.Process.Status.Test.Unit {
+    extension ISO_9945.Kernel.Process.Status.Test.Unit {
         @Test
         func `exit accessor returns Exit struct`() {
-            let status = Kernel.Process.Status(rawValue: 0)
+            let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
             let exit = status.exit
-            #expect(exit is Kernel.Process.Status.Exit)
+            #expect(exit is ISO_9945.Kernel.Process.Status.Exit)
         }
 
         @Test
         func `terminating accessor returns Terminating struct`() {
-            let status = Kernel.Process.Status(rawValue: 0)
+            let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
             let terminating = status.terminating
-            #expect(terminating is Kernel.Process.Status.Terminating)
+            #expect(terminating is ISO_9945.Kernel.Process.Status.Terminating)
         }
 
         @Test
         func `stop accessor returns Stop struct`() {
-            let status = Kernel.Process.Status(rawValue: 0)
+            let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
             let stop = status.stop
-            #expect(stop is Kernel.Process.Status.Stop)
+            #expect(stop is ISO_9945.Kernel.Process.Status.Stop)
         }
 
         @Test
         func `core accessor returns Core struct`() {
-            let status = Kernel.Process.Status(rawValue: 0)
+            let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
             let core = status.core
-            #expect(core is Kernel.Process.Status.Core)
+            #expect(core is ISO_9945.Kernel.Process.Status.Core)
         }
     }
 
     // MARK: - Classification Tests
 
-    extension Kernel.Process.Status.Test.Unit {
+    extension ISO_9945.Kernel.Process.Status.Test.Unit {
         @Test
         func `Classification cases are distinct`() {
-            let signal = Kernel.Signal.Number(rawValue: 9)  // SIGKILL
-            let cases: [Kernel.Process.Status.Classification] = [
+            let signal = ISO_9945.Kernel.Signal.Number(rawValue: 9)  // SIGKILL
+            let cases: [ISO_9945.Kernel.Process.Status.Classification] = [
                 .exited(code: 0),
                 .signaled(signal: signal, false),
                 .stopped(signal: signal),
@@ -113,27 +113,27 @@ import Testing
         @Test
         func `exited classifications with different codes are different`() {
             #expect(
-                Kernel.Process.Status.Classification.exited(code: 0)
-                    != Kernel.Process.Status.Classification.exited(code: 1)
+                ISO_9945.Kernel.Process.Status.Classification.exited(code: 0)
+                    != ISO_9945.Kernel.Process.Status.Classification.exited(code: 1)
             )
         }
 
         @Test
         func `signaled classifications with different signals are different`() {
-            let sig9 = Kernel.Signal.Number(rawValue: 9)
-            let sig15 = Kernel.Signal.Number(rawValue: 15)
+            let sig9 = ISO_9945.Kernel.Signal.Number(rawValue: 9)
+            let sig15 = ISO_9945.Kernel.Signal.Number(rawValue: 15)
             #expect(
-                Kernel.Process.Status.Classification.signaled(signal: sig9, false)
-                    != Kernel.Process.Status.Classification.signaled(signal: sig15, false)
+                ISO_9945.Kernel.Process.Status.Classification.signaled(signal: sig9, false)
+                    != ISO_9945.Kernel.Process.Status.Classification.signaled(signal: sig15, false)
             )
         }
 
         @Test
         func `signaled classifications with different core dump are different`() {
-            let sig = Kernel.Signal.Number(rawValue: 9)
+            let sig = ISO_9945.Kernel.Signal.Number(rawValue: 9)
             #expect(
-                Kernel.Process.Status.Classification.signaled(signal: sig, false)
-                    != Kernel.Process.Status.Classification.signaled(signal: sig, true)
+                ISO_9945.Kernel.Process.Status.Classification.signaled(signal: sig, false)
+                    != ISO_9945.Kernel.Process.Status.Classification.signaled(signal: sig, true)
             )
         }
     }

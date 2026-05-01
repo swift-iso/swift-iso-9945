@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.IO.Blocking.Error {
+extension ISO_9945.Kernel.IO.Blocking.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.IO.Blocking.Error {
 
 // MARK: - Unit Tests
 
-extension Kernel.IO.Blocking.Error.Test.Unit {
+extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
     func `wouldBlock case exists`() {
-        let error = Kernel.IO.Blocking.Error.wouldBlock
+        let error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
         if case .wouldBlock = error {
             // Expected
         } else {
@@ -37,39 +38,39 @@ extension Kernel.IO.Blocking.Error.Test.Unit {
 
 // MARK: - Description Tests
 
-extension Kernel.IO.Blocking.Error.Test.Unit {
+extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
     func `wouldBlock description`() {
-        let error = Kernel.IO.Blocking.Error.wouldBlock
+        let error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
         #expect(error.description == "operation would block")
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.IO.Blocking.Error.Test.Unit {
+extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = Kernel.IO.Blocking.Error.wouldBlock
-        #expect(error is Kernel.IO.Blocking.Error)
+        let error: any Swift.Error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
+        #expect(error is ISO_9945.Kernel.IO.Blocking.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let error: any Sendable = Kernel.IO.Blocking.Error.wouldBlock
-        #expect(error is Kernel.IO.Blocking.Error)
+        let error: any Sendable = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
+        #expect(error is ISO_9945.Kernel.IO.Blocking.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = Kernel.IO.Blocking.Error.wouldBlock
-        let b = Kernel.IO.Blocking.Error.wouldBlock
+        let a = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
+        let b = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
         #expect(a == b)
     }
 
     @Test
     func `Error is Hashable`() {
-        var set = Set<Kernel.IO.Blocking.Error>()
+        var set = Set<ISO_9945.Kernel.IO.Blocking.Error>()
         set.insert(.wouldBlock)
         set.insert(.wouldBlock)  // duplicate
         #expect(set.count == 1)

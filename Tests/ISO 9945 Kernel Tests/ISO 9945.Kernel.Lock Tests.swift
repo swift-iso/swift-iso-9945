@@ -19,7 +19,7 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.Lock {
+extension ISO_9945.Kernel.Lock {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -29,19 +29,19 @@ extension Kernel.Lock {
 
 // MARK: - Range Unit Tests
 
-extension Kernel.Lock.Test.Unit {
+extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `Range.file is equatable`() {
-        let r1 = Kernel.Lock.Range.file
-        let r2 = Kernel.Lock.Range.file
+        let r1 = ISO_9945.Kernel.Lock.Range.file
+        let r2 = ISO_9945.Kernel.Lock.Range.file
         #expect(r1 == r2)
     }
 
     @Test
     func `Range.bytes is equatable`() {
-        let r1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(110))
-        let r2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(110))
-        let r3 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(20), end: Kernel.File.Offset(120))
+        let r1 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(110))
+        let r2 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(110))
+        let r3 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(20), end: ISO_9945.Kernel.File.Offset(120))
 
         #expect(r1 == r2)
         #expect(r1 != r3)
@@ -49,26 +49,26 @@ extension Kernel.Lock.Test.Unit {
 
     @Test
     func `Range.file and Range.bytes are not equal`() {
-        let file = Kernel.Lock.Range.file
-        let bytes = Kernel.Lock.Range.bytes(start: .zero, end: .zero)
+        let file = ISO_9945.Kernel.Lock.Range.file
+        let bytes = ISO_9945.Kernel.Lock.Range.bytes(start: .zero, end: .zero)
 
         #expect(file != bytes)
     }
 
     @Test
     func `Range.bytes with length convenience`() {
-        let range = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(100), length: Kernel.File.Size(100))
-        #expect(range == .bytes(start: Kernel.File.Offset(100), end: Kernel.File.Offset(200)))
+        let range = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(100), length: ISO_9945.Kernel.File.Size(100))
+        #expect(range == .bytes(start: ISO_9945.Kernel.File.Offset(100), end: ISO_9945.Kernel.File.Offset(200)))
     }
 }
 
 // MARK: - Kind Unit Tests
 
-extension Kernel.Lock.Test.Unit {
+extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `Kind.shared and Kind.exclusive`() {
-        let shared = Kernel.Lock.Kind.shared
-        let exclusive = Kernel.Lock.Kind.exclusive
+        let shared = ISO_9945.Kernel.Lock.Kind.shared
+        let exclusive = ISO_9945.Kernel.Lock.Kind.exclusive
 
         #expect(shared != exclusive)
         #expect(shared == .shared)
@@ -78,23 +78,23 @@ extension Kernel.Lock.Test.Unit {
 
 // MARK: - Acquire Unit Tests
 
-extension Kernel.Lock.Test.Unit {
+extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `Acquire.try case`() {
-        let acquire = Kernel.Lock.Acquire.try
+        let acquire = ISO_9945.Kernel.Lock.Acquire.try
         #expect(acquire == .try)
     }
 
     @Test
     func `Acquire.wait case`() {
-        let acquire = Kernel.Lock.Acquire.wait
+        let acquire = ISO_9945.Kernel.Lock.Acquire.wait
         #expect(acquire == .wait)
     }
 
     @Test
     func `Acquire.deadline case`() {
         let deadline = Clock.Continuous.now
-        let acquire = Kernel.Lock.Acquire.deadline(deadline)
+        let acquire = ISO_9945.Kernel.Lock.Acquire.deadline(deadline)
 
         if case .deadline(let d) = acquire {
             #expect(d == deadline)
@@ -105,28 +105,28 @@ extension Kernel.Lock.Test.Unit {
 
     @Test
     func `Acquire is equatable`() {
-        #expect(Kernel.Lock.Acquire.try == .try)
-        #expect(Kernel.Lock.Acquire.wait == .wait)
-        #expect(Kernel.Lock.Acquire.try != .wait)
+        #expect(ISO_9945.Kernel.Lock.Acquire.try == .try)
+        #expect(ISO_9945.Kernel.Lock.Acquire.wait == .wait)
+        #expect(ISO_9945.Kernel.Lock.Acquire.try != .wait)
     }
 }
 
 // MARK: - Hashable Tests
 
-extension Kernel.Lock.Test.Unit {
+extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `Range is hashable`() {
-        var set = Set<Kernel.Lock.Range>()
+        var set = Set<ISO_9945.Kernel.Lock.Range>()
         set.insert(.file)
-        set.insert(.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(30)))
-        set.insert(.bytes(start: Kernel.File.Offset(10), end: Kernel.File.Offset(30)))  // Duplicate
+        set.insert(.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30)))
+        set.insert(.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30)))  // Duplicate
 
         #expect(set.count == 2)
     }
 
     @Test
     func `Kind is hashable`() {
-        var set = Set<Kernel.Lock.Kind>()
+        var set = Set<ISO_9945.Kernel.Lock.Kind>()
         set.insert(.shared)
         set.insert(.exclusive)
         set.insert(.shared)  // Duplicate
@@ -140,18 +140,18 @@ extension Kernel.Lock.Test.Unit {
 // NOTE: These tests verify API correctness (no crashes, correct return values).
 // POSIX fcntl locks are per-process, not per-thread, so same-process tests
 // cannot verify contention semantics. Cross-process contention is tested in
-// Kernel Tests/Kernel.Lock.Integration Tests.swift using the _Lock Test Process helper.
+// Kernel Tests/ISO_9945.Kernel.Lock.Integration Tests.swift using the _Lock Test Process helper.
 
 
-    extension Kernel.Lock.Test.Unit {
+    extension ISO_9945.Kernel.Lock.Test.Unit {
         @Test
         func `lock and unlock on file succeeds`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-test")
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            try Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
+            try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
         }
 
         @Test
@@ -160,8 +160,8 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            try Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
-            try Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
+            try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
         }
 
         @Test
@@ -174,14 +174,14 @@ extension Kernel.Lock.Test.Unit {
             defer { KernelIOTest.cleanup(path: path) }
 
             let fd2 = try Path.scope(path) { p in
-                try Kernel.File.Open.open(path: p, mode: .readWrite, options: [], permissions: .privateFile)
+                try ISO_9945.Kernel.File.Open.open(path: p, mode: .readWrite, options: [], permissions: .privateFile)
             }
 
-            try Kernel.Lock.lock(fd: fd1._rawValue, range: .file, kind: .shared)
-            try Kernel.Lock.Immediate.lock(fd: fd2._rawValue, range: .file, kind: .shared)
+            try ISO_9945.Kernel.Lock.lock(fd: fd1._rawValue, range: .file, kind: .shared)
+            try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd2._rawValue, range: .file, kind: .shared)
 
-            try Kernel.Lock.unlock(fd: fd1._rawValue, range: .file)
-            try Kernel.Lock.unlock(fd: fd2._rawValue, range: .file)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd1._rawValue, range: .file)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd2._rawValue, range: .file)
         }
 
         @Test
@@ -190,14 +190,14 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            let range1 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(100))
-            let range2 = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(200), end: Kernel.File.Offset(300))
+            let range1 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(0), end: ISO_9945.Kernel.File.Offset(100))
+            let range2 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(200), end: ISO_9945.Kernel.File.Offset(300))
 
-            try Kernel.Lock.lock(fd: fd._rawValue, range: range1, kind: .exclusive)
-            try Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: range2, kind: .exclusive)
+            try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: range1, kind: .exclusive)
+            try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: range2, kind: .exclusive)
 
-            try Kernel.Lock.unlock(fd: fd._rawValue, range: range1)
-            try Kernel.Lock.unlock(fd: fd._rawValue, range: range2)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: range1)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: range2)
         }
 
         @Test
@@ -208,13 +208,13 @@ extension Kernel.Lock.Test.Unit {
             defer { KernelIOTest.cleanup(path: path) }
 
             // Should not throw
-            try Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
+            try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
         }
     }
 
     // MARK: - Token Tests
 
-    extension Kernel.Lock.Test.Unit {
+    extension ISO_9945.Kernel.Lock.Test.Unit {
         @Test
         func `Token acquires and releases lock`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-token")
@@ -222,7 +222,7 @@ extension Kernel.Lock.Test.Unit {
 
             // Token consumes the descriptor; `release()` unlocks the lock
             // and the descriptor's deinit closes the fd at token destruction.
-            var token = try Kernel.Lock.Token(
+            var token = try ISO_9945.Kernel.Lock.Token(
                 descriptor: try KernelIOTest.open(at: path),
                 range: .file,
                 kind: .exclusive,
@@ -237,7 +237,7 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            var token = try Kernel.Lock.Token(
+            var token = try ISO_9945.Kernel.Lock.Token(
                 descriptor: fd,
                 range: .file,
                 kind: .exclusive,
@@ -253,7 +253,7 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            var token = try Kernel.Lock.Token(
+            var token = try ISO_9945.Kernel.Lock.Token(
                 descriptor: fd,
                 range: .file,
                 kind: .exclusive
@@ -269,9 +269,9 @@ extension Kernel.Lock.Test.Unit {
             let fd = try KernelIOTest.open(at: path)
             defer { KernelIOTest.cleanup(path: path) }
 
-            let range = Kernel.Lock.Range.bytes(start: Kernel.File.Offset(0), end: Kernel.File.Offset(512))
+            let range = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(0), end: ISO_9945.Kernel.File.Offset(512))
 
-            var token = try Kernel.Lock.Token(
+            var token = try ISO_9945.Kernel.Lock.Token(
                 descriptor: fd,
                 range: range,
                 kind: .shared
@@ -283,14 +283,14 @@ extension Kernel.Lock.Test.Unit {
 
     // MARK: - withExclusive/withShared Tests
 
-    extension Kernel.Lock.Test.Unit {
+    extension ISO_9945.Kernel.Lock.Test.Unit {
         @Test
         func `withExclusive executes body and releases lock`() throws {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             defer { KernelIOTest.cleanup(path: path) }
 
             var executed = false
-            try Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
+            try ISO_9945.Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
                 executed = true
             }
 
@@ -306,7 +306,7 @@ extension Kernel.Lock.Test.Unit {
             let path = KernelIOTest.makeTempPath(prefix: "lock-with")
             defer { KernelIOTest.cleanup(path: path) }
 
-            let result = try Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
+            let result = try ISO_9945.Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
                 return 42
             }
 
@@ -319,7 +319,7 @@ extension Kernel.Lock.Test.Unit {
             defer { KernelIOTest.cleanup(path: path) }
 
             var executed = false
-            try Kernel.Lock.withShared(try KernelIOTest.open(at: path)) {
+            try ISO_9945.Kernel.Lock.withShared(try KernelIOTest.open(at: path)) {
                 executed = true
             }
 
@@ -334,7 +334,7 @@ extension Kernel.Lock.Test.Unit {
             struct TestError: Swift.Error {}
 
             do {
-                try Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) { () throws(TestError) in
+                try ISO_9945.Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) { () throws(TestError) in
                     throw TestError()
                 }
                 Issue.record("Expected TestError")

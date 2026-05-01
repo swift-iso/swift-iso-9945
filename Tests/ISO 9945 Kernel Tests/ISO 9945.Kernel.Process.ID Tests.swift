@@ -16,7 +16,7 @@ import Testing
     import Error_Primitives
     @testable import ISO_9945_Kernel
 
-    // Note: Kernel.Process.ID already has Test struct pattern from elsewhere.
+    // Note: ISO_9945.Kernel.Process.ID already has Test struct pattern from elsewhere.
     // We add tests in a separate file to test the .parent accessor.
 
     // MARK: - Parent Accessor Tests
@@ -24,23 +24,23 @@ import Testing
     // NOTE: These tests use posix_spawn via POSIXTestHelper instead of fork() directly
     // to avoid Swift runtime lock corruption in multithreaded test environments.
 
-    @Suite("Kernel.Process.ID Parent Tests")
+    @Suite("ISO_9945.Kernel.Process.ID Parent Tests")
     struct KernelProcessIDParentTests {
         @Test
         func `parent returns positive PID`() {
-            let parent = Kernel.Process.ID.parent
+            let parent = ISO_9945.Kernel.Process.ID.parent
             #expect(parent.rawValue > 0)
         }
 
         @Test
         func `spawned child's parent matches spawner's current`() throws {
             #if os(macOS)
-                let ourPID = Kernel.Process.ID.current
+                let ourPID = ISO_9945.Kernel.Process.ID.current
 
                 // Spawn helper that verifies its parent PID matches ours
                 let child = try POSIXTestHelper.spawn("verify-parent", "\(ourPID.rawValue)")
 
-                let result = try Kernel.Process.Wait.wait(.process(child))
+                let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
                 #expect(result?.status.exit.code == 0, "Child's parent should match spawner's PID")
             #endif
         }

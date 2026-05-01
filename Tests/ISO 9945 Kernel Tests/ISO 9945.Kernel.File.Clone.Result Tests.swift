@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Clone.Result {
+extension ISO_9945.Kernel.File.Clone.Result {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Clone.Result {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Clone.Result.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Result.Test.Unit {
     @Test
     func `reflinked case exists`() {
-        let result = Kernel.File.Clone.Result.reflinked
+        let result = ISO_9945.Kernel.File.Clone.Result.reflinked
         if case .reflinked = result {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Clone.Result.Test.Unit {
 
     @Test
     func `copied case exists`() {
-        let result = Kernel.File.Clone.Result.copied
+        let result = ISO_9945.Kernel.File.Clone.Result.copied
         if case .copied = result {
             // Expected
         } else {
@@ -47,18 +48,18 @@ extension Kernel.File.Clone.Result.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Clone.Result.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Result.Test.Unit {
     @Test
     func `Result is Sendable`() {
-        let result: any Sendable = Kernel.File.Clone.Result.reflinked
-        #expect(result is Kernel.File.Clone.Result)
+        let result: any Sendable = ISO_9945.Kernel.File.Clone.Result.reflinked
+        #expect(result is ISO_9945.Kernel.File.Clone.Result)
     }
 
     @Test
     func `Result is Equatable`() {
-        let a = Kernel.File.Clone.Result.reflinked
-        let b = Kernel.File.Clone.Result.reflinked
-        let c = Kernel.File.Clone.Result.copied
+        let a = ISO_9945.Kernel.File.Clone.Result.reflinked
+        let b = ISO_9945.Kernel.File.Clone.Result.reflinked
+        let c = ISO_9945.Kernel.File.Clone.Result.copied
         #expect(a == b)
         #expect(a != c)
     }
@@ -66,17 +67,17 @@ extension Kernel.File.Clone.Result.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Clone.Result.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Result.Test.EdgeCase {
     @Test
     func `reflinked and copied are distinct`() {
-        let reflinked = Kernel.File.Clone.Result.reflinked
-        let copied = Kernel.File.Clone.Result.copied
+        let reflinked = ISO_9945.Kernel.File.Clone.Result.reflinked
+        let copied = ISO_9945.Kernel.File.Clone.Result.copied
         #expect(reflinked != copied)
     }
 
     @Test
     func `all cases are distinct`() {
-        let cases: [Kernel.File.Clone.Result] = [
+        let cases: [ISO_9945.Kernel.File.Clone.Result] = [
             .reflinked,
             .copied,
         ]

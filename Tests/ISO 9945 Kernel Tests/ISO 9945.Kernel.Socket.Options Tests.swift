@@ -27,7 +27,7 @@ import Error_Primitives
 
     @testable import ISO_9945_Kernel
 
-    extension Kernel.Socket.Options {
+    extension ISO_9945.Kernel.Socket.Options {
         @Suite
     struct Test {
         @Suite struct Unit {}
@@ -37,44 +37,44 @@ import Error_Primitives
 
     // MARK: - Unit Tests
 
-    extension Kernel.Socket.Options.Test.Unit {
+    extension ISO_9945.Kernel.Socket.Options.Test.Unit {
         @Test
         func `Options type exists`() {
-            let _: Kernel.Socket.Options.Type = Kernel.Socket.Options.self
+            let _: ISO_9945.Kernel.Socket.Options.Type = ISO_9945.Kernel.Socket.Options.self
         }
 
         @Test
         func `Options from rawValue`() {
-            let flags = Kernel.Socket.Options(rawValue: O_NONBLOCK)
+            let flags = ISO_9945.Kernel.Socket.Options(rawValue: O_NONBLOCK)
             #expect(flags.rawValue == O_NONBLOCK)
         }
     }
 
     // MARK: - Flag Constants Tests
 
-    extension Kernel.Socket.Options.Test.Unit {
+    extension ISO_9945.Kernel.Socket.Options.Test.Unit {
         @Test
         func `nonBlock flag`() {
-            let flags = Kernel.Socket.Options.nonBlock
+            let flags = ISO_9945.Kernel.Socket.Options.nonBlock
             #expect(flags.rawValue == O_NONBLOCK)
         }
 
         @Test
         func `closeOnExec flag`() {
-            let flags = Kernel.Socket.Options.closeOnExec
+            let flags = ISO_9945.Kernel.Socket.Options.closeOnExec
             #expect(flags.rawValue == O_CLOEXEC)
         }
 
         @Test
         func `none flag is empty`() {
-            let flags = Kernel.Socket.Options.none
+            let flags = ISO_9945.Kernel.Socket.Options.none
             #expect(flags.isEmpty)
             #expect(flags.rawValue == 0)
         }
 
         @Test
         func `asyncDefault combines nonBlock and closeOnExec`() {
-            let flags = Kernel.Socket.Options.asyncDefault
+            let flags = ISO_9945.Kernel.Socket.Options.asyncDefault
             #expect(flags.contains(.nonBlock))
             #expect(flags.contains(.closeOnExec))
         }
@@ -82,42 +82,42 @@ import Error_Primitives
 
     // MARK: - OptionSet Tests
 
-    extension Kernel.Socket.Options.Test.Unit {
+    extension ISO_9945.Kernel.Socket.Options.Test.Unit {
         @Test
         func `Options can be combined with array literal`() {
-            let combined: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
+            let combined: ISO_9945.Kernel.Socket.Options = [.nonBlock, .closeOnExec]
             #expect(combined.contains(.nonBlock))
             #expect(combined.contains(.closeOnExec))
         }
 
         @Test
         func `Options contains check`() {
-            let flags: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
+            let flags: ISO_9945.Kernel.Socket.Options = [.nonBlock, .closeOnExec]
             #expect(flags.contains(.nonBlock))
             #expect(flags.contains(.closeOnExec))
         }
 
         @Test
         func `Options array literal initialization`() {
-            let flags: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
+            let flags: ISO_9945.Kernel.Socket.Options = [.nonBlock, .closeOnExec]
             #expect(flags == .asyncDefault)
         }
     }
 
     // MARK: - Conformance Tests
 
-    extension Kernel.Socket.Options.Test.Unit {
+    extension ISO_9945.Kernel.Socket.Options.Test.Unit {
         @Test
         func `Options is Sendable`() {
-            let value: any Sendable = Kernel.Socket.Options.none
-            #expect(value is Kernel.Socket.Options)
+            let value: any Sendable = ISO_9945.Kernel.Socket.Options.none
+            #expect(value is ISO_9945.Kernel.Socket.Options)
         }
 
         @Test
         func `Options is Equatable`() {
-            let a = Kernel.Socket.Options.nonBlock
-            let b = Kernel.Socket.Options.nonBlock
-            let c = Kernel.Socket.Options.closeOnExec
+            let a = ISO_9945.Kernel.Socket.Options.nonBlock
+            let b = ISO_9945.Kernel.Socket.Options.nonBlock
+            let c = ISO_9945.Kernel.Socket.Options.closeOnExec
             #expect(a == b)
             #expect(a != c)
         }
@@ -125,17 +125,17 @@ import Error_Primitives
 
     // MARK: - Edge Cases
 
-    extension Kernel.Socket.Options.Test.EdgeCase {
+    extension ISO_9945.Kernel.Socket.Options.Test.EdgeCase {
         @Test
         func `Empty flags is none`() {
-            let empty: Kernel.Socket.Options = []
+            let empty: ISO_9945.Kernel.Socket.Options = []
             #expect(empty == .none)
         }
 
         @Test
         func `Options rawValue roundtrip`() {
-            let original: Kernel.Socket.Options = [.nonBlock, .closeOnExec]
-            let roundtrip = Kernel.Socket.Options(rawValue: original.rawValue)
+            let original: ISO_9945.Kernel.Socket.Options = [.nonBlock, .closeOnExec]
+            let roundtrip = ISO_9945.Kernel.Socket.Options(rawValue: original.rawValue)
             #expect(roundtrip == original)
         }
     }

@@ -18,7 +18,7 @@ import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
-extension Kernel.File.Seek {
+extension ISO_9945.Kernel.File.Seek {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -28,12 +28,12 @@ extension Kernel.File.Seek {
 
 // MARK: - Origin Unit Tests
 
-extension Kernel.File.Seek.Test.Unit {
+extension ISO_9945.Kernel.File.Seek.Test.Unit {
     @Test
     func `Origin cases are distinct`() {
-        let start = Kernel.File.Seek.Origin.start
-        let current = Kernel.File.Seek.Origin.current
-        let end = Kernel.File.Seek.Origin.end
+        let start = ISO_9945.Kernel.File.Seek.Origin.start
+        let current = ISO_9945.Kernel.File.Seek.Origin.current
+        let end = ISO_9945.Kernel.File.Seek.Origin.end
 
         #expect(start != current)
         #expect(start != end)
@@ -42,7 +42,7 @@ extension Kernel.File.Seek.Test.Unit {
 
     @Test
     func `Origin is Sendable`() {
-        let origin: any Sendable = Kernel.File.Seek.Origin.start
-        #expect(origin is Kernel.File.Seek.Origin)
+        let origin: any Sendable = ISO_9945.Kernel.File.Seek.Origin.start
+        #expect(origin is ISO_9945.Kernel.File.Seek.Origin)
     }
 }

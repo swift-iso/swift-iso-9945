@@ -22,7 +22,7 @@ import Testing
     import Error_Primitives
     @testable import ISO_9945_Kernel
 
-    extension Kernel.Process.Error {
+    extension ISO_9945.Kernel.Process.Error {
         @Suite
         struct Test {
             @Suite struct Unit {}
@@ -34,30 +34,30 @@ import Testing
 
 // MARK: - Unit Tests
 
-    extension Kernel.Process.Error.Test.Unit {
+    extension ISO_9945.Kernel.Process.Error.Test.Unit {
         @Test
         func `error conforms to Swift.Error`() {
-            let error: any Swift.Error = Kernel.Process.Error.fork(.posix(1))
-            #expect(error is Kernel.Process.Error)
+            let error: any Swift.Error = ISO_9945.Kernel.Process.Error.fork(.posix(1))
+            #expect(error is ISO_9945.Kernel.Process.Error)
         }
 
         @Test
         func `error is Sendable`() {
-            let error: any Sendable = Kernel.Process.Error.fork(.posix(1))
-            #expect(error is Kernel.Process.Error)
+            let error: any Sendable = ISO_9945.Kernel.Process.Error.fork(.posix(1))
+            #expect(error is ISO_9945.Kernel.Process.Error)
         }
 
         @Test
         func `error is Equatable`() {
             let code = Error_Primitives.Error.Code.posix(1)
-            #expect(Kernel.Process.Error.fork(code) == Kernel.Process.Error.fork(code))
-            #expect(Kernel.Process.Error.fork(code) != Kernel.Process.Error.wait(code))
+            #expect(ISO_9945.Kernel.Process.Error.fork(code) == ISO_9945.Kernel.Process.Error.fork(code))
+            #expect(ISO_9945.Kernel.Process.Error.fork(code) != ISO_9945.Kernel.Process.Error.wait(code))
         }
 
         @Test
         func `code accessor returns underlying code`() {
             let code = Error_Primitives.Error.Code.posix(42)
-            let errors: [Kernel.Process.Error] = [
+            let errors: [ISO_9945.Kernel.Process.Error] = [
                 .fork(code),
                 .execute(code),
                 .wait(code),
@@ -73,17 +73,17 @@ import Testing
         @Test
         func `isInterrupted returns true for EINTR`() {
             let code = Error_Primitives.Error.Code.posix(EINTR)
-            let error = Kernel.Process.Error.wait(code)
+            let error = ISO_9945.Kernel.Process.Error.wait(code)
             #expect(error.isInterrupted)
 
-            let nonInterrupted = Kernel.Process.Error.wait(.posix(1))
+            let nonInterrupted = ISO_9945.Kernel.Process.Error.wait(.posix(1))
             #expect(!nonInterrupted.isInterrupted)
         }
 
         @Test
         func `all error cases are distinct`() {
             let code = Error_Primitives.Error.Code.posix(1)
-            let cases: [Kernel.Process.Error] = [
+            let cases: [ISO_9945.Kernel.Process.Error] = [
                 .fork(code),
                 .execute(code),
                 .wait(code),
@@ -103,25 +103,25 @@ import Testing
 
     // MARK: - Semantic Tests
 
-    extension Kernel.Process.Error.Test.Unit {
+    extension ISO_9945.Kernel.Process.Error.Test.Unit {
         @Test
         func `semantic classification works`() {
-            let resourceLimit = Kernel.Process.Error.fork(.posix(EAGAIN))
+            let resourceLimit = ISO_9945.Kernel.Process.Error.fork(.posix(EAGAIN))
             #expect(resourceLimit.semantic == .resourceLimit)
 
-            let noPermission = Kernel.Process.Error.session(.posix(EPERM))
+            let noPermission = ISO_9945.Kernel.Process.Error.session(.posix(EPERM))
             #expect(noPermission.semantic == .noPermission)
 
-            let noSuchProcess = Kernel.Process.Error.wait(.posix(ESRCH))
+            let noSuchProcess = ISO_9945.Kernel.Process.Error.wait(.posix(ESRCH))
             #expect(noSuchProcess.semantic == .noSuchProcess)
 
-            let noChild = Kernel.Process.Error.wait(.posix(ECHILD))
+            let noChild = ISO_9945.Kernel.Process.Error.wait(.posix(ECHILD))
             #expect(noChild.semantic == .noSuchProcess)
 
-            let interrupted = Kernel.Process.Error.wait(.posix(EINTR))
+            let interrupted = ISO_9945.Kernel.Process.Error.wait(.posix(EINTR))
             #expect(interrupted.semantic == .interrupted)
 
-            let invalidArg = Kernel.Process.Error.wait(.posix(EINVAL))
+            let invalidArg = ISO_9945.Kernel.Process.Error.wait(.posix(EINVAL))
             #expect(invalidArg.semantic == .invalidArgument)
         }
     }

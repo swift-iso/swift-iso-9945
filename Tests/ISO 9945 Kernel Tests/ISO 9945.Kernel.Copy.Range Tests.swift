@@ -12,9 +12,10 @@
 #if os(Linux)
     // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-    extension Kernel.Copy.Range {
+    extension ISO_9945.Kernel.Copy.Range {
         @Suite
     struct Test {
         @Suite struct Unit {}
@@ -24,19 +25,19 @@ import Testing
 
     // MARK: - Unit Tests
 
-    extension Kernel.Copy.Range.Test.Unit {
+    extension ISO_9945.Kernel.Copy.Range.Test.Unit {
         @Test
         func `Range namespace exists`() {
-            // Kernel.Copy.Range is a public enum namespace (Linux only)
-            _ = Kernel.Copy.Range.self
+            // ISO_9945.Kernel.Copy.Range is a public enum namespace (Linux only)
+            _ = ISO_9945.Kernel.Copy.Range.self
         }
 
         @Test
         func `Range is an enum`() {
-            let _: Kernel.Copy.Range.Type = Kernel.Copy.Range.self
+            let _: ISO_9945.Kernel.Copy.Range.Type = ISO_9945.Kernel.Copy.Range.self
         }
 
-        // NOTE: Kernel.Copy.Range.copy() is defined at L2 (swift-iso-9945).
+        // NOTE: ISO_9945.Kernel.Copy.Range.copy() is defined at L2 (swift-iso-9945).
         // Signature verification belongs in ISO 9945 Kernel tests.
     }
 

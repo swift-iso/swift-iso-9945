@@ -11,6 +11,7 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 @testable import Error_Primitives
 import Path_Primitives
@@ -73,25 +74,25 @@ import Memory_Primitives
     struct PermissionErrorMappingTests {
         @Test
         func `denied from EACCES`() {
-            let error = Kernel.Permission.Error(code: .posix(EACCES))
+            let error = ISO_9945.Kernel.Permission.Error(code: .posix(EACCES))
             #expect(error == .denied)
         }
 
         @Test
         func `notPermitted from EPERM`() {
-            let error = Kernel.Permission.Error(code: .posix(EPERM))
+            let error = ISO_9945.Kernel.Permission.Error(code: .posix(EPERM))
             #expect(error == .notPermitted)
         }
 
         @Test
         func `readOnlyFilesystem from EROFS`() {
-            let error = Kernel.Permission.Error(code: .posix(EROFS))
+            let error = ISO_9945.Kernel.Permission.Error(code: .posix(EROFS))
             #expect(error == .readOnlyFilesystem)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.Permission.Error(code: .posix(EINTR))
+            let error = ISO_9945.Kernel.Permission.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }
@@ -102,25 +103,25 @@ import Memory_Primitives
     struct DescriptorValidityErrorMappingTests {
         @Test
         func `invalid from EBADF`() {
-            let error = Kernel.Descriptor.Validity.Error(code: .posix(EBADF))
+            let error = ISO_9945.Kernel.Descriptor.Validity.Error(code: .posix(EBADF))
             #expect(error == .invalid)
         }
 
         @Test
         func `limit process from EMFILE`() {
-            let error = Kernel.Descriptor.Validity.Error(code: .posix(EMFILE))
+            let error = ISO_9945.Kernel.Descriptor.Validity.Error(code: .posix(EMFILE))
             #expect(error == .limit(.process))
         }
 
         @Test
         func `limit system from ENFILE`() {
-            let error = Kernel.Descriptor.Validity.Error(code: .posix(ENFILE))
+            let error = ISO_9945.Kernel.Descriptor.Validity.Error(code: .posix(ENFILE))
             #expect(error == .limit(.system))
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.Descriptor.Validity.Error(code: .posix(EINTR))
+            let error = ISO_9945.Kernel.Descriptor.Validity.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }
@@ -131,13 +132,13 @@ import Memory_Primitives
     struct IOBlockingErrorMappingTests {
         @Test
         func `wouldBlock from EAGAIN`() {
-            let error = Kernel.IO.Blocking.Error(code: .posix(EAGAIN))
+            let error = ISO_9945.Kernel.IO.Blocking.Error(code: .posix(EAGAIN))
             #expect(error == .wouldBlock)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.IO.Blocking.Error(code: .posix(EACCES))
+            let error = ISO_9945.Kernel.IO.Blocking.Error(code: .posix(EACCES))
             #expect(error == nil)
         }
     }
@@ -148,19 +149,19 @@ import Memory_Primitives
     struct StorageErrorMappingTests {
         @Test
         func `exhausted from ENOSPC`() {
-            let error = Kernel.Storage.Error(code: .posix(ENOSPC))
+            let error = ISO_9945.Kernel.Storage.Error(code: .posix(ENOSPC))
             #expect(error == .exhausted)
         }
 
         @Test
         func `quota from EDQUOT`() {
-            let error = Kernel.Storage.Error(code: .posix(EDQUOT))
+            let error = ISO_9945.Kernel.Storage.Error(code: .posix(EDQUOT))
             #expect(error == .quota)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.Storage.Error(code: .posix(EINTR))
+            let error = ISO_9945.Kernel.Storage.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }
@@ -194,25 +195,25 @@ import Memory_Primitives
     struct IOErrorMappingTests {
         @Test
         func `hardware from EIO`() {
-            let error = Kernel.IO.Error(code: .posix(EIO))
+            let error = ISO_9945.Kernel.IO.Error(code: .posix(EIO))
             #expect(error == .hardware)
         }
 
         @Test
         func `broken from EPIPE`() {
-            let error = Kernel.IO.Error(code: .posix(EPIPE))
+            let error = ISO_9945.Kernel.IO.Error(code: .posix(EPIPE))
             #expect(error == .broken)
         }
 
         @Test
         func `reset from ECONNRESET`() {
-            let error = Kernel.IO.Error(code: .posix(ECONNRESET))
+            let error = ISO_9945.Kernel.IO.Error(code: .posix(ECONNRESET))
             #expect(error == .reset)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Kernel.IO.Error(code: .posix(EINTR))
+            let error = ISO_9945.Kernel.IO.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }

@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.Storage {
+extension ISO_9945.Kernel.Storage {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,23 +24,23 @@ extension Kernel.Storage {
 
 // MARK: - Unit Tests
 
-extension Kernel.Storage.Test.Unit {
+extension ISO_9945.Kernel.Storage.Test.Unit {
     @Test
     func `Storage namespace exists`() {
-        _ = Kernel.Storage.self
+        _ = ISO_9945.Kernel.Storage.self
     }
 
     @Test
     func `Storage is an enum`() {
-        let _: Kernel.Storage.Type = Kernel.Storage.self
+        let _: ISO_9945.Kernel.Storage.Type = ISO_9945.Kernel.Storage.self
     }
 }
 
 // MARK: - Nested Types
 
-extension Kernel.Storage.Test.Unit {
+extension ISO_9945.Kernel.Storage.Test.Unit {
     @Test
     func `Storage.Error type exists`() {
-        let _: Kernel.Storage.Error.Type = Kernel.Storage.Error.self
+        let _: ISO_9945.Kernel.Storage.Error.Type = ISO_9945.Kernel.Storage.Error.self
     }
 }

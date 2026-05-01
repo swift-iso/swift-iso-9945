@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Direct.Mode {
+extension ISO_9945.Kernel.File.Direct.Mode {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Direct.Mode {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Mode.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
     @Test
     func `direct case exists`() {
-        let mode = Kernel.File.Direct.Mode.direct
+        let mode = ISO_9945.Kernel.File.Direct.Mode.direct
         if case .direct = mode {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Direct.Mode.Test.Unit {
 
     @Test
     func `uncached case exists`() {
-        let mode = Kernel.File.Direct.Mode.uncached
+        let mode = ISO_9945.Kernel.File.Direct.Mode.uncached
         if case .uncached = mode {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Direct.Mode.Test.Unit {
 
     @Test
     func `buffered case exists`() {
-        let mode = Kernel.File.Direct.Mode.buffered
+        let mode = ISO_9945.Kernel.File.Direct.Mode.buffered
         if case .buffered = mode {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.Direct.Mode.Test.Unit {
 
     @Test
     func `auto case exists`() {
-        let mode = Kernel.File.Direct.Mode.auto(policy: .fallbackToBuffered)
+        let mode = ISO_9945.Kernel.File.Direct.Mode.auto(policy: .fallbackToBuffered)
         if case .auto = mode {
             // Expected
         } else {
@@ -67,18 +68,18 @@ extension Kernel.File.Direct.Mode.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Direct.Mode.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
     @Test
     func `Mode is Sendable`() {
-        let mode: any Sendable = Kernel.File.Direct.Mode.buffered
-        #expect(mode is Kernel.File.Direct.Mode)
+        let mode: any Sendable = ISO_9945.Kernel.File.Direct.Mode.buffered
+        #expect(mode is ISO_9945.Kernel.File.Direct.Mode)
     }
 
     @Test
     func `Mode is Equatable`() {
-        let a = Kernel.File.Direct.Mode.buffered
-        let b = Kernel.File.Direct.Mode.buffered
-        let c = Kernel.File.Direct.Mode.direct
+        let a = ISO_9945.Kernel.File.Direct.Mode.buffered
+        let b = ISO_9945.Kernel.File.Direct.Mode.buffered
+        let c = ISO_9945.Kernel.File.Direct.Mode.direct
         #expect(a == b)
         #expect(a != c)
     }
@@ -86,24 +87,24 @@ extension Kernel.File.Direct.Mode.Test.Unit {
 
 // MARK: - Nested Types
 
-extension Kernel.File.Direct.Mode.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
     @Test
     func `Mode.Policy type exists`() {
-        let _: Kernel.File.Direct.Mode.Policy.Type = Kernel.File.Direct.Mode.Policy.self
+        let _: ISO_9945.Kernel.File.Direct.Mode.Policy.Type = ISO_9945.Kernel.File.Direct.Mode.Policy.self
     }
 
     @Test
     func `Mode.Resolved type exists`() {
-        let _: Kernel.File.Direct.Mode.Resolved.Type = Kernel.File.Direct.Mode.Resolved.self
+        let _: ISO_9945.Kernel.File.Direct.Mode.Resolved.Type = ISO_9945.Kernel.File.Direct.Mode.Resolved.self
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Direct.Mode.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Mode.Test.EdgeCase {
     @Test
     func `all simple cases are distinct`() {
-        let cases: [Kernel.File.Direct.Mode] = [
+        let cases: [ISO_9945.Kernel.File.Direct.Mode] = [
             .direct,
             .uncached,
             .buffered,
@@ -118,8 +119,8 @@ extension Kernel.File.Direct.Mode.Test.EdgeCase {
 
     @Test
     func `auto with different policies are distinct`() {
-        let fallback = Kernel.File.Direct.Mode.auto(policy: .fallbackToBuffered)
-        let error = Kernel.File.Direct.Mode.auto(policy: .errorOnViolation)
+        let fallback = ISO_9945.Kernel.File.Direct.Mode.auto(policy: .fallbackToBuffered)
+        let error = ISO_9945.Kernel.File.Direct.Mode.auto(policy: .errorOnViolation)
         #expect(fallback != error)
     }
 }

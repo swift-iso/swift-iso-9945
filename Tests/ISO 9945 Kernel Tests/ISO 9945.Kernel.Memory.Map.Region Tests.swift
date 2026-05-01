@@ -46,7 +46,7 @@ extension Memory.Map.Region.Test.Unit {
     extension Memory.Map.Region.Test.Unit {
         @Test
         func `Region stores base address`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 
@@ -55,7 +55,7 @@ extension Memory.Map.Region.Test.Unit {
 
         @Test
         func `Region stores length`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 
@@ -64,7 +64,7 @@ extension Memory.Map.Region.Test.Unit {
 
         @Test
         func `Region init sets values correctly`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 
@@ -81,7 +81,7 @@ extension Memory.Map.Region.Test.Unit {
     extension Memory.Map.Region.Test.Unit {
         @Test
         func `Region stores mappingHandle on Windows`() throws {
-            let pageSize = Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 

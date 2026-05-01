@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Direct.Error.Operation {
+extension ISO_9945.Kernel.File.Direct.Error.Operation {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Direct.Error.Operation {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Direct.Error.Operation.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.Unit {
     @Test
     func `open case exists`() {
-        let operation = Kernel.File.Direct.Error.Operation.open
+        let operation = ISO_9945.Kernel.File.Direct.Error.Operation.open
         if case .open = operation {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Direct.Error.Operation.Test.Unit {
 
     @Test
     func `cache case exists`() {
-        let operation = Kernel.File.Direct.Error.Operation.cache(.set)
+        let operation = ISO_9945.Kernel.File.Direct.Error.Operation.cache(.set)
         if case .cache = operation {
             // Expected
         } else {
@@ -46,7 +47,7 @@ extension Kernel.File.Direct.Error.Operation.Test.Unit {
 
     @Test
     func `sector case exists`() {
-        let operation = Kernel.File.Direct.Error.Operation.sector(.getSize)
+        let operation = ISO_9945.Kernel.File.Direct.Error.Operation.sector(.getSize)
         if case .sector = operation {
             // Expected
         } else {
@@ -56,7 +57,7 @@ extension Kernel.File.Direct.Error.Operation.Test.Unit {
 
     @Test
     func `read case exists`() {
-        let operation = Kernel.File.Direct.Error.Operation.read
+        let operation = ISO_9945.Kernel.File.Direct.Error.Operation.read
         if case .read = operation {
             // Expected
         } else {
@@ -66,7 +67,7 @@ extension Kernel.File.Direct.Error.Operation.Test.Unit {
 
     @Test
     func `write case exists`() {
-        let operation = Kernel.File.Direct.Error.Operation.write
+        let operation = ISO_9945.Kernel.File.Direct.Error.Operation.write
         if case .write = operation {
             // Expected
         } else {
@@ -77,74 +78,74 @@ extension Kernel.File.Direct.Error.Operation.Test.Unit {
 
 // MARK: - Nested Type Tests
 
-extension Kernel.File.Direct.Error.Operation.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.Unit {
     @Test
     func `Cache.set case exists`() {
-        let cache = Kernel.File.Direct.Error.Operation.Cache.set
+        let cache = ISO_9945.Kernel.File.Direct.Error.Operation.Cache.set
         #expect(cache.rawValue == "set")
     }
 
     @Test
     func `Cache.clear case exists`() {
-        let cache = Kernel.File.Direct.Error.Operation.Cache.clear
+        let cache = ISO_9945.Kernel.File.Direct.Error.Operation.Cache.clear
         #expect(cache.rawValue == "clear")
     }
 
     @Test
     func `Sector.getSize case exists`() {
-        let sector = Kernel.File.Direct.Error.Operation.Sector.getSize
+        let sector = ISO_9945.Kernel.File.Direct.Error.Operation.Sector.getSize
         #expect(sector.rawValue == "getSize")
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Direct.Error.Operation.Test.Unit {
+extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.Unit {
     @Test
     func `Operation is Sendable`() {
-        let operation: any Sendable = Kernel.File.Direct.Error.Operation.open
-        #expect(operation is Kernel.File.Direct.Error.Operation)
+        let operation: any Sendable = ISO_9945.Kernel.File.Direct.Error.Operation.open
+        #expect(operation is ISO_9945.Kernel.File.Direct.Error.Operation)
     }
 
     @Test
     func `Operation is Equatable`() {
-        let a = Kernel.File.Direct.Error.Operation.open
-        let b = Kernel.File.Direct.Error.Operation.open
-        let c = Kernel.File.Direct.Error.Operation.read
+        let a = ISO_9945.Kernel.File.Direct.Error.Operation.open
+        let b = ISO_9945.Kernel.File.Direct.Error.Operation.open
+        let c = ISO_9945.Kernel.File.Direct.Error.Operation.read
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Cache is Sendable`() {
-        let cache: any Sendable = Kernel.File.Direct.Error.Operation.Cache.set
-        #expect(cache is Kernel.File.Direct.Error.Operation.Cache)
+        let cache: any Sendable = ISO_9945.Kernel.File.Direct.Error.Operation.Cache.set
+        #expect(cache is ISO_9945.Kernel.File.Direct.Error.Operation.Cache)
     }
 
     @Test
     func `Cache is Equatable`() {
-        let a = Kernel.File.Direct.Error.Operation.Cache.set
-        let b = Kernel.File.Direct.Error.Operation.Cache.set
-        let c = Kernel.File.Direct.Error.Operation.Cache.clear
+        let a = ISO_9945.Kernel.File.Direct.Error.Operation.Cache.set
+        let b = ISO_9945.Kernel.File.Direct.Error.Operation.Cache.set
+        let c = ISO_9945.Kernel.File.Direct.Error.Operation.Cache.clear
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Sector is Sendable`() {
-        let sector: any Sendable = Kernel.File.Direct.Error.Operation.Sector.getSize
-        #expect(sector is Kernel.File.Direct.Error.Operation.Sector)
+        let sector: any Sendable = ISO_9945.Kernel.File.Direct.Error.Operation.Sector.getSize
+        #expect(sector is ISO_9945.Kernel.File.Direct.Error.Operation.Sector)
     }
 }
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Direct.Error.Operation.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.EdgeCase {
     @Test
     func `all simple operations are distinct`() {
-        let open = Kernel.File.Direct.Error.Operation.open
-        let read = Kernel.File.Direct.Error.Operation.read
-        let write = Kernel.File.Direct.Error.Operation.write
+        let open = ISO_9945.Kernel.File.Direct.Error.Operation.open
+        let read = ISO_9945.Kernel.File.Direct.Error.Operation.read
+        let write = ISO_9945.Kernel.File.Direct.Error.Operation.write
         #expect(open != read)
         #expect(read != write)
         #expect(open != write)
@@ -152,8 +153,8 @@ extension Kernel.File.Direct.Error.Operation.Test.EdgeCase {
 
     @Test
     func `cache operations with different types are distinct`() {
-        let cacheSet = Kernel.File.Direct.Error.Operation.cache(.set)
-        let cacheClear = Kernel.File.Direct.Error.Operation.cache(.clear)
+        let cacheSet = ISO_9945.Kernel.File.Direct.Error.Operation.cache(.set)
+        let cacheClear = ISO_9945.Kernel.File.Direct.Error.Operation.cache(.clear)
         #expect(cacheSet != cacheClear)
     }
 }

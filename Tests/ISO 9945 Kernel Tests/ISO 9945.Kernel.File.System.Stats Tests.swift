@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.System.Stats {
+extension ISO_9945.Kernel.File.System.Stats {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,11 +24,11 @@ extension Kernel.File.System.Stats {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.System.Stats.Test.Unit {
+extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
     @Test
     func `Statfs memberwise init`() {
-        let fs = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(0x1234),
+        let fs = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(0x1234),
             blockSize: 4096,
             blocks: 1_000_000,
             freeBlocks: 500000,
@@ -38,7 +39,7 @@ extension Kernel.File.System.Stats.Test.Unit {
             nameMax: 255
         )
 
-        #expect(fs.type == Kernel.File.System.Kind(0x1234))
+        #expect(fs.type == ISO_9945.Kernel.File.System.Kind(0x1234))
         #expect(fs.blockSize == 4096)
         #expect(fs.blocks == 1_000_000)
         #expect(fs.freeBlocks == 500000)
@@ -52,8 +53,8 @@ extension Kernel.File.System.Stats.Test.Unit {
 
     @Test
     func `Statfs with fsTypeName`() {
-        let fs = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(0x1234),
+        let fs = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(0x1234),
             blockSize: 4096,
             blocks: 1_000_000,
             freeBlocks: 500000,
@@ -70,8 +71,8 @@ extension Kernel.File.System.Stats.Test.Unit {
 
     @Test
     func `Statfs is equatable`() {
-        let fs1 = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(1),
+        let fs1 = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(1),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
@@ -82,8 +83,8 @@ extension Kernel.File.System.Stats.Test.Unit {
             nameMax: 255
         )
 
-        let fs2 = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(1),
+        let fs2 = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(1),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
@@ -94,8 +95,8 @@ extension Kernel.File.System.Stats.Test.Unit {
             nameMax: 255
         )
 
-        let fs3 = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(2),  // Different type
+        let fs3 = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(2),  // Different type
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
@@ -112,8 +113,8 @@ extension Kernel.File.System.Stats.Test.Unit {
 
     @Test
     func `Statfs is hashable`() {
-        let fs1 = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(1),
+        let fs1 = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(1),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
@@ -124,8 +125,8 @@ extension Kernel.File.System.Stats.Test.Unit {
             nameMax: 255
         )
 
-        let fs2 = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(2),
+        let fs2 = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(2),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
@@ -136,7 +137,7 @@ extension Kernel.File.System.Stats.Test.Unit {
             nameMax: 255
         )
 
-        var set = Set<Kernel.File.System.Stats>()
+        var set = Set<ISO_9945.Kernel.File.System.Stats>()
         set.insert(fs1)
         set.insert(fs1)  // Duplicate
         set.insert(fs2)
@@ -147,13 +148,13 @@ extension Kernel.File.System.Stats.Test.Unit {
 
 // MARK: - Computed Property Tests
 
-extension Kernel.File.System.Stats.Test.Unit {
+extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
     @Test
     func `availableBlocks <= freeBlocks (typical)`() {
         // In real filesystems, availableBlocks is typically <= freeBlocks
         // (root-reserved blocks)
-        let fs = Kernel.File.System.Stats(
-            type: Kernel.File.System.Kind(1),
+        let fs = ISO_9945.Kernel.File.System.Stats(
+            type: ISO_9945.Kernel.File.System.Kind(1),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,

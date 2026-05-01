@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Clone.Error.Operation {
+extension ISO_9945.Kernel.File.Clone.Error.Operation {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,84 +24,84 @@ extension Kernel.File.Clone.Error.Operation {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Clone.Error.Operation.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
     @Test
     func `clonefile case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.clonefile
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.clonefile
         #expect(operation.rawValue == "clonefile")
     }
 
     @Test
     func `copyfile case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.copyfile
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.copyfile
         #expect(operation.rawValue == "copyfile")
     }
 
     @Test
     func `ficlone case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.ficlone
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.ficlone
         #expect(operation.rawValue == "ficlone")
     }
 
     @Test
     func `copyFileRange case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.copyFileRange
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.copyFileRange
         #expect(operation.rawValue == "copyFileRange")
     }
 
     @Test
     func `duplicateExtents case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.duplicateExtents
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.duplicateExtents
         #expect(operation.rawValue == "duplicateExtents")
     }
 
     @Test
     func `statfs case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.statfs
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.statfs
         #expect(operation.rawValue == "statfs")
     }
 
     @Test
     func `stat case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.stat
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.stat
         #expect(operation.rawValue == "stat")
     }
 
     @Test
     func `copy case exists`() {
-        let operation = Kernel.File.Clone.Error.Operation.copy
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.copy
         #expect(operation.rawValue == "copy")
     }
 }
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Clone.Error.Operation.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
     @Test
     func `Operation is Sendable`() {
-        let operation: any Sendable = Kernel.File.Clone.Error.Operation.clonefile
-        #expect(operation is Kernel.File.Clone.Error.Operation)
+        let operation: any Sendable = ISO_9945.Kernel.File.Clone.Error.Operation.clonefile
+        #expect(operation is ISO_9945.Kernel.File.Clone.Error.Operation)
     }
 
     @Test
     func `Operation is Equatable`() {
-        let a = Kernel.File.Clone.Error.Operation.clonefile
-        let b = Kernel.File.Clone.Error.Operation.clonefile
-        let c = Kernel.File.Clone.Error.Operation.copyfile
+        let a = ISO_9945.Kernel.File.Clone.Error.Operation.clonefile
+        let b = ISO_9945.Kernel.File.Clone.Error.Operation.clonefile
+        let c = ISO_9945.Kernel.File.Clone.Error.Operation.copyfile
         #expect(a == b)
         #expect(a != c)
     }
 
     @Test
     func `Operation is RawRepresentable`() {
-        let operation = Kernel.File.Clone.Error.Operation.clonefile
-        let fromRaw = Kernel.File.Clone.Error.Operation(rawValue: "clonefile")
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation.clonefile
+        let fromRaw = ISO_9945.Kernel.File.Clone.Error.Operation(rawValue: "clonefile")
         #expect(fromRaw == operation)
     }
 
     @Test
     func `Operation is Hashable`() {
-        var set = Set<Kernel.File.Clone.Error.Operation>()
+        var set = Set<ISO_9945.Kernel.File.Clone.Error.Operation>()
         set.insert(.clonefile)
         set.insert(.copyfile)
         set.insert(.clonefile)  // duplicate
@@ -110,10 +111,10 @@ extension Kernel.File.Clone.Error.Operation.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Clone.Error.Operation.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.EdgeCase {
     @Test
     func `all operations are distinct`() {
-        let operations: [Kernel.File.Clone.Error.Operation] = [
+        let operations: [ISO_9945.Kernel.File.Clone.Error.Operation] = [
             .clonefile,
             .copyfile,
             .ficlone,
@@ -134,14 +135,14 @@ extension Kernel.File.Clone.Error.Operation.Test.EdgeCase {
     @Test
     func `all raw values are distinct`() {
         let rawValues = [
-            Kernel.File.Clone.Error.Operation.clonefile.rawValue,
-            Kernel.File.Clone.Error.Operation.copyfile.rawValue,
-            Kernel.File.Clone.Error.Operation.ficlone.rawValue,
-            Kernel.File.Clone.Error.Operation.copyFileRange.rawValue,
-            Kernel.File.Clone.Error.Operation.duplicateExtents.rawValue,
-            Kernel.File.Clone.Error.Operation.statfs.rawValue,
-            Kernel.File.Clone.Error.Operation.stat.rawValue,
-            Kernel.File.Clone.Error.Operation.copy.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.clonefile.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.copyfile.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.ficlone.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.copyFileRange.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.duplicateExtents.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.statfs.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.stat.rawValue,
+            ISO_9945.Kernel.File.Clone.Error.Operation.copy.rawValue,
         ]
 
         let uniqueRawValues = Set(rawValues)
@@ -150,7 +151,7 @@ extension Kernel.File.Clone.Error.Operation.Test.EdgeCase {
 
     @Test
     func `invalid raw value returns nil`() {
-        let operation = Kernel.File.Clone.Error.Operation(rawValue: "invalid")
+        let operation = ISO_9945.Kernel.File.Clone.Error.Operation(rawValue: "invalid")
         #expect(operation == nil)
     }
 }

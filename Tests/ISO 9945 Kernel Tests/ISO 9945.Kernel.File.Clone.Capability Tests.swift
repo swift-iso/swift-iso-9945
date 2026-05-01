@@ -11,9 +11,10 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import ISO_9945_Kernel
 
 
-extension Kernel.File.Clone.Capability {
+extension ISO_9945.Kernel.File.Clone.Capability {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -23,10 +24,10 @@ extension Kernel.File.Clone.Capability {
 
 // MARK: - Unit Tests
 
-extension Kernel.File.Clone.Capability.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
     @Test
     func `reflink case exists`() {
-        let capability = Kernel.File.Clone.Capability.reflink
+        let capability = ISO_9945.Kernel.File.Clone.Capability.reflink
         if case .reflink = capability {
             // Expected
         } else {
@@ -36,7 +37,7 @@ extension Kernel.File.Clone.Capability.Test.Unit {
 
     @Test
     func `none case exists`() {
-        let capability = Kernel.File.Clone.Capability.none
+        let capability = ISO_9945.Kernel.File.Clone.Capability.none
         if case .none = capability {
             // Expected
         } else {
@@ -47,18 +48,18 @@ extension Kernel.File.Clone.Capability.Test.Unit {
 
 // MARK: - Conformance Tests
 
-extension Kernel.File.Clone.Capability.Test.Unit {
+extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
     @Test
     func `Capability is Sendable`() {
-        let capability: any Sendable = Kernel.File.Clone.Capability.reflink
-        #expect(capability is Kernel.File.Clone.Capability)
+        let capability: any Sendable = ISO_9945.Kernel.File.Clone.Capability.reflink
+        #expect(capability is ISO_9945.Kernel.File.Clone.Capability)
     }
 
     @Test
     func `Capability is Equatable`() {
-        let a = Kernel.File.Clone.Capability.reflink
-        let b = Kernel.File.Clone.Capability.reflink
-        let c = Kernel.File.Clone.Capability.none
+        let a = ISO_9945.Kernel.File.Clone.Capability.reflink
+        let b = ISO_9945.Kernel.File.Clone.Capability.reflink
+        let c = ISO_9945.Kernel.File.Clone.Capability.none
         #expect(a == b)
         #expect(a != c)
     }
@@ -66,17 +67,17 @@ extension Kernel.File.Clone.Capability.Test.Unit {
 
 // MARK: - Edge Cases
 
-extension Kernel.File.Clone.Capability.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Capability.Test.EdgeCase {
     @Test
     func `reflink and none are distinct`() {
-        let reflink = Kernel.File.Clone.Capability.reflink
-        let none = Kernel.File.Clone.Capability.none
+        let reflink = ISO_9945.Kernel.File.Clone.Capability.reflink
+        let none = ISO_9945.Kernel.File.Clone.Capability.none
         #expect(reflink != none)
     }
 
     @Test
     func `all cases are distinct`() {
-        let cases: [Kernel.File.Clone.Capability] = [
+        let cases: [ISO_9945.Kernel.File.Clone.Capability] = [
             .reflink,
             .none,
         ]
