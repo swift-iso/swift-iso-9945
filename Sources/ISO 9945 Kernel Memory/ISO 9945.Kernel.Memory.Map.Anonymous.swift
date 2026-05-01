@@ -11,7 +11,7 @@
 
 #if !os(Windows)
 
-@_spi(Syscall) import Memory_Primitives
+import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
