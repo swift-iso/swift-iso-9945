@@ -288,7 +288,6 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
-                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
             ]
         ),
 
