@@ -22,8 +22,7 @@ extension ISO_9945.Kernel.Poll {
         /// - Parameters:
         ///   - descriptor: The raw file descriptor to monitor.
         ///   - requested: Events to monitor for.
-        @_spi(Syscall)
-        public init(descriptor: Int32, requested: Events) {
+        internal init(descriptor: Int32, requested: Events) {
             self.cValue = pollfd(
                 fd: descriptor,
                 events: requested.rawValue,
