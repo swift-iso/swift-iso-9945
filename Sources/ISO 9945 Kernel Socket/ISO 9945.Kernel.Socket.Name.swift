@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -22,6 +24,24 @@ extension ISO_9945.Kernel.Socket {
     public enum Name {}
 }
 
+// MARK: - Name typed (Phase 1.5)
+
+extension ISO_9945.Kernel.Socket.Name {
+    /// Gets the local address of a typed socket descriptor.
+    public static func local(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+        try local(fd: descriptor._rawValue)
+    }
+
+    /// Gets the remote address of a connected typed socket descriptor.
+    public static func peer(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+        try peer(fd: descriptor._rawValue)
+    }
+}
+
 // MARK: - Name raw fd SPI
 
 extension ISO_9945.Kernel.Socket.Name {
@@ -30,8 +50,7 @@ extension ISO_9945.Kernel.Socket.Name {
     /// - Parameter fd: The socket raw fd.
     /// - Returns: The local address and its length.
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    @_spi(Syscall)
-    public static func local(
+    internal static func local(
         fd: Int32
     ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
@@ -58,8 +77,7 @@ extension ISO_9945.Kernel.Socket.Name {
     /// ## Common Errors
     ///
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
-    @_spi(Syscall)
-    public static func peer(
+    internal static func peer(
         fd: Int32
     ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()

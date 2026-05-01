@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -16,6 +18,17 @@
 #elseif canImport(Musl)
     internal import Musl
 #endif
+
+// MARK: - getError typed (Phase 1.5)
+
+extension ISO_9945.Kernel.Socket {
+    /// Gets and clears the pending socket error (SO_ERROR) on a typed descriptor.
+    public static func getError(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Error_Primitives.Error.Code {
+        try getError(fd: descriptor._rawValue)
+    }
+}
 
 // MARK: - POSIX socket operations (raw fd SPI)
 
@@ -29,8 +42,7 @@ extension ISO_9945.Kernel.Socket {
     /// - Parameter fd: The socket file descriptor.
     /// - Returns: The error code (`.posix(0)` if no pending error).
     /// - Throws: `ISO_9945.Kernel.Socket.Error` if getsockopt fails.
-    @_spi(Syscall)
-    public static func getError(fd: Int32) throws(ISO_9945.Kernel.Socket.Error) -> Error_Primitives.Error.Code {
+    internal static func getError(fd: Int32) throws(ISO_9945.Kernel.Socket.Error) -> Error_Primitives.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 

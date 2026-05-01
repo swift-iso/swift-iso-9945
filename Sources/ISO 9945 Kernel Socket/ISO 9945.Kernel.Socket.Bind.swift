@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -24,11 +26,52 @@ extension ISO_9945.Kernel.Socket {
 
 // MARK: - Bind raw fd SPI
 //
-// Per Cycle 21, the L2 Kernel Socket API is canonical-raw: takes `fd: Int32`.
-// L3-policy typed-descriptor convenience lives at swift-posix per
-// [PLAT-ARCH-005] / [PLAT-ARCH-008e]. Typed convenience overloads on
-// ISO_9945.Kernel.Socket.Descriptor / ISO_9945.Kernel.Descriptor were dropped per L1-domain-only
-// architecture.
+// Typed Phase-1.5 forms re-added in Wave 4c-Socket Main (2026-05-01) per
+// [PLAT-ARCH-005] three-tier chain (Prerequisite II). The typed L2 forms
+// take `borrowing ISO_9945.Kernel.Socket.Descriptor` (= typealias to
+// `ISO_9945.Kernel.Descriptor`); L3-policy callers (swift-posix) hold
+// `borrowing POSIX.Kernel.Socket.Descriptor` (= same compile-time type
+// via the Prerequisite II typealias chain) and pass through directly,
+// eliminating the round-trip `descriptor._rawValue` → `init(_rawValue:)`.
+// The `@_spi(Syscall) (fd: Int32, ...)` raw companions are retained for
+// SPI bridge consumers; they will be downgraded in a Wave 4c retire-cycle.
+
+// MARK: - Bind typed (Phase 1.5)
+
+extension ISO_9945.Kernel.Socket.Bind {
+    /// Binds a typed socket descriptor to a local address.
+    public static func bind(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: descriptor._rawValue, address: address, length: length)
+    }
+
+    /// Binds a typed socket descriptor to an IPv4 address.
+    public static func bind(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.IPv4
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: descriptor._rawValue, address: address)
+    }
+
+    /// Binds a typed socket descriptor to an IPv6 address.
+    public static func bind(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.IPv6
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: descriptor._rawValue, address: address)
+    }
+
+    /// Binds a typed socket descriptor to a Unix domain address.
+    public static func bind(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.Unix
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try bind(fd: descriptor._rawValue, address: address)
+    }
+}
 
 extension ISO_9945.Kernel.Socket.Bind {
     /// Binds a raw socket fd to a local address.
@@ -44,8 +87,7 @@ extension ISO_9945.Kernel.Socket.Bind {
     /// - `.platform(.addressInUse)` (EADDRINUSE): Address already bound.
     /// - `.platform(.accessDenied)` (EACCES): Privileged port or restricted address.
     /// - `.platform(.invalidArgument)` (EINVAL): Socket already bound.
-    @_spi(Syscall)
-    public static func bind(
+    internal static func bind(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Storage,
         length: ISO_9945.Kernel.Socket.Address.Length
@@ -61,8 +103,7 @@ extension ISO_9945.Kernel.Socket.Bind {
     }
 
     /// Binds a raw socket fd to an IPv4 address.
-    @_spi(Syscall)
-    public static func bind(
+    internal static func bind(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv4
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -70,8 +111,7 @@ extension ISO_9945.Kernel.Socket.Bind {
     }
 
     /// Binds a raw socket fd to an IPv6 address.
-    @_spi(Syscall)
-    public static func bind(
+    internal static func bind(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv6
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -79,8 +119,7 @@ extension ISO_9945.Kernel.Socket.Bind {
     }
 
     /// Binds a raw socket fd to a Unix domain address.
-    @_spi(Syscall)
-    public static func bind(
+    internal static func bind(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Unix
     ) throws(ISO_9945.Kernel.Socket.Error) {

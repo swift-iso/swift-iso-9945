@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -22,12 +24,50 @@ extension ISO_9945.Kernel.Socket {
     public enum Connect {}
 }
 
+// MARK: - Connect typed (Phase 1.5)
+//
+// Typed Phase-1.5 forms re-added in Wave 4c-Socket Main (2026-05-01) per
+// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
+
+extension ISO_9945.Kernel.Socket.Connect {
+    /// Initiates a connection on a typed socket descriptor.
+    public static func connect(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: descriptor._rawValue, address: address, length: length)
+    }
+
+    /// Connects a typed socket descriptor to an IPv4 address.
+    public static func connect(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.IPv4
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: descriptor._rawValue, address: address)
+    }
+
+    /// Connects a typed socket descriptor to an IPv6 address.
+    public static func connect(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.IPv6
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: descriptor._rawValue, address: address)
+    }
+
+    /// Connects a typed socket descriptor to a Unix domain address.
+    public static func connect(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.Unix
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try connect(fd: descriptor._rawValue, address: address)
+    }
+}
+
 // MARK: - Connect Operation (raw fd SPI)
 //
-// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
-// ISO_9945.Kernel.Socket.Descriptor convenience overloads were dropped; the L3
-// unifier typealias chain at swift-kernel exposes the typed cross-platform
-// name. Post-Path-X cleanup will retype L2 to ISO_9945.Kernel.Socket.Descriptor.
+// Raw `fd: Int32` companions retained for SPI bridge consumers; will be
+// downgraded in a Wave 4c retire-cycle.
 
 extension ISO_9945.Kernel.Socket.Connect {
     /// Initiates a connection on a socket.
@@ -48,8 +88,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     /// - `.platform(.networkUnreachable)` (ENETUNREACH): Network is unreachable.
     /// - `.platform(.inProgress)` (EINPROGRESS): Non-blocking connect initiated.
     /// - `.platform(.alreadyConnected)` (EISCONN): Socket is already connected.
-    @_spi(Syscall)
-    public static func connect(
+    internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Storage,
         length: ISO_9945.Kernel.Socket.Address.Length
@@ -65,8 +104,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     /// Connects a raw socket fd to an IPv4 address.
-    @_spi(Syscall)
-    public static func connect(
+    internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv4
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -74,8 +112,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     /// Connects a raw socket fd to an IPv6 address.
-    @_spi(Syscall)
-    public static func connect(
+    internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv6
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -83,8 +120,7 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     /// Connects a raw socket fd to a Unix domain address.
-    @_spi(Syscall)
-    public static func connect(
+    internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Unix
     ) throws(ISO_9945.Kernel.Socket.Error) {

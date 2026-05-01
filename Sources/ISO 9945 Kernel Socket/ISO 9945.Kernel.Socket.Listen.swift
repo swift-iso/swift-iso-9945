@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -22,9 +24,22 @@ extension ISO_9945.Kernel.Socket {
     public enum Listen {}
 }
 
-// MARK: - Listen raw fd SPI
+// MARK: - Listen typed (Phase 1.5)
 //
-// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`.
+// Typed Phase-1.5 form re-added in Wave 4c-Socket Main (2026-05-01) per
+// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
+
+extension ISO_9945.Kernel.Socket.Listen {
+    /// Marks a typed socket descriptor as a passive listening socket.
+    public static func listen(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        backlog: ISO_9945.Kernel.Socket.Backlog = .max
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        try listen(fd: descriptor._rawValue, backlog: backlog)
+    }
+}
+
+// MARK: - Listen raw fd SPI
 
 extension ISO_9945.Kernel.Socket.Listen {
     /// Marks a raw socket fd as a passive listening socket.
@@ -38,8 +53,7 @@ extension ISO_9945.Kernel.Socket.Listen {
     ///
     /// - `.platform(.operationNotSupported)` (EOPNOTSUPP): Socket type does not support listen.
     /// - `.platform(.addressInUse)` (EADDRINUSE): Another socket is listening on this address.
-    @_spi(Syscall)
-    public static func listen(
+    internal static func listen(
         fd: Int32,
         backlog: ISO_9945.Kernel.Socket.Backlog = .max
     ) throws(ISO_9945.Kernel.Socket.Error) {

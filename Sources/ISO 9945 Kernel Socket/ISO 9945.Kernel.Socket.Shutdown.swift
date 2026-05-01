@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -16,6 +18,18 @@
 #elseif canImport(Musl)
     internal import Musl
 #endif
+
+// MARK: - Shutdown typed (Phase 1.5)
+
+extension ISO_9945.Kernel.Socket.Shutdown {
+    /// Shuts down part of a full-duplex connection on a typed socket descriptor.
+    public static func shutdown(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        how: How
+    ) throws(Error) {
+        try shutdown(fd: descriptor._rawValue, how: how)
+    }
+}
 
 // MARK: - POSIX shutdown() syscall (raw fd SPI)
 
@@ -26,8 +40,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     ///   - fd: The socket file descriptor.
     ///   - how: Which half of the connection to shut down.
     /// - Throws: `ISO_9945.Kernel.Socket.Shutdown.Error` on failure.
-    @_spi(Syscall)
-    public static func shutdown(
+    internal static func shutdown(
         fd: Int32,
         how: How
     ) throws(Error) {

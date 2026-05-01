@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -22,12 +24,41 @@ extension ISO_9945.Kernel.Socket {
     public enum Receive {}
 }
 
-// MARK: - Receive Operations (raw fd SPI)
+// MARK: - Receive typed (Phase 1.5)
 //
-// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
-// ISO_9945.Kernel.Socket.Descriptor convenience overloads were dropped per the
-// L1-domain-only architecture. Post-Path-X cleanup will retype L2 to
-// ISO_9945.Kernel.Socket.Descriptor.
+// Typed Phase-1.5 forms re-added in Wave 4c-Socket Main (2026-05-01) per
+// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
+
+extension ISO_9945.Kernel.Socket.Receive {
+    /// Receives data from a connected typed socket descriptor into a mutable span.
+    public static func receive(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        into span: inout MutableSpan<UInt8>,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try receive(fd: descriptor._rawValue, into: &span, options: options)
+    }
+
+    /// Receives data and the sender's address into a mutable span.
+    public static func from(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        into span: inout MutableSpan<UInt8>,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
+        try from(fd: descriptor._rawValue, into: &span, options: options)
+    }
+
+    /// Receives a message with full control over headers and ancillary data.
+    public static func message(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        header: inout ISO_9945.Kernel.Socket.Message.Header,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try message(fd: descriptor._rawValue, header: &header, options: options)
+    }
+}
+
+// MARK: - Receive Operations (raw fd SPI)
 
 extension ISO_9945.Kernel.Socket.Receive {
     /// Receives data from a connected socket into a mutable span.
@@ -44,8 +75,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// - `.platform(.wouldBlock)` (EAGAIN): Non-blocking and no data available.
     /// - `.platform(.connectionReset)` (ECONNRESET): Peer reset the connection.
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
-    @_spi(Syscall)
-    public static func receive(
+    internal static func receive(
         fd: Int32,
         into span: inout MutableSpan<UInt8>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
@@ -73,8 +103,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received, the sender's address, and address length.
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    @_spi(Syscall)
-    public static func from(
+    internal static func from(
         fd: Int32,
         into span: inout MutableSpan<UInt8>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
@@ -114,8 +143,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes received.
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    @_spi(Syscall)
-    public static func message(
+    internal static func message(
         fd: Int32,
         header: inout ISO_9945.Kernel.Socket.Message.Header,
         options: ISO_9945.Kernel.Socket.Message.Options = []

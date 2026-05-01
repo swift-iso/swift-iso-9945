@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -22,12 +24,49 @@ extension ISO_9945.Kernel.Socket {
     public enum Send {}
 }
 
-// MARK: - Send Operations (raw fd SPI)
+// MARK: - Send typed (Phase 1.5)
 //
-// Per Cycle 21 (transitional), L2 syscall API takes raw `fd: Int32`. Typed
-// ISO_9945.Kernel.Socket.Descriptor convenience overloads were dropped per the
-// L1-domain-only architecture. Post-Path-X cleanup will retype L2 to
-// ISO_9945.Kernel.Socket.Descriptor.
+// Typed Phase-1.5 forms re-added in Wave 4c-Socket Main (2026-05-01) per
+// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
+
+extension ISO_9945.Kernel.Socket.Send {
+    /// Sends data from a span on a connected typed socket descriptor.
+    public static func send(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        from span: Span<UInt8>,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try send(fd: descriptor._rawValue, from: span, options: options)
+    }
+
+    /// Sends data from a span to a specific address (for connectionless sockets).
+    public static func to(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        from span: Span<UInt8>,
+        options: ISO_9945.Kernel.Socket.Message.Options = [],
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        addressLength: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try to(
+            fd: descriptor._rawValue,
+            from: span,
+            options: options,
+            address: address,
+            addressLength: addressLength
+        )
+    }
+
+    /// Sends a message with full control over headers and ancillary data.
+    public static func message(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        header: inout ISO_9945.Kernel.Socket.Message.Header,
+        options: ISO_9945.Kernel.Socket.Message.Options = []
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
+        try message(fd: descriptor._rawValue, header: &header, options: options)
+    }
+}
+
+// MARK: - Send Operations (raw fd SPI)
 
 extension ISO_9945.Kernel.Socket.Send {
     /// Sends data from a span on a connected socket.
@@ -45,8 +84,7 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - `.platform(.connectionReset)` (ECONNRESET): Peer reset the connection.
     /// - `.platform(.brokenPipe)` (EPIPE): Peer closed the connection.
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
-    @_spi(Syscall)
-    public static func send(
+    internal static func send(
         fd: Int32,
         from span: Span<UInt8>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
@@ -76,8 +114,7 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - addressLength: The size of the destination address.
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    @_spi(Syscall)
-    public static func to(
+    internal static func to(
         fd: Int32,
         from span: Span<UInt8>,
         options: ISO_9945.Kernel.Socket.Message.Options = [],
@@ -112,8 +149,7 @@ extension ISO_9945.Kernel.Socket.Send {
     ///   - options: Message flags (default: none).
     /// - Returns: The number of bytes actually sent.
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    @_spi(Syscall)
-    public static func message(
+    internal static func message(
         fd: Int32,
         header: inout ISO_9945.Kernel.Socket.Message.Header,
         options: ISO_9945.Kernel.Socket.Message.Options = []
