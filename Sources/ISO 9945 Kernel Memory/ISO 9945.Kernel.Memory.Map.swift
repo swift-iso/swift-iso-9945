@@ -40,8 +40,7 @@ extension Memory.Map {
     ///   - offset: Offset into the file (must be page-aligned).
     /// - Returns: Pointer to the mapped region.
     /// - Throws: `Error.map` on failure.
-    @_spi(Syscall)
-    public static func map(
+    internal static func map(
         addr: Memory.Address? = nil,
         length: Memory.Address.Count,
         protection: Protection,
