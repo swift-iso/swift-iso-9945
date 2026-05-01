@@ -50,8 +50,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - buffer: The buffer to write from.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
-    @_spi(Syscall)
-    public static func write(
+    internal static func write(
         fd: Int32,
         from buffer: UnsafeRawBufferPointer
     ) throws(Error) -> Int {
@@ -102,8 +101,7 @@ extension ISO_9945.Kernel.IO.Write {
     ///   - offset: The file offset to write at.
     /// - Returns: Number of bytes written (may be less than `buffer.count`).
     /// - Throws: ``Kernel/IO/Write/Error`` on failure (including EINTR).
-    @_spi(Syscall)
-    public static func pwrite(
+    internal static func pwrite(
         fd: Int32,
         from buffer: UnsafeRawBufferPointer,
         at offset: ISO_9945.Kernel.File.Offset

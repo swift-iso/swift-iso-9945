@@ -34,8 +34,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - buffer: The buffer to read into.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
-    @_spi(Syscall)
-    public static func read(
+    internal static func read(
         fd: Int32,
         into buffer: UnsafeMutableRawBufferPointer
     ) throws(Error) -> Int {
@@ -75,8 +74,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - offset: The file offset to read from.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
-    @_spi(Syscall)
-    public static func pread(
+    internal static func pread(
         fd: Int32,
         into buffer: UnsafeMutableRawBufferPointer,
         at offset: ISO_9945.Kernel.File.Offset
