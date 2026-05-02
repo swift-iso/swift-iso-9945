@@ -48,6 +48,7 @@ extension ISO_9945.Kernel.Time {
     ///
     /// - Returns: The current wall-clock reading as seconds and nanoseconds
     ///   since 1970-01-01 00:00:00 UTC (nanosecond precision).
+    @_spi(Syscall)
     public static func realtime() -> ISO_9945.Kernel.Time {
         #if canImport(Darwin)
             var ts = Darwin.timespec()
