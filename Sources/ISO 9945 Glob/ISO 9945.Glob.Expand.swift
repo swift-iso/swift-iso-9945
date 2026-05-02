@@ -23,8 +23,10 @@ extension ISO_9945.Glob {
 extension ISO_9945.Glob {
     /// Wraps `glob(3)`. Expands a pattern into matching paths.
     ///
-    /// Allocates internally via `glob_t`. Prefer `ISO_9945.Kernel.Glob.match` at L3
-    /// for streaming results and `**` support.
+    /// Allocates internally via `glob_t`. Prefer the L3-policy `Glob.match`
+    /// at swift-posix (`POSIX Kernel Glob`) for streaming results and `**`
+    /// support — that path uses the cross-platform `Glob.Pattern` vocabulary
+    /// from L1 swift-glob-primitives.
     ///
     /// - Parameters:
     ///   - pattern: Glob pattern to expand.
