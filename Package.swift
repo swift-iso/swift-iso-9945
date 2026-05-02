@@ -419,6 +419,7 @@ let package = Package(
                 "ISO 9945 Glob",
                 "ISO 9945 Kernel Test Support",
                 .product(name: "Tagged Primitives Test Support", package: "swift-tagged-primitives"),
+                .product(name: "Tagged Primitives Standard Library Integration", package: "swift-tagged-primitives"),
             ]
         ),
     ],
