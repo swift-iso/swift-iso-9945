@@ -74,7 +74,6 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter descriptor: The file descriptor to stat.
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    @_spi(Syscall)
     public static func get(descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe get(fd: descriptor._rawValue)
     }
@@ -91,7 +90,6 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    @_spi(Syscall)
     public static func get(path: borrowing Path.Borrowed) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe get(unsafePath: UnsafePointer<CChar>(cString))
@@ -107,7 +105,6 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter path: Null-terminated path pointer.
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    @_spi(Syscall)
     @unsafe
     public static func get(at path: UnsafePointer<Path.Char>) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe get(unsafePath: UnsafePointer<CChar>(path))
@@ -147,7 +144,6 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    @_spi(Syscall)
     public static func lget(path: borrowing Path.Borrowed) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe lget(unsafePath: UnsafePointer<CChar>(cString))
@@ -162,7 +158,6 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter path: Null-terminated path pointer.
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    @_spi(Syscall)
     @unsafe
     public static func lget(at path: UnsafePointer<Path.Char>) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe lget(unsafePath: UnsafePointer<CChar>(path))

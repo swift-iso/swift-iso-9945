@@ -46,7 +46,6 @@ extension Memory.Map.Anonymous {
     /// // Write to the memory
     /// region.base.mutablePointer.storeBytes(of: 42, as: Int.self)
     /// ```
-    @_spi(Syscall)
     public static func map(
         length: Memory.Address.Count,
         protection: Memory.Map.Protection = [.read, .write],

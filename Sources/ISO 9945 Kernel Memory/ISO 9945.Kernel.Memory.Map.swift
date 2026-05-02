@@ -72,7 +72,6 @@ extension Memory.Map {
     ///
     /// Phase 1.5 typed L2 form. Delegates to the raw `map(... fd: Int32, ...)`
     /// SPI via `descriptor._rawValue`.
-    @_spi(Syscall)
     public static func map(
         addr: Memory.Address? = nil,
         length: Memory.Address.Count,
@@ -98,7 +97,6 @@ extension Memory.Map {
     ///   - length: The length of the mapping.
     /// - Throws: `Error.unmap` on failure.
 
-    @_spi(Syscall)
     public static func unmap(
         addr: Memory.Address,
         length: Memory.Address.Count
@@ -113,7 +111,6 @@ extension Memory.Map {
     /// - Parameter region: The region to unmap.
     /// - Throws: `Error.unmap` on failure.
 
-    @_spi(Syscall)
     public static func unmap(_ region: Region) throws(Error) {
         try unmap(addr: region.base, length: region.length)
     }
@@ -126,7 +123,6 @@ extension Memory.Map {
     ///   - flags: Sync flags (sync, async, invalidate).
     /// - Throws: `Error.sync` on failure.
 
-    @_spi(Syscall)
     public static func sync(
         addr: Memory.Address,
         length: Memory.Address.Count,
@@ -145,7 +141,6 @@ extension Memory.Map {
     ///   - protection: The new protection flags.
     /// - Throws: `Error.protect` on failure.
 
-    @_spi(Syscall)
     public static func protect(
         addr: Memory.Address,
         length: Memory.Address.Count,
@@ -165,7 +160,6 @@ extension Memory.Map {
     ///   - length: The length of the region.
     ///   - advice: The advice type.
 
-    @_spi(Syscall)
     public static func advise(
         addr: Memory.Address,
         length: Memory.Address.Count,
