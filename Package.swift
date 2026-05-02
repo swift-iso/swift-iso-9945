@@ -114,6 +114,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../../swift-primitives/swift-algebra-primitives"),
+        .package(path: "../../swift-primitives/swift-carrier-primitives"),
         .package(path: "../../swift-primitives/swift-tagged-primitives"),
         .package(path: "../../swift-primitives/swift-loader-primitives"),
         .package(path: "../../swift-primitives/swift-string-primitives"),
@@ -141,6 +142,7 @@ let package = Package(
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
+                .product(name: "Carrier Primitives", package: "swift-carrier-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "Time Primitives Core", package: "swift-time-primitives"),
                 .product(name: "Binary Primitives Core", package: "swift-binary-primitives"),
