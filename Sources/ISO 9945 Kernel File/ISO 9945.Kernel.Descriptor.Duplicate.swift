@@ -28,13 +28,19 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// Spec-literal raw `dup(2)`. Creates a copy of the file descriptor using
     /// the lowest-numbered available file descriptor. The typed L2 convenience
     /// (`ISO_9945.Kernel.Descriptor.Duplicate.duplicate(_:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
+    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw form internally.
+    ///
+    /// **Item 1.5 (2026-05-02)**: downgraded from `@_spi(Syscall) public` to
+    /// `package`. swift-memory's Memory.Lock.Token.acquire — the sole
+    /// cross-package consumer — was migrated to the typed L2 form in Phase 3
+    /// (commit `371a6e5`). In-package access (other targets within
+    /// swift-iso-9945's Package.swift) preserved via SE-0386 `package`
+    /// access; cross-package consumers no longer have access.
     ///
     /// - Parameter fd: The raw file descriptor to duplicate.
     /// - Returns: The new raw file descriptor.
     /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure.
-    @_spi(Syscall)
-    public static func duplicate(fd: Int32) throws(Error) -> Int32 {
+    package static func duplicate(fd: Int32) throws(Error) -> Int32 {
         #if canImport(Darwin)
             let result = unsafe Darwin.dup(fd)
         #elseif canImport(Musl)

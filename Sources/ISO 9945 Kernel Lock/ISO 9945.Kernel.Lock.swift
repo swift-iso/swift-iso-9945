@@ -33,7 +33,14 @@ extension ISO_9945.Kernel.Lock {
     /// (`ISO_9945.Kernel.Lock.lock(_:range:kind:)` taking `borrowing
     /// ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
     /// (`POSIX.Kernel.Lock.lock(_:range:kind:)` in swift-posix) both call
-    /// this raw SPI internally.
+    /// this raw form internally.
+    ///
+    /// **Item 1.5 (2026-05-02)**: downgraded from `@_spi(Syscall) public` to
+    /// `package`. swift-memory's Memory.Lock.Token.acquire — the sole
+    /// cross-package consumer — was migrated to the typed L2 form in Phase 3
+    /// (commit `371a6e5`). In-package access (other targets within
+    /// swift-iso-9945's Package.swift, including Tests/) preserved via
+    /// SE-0386 `package` access; cross-package consumers no longer have access.
     ///
     /// - Parameters:
     ///   - fd: The file descriptor.
@@ -41,8 +48,7 @@ extension ISO_9945.Kernel.Lock {
     ///   - kind: The lock kind (shared or exclusive).
     /// - Throws: `Error.deadlock` if a deadlock is detected,
     ///           `Error.unavailable` if the system lock table is exhausted.
-    @_spi(Syscall)
-    public static func lock(
+    package static func lock(
         fd: Int32,
         range: ISO_9945.Kernel.Lock.Range,
         kind: ISO_9945.Kernel.Lock.Kind
@@ -61,14 +67,20 @@ extension ISO_9945.Kernel.Lock {
     /// convenience (`ISO_9945.Kernel.Lock.unlock(_:range:)` taking
     /// `borrowing ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
     /// (`POSIX.Kernel.Lock.unlock(_:range:)` in swift-posix) both call
-    /// this raw SPI internally.
+    /// this raw form internally.
+    ///
+    /// **Item 1.5 (2026-05-02)**: downgraded from `@_spi(Syscall) public` to
+    /// `package`. swift-memory's Memory.Lock.Token.acquire — the sole
+    /// cross-package consumer — was migrated to the typed L2 form in Phase 3
+    /// (commit `371a6e5`). In-package access (other targets within
+    /// swift-iso-9945's Package.swift, including Tests/) preserved via
+    /// SE-0386 `package` access; cross-package consumers no longer have access.
     ///
     /// - Parameters:
     ///   - fd: The file descriptor.
     ///   - range: The byte range to unlock.
     /// - Throws: `Error` if unlocking fails.
-    @_spi(Syscall)
-    public static func unlock(
+    package static func unlock(
         fd: Int32,
         range: ISO_9945.Kernel.Lock.Range
     ) throws(ISO_9945.Kernel.Lock.Error) {
