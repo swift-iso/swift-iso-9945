@@ -32,6 +32,7 @@ public import Path_Primitives
 public import Error_Primitives
 import ISO_9945_Kernel
 @_spi(Syscall) import ISO_9945_Kernel_Lock
+@_spi(Syscall) import ISO_9945_Kernel_File  // Wave 3.5-Corrective-2 tail: File.Open.open is @_spi(Syscall) public
 
 @main
 struct LockHelper {
