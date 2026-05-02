@@ -50,6 +50,7 @@ extension ISO_9945.Kernel.File.Open {
     /// - Returns: A file descriptor for the opened file.
     /// - Throws: ``Kernel/File/Open/Error`` on failure.
     /// - Complexity: O(1) in Swift, O(path length) in kernel.
+    @_spi(Syscall)
     public static func open(
         path: borrowing Path.Borrowed,
         mode: ISO_9945.Kernel.File.Open.Mode,
