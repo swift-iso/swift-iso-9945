@@ -37,6 +37,7 @@ extension Memory.Map {
     ///
     /// - Note: This is advisory only. The kernel may ignore the hint.
     ///   The function does not throw on failure since advice is optional.
+    @_spi(Syscall)
     @unsafe
     public static func advise(
         addr: UnsafeMutableRawPointer,
@@ -50,6 +51,7 @@ extension Memory.Map {
     /// Advises the kernel about expected memory access patterns.
     ///
     /// Overload accepting an immutable pointer for read-only mappings.
+    @_spi(Syscall)
     @unsafe
     public static func advise(
         addr: UnsafeRawPointer,
