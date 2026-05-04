@@ -84,19 +84,19 @@ extension ISO_9945.Kernel.IO.Read {
         }
         #if canImport(Darwin)
             return try Syscall.require(
-                unsafe Darwin.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
+                unsafe Darwin.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Musl)
             return try Syscall.require(
-                unsafe Musl.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
+                unsafe Musl.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
                 .nonNegative,
                 orThrow: Error.current()
             )
         #elseif canImport(Glibc)
             return try Syscall.require(
-                unsafe Glibc.pread(fd, baseAddress, buffer.count, off_t(offset.rawValue)),
+                unsafe Glibc.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
                 .nonNegative,
                 orThrow: Error.current()
             )

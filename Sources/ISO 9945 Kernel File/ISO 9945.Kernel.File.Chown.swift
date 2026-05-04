@@ -56,11 +56,11 @@ extension ISO_9945.Kernel.File.Chown {
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
-            let result = unsafe Darwin.chown(cPath, uid.rawValue, gid.rawValue)
+            let result = unsafe Darwin.chown(cPath, uid.underlying, gid.underlying)
         #elseif canImport(Musl)
-            let result = Musl.chown(cPath, uid.rawValue, gid.rawValue)
+            let result = Musl.chown(cPath, uid.underlying, gid.underlying)
         #elseif canImport(Glibc)
-            let result = Glibc.chown(cPath, uid.rawValue, gid.rawValue)
+            let result = Glibc.chown(cPath, uid.underlying, gid.underlying)
         #endif
 
         guard result == 0 else {
@@ -101,11 +101,11 @@ extension ISO_9945.Kernel.File.Chown {
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
         #if canImport(Darwin)
-            let result = unsafe Darwin.lchown(cPath, uid.rawValue, gid.rawValue)
+            let result = unsafe Darwin.lchown(cPath, uid.underlying, gid.underlying)
         #elseif canImport(Musl)
-            let result = Musl.lchown(cPath, uid.rawValue, gid.rawValue)
+            let result = Musl.lchown(cPath, uid.underlying, gid.underlying)
         #elseif canImport(Glibc)
-            let result = Glibc.lchown(cPath, uid.rawValue, gid.rawValue)
+            let result = Glibc.lchown(cPath, uid.underlying, gid.underlying)
         #endif
 
         guard result == 0 else {
@@ -135,11 +135,11 @@ extension ISO_9945.Kernel.File.Chown {
         gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         #if canImport(Darwin)
-            let result = unsafe Darwin.fchown(fd, uid.rawValue, gid.rawValue)
+            let result = unsafe Darwin.fchown(fd, uid.underlying, gid.underlying)
         #elseif canImport(Musl)
-            let result = unsafe Musl.fchown(fd, uid.rawValue, gid.rawValue)
+            let result = unsafe Musl.fchown(fd, uid.underlying, gid.underlying)
         #elseif canImport(Glibc)
-            let result = unsafe Glibc.fchown(fd, uid.rawValue, gid.rawValue)
+            let result = unsafe Glibc.fchown(fd, uid.underlying, gid.underlying)
         #endif
 
         guard result == 0 else {

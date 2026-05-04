@@ -82,7 +82,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
         }
         if !offset.isAligned(fileOffset) {
             return .misalignedOffset(
-                offset: fileOffset.rawValue,
+                offset: fileOffset.underlying,
                 required: offsetAlignment
             )
         }

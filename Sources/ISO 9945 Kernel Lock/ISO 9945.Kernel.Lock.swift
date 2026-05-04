@@ -93,8 +93,8 @@ extension ISO_9945.Kernel.Lock {
             fl.l_start = 0
             fl.l_len = 0  // 0 means lock to EOF
         case .bytes(let start, let end):
-            fl.l_start = off_t(start.rawValue)
-            fl.l_len = off_t((end - start).rawValue)
+            fl.l_start = off_t(start.underlying)
+            fl.l_len = off_t((end - start).underlying)
         }
 
         let result = unsafe fcntl(fd, F_SETLK, &fl)
@@ -117,8 +117,8 @@ extension ISO_9945.Kernel.Lock {
             fl.l_start = 0
             fl.l_len = 0
         case .bytes(let start, let end):
-            fl.l_start = off_t(start.rawValue)
-            fl.l_len = off_t((end - start).rawValue)
+            fl.l_start = off_t(start.underlying)
+            fl.l_len = off_t((end - start).underlying)
         }
 
         return fl

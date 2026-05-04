@@ -17,6 +17,6 @@ public import Carrier_Primitives
 // struct AND `Tagged<POSIX, ISO_9945.Kernel.File.Stats>` (the L3 variant)
 // uniformly via Tagged's cascading Carrier conformance.
 
-extension ISO_9945.Kernel.File.Stats: Carrier {
+extension ISO_9945.Kernel.File.Stats: Carrier.`Protocol` {
     public typealias Underlying = ISO_9945.Kernel.File.Stats
 }

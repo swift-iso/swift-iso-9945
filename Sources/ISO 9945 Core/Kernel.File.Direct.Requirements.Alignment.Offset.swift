@@ -22,7 +22,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
         /// - Returns: `true` if the offset is a multiple of `offsetAlignment`.
         public func isAligned(_ offset: ISO_9945.Kernel.File.Offset) -> Bool {
             let mask: Int64 = alignment.offsetAlignment.mask()
-            return offset.rawValue & mask == 0
+            return offset.underlying & mask == 0
         }
     }
 

@@ -131,7 +131,7 @@ extension ISO_9945.Kernel.Socket.Send {
                     buffer.count,
                     options.rawValue,
                     sockaddrPtr,
-                    socklen_t(addressLength.rawValue.rawValue)
+                    socklen_t(addressLength.underlying.rawValue)
                 )
             }
             guard result >= 0 else {

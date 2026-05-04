@@ -82,7 +82,7 @@ extension ISO_9945.Kernel.Lock {
             granularity: Memory.Allocation.Granularity
         ) {
             let endOffset = offset + length
-            let roundedEnd = granularity.rawValue.alignUp(endOffset)
+            let roundedEnd = granularity.underlying.alignUp(endOffset)
             self = .bytes(start: offset, end: roundedEnd)
         }
     }

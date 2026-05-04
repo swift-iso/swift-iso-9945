@@ -39,7 +39,7 @@ extension ISO_9945.Kernel.File.Truncate {
         fd: Int32,
         to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
-        let rc = unsafe ftruncate(fd, off_t(length.rawValue))
+        let rc = unsafe ftruncate(fd, off_t(length.underlying))
 
         guard rc == 0 else {
             throw Error_Primitives.Error.current(operation: "ftruncate")
@@ -79,7 +79,7 @@ extension ISO_9945.Kernel.File.Truncate {
         path: UnsafePointer<CChar>,
         to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
-        let rc = unsafe Darwin_or_Glibc_truncate(path, off_t(length.rawValue))
+        let rc = unsafe Darwin_or_Glibc_truncate(path, off_t(length.underlying))
 
         guard rc == 0 else {
             throw Error_Primitives.Error.current(operation: "truncate")

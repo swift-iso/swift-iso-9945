@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.Time {
         #endif
         unsafe clock_gettime(CLOCK_REALTIME, &ts)
         return ISO_9945.Kernel.Time(
-            __unchecked: (),
+            _unchecked: (),
             secondsSinceUnixEpoch: Int64(ts.tv_sec),
             nanosecondFraction: Int32(ts.tv_nsec)
         )

@@ -79,7 +79,7 @@ extension ISO_9945.Kernel.Process.Session {
         guard result != -1 else {
             throw .session(Error_Primitives.Error.captureErrno())
         }
-        return ID(__unchecked: (), result)
+        return ID(_unchecked: result)
     }
 
     /// Gets the session ID of a process.
@@ -108,6 +108,6 @@ extension ISO_9945.Kernel.Process.Session {
         guard result != -1 else {
             throw .session(Error_Primitives.Error.captureErrno())
         }
-        return ID(__unchecked: (), result)
+        return ID(_unchecked: result)
     }
 }

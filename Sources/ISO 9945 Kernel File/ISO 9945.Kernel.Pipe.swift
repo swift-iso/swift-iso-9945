@@ -27,21 +27,21 @@ extension ISO_9945.Kernel.Pipe {
     public typealias Descriptors = Tagged<ISO_9945.Kernel.Pipe, Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>>
 }
 
-extension Tagged where Tag == ISO_9945.Kernel.Pipe, RawValue == Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor> {
+extension Tagged where Tag == ISO_9945.Kernel.Pipe, Underlying == Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor> {
     /// The read end of the pipe.
     public var read: ISO_9945.Kernel.Descriptor {
-        @inlinable _read { yield rawValue.first }
+        @inlinable _read { yield underlying.first }
     }
 
     /// The write end of the pipe.
     public var write: ISO_9945.Kernel.Descriptor {
-        @inlinable _read { yield rawValue.second }
+        @inlinable _read { yield underlying.second }
     }
 
     /// Creates pipe descriptors from read and write ends.
     @inlinable
     internal init(read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) {
-        self.init(__unchecked: (), Pair(read, write))
+        self.init(_unchecked: Pair(read, write))
     }
 }
 

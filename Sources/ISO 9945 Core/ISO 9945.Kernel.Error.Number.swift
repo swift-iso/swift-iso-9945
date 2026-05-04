@@ -36,53 +36,53 @@ extension Error_Primitives.Error {
 
 extension Error_Primitives.Error.Number {
     /// File or directory does not exist (ENOENT).
-    public static var noEntry: Self { Self(__unchecked: (),ENOENT) }
+    public static var noEntry: Self { Self(_unchecked: ENOENT) }
 
     /// Permission denied (EACCES).
-    public static var accessDenied: Self { Self(__unchecked: (),EACCES) }
+    public static var accessDenied: Self { Self(_unchecked: EACCES) }
 
     /// Operation not permitted (EPERM).
-    public static var notPermitted: Self { Self(__unchecked: (),EPERM) }
+    public static var notPermitted: Self { Self(_unchecked: EPERM) }
 
     /// File or directory already exists (EEXIST).
-    public static var exists: Self { Self(__unchecked: (),EEXIST) }
+    public static var exists: Self { Self(_unchecked: EEXIST) }
 
     /// Is a directory (EISDIR).
-    public static var isDirectory: Self { Self(__unchecked: (),EISDIR) }
+    public static var isDirectory: Self { Self(_unchecked: EISDIR) }
 
     /// Too many open files in process (EMFILE).
-    public static var processLimit: Self { Self(__unchecked: (),EMFILE) }
+    public static var processLimit: Self { Self(_unchecked: EMFILE) }
 
     /// Too many open files in system (ENFILE).
-    public static var systemLimit: Self { Self(__unchecked: (),ENFILE) }
+    public static var systemLimit: Self { Self(_unchecked: ENFILE) }
 
     /// Invalid argument (EINVAL).
-    public static var invalid: Self { Self(__unchecked: (),EINVAL) }
+    public static var invalid: Self { Self(_unchecked: EINVAL) }
 
     /// Interrupted system call (EINTR).
-    public static var interrupted: Self { Self(__unchecked: (),EINTR) }
+    public static var interrupted: Self { Self(_unchecked: EINTR) }
 
     /// Resource temporarily unavailable / would block (EAGAIN).
-    public static var wouldBlock: Self { Self(__unchecked: (),EAGAIN) }
+    public static var wouldBlock: Self { Self(_unchecked: EAGAIN) }
 
     /// No such device (ENODEV).
-    public static var noDevice: Self { Self(__unchecked: (),ENODEV) }
+    public static var noDevice: Self { Self(_unchecked: ENODEV) }
 
     /// Not a directory (ENOTDIR).
-    public static var notDirectory: Self { Self(__unchecked: (),ENOTDIR) }
+    public static var notDirectory: Self { Self(_unchecked: ENOTDIR) }
 
     /// Read-only file system (EROFS).
-    public static var readOnlyFilesystem: Self { Self(__unchecked: (),EROFS) }
+    public static var readOnlyFilesystem: Self { Self(_unchecked: EROFS) }
 
     /// No space left on device (ENOSPC).
-    public static var noSpace: Self { Self(__unchecked: (),ENOSPC) }
+    public static var noSpace: Self { Self(_unchecked: ENOSPC) }
 
     /// Bad file descriptor (EBADF).
-    public static var badDescriptor: Self { Self(__unchecked: (),EBADF) }
+    public static var badDescriptor: Self { Self(_unchecked: EBADF) }
 
     /// I/O error (EIO).
-    public static var ioError: Self { Self(__unchecked: (),EIO) }
+    public static var ioError: Self { Self(_unchecked: EIO) }
 
     /// Out of memory (ENOMEM).
-    public static var noMemory: Self { Self(__unchecked: (),ENOMEM) }
+    public static var noMemory: Self { Self(_unchecked: ENOMEM) }
 }

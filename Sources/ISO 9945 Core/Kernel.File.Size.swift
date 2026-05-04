@@ -98,8 +98,8 @@ extension ISO_9945.Kernel.File.Size {
     /// - Precondition: `delta` must be non-negative.
     @inlinable
     public init(_ delta: ISO_9945.Kernel.File.Delta) {
-        precondition(delta.rawValue >= 0, "Delta must be non-negative to convert to Size")
-        self.init(delta.rawValue)
+        precondition(delta.underlying >= 0, "Delta must be non-negative to convert to Size")
+        self.init(delta.underlying)
     }
 }
 
@@ -109,13 +109,13 @@ extension ISO_9945.Kernel.File.Size {
     /// Whether this size is zero.
     @inlinable
     public var isZero: Bool {
-        rawValue == 0
+        underlying == 0
     }
 
     /// Whether this size is positive (greater than zero).
     @inlinable
     public var isPositive: Bool {
-        rawValue > 0
+        underlying > 0
     }
 }
 
@@ -128,7 +128,7 @@ extension ISO_9945.Kernel.File.Size {
     /// - Returns: `true` if this size is a multiple of the alignment.
     public func isAligned(to alignment: Memory.Alignment) -> Bool {
         let mask: Int64 = alignment.mask()
-        return rawValue & mask == 0
+        return underlying & mask == 0
     }
 
     /// Rounds this size down to the nearest alignment boundary.
@@ -137,7 +137,7 @@ extension ISO_9945.Kernel.File.Size {
     /// - Returns: The largest aligned size ≤ `self`.
     public func alignedDown(to alignment: Memory.Alignment) -> Self {
         let mask: Int64 = alignment.mask()
-        return Self(rawValue & ~mask)
+        return Self(underlying & ~mask)
     }
 
     /// Rounds this size up to the nearest alignment boundary.
@@ -146,7 +146,7 @@ extension ISO_9945.Kernel.File.Size {
     /// - Returns: The smallest aligned size ≥ `self`.
     public func alignedUp(to alignment: Memory.Alignment) -> Self {
         let mask: Int64 = alignment.mask()
-        return Self((rawValue &+ mask) & ~mask)
+        return Self((underlying &+ mask) & ~mask)
     }
 }
 
@@ -158,6 +158,6 @@ extension Int {
     /// - Parameter size: The file size.
     @inlinable
     public init(_ size: ISO_9945.Kernel.File.Size) {
-        self = Int(size.rawValue)
+        self = Int(size.underlying)
     }
 }

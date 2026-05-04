@@ -17,7 +17,7 @@ extension ISO_9945.Kernel.User {
 extension ISO_9945.Kernel.User.Effective {
     /// Gets the effective user ID of the calling process.
     public static func id() -> ISO_9945.Kernel.User.ID {
-        ISO_9945.Kernel.User.ID(__unchecked: (), geteuid())
+        ISO_9945.Kernel.User.ID(_unchecked: geteuid())
     }
 
     /// Sets the effective user ID of the calling process.
@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.User.Effective {
     public static func set(
         _ uid: ISO_9945.Kernel.User.ID
     ) throws(Error_Primitives.Error) {
-        guard seteuid(uid.rawValue) == 0 else {
+        guard seteuid(uid.underlying) == 0 else {
             throw Error_Primitives.Error.current(operation: "seteuid")
         }
     }

@@ -17,7 +17,7 @@ extension ISO_9945.Kernel.Group {
 extension ISO_9945.Kernel.Group.Effective {
     /// Gets the effective group ID of the calling process.
     public static func id() -> ISO_9945.Kernel.Group.ID {
-        ISO_9945.Kernel.Group.ID(__unchecked: (), getegid())
+        ISO_9945.Kernel.Group.ID(_unchecked: getegid())
     }
 
     /// Sets the effective group ID of the calling process.
@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.Group.Effective {
     public static func set(
         _ gid: ISO_9945.Kernel.Group.ID
     ) throws(Error_Primitives.Error) {
-        guard setegid(gid.rawValue) == 0 else {
+        guard setegid(gid.underlying) == 0 else {
             throw Error_Primitives.Error.current(operation: "setegid")
         }
     }

@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         get { unsafe Name(pointer: cValue.msg_name, length: ISO_9945.Kernel.Socket.Address.Length(cValue.msg_namelen)) }
         set {
             unsafe cValue.msg_name = newValue.pointer
-            unsafe cValue.msg_namelen = socklen_t(newValue.length.rawValue.rawValue)
+            unsafe cValue.msg_namelen = socklen_t(newValue.length.underlying.rawValue)
         }
     }
 

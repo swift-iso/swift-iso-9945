@@ -79,7 +79,7 @@ extension ISO_9945.Kernel.Process.Wait {
             case .process(let id):
                 id.rawValue
             case .group(let pgid):
-                -pgid.rawValue
+                -pgid.underlying
             case .current:
                 0
             }

@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.User {
     public typealias ID = Tagged<ISO_9945.Kernel.User, UInt32>
 }
 
-extension Tagged where Tag == ISO_9945.Kernel.User, RawValue == UInt32 {
+extension Tagged where Tag == ISO_9945.Kernel.User, Underlying == UInt32 {
     /// The root user (uid 0).
     public static var root: Self { .zero }
 }

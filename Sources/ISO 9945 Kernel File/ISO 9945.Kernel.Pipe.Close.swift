@@ -31,13 +31,12 @@ extension ISO_9945.Kernel.Pipe.Close {
     public static func write(
         _ descriptors: consuming ISO_9945.Kernel.Pipe.Descriptors
     ) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor {
-        let tagged = try descriptors.map { (pair: consuming Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
+        try descriptors.map { (pair: consuming Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
             try pair.apply { (read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
                 try ISO_9945.Kernel.Close.close(write)
                 return read
             }
-        }
-        return tagged.rawValue
+        }.underlying
     }
 
     /// Closes the read end of a pipe, returning the write end.
@@ -53,12 +52,11 @@ extension ISO_9945.Kernel.Pipe.Close {
     public static func read(
         _ descriptors: consuming ISO_9945.Kernel.Pipe.Descriptors
     ) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor {
-        let tagged = try descriptors.map { (pair: consuming Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
+        try descriptors.map { (pair: consuming Pair<ISO_9945.Kernel.Descriptor, ISO_9945.Kernel.Descriptor>) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
             try pair.apply { (read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.Close.Error) -> ISO_9945.Kernel.Descriptor in
                 try ISO_9945.Kernel.Close.close(read)
                 return write
             }
-        }
-        return tagged.rawValue
+        }.underlying
     }
 }

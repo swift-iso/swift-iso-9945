@@ -40,8 +40,8 @@ extension ISO_9945.Kernel.Process.Group {
 
 // MARK: - Process.Group.ID Constants
 
-extension Tagged where Tag == ISO_9945.Kernel.Process.Group, RawValue == Int32 {
+extension Tagged where Tag == ISO_9945.Kernel.Process.Group, Underlying == Int32 {
     /// The current process group.
 
-    public static var current: Self { Self(__unchecked: (), getpgrp()) }
+    public static var current: Self { Self(_unchecked: getpgrp()) }
 }

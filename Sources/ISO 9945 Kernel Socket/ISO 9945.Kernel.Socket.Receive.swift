@@ -113,7 +113,7 @@ extension ISO_9945.Kernel.Socket.Receive {
                 return (count: 0, address: ISO_9945.Kernel.Socket.Address.Storage(), addressLength: ISO_9945.Kernel.Socket.Address.Length(UInt(0)))
             }
             var storage = ISO_9945.Kernel.Socket.Address.Storage()
-            var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.rawValue.rawValue)
+            var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
             let count = storage.withUnsafeMutableBytes { ptr, _ in
                 let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)

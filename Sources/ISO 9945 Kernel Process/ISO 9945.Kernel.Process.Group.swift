@@ -73,7 +73,7 @@ extension ISO_9945.Kernel.Process.Group {
             case .same:
                 0
             case .id(let id):
-                id.rawValue
+                id.underlying
             }
 
         guard setpgid(pid, pgid) == 0 else {
@@ -107,6 +107,6 @@ extension ISO_9945.Kernel.Process.Group {
         guard result != -1 else {
             throw .group(Error_Primitives.Error.captureErrno())
         }
-        return ID(__unchecked: (), result)
+        return ID(_unchecked: result)
     }
 }

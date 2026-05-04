@@ -27,9 +27,9 @@ extension System {
     /// Note: This is a conservative limit, not a universal truth.
     public static var pathMax: System.Path.Length {
         #if canImport(Darwin)
-            return System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // 1024
+            return System.Path.Length(_unchecked: Cardinal(UInt(PATH_MAX)))  // 1024
         #else
-            return System.Path.Length(__unchecked: (), Cardinal(UInt(PATH_MAX)))  // Usually 4096
+            return System.Path.Length(_unchecked: Cardinal(UInt(PATH_MAX)))  // Usually 4096
         #endif
     }
 
@@ -38,7 +38,7 @@ extension System {
     /// This is the fundamental unit of memory management.
     /// Typically 4096 bytes on most systems, 16384 on Apple Silicon.
     public static var pageSize: System.Page.Size {
-        System.Page.Size(__unchecked: (), Cardinal(UInt(sysconf(Int32(_SC_PAGESIZE)))))
+        System.Page.Size(_unchecked: Cardinal(UInt(sysconf(Int32(_SC_PAGESIZE)))))
     }
 
     /// Number of active/online processors.
@@ -49,7 +49,7 @@ extension System {
     /// Returns 1 as a fallback if the syscall fails.
     public static var processorCount: System.Processor.Count {
         let count = sysconf(Int32(_SC_NPROCESSORS_ONLN))
-        return System.Processor.Count(__unchecked: (), Cardinal(UInt(count > 0 ? count : 1)))
+        return System.Processor.Count(_unchecked: Cardinal(UInt(count > 0 ? count : 1)))
     }
 
     /// Sleeps for the specified duration.

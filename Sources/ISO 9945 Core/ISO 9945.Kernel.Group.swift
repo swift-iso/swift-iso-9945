@@ -24,7 +24,7 @@ extension ISO_9945.Kernel.Group {
     public typealias ID = Tagged<ISO_9945.Kernel.Group, UInt32>
 }
 
-extension Tagged where Tag == ISO_9945.Kernel.Group, RawValue == UInt32 {
+extension Tagged where Tag == ISO_9945.Kernel.Group, Underlying == UInt32 {
     /// The root group (gid 0).
     public static var root: Self { .zero }
 }

@@ -27,10 +27,10 @@ extension ISO_9945.Kernel.Event {
 
 // MARK: - Event.ID Conversions
 
-extension Tagged where Tag == ISO_9945.Kernel.Event, RawValue == UInt {
+extension Tagged where Tag == ISO_9945.Kernel.Event, Underlying == UInt {
     /// Creates an identifier from an Int32 (for signals, etc.).
     @inlinable
     public init(_ value: Int32) {
-        self.init(__unchecked: (), UInt(bitPattern: Int(value)))
+        self.init(_unchecked: UInt(bitPattern: Int(value)))
     }
 }

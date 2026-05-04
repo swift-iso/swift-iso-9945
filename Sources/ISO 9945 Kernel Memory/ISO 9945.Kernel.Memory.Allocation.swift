@@ -30,6 +30,6 @@ extension Memory.Allocation {
     public static var system: Memory.Allocation.Granularity {
         let pageSize = Int(sysconf(Int32(_SC_PAGESIZE)))
         // Safe: page size is always a power of 2
-        return Memory.Allocation.Granularity(__unchecked: (), try! Memory.Alignment(pageSize))
+        return Memory.Allocation.Granularity(_unchecked: try! Memory.Alignment(pageSize))
     }
 }

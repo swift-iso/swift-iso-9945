@@ -45,7 +45,7 @@ extension Memory.Lock {
         address: UnsafeRawPointer,
         length: Memory.Address.Count
     ) throws(Error) {
-        guard unsafe (mlock(address, Int(bitPattern: length.rawValue.rawValue)) == 0) else {
+        guard unsafe (mlock(address, Int(bitPattern: length.underlying.rawValue)) == 0) else {
             throw .lock(.captureErrno())
         }
     }
@@ -63,7 +63,7 @@ extension Memory.Lock {
         address: UnsafeRawPointer,
         length: Memory.Address.Count
     ) throws(Error) {
-        guard unsafe (munlock(address, Int(bitPattern: length.rawValue.rawValue)) == 0) else {
+        guard unsafe (munlock(address, Int(bitPattern: length.underlying.rawValue)) == 0) else {
             throw .unlock(.captureErrno())
         }
     }

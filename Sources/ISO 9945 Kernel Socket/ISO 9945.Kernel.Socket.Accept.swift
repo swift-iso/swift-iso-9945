@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.Socket.Accept {
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     internal static func accept(fd: Int32) throws(ISO_9945.Kernel.Socket.Error) -> Result {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
-        var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.rawValue.rawValue)
+        var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
         let acceptedFd = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)

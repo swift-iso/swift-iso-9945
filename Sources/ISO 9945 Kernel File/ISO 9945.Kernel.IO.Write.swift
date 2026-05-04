@@ -111,11 +111,11 @@ extension ISO_9945.Kernel.IO.Write {
         }
 
         #if canImport(Darwin)
-            let result = unsafe Darwin.pwrite(fd, baseAddress, buffer.count, off_t(offset.rawValue))
+            let result = unsafe Darwin.pwrite(fd, baseAddress, buffer.count, off_t(offset.underlying))
         #elseif canImport(Musl)
-            let result = unsafe Musl.pwrite(fd, baseAddress, buffer.count, off_t(offset.rawValue))
+            let result = unsafe Musl.pwrite(fd, baseAddress, buffer.count, off_t(offset.underlying))
         #elseif canImport(Glibc)
-            let result = unsafe Glibc.pwrite(fd, baseAddress, buffer.count, off_t(offset.rawValue))
+            let result = unsafe Glibc.pwrite(fd, baseAddress, buffer.count, off_t(offset.underlying))
         #endif
 
         if result >= 0 {

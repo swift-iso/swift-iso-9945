@@ -44,7 +44,7 @@ extension Memory.Map {
         advice: Memory.Map.Advice
     ) {
         // madvise returns -1 on error, but we ignore errors since advice is optional
-        _ = unsafe madvise(addr, Int(bitPattern: length.rawValue.rawValue), advice.rawValue)
+        _ = unsafe madvise(addr, Int(bitPattern: length.underlying.rawValue), advice.rawValue)
     }
 
     /// Advises the kernel about expected memory access patterns.
@@ -56,7 +56,7 @@ extension Memory.Map {
         length: Memory.Address.Count,
         advice: Memory.Map.Advice
     ) {
-        _ = unsafe madvise(UnsafeMutableRawPointer(mutating: addr), Int(bitPattern: length.rawValue.rawValue), advice.rawValue)
+        _ = unsafe madvise(UnsafeMutableRawPointer(mutating: addr), Int(bitPattern: length.underlying.rawValue), advice.rawValue)
     }
 }
 

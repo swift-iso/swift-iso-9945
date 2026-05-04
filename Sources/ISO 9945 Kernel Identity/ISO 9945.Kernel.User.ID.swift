@@ -17,7 +17,7 @@ extension ISO_9945.Kernel.User {
 extension ISO_9945.Kernel.User.Real {
     /// Gets the real user ID of the calling process.
     public static func id() -> ISO_9945.Kernel.User.ID {
-        ISO_9945.Kernel.User.ID(__unchecked: (), getuid())
+        ISO_9945.Kernel.User.ID(_unchecked: getuid())
     }
 
     /// Sets the real user ID of the calling process.
@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.User.Real {
     public static func set(
         _ uid: ISO_9945.Kernel.User.ID
     ) throws(Error_Primitives.Error) {
-        guard setuid(uid.rawValue) == 0 else {
+        guard setuid(uid.underlying) == 0 else {
             throw Error_Primitives.Error.current(operation: "setuid")
         }
     }

@@ -109,7 +109,7 @@ extension ISO_9945.Kernel.Signal.Send {
         pgid: ISO_9945.Kernel.Process.Group.ID
     ) throws(ISO_9945.Kernel.Signal.Error) {
         // Negative PID means process group
-        guard kill(-pgid.rawValue, signal.rawValue) == 0 else {
+        guard kill(-pgid.underlying, signal.rawValue) == 0 else {
             throw .send(Error_Primitives.Error.captureErrno())
         }
     }

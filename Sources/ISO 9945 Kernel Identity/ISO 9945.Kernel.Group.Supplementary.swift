@@ -36,6 +36,6 @@ extension ISO_9945.Kernel.Group.Supplementary {
             throw Error_Primitives.Error.current(operation: "getgroups")
         }
 
-        return gids.prefix(Int(result)).map { ISO_9945.Kernel.Group.ID(__unchecked: (), $0) }
+        return gids.prefix(Int(result)).map { ISO_9945.Kernel.Group.ID(_unchecked: $0) }
     }
 }

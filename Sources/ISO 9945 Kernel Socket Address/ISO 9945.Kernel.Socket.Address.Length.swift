@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.Socket.Address {
 
 // MARK: - Convenience Construction
 
-extension Tagged where Tag == ISO_9945.Kernel.Socket.Address, RawValue == Cardinal {
+extension Tagged where Tag == ISO_9945.Kernel.Socket.Address, Underlying == Cardinal {
     /// Creates a length from a raw 32-bit unsigned value (POSIX `socklen_t`).
     @inlinable
     public init(_ socklen: UInt32) {

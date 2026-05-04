@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.Group.Database {
     /// - Parameter gid: The group ID to look up.
     /// - Returns: The group entry, or `nil` if not found.
     public static func find(gid: ISO_9945.Kernel.Group.ID) -> Entry? {
-        guard let gr = unsafe getgrgid(gid.rawValue) else { return nil }
+        guard let gr = unsafe getgrgid(gid.underlying) else { return nil }
         return unsafe entry(from: gr)
     }
 
@@ -45,7 +45,7 @@ extension ISO_9945.Kernel.Group.Database {
 
         return unsafe Entry(
             name: String(cString: gr.pointee.gr_name),
-            gid: ISO_9945.Kernel.Group.ID(__unchecked: (), gr.pointee.gr_gid),
+            gid: ISO_9945.Kernel.Group.ID(_unchecked: gr.pointee.gr_gid),
             members: members
         )
     }
