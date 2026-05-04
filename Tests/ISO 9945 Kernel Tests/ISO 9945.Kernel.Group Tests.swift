@@ -102,7 +102,7 @@ extension ISO_9945.Kernel.Group.Test.EdgeCase {
     @Test
     func `Group.ID rawValue roundtrip`() {
         for value: UInt32 in [0, 1, 100, 1000, UInt32.max] {
-            let gid = ISO_9945.Kernel.Group.ID(__unchecked: (), value)
+            let gid = ISO_9945.Kernel.Group.ID(_unchecked: value)
             #expect(gid.rawValue == value)
         }
     }

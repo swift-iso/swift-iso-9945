@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 @_spi(Syscall) import Path_Primitives
@@ -39,7 +40,7 @@ struct EventIDTests {
 
     @Test
     func `ID max value`() {
-        let id = ISO_9945.Kernel.Event.ID(__unchecked: (), UInt.max)
+        let id = ISO_9945.Kernel.Event.ID(_unchecked: UInt.max)
         #expect(id.rawValue == UInt.max)
     }
 
@@ -74,7 +75,7 @@ struct EventIDTests {
     func `Descriptor from ID fails for large values`() {
         // Values larger than Int32.max cannot be converted to a descriptor.
         // No fd is constructed (init? returns nil), so no aliasing risk.
-        let largeID = ISO_9945.Kernel.Event.ID(__unchecked: (), UInt(Int32.max) + 1)
+        let largeID = ISO_9945.Kernel.Event.ID(_unchecked: UInt(Int32.max) + 1)
         let descriptor = ISO_9945.Kernel.Descriptor(largeID)
         let isNil = (descriptor == nil)
         #expect(isNil)
@@ -94,9 +95,9 @@ struct EventIDTests {
     @Test
     func `ID is Hashable`() {
         var set = Set<ISO_9945.Kernel.Event.ID>()
-        set.insert(ISO_9945.Kernel.Event.ID(__unchecked: (), 1))
-        set.insert(ISO_9945.Kernel.Event.ID(__unchecked: (), 2))
-        set.insert(ISO_9945.Kernel.Event.ID(__unchecked: (), 1))  // duplicate
+        set.insert(ISO_9945.Kernel.Event.ID(_unchecked: 1))
+        set.insert(ISO_9945.Kernel.Event.ID(_unchecked: 2))
+        set.insert(ISO_9945.Kernel.Event.ID(_unchecked: 1))  // duplicate
         #expect(set.count == 2)
     }
 

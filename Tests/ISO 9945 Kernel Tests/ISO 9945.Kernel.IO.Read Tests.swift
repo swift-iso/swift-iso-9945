@@ -165,7 +165,7 @@ extension ISO_9945.Kernel.IO.Read {
 
             #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
                 try buffer.withUnsafeMutableBytes { ptr in
-                    try ISO_9945.Kernel.IO.Read.read(ISO_9945.Kernel.Descriptor(_rawValue: -1), into: ptr)
+                    try ISO_9945.Kernel.IO.Read.read(ISO_9945.Kernel.Descriptor(_raw: -1), into: ptr)
                 }
             }
         }
@@ -176,7 +176,7 @@ extension ISO_9945.Kernel.IO.Read {
 
             #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
                 try buffer.withUnsafeMutableBytes { ptr in
-                    try ISO_9945.Kernel.IO.Read.pread(ISO_9945.Kernel.Descriptor(_rawValue: -1), into: ptr, at: ISO_9945.Kernel.File.Offset(0))
+                    try ISO_9945.Kernel.IO.Read.pread(ISO_9945.Kernel.Descriptor(_raw: -1), into: ptr, at: ISO_9945.Kernel.File.Offset(0))
                 }
             }
         }

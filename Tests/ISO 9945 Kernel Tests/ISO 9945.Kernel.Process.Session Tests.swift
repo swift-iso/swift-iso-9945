@@ -34,7 +34,7 @@ extension ISO_9945.Kernel.Process.Session {
 extension ISO_9945.Kernel.Process.Session.Test.Unit {
     @Test
     func `Session.ID is type alias for Tagged`() {
-        let id = ISO_9945.Kernel.Process.Session.ID(__unchecked: (), 123)
+        let id = ISO_9945.Kernel.Process.Session.ID(_unchecked: 123)
         #expect(id.rawValue == 123)
     }
 }

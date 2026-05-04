@@ -71,9 +71,9 @@ private enum LockTestHelper {
     ///
     /// - Parameters:
     ///   - filePath: Path to the file to lock.
-    ///   - milliseconds: How long to hold the lock.
+    ///   - millisecondsSinceUnixEpoch: How long to hold the lock.
     /// - Returns: The process ID of the spawned helper.
-    static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> ISO_9945.Kernel.Process.ID {
+    static func spawn(lockingFile filePath: Swift.String, forMilliseconds millisecondsSinceUnixEpoch: Int) throws -> ISO_9945.Kernel.Process.ID {
         let helperPath = executablePath()
         let allArgs = [helperPath, filePath, "\(milliseconds)"]
         let envp: [Swift.String] = []

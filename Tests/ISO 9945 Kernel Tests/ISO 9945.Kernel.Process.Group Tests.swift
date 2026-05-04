@@ -16,7 +16,6 @@ import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Path_Primitives
 import Error_Primitives
-import Tagged_Primitives_Test_Support
 
 @testable import ISO_9945_Kernel
 
@@ -35,7 +34,7 @@ extension ISO_9945.Kernel.Process.Group {
 extension ISO_9945.Kernel.Process.Group.Test.Unit {
     @Test
     func `Group.ID is type alias for Tagged`() {
-        let id = ISO_9945.Kernel.Process.Group.ID(__unchecked: (), 123)
+        let id = ISO_9945.Kernel.Process.Group.ID(_unchecked: 123)
         #expect(id.rawValue == 123)
     }
 
@@ -47,7 +46,7 @@ extension ISO_9945.Kernel.Process.Group.Test.Unit {
 
     @Test
     func `Group.Target cases are distinct`() {
-        let pgid = ISO_9945.Kernel.Process.Group.ID(__unchecked: (), 42)
+        let pgid = ISO_9945.Kernel.Process.Group.ID(_unchecked: 42)
         #expect(ISO_9945.Kernel.Process.Group.Target.same != ISO_9945.Kernel.Process.Group.Target.id(pgid))
     }
 }

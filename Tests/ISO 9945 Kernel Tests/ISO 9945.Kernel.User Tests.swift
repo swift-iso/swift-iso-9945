@@ -102,7 +102,7 @@ extension ISO_9945.Kernel.User.Test.EdgeCase {
     @Test
     func `User.ID rawValue roundtrip`() {
         for value: UInt32 in [0, 1, 501, 65534, UInt32.max] {
-            let uid = ISO_9945.Kernel.User.ID(__unchecked: (), value)
+            let uid = ISO_9945.Kernel.User.ID(_unchecked: value)
             #expect(uid.rawValue == value)
         }
     }

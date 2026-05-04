@@ -402,6 +402,7 @@ let package = Package(
             name: "ISO 9945 Kernel Test Support",
             dependencies: [
                 "ISO 9945 Kernel",
+                .product(name: "Cardinal Primitives Test Support", package: "swift-cardinal-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives")
@@ -418,8 +419,6 @@ let package = Package(
                 "ISO 9945 Kernel",
                 "ISO 9945 Glob",
                 "ISO 9945 Kernel Test Support",
-                .product(name: "Tagged Primitives Test Support", package: "swift-tagged-primitives"),
-                .product(name: "Tagged Primitives Standard Library Integration", package: "swift-tagged-primitives"),
             ]
         ),
     ],

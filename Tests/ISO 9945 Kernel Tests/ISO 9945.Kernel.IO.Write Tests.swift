@@ -177,7 +177,7 @@ extension ISO_9945.Kernel.IO.Write {
 
             #expect(throws: ISO_9945.Kernel.IO.Write.Error.self) {
                 try content.withUnsafeBytes { ptr in
-                    try ISO_9945.Kernel.IO.Write.write(ISO_9945.Kernel.Descriptor(_rawValue: -1), from: ptr)
+                    try ISO_9945.Kernel.IO.Write.write(ISO_9945.Kernel.Descriptor(_raw: -1), from: ptr)
                 }
             }
         }
@@ -188,7 +188,7 @@ extension ISO_9945.Kernel.IO.Write {
 
             #expect(throws: ISO_9945.Kernel.IO.Write.Error.self) {
                 try content.withUnsafeBytes { ptr in
-                    try ISO_9945.Kernel.IO.Write.pwrite(ISO_9945.Kernel.Descriptor(_rawValue: -1), from: ptr, at: ISO_9945.Kernel.File.Offset(0))
+                    try ISO_9945.Kernel.IO.Write.pwrite(ISO_9945.Kernel.Descriptor(_raw: -1), from: ptr, at: ISO_9945.Kernel.File.Offset(0))
                 }
             }
         }

@@ -16,6 +16,7 @@ import Error_Primitives
 @_spi(Syscall) import Path_Primitives
 @_spi(Syscall) import Error_Primitives
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 
 @testable import ISO_9945_Kernel
 
@@ -53,7 +54,7 @@ extension ISO_9945.Kernel.Close.Test.EdgeCase {
     @Test
     func `close throws on negative descriptor`() {
         #expect(throws: ISO_9945.Kernel.Close.Error.self) {
-            try ISO_9945.Kernel.Close.close(ISO_9945.Kernel.Descriptor(_rawValue: -100))
+            try ISO_9945.Kernel.Close.close(ISO_9945.Kernel.Descriptor(_raw: -100))
         }
     }
 }

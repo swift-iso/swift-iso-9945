@@ -150,7 +150,7 @@ extension POSIXThreadSynchronizationTests {
 }
 
 /// Small sleep helper using usleep
-private func smallSleep(milliseconds: UInt32) {
+private func smallSleep(millisecondsSinceUnixEpoch: UInt32) {
     #if canImport(Darwin)
         usleep(milliseconds * 1000)
     #elseif canImport(Glibc)
@@ -176,9 +176,9 @@ extension POSIXThreadSynchronizationTests.Integration {
 
         // Wait for thread to enter wait
         while !waiterReady.load(ordering: .acquiring) {
-            smallSleep(milliseconds: 1)
+            smallSleep(millisecondsSinceUnixEpoch: 1)
         }
-        smallSleep(milliseconds: 20)
+        smallSleep(millisecondsSinceUnixEpoch: 20)
 
         // Signal
         mutex.lock()
@@ -223,9 +223,9 @@ extension POSIXThreadSynchronizationTests.Integration {
 
         // Wait for all threads to enter wait
         while waitersReady.load(ordering: .acquiring) < numWaiters {
-            smallSleep(milliseconds: 1)
+            smallSleep(millisecondsSinceUnixEpoch: 1)
         }
-        smallSleep(milliseconds: 30)
+        smallSleep(millisecondsSinceUnixEpoch: 30)
 
         // Broadcast
         mutex.lock()

@@ -12,11 +12,11 @@
 #if os(macOS)
 
 import Testing
-import Tagged_Primitives_Test_Support
 
     import Path_Primitives
     import Error_Primitives
     @testable import ISO_9945_Kernel
+import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 
     extension ISO_9945.Kernel.Process.Wait {

@@ -11,7 +11,9 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel
+import ISO_9945_Kernel_Test_Support
 
 
 extension ISO_9945.Kernel.File.Stats {
@@ -27,7 +29,7 @@ extension ISO_9945.Kernel.File.Stats {
 extension ISO_9945.Kernel.File.Stats.Test.Unit {
     @Test
     func `Stat stores all fields`() {
-        let time = ISO_9945.Kernel.Time(seconds: 1000)
+        let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 1000)
         let stat = ISO_9945.Kernel.File.Stats(
             size: 1024,
             type: .regular,
@@ -54,7 +56,7 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
 
     @Test
     func `Stat is Sendable`() {
-        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 0)
         let stat: any Sendable = ISO_9945.Kernel.File.Stats(
             size: 0,
             type: .regular,
@@ -73,7 +75,7 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
 
     @Test
     func `Stat is Equatable`() {
-        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 0)
         let a = ISO_9945.Kernel.File.Stats(
             size: 100,
             type: .regular,
@@ -163,7 +165,7 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
 extension ISO_9945.Kernel.File.Stats.Test.EdgeCase {
     @Test
     func `zero size file`() {
-        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 0)
         let stat = ISO_9945.Kernel.File.Stats(
             size: 0,
             type: .regular,
@@ -183,7 +185,7 @@ extension ISO_9945.Kernel.File.Stats.Test.EdgeCase {
 
     @Test
     func `maximum permissions`() {
-        let time = ISO_9945.Kernel.Time(seconds: 0)
+        let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 0)
         let stat = ISO_9945.Kernel.File.Stats(
             size: 0,
             type: .regular,
