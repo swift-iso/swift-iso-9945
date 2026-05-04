@@ -11,6 +11,7 @@
 
 // Tests use Apple native Testing framework
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Path_Primitives
@@ -92,7 +93,7 @@ extension System.Test.Unit {
     @Test
     func `allocationGranularity is positive`() {
         let granularity = Memory.Allocation.system
-        let size: Int = granularity.rawValue.magnitude()
+        let size: Int = granularity.underlying.magnitude()
         #expect(size > 0)
     }
 
@@ -100,7 +101,7 @@ extension System.Test.Unit {
     func `allocationGranularity is power of 2`() {
         let granularity = Memory.Allocation.system
         // Memory.Alignment always represents a power of 2
-        let size: Int = granularity.rawValue.magnitude()
+        let size: Int = granularity.underlying.magnitude()
         #expect(size & (size - 1) == 0)
     }
 
@@ -108,7 +109,7 @@ extension System.Test.Unit {
         func `allocationGranularity equals pageSize on POSIX`() {
             let granularity = Memory.Allocation.system
             // Compare underlying values since these are different types
-            let size: Int = granularity.rawValue.magnitude()
+            let size: Int = granularity.underlying.magnitude()
             #expect(size == Int(System.pageSize))
         }
 }

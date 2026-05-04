@@ -15,6 +15,7 @@ import Path_Primitives
 import Error_Primitives
 // Tests use Apple native Testing framework
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 
 @testable import ISO_9945_Kernel
 

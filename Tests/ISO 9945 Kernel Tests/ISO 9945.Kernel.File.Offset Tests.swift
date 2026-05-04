@@ -51,7 +51,7 @@ struct FileOffsetTests {
 
     @Test
     func `max constant`() {
-        #expect(ISO_9945.Kernel.File.Offset.max.rawValue == Int64.max)
+        #expect(ISO_9945.Kernel.File.Offset.max.underlying == Int64.max)
     }
 
     // MARK: - Arithmetic with Delta

@@ -16,6 +16,7 @@ import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Error_Primitives
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 
 #if canImport(Darwin)
     import Darwin
@@ -71,9 +72,9 @@ private enum LockTestHelper {
     ///
     /// - Parameters:
     ///   - filePath: Path to the file to lock.
-    ///   - millisecondsSinceUnixEpoch: How long to hold the lock.
+    ///   - milliseconds: How long to hold the lock.
     /// - Returns: The process ID of the spawned helper.
-    static func spawn(lockingFile filePath: Swift.String, forMilliseconds millisecondsSinceUnixEpoch: Int) throws -> ISO_9945.Kernel.Process.ID {
+    static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> ISO_9945.Kernel.Process.ID {
         let helperPath = executablePath()
         let allArgs = [helperPath, filePath, "\(milliseconds)"]
         let envp: [Swift.String] = []

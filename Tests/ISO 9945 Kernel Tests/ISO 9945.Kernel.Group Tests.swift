@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Path_Primitives
@@ -103,7 +104,7 @@ extension ISO_9945.Kernel.Group.Test.EdgeCase {
     func `Group.ID rawValue roundtrip`() {
         for value: UInt32 in [0, 1, 100, 1000, UInt32.max] {
             let gid = ISO_9945.Kernel.Group.ID(_unchecked: value)
-            #expect(gid.rawValue == value)
+            #expect(gid.underlying == value)
         }
     }
 }

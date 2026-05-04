@@ -12,6 +12,7 @@
 #if os(macOS)
 
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Path_Primitives
@@ -35,7 +36,7 @@ extension ISO_9945.Kernel.Process.Group.Test.Unit {
     @Test
     func `Group.ID is type alias for Tagged`() {
         let id = ISO_9945.Kernel.Process.Group.ID(_unchecked: 123)
-        #expect(id.rawValue == 123)
+        #expect(id.underlying == 123)
     }
 
     @Test
@@ -58,7 +59,7 @@ extension ISO_9945.Kernel.Process.Group.Test.Integration {
     func `getpgid returns current process group`() throws {
         let currentPID = ISO_9945.Kernel.Process.ID.current
         let pgid = try ISO_9945.Kernel.Process.Group.id(of: currentPID)
-        #expect(pgid.rawValue > 0)
+        #expect(pgid.underlying > 0)
     }
 
     @Test

@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Path_Primitives
@@ -103,7 +104,7 @@ extension ISO_9945.Kernel.User.Test.EdgeCase {
     func `User.ID rawValue roundtrip`() {
         for value: UInt32 in [0, 1, 501, 65534, UInt32.max] {
             let uid = ISO_9945.Kernel.User.ID(_unchecked: value)
-            #expect(uid.rawValue == value)
+            #expect(uid.underlying == value)
         }
     }
 }

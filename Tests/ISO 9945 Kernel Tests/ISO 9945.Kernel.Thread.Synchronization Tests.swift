@@ -15,6 +15,7 @@ import Path_Primitives
 import Error_Primitives
 import Synchronization
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 
 @testable import ISO_9945_Kernel
 
@@ -150,7 +151,7 @@ extension POSIXThreadSynchronizationTests {
 }
 
 /// Small sleep helper using usleep
-private func smallSleep(millisecondsSinceUnixEpoch: UInt32) {
+private func smallSleep(milliseconds: UInt32) {
     #if canImport(Darwin)
         usleep(milliseconds * 1000)
     #elseif canImport(Glibc)
@@ -176,9 +177,9 @@ extension POSIXThreadSynchronizationTests.Integration {
 
         // Wait for thread to enter wait
         while !waiterReady.load(ordering: .acquiring) {
-            smallSleep(millisecondsSinceUnixEpoch: 1)
+            smallSleep(milliseconds: 1)
         }
-        smallSleep(millisecondsSinceUnixEpoch: 20)
+        smallSleep(milliseconds: 20)
 
         // Signal
         mutex.lock()
@@ -223,9 +224,9 @@ extension POSIXThreadSynchronizationTests.Integration {
 
         // Wait for all threads to enter wait
         while waitersReady.load(ordering: .acquiring) < numWaiters {
-            smallSleep(millisecondsSinceUnixEpoch: 1)
+            smallSleep(milliseconds: 1)
         }
-        smallSleep(millisecondsSinceUnixEpoch: 30)
+        smallSleep(milliseconds: 30)
 
         // Broadcast
         mutex.lock()

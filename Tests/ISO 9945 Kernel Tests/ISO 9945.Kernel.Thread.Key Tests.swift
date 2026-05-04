@@ -12,6 +12,7 @@
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 
 @testable import ISO_9945_Kernel
 

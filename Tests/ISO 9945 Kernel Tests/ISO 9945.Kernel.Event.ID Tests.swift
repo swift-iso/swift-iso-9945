@@ -41,7 +41,7 @@ struct EventIDTests {
     @Test
     func `ID max value`() {
         let id = ISO_9945.Kernel.Event.ID(_unchecked: UInt.max)
-        #expect(id.rawValue == UInt.max)
+        #expect(id.underlying == UInt.max)
     }
 
     // MARK: - Descriptor Conversion
@@ -54,7 +54,7 @@ struct EventIDTests {
         // through their respective ISO_9945.Kernel.Descriptor deinits.
         let pipe = try ISO_9945.Kernel.Pipe.pipe()
         let id = ISO_9945.Kernel.Event.ID(descriptor: pipe.read)
-        #expect(id.rawValue == UInt(bitPattern: Int(pipe.read._rawValue)))
+        #expect(id.underlying == UInt(bitPattern: Int(pipe.read._rawValue)))
     }
 
     @Test
@@ -67,8 +67,8 @@ struct EventIDTests {
         let pipe = try ISO_9945.Kernel.Pipe.pipe()
         let originalRaw = pipe.read._rawValue
         let id = ISO_9945.Kernel.Event.ID(descriptor: pipe.read)
-        #expect(id.rawValue <= UInt(Int32.max))
-        #expect(Int32(id.rawValue) == originalRaw)
+        #expect(id.underlying <= UInt(Int32.max))
+        #expect(Int32(id.underlying) == originalRaw)
     }
 
     @Test

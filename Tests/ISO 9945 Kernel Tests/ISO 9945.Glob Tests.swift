@@ -12,6 +12,7 @@
 import ISO_9945_Glob
 import Path_Primitives
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel
 
 // MARK: - fnmatch Tests

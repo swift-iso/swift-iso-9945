@@ -13,6 +13,7 @@
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 
     import Path_Primitives
     import Error_Primitives

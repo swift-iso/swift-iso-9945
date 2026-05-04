@@ -12,6 +12,7 @@
 #if os(macOS)
 
 import Testing
+import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel_Test_Support
 import ISO_9945_Kernel
 import Path_Primitives
@@ -35,7 +36,7 @@ extension ISO_9945.Kernel.Process.Session.Test.Unit {
     @Test
     func `Session.ID is type alias for Tagged`() {
         let id = ISO_9945.Kernel.Process.Session.ID(_unchecked: 123)
-        #expect(id.rawValue == 123)
+        #expect(id.underlying == 123)
     }
 }
 
@@ -46,7 +47,7 @@ extension ISO_9945.Kernel.Process.Session.Test.Integration {
     func `getsid returns current session ID`() throws {
         let currentPID = ISO_9945.Kernel.Process.ID.current
         let sessionID = try ISO_9945.Kernel.Process.Session.id(of: currentPID)
-        #expect(sessionID.rawValue > 0)
+        #expect(sessionID.underlying > 0)
     }
 
     @Test

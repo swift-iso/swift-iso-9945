@@ -150,7 +150,7 @@ extension ISO_9945.Kernel.File.System.Block.Test.EdgeCase {
     @Test
     func `Size maximum value`() {
         let size = ISO_9945.Kernel.File.System.Block.Size(UInt64.max)
-        #expect(size.rawValue == UInt64.max)
+        #expect(size.underlying == UInt64.max)
     }
 
     @Test
