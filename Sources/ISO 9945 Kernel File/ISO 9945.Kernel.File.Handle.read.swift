@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Algebra_Primitives
+import Either_Primitives
 
 // MARK: - POSIX read operations on ISO_9945.Kernel.File.Handle
 
