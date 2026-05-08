@@ -131,6 +131,8 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-ascii-primitives"),
         .package(path: "../../swift-primitives/swift-cpu-primitives"),
         .package(path: "../../swift-primitives/swift-cardinal-primitives"),
+        .package(path: "../../swift-primitives/swift-either-primitives"),
+        .package(path: "../../swift-primitives/swift-pair-primitives"),
         .package(path: "../swift-iso-9899")
     ],
     targets: [
@@ -171,7 +173,8 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Core",
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
+                .product(name: "Either Primitives", package: "swift-either-primitives"),
+                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
                 .product(name: "String Primitives", package: "swift-string-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "ISO 9899 Core", package: "swift-iso-9899")
@@ -218,7 +221,7 @@ let package = Package(
                 "ISO 9945 Kernel File",
                 "ISO 9945 Kernel Poll",
                 "ISO 9945 Kernel Socket Address",
-                .product(name: "Algebra Primitives", package: "swift-algebra-primitives"),
+                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
             ]
         ),
 

@@ -2,5 +2,6 @@
 @_exported public import Path_Primitives
 @_exported public import String_Primitives
 @_exported public import String_Primitives
-@_exported public import Algebra_Primitives
+@_exported public import Either_Primitives
+@_exported public import Pair_Primitives
 @_exported public import Tagged_Primitives
