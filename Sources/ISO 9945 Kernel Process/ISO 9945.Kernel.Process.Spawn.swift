@@ -127,4 +127,72 @@ extension ISO_9945.Kernel.Process.Spawn {
 
         return try unsafe spawn(path: pathCChar, argv: argvCChar, envp: envpCChar)
     }
+
+    /// Spawns a new process with the given actions applied to the child.
+    ///
+    /// The child inherits the parent's file descriptor table, then applies
+    /// each accumulated action in `actions` (dup2 / close / chdir / open)
+    /// before `execve(2)`.
+    ///
+    /// - Parameters:
+    ///   - path: Path to the executable (NUL-terminated C string).
+    ///   - argv: Argument vector (NULL-terminated array).
+    ///   - envp: Environment vector (NULL-terminated array).
+    ///   - actions: Builder containing the actions to apply in the child.
+    /// - Returns: The process ID of the spawned child.
+    /// - Throws: ``ISO_9945/Kernel/Process/Error/spawn(_:)`` on failure.
+    @unsafe
+    @_spi(Syscall)
+    public static func spawn(
+        path: UnsafePointer<CChar>,
+        argv: UnsafePointer<UnsafePointer<CChar>?>,
+        envp: UnsafePointer<UnsafePointer<CChar>?>,
+        actions: borrowing Actions
+    ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
+        var pid: pid_t = 0
+
+        let typed = unsafe UnsafePointer<posix_spawn_file_actions_t?>(actions._handle)
+        let rc = unsafe swift_posix_spawn(
+            &pid,
+            path,
+            typed,
+            nil,  // attrp
+            argv,
+            envp
+        )
+
+        guard rc == 0 else {
+            throw .spawn(.posix(rc))
+        }
+
+        return ISO_9945.Kernel.Process.ID(pid)
+    }
+
+    /// Spawns a new process with actions using `Path.Char` pointers.
+    ///
+    /// - Parameters:
+    ///   - path: Path to the executable.
+    ///   - argv: Argument vector (NULL-terminated array).
+    ///   - envp: Environment vector (NULL-terminated array).
+    ///   - actions: Builder containing the actions to apply in the child.
+    /// - Returns: The process ID of the spawned child.
+    /// - Throws: ``ISO_9945/Kernel/Process/Error/spawn(_:)`` on failure.
+    @unsafe
+    public static func spawn(
+        path: UnsafePointer<Path.Char>,
+        argv: UnsafePointer<UnsafePointer<Path.Char>?>,
+        envp: UnsafePointer<UnsafePointer<Path.Char>?>,
+        actions: borrowing Actions
+    ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
+        let pathCChar = unsafe UnsafePointer<CChar>(path)
+        let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
+        let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
+
+        return try unsafe spawn(
+            path: pathCChar,
+            argv: argvCChar,
+            envp: envpCChar,
+            actions: actions
+        )
+    }
 }

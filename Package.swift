@@ -152,6 +152,7 @@ let package = Package(
                 .product(name: "CPU Primitives", package: "swift-cpu-primitives"),
                 .product(name: "Cardinal Primitives", package: "swift-cardinal-primitives"),
                 .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
+                .product(name: "System Primitives", package: "swift-system-primitives"),
             ]
         ),
 

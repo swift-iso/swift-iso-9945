@@ -77,6 +77,8 @@ static inline int swift_execve(
 // posix_spawn does NOT modify the strings, this is safe.
 
 #include <spawn.h>
+#include <stdlib.h>
+#include <errno.h>
 
 static inline int swift_posix_spawn(
     pid_t *pid,
@@ -87,6 +89,89 @@ static inline int swift_posix_spawn(
     const char *const envp[]
 ) {
     return posix_spawn(pid, path, file_actions, attrp, (char *const *)argv, (char *const *)envp);
+}
+
+// posix_spawn_file_actions wrappers.
+//
+// posix_spawn_file_actions_t is an opaque platform-specific type whose
+// layout differs (pointer on Darwin, struct on Linux). To avoid exposing
+// the layout to Swift, the init wrapper heap-allocates the actions object
+// and the destroy wrapper frees it. Swift holds an
+// UnsafeMutablePointer<posix_spawn_file_actions_t> across the lifetime.
+
+static inline posix_spawn_file_actions_t * _Nullable swift_posix_spawn_file_actions_init(int * _Nonnull result) {
+    posix_spawn_file_actions_t *actions =
+        (posix_spawn_file_actions_t *)malloc(sizeof(posix_spawn_file_actions_t));
+    if (actions == NULL) {
+        *result = ENOMEM;
+        return NULL;
+    }
+    int rc = posix_spawn_file_actions_init(actions);
+    if (rc != 0) {
+        free(actions);
+        *result = rc;
+        return NULL;
+    }
+    *result = 0;
+    return actions;
+}
+
+static inline int swift_posix_spawn_file_actions_destroy(posix_spawn_file_actions_t * _Nonnull actions) {
+    int rc = posix_spawn_file_actions_destroy(actions);
+    free(actions);
+    return rc;
+}
+
+static inline int swift_posix_spawn_file_actions_addopen(
+    posix_spawn_file_actions_t * _Nonnull actions,
+    int fildes,
+    const char * _Nonnull path,
+    int oflag,
+    mode_t mode
+) {
+    return posix_spawn_file_actions_addopen(actions, fildes, path, oflag, mode);
+}
+
+static inline int swift_posix_spawn_file_actions_adddup2(
+    posix_spawn_file_actions_t * _Nonnull actions,
+    int fildes,
+    int newfildes
+) {
+    return posix_spawn_file_actions_adddup2(actions, fildes, newfildes);
+}
+
+static inline int swift_posix_spawn_file_actions_addclose(
+    posix_spawn_file_actions_t * _Nonnull actions,
+    int fildes
+) {
+    return posix_spawn_file_actions_addclose(actions, fildes);
+}
+
+// addchdir: change the child's working directory before exec.
+//
+// macOS 26.0 / POSIX.1-2024 standardised the non-suffixed
+// `posix_spawn_file_actions_addchdir(3)`. glibc and older Darwin SDKs
+// ship only the `_np` variant. We pick the right symbol per platform.
+//
+// On Linux the declaration is _GNU_SOURCE-gated so we forward-declare
+// it locally to avoid forcing _GNU_SOURCE on consumers.
+
+#if defined(__linux__)
+extern int posix_spawn_file_actions_addchdir_np(
+    posix_spawn_file_actions_t *file_actions,
+    const char *path
+);
+#endif
+
+static inline int swift_posix_spawn_file_actions_addchdir(
+    posix_spawn_file_actions_t * _Nonnull actions,
+    const char * _Nonnull path
+) {
+#if defined(__APPLE__) && defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && (__MAC_OS_X_VERSION_MIN_REQUIRED >= 260000)
+    return posix_spawn_file_actions_addchdir(actions, path);
+#else
+    return posix_spawn_file_actions_addchdir_np(actions, path);
+#endif
 }
 
 #endif /* __APPLE__ || __linux__ */
