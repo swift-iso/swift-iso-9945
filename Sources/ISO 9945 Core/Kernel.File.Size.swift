@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 
-public import Binary_Primitives_Core
+public import Binary_Primitives
 
 extension ISO_9945.Kernel.File {
     /// File size as a non-directional magnitude.

@@ -147,7 +147,7 @@ let package = Package(
                 .product(name: "Carrier Primitives", package: "swift-carrier-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "Time Primitives Core", package: "swift-time-primitives"),
-                .product(name: "Binary Primitives Core", package: "swift-binary-primitives"),
+                .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "Dimension Primitives", package: "swift-dimension-primitives"),
                 .product(name: "CPU Primitives", package: "swift-cpu-primitives"),
                 .product(name: "Cardinal Primitives", package: "swift-cardinal-primitives"),
