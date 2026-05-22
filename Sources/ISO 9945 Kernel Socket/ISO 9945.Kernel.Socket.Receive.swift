@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// Receives data from a connected typed socket descriptor into a mutable span.
     public static func receive(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
-        into span: inout MutableSpan<UInt8>,
+        into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try receive(fd: descriptor._rawValue, into: &span, options: options)
@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// Receives data and the sender's address into a mutable span.
     public static func from(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
-        into span: inout MutableSpan<UInt8>,
+        into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
         try from(fd: descriptor._rawValue, into: &span, options: options)
@@ -77,7 +77,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
     internal static func receive(
         fd: Int32,
-        into span: inout MutableSpan<UInt8>,
+        into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
@@ -105,7 +105,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     internal static func from(
         fd: Int32,
-        into span: inout MutableSpan<UInt8>,
+        into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
         try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) in

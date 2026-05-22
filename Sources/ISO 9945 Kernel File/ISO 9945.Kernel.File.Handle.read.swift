@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.File.Handle {
     /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     public borrowing func read(
-        into span: inout MutableSpan<UInt8>
+        into span: inout MutableSpan<Byte>
     ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Read.read(descriptor, into: &span)
@@ -93,7 +93,7 @@ extension ISO_9945.Kernel.File.Handle {
     /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pread(
-        into span: inout MutableSpan<UInt8>,
+        into span: inout MutableSpan<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
         do {

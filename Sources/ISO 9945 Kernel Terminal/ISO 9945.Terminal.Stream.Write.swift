@@ -32,10 +32,10 @@ extension Terminal.Stream.Write {
     /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on a non-EINTR failure.
     @discardableResult
     public func callAsFunction(
-        _ bytes: some Swift.Sequence<UInt8>
+        _ bytes: some Swift.Sequence<Byte>
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
-        let array = ContiguousArray<UInt8>(bytes)
-        return try unsafe array.withUnsafeBufferPointer { (buffer: UnsafeBufferPointer<UInt8>) throws(ISO_9945.Kernel.IO.Write.Error) -> Int in
+        let array = ContiguousArray<Byte>(bytes)
+        return try unsafe array.withUnsafeBufferPointer { (buffer: UnsafeBufferPointer<Byte>) throws(ISO_9945.Kernel.IO.Write.Error) -> Int in
             let raw = UnsafeRawBufferPointer(buffer)
             return try unsafe write(raw)
         }
