@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Equation_Primitives_Core
+import Equation_Primitives
 
 extension ISO_9945.Kernel.Descriptor: Equation.`Protocol` {
     @inlinable

@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Hash_Primitives_Core
+import Hash_Primitives
 
 extension ISO_9945.Kernel.Descriptor: Hash.`Protocol` {
     @inlinable
