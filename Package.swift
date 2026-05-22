@@ -128,6 +128,9 @@ let package = Package(
         .package(path: "../../swift-primitives/swift-path-primitives"),
         .package(path: "../../swift-primitives/swift-system-primitives"),
         .package(path: "../../swift-primitives/swift-memory-primitives"),
+        .package(path: "../../swift-primitives/swift-memory-lock-primitives"),
+        .package(path: "../../swift-primitives/swift-memory-shared-primitives"),
+        .package(path: "../../swift-primitives/swift-memory-map-primitives"),
         .package(path: "../../swift-primitives/swift-ascii-primitives"),
         .package(path: "../../swift-primitives/swift-cpu-primitives"),
         .package(path: "../../swift-primitives/swift-cardinal-primitives"),
@@ -234,6 +237,9 @@ let package = Package(
                 "ISO 9945 Core",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
+                .product(name: "Memory Lock Primitives", package: "swift-memory-lock-primitives"),
+                .product(name: "Memory Shared Primitives", package: "swift-memory-shared-primitives"),
+                .product(name: "Memory Map Primitives", package: "swift-memory-map-primitives"),
             ]
         ),
 
