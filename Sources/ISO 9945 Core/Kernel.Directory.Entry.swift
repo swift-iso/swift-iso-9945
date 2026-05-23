@@ -21,6 +21,13 @@ extension ISO_9945.Kernel.Directory {
         public let rawName: [UInt16]
         #else
         /// Raw bytes of the name.
+        ///
+        /// Available via `@_spi(Syscall)` for syscall-implementation
+        /// layers (e.g., `ISO_9945.Kernel.Directory.Stream.next()` and
+        /// directory iteration internals). Application-layer consumers
+        /// should use `nameView` for byte access without depending on
+        /// the array storage shape.
+        @_spi(Syscall)
         public let rawName: [UInt8]
         #endif
 
@@ -37,6 +44,7 @@ extension ISO_9945.Kernel.Directory {
             self.type = type
         }
         #else
+        @_spi(Syscall)
         public init(rawName: [UInt8], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
             self.rawName = rawName
             self.inode = inode
@@ -98,7 +106,11 @@ extension ISO_9945.Kernel.Directory {
         ///
         /// `rawName` is null-terminated. This property borrows the array's
         /// heap buffer directly — the view cannot outlive `self`.
-        @inlinable
+        ///
+        /// Not `@inlinable`: its body references the `@_spi(Syscall)` `rawName`
+        /// storage; Swift forbids `@inlinable` bodies from naming SPI
+        /// declarations. The cross-module function-call cost is negligible
+        /// relative to the syscall (readdir) driving directory iteration.
         public var nameView: Path.Borrowed {
             @_lifetime(borrow self)
             borrowing get {
