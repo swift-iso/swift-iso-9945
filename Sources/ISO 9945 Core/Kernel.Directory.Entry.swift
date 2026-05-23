@@ -52,44 +52,6 @@ extension ISO_9945.Kernel.Directory {
         }
         #endif
 
-        /// The name as a String, or nil if not valid UTF-8 (POSIX) or UTF-16 (Windows).
-        ///
-        /// `rawName` is null-terminated. This property decodes the bytes
-        /// excluding the trailing null terminator.
-        public var name: Swift.String? {
-            #if os(Windows)
-            // Validate UTF-16: reject lone surrogates
-            let codeUnits = rawName.dropLast()  // exclude NUL
-            var utf16 = UTF16()
-            var iterator = codeUnits.makeIterator()
-            while true {
-                switch utf16.decode(&iterator) {
-                case .scalarValue(_): continue
-                case .emptyInput:
-                    return Swift.String(decoding: codeUnits, as: UTF16.self)
-                case .error:
-                    return nil
-                }
-            }
-            #else
-            // Validate UTF-8
-            let bytes = rawName.dropLast()  // exclude NUL
-            var utf8 = UTF8()
-            var iterator = bytes.makeIterator()
-            var scalars: [Unicode.Scalar] = []
-            scalars.reserveCapacity(bytes.count)
-            while true {
-                switch utf8.decode(&iterator) {
-                case .scalarValue(let s): scalars.append(s)
-                case .emptyInput:
-                    return Swift.String(Swift.String.UnicodeScalarView(scalars))
-                case .error:
-                    return nil
-                }
-            }
-            #endif
-        }
-
         /// Returns true if this entry is "." or "..".
         ///
         /// `rawName` is null-terminated, so "." is `[0x2E, 0x00]`
@@ -105,13 +67,17 @@ extension ISO_9945.Kernel.Directory {
         /// The entry name as a `Path.Borrowed`. Zero allocation.
         ///
         /// `rawName` is null-terminated. This property borrows the array's
-        /// heap buffer directly — the view cannot outlive `self`.
+        /// heap buffer directly — the view cannot outlive `self`. Consumers
+        /// reach byte content via `name.span` (Span<Path.Char>) or
+        /// `name.pointer` (UnsafePointer<Path.Char>). Decoding to a Swift
+        /// String is consumer responsibility (e.g.,
+        /// `Swift.String(decoding: entry.name.span, as: UTF8.self)`).
         ///
         /// Not `@inlinable`: its body references the `@_spi(Syscall)` `rawName`
         /// storage; Swift forbids `@inlinable` bodies from naming SPI
         /// declarations. The cross-module function-call cost is negligible
         /// relative to the syscall (readdir) driving directory iteration.
-        public var nameView: Path.Borrowed {
+        public var name: Path.Borrowed {
             @_lifetime(borrow self)
             borrowing get {
                 let ptr = unsafe rawName.withUnsafeBufferPointer { $0.baseAddress! }
