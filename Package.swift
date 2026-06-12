@@ -128,6 +128,7 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-path-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-system-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-lock-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-shared-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-map-primitives.git", branch: "main"),
@@ -145,6 +146,7 @@ let package = Package(
             name: "ISO 9945 Core",
             dependencies: [
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
+                .product(name: "Memory Allocation Primitives", package: "swift-memory-allocation-primitives"),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Error Primitives", package: "swift-error-primitives"),
                 .product(name: "Carrier Primitives", package: "swift-carrier-primitives"),
@@ -204,6 +206,7 @@ let package = Package(
                 "ISO 9945 Kernel Clock",
                 "ISO 9945 Kernel System",
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
+                .product(name: "Memory Allocation Primitives", package: "swift-memory-allocation-primitives"),
             ]
         ),
 
@@ -237,6 +240,7 @@ let package = Package(
                 "ISO 9945 Core",
                 .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
+                .product(name: "Memory Allocation Primitives", package: "swift-memory-allocation-primitives"),
                 .product(name: "Memory Lock Primitives", package: "swift-memory-lock-primitives"),
                 .product(name: "Memory Shared Primitives", package: "swift-memory-shared-primitives"),
                 .product(name: "Memory Map Primitives", package: "swift-memory-map-primitives"),
