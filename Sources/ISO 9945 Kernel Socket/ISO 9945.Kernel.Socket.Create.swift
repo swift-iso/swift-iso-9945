@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import ISO_9945_Core
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -22,10 +24,12 @@ extension ISO_9945.Kernel.Socket {
     public enum Create {}
 }
 
-// MARK: - Create Operation (raw fd SPI)
+// MARK: - Create typed (Phase 1.5)
 //
-// Per Cycle 21 (transitional), L2 syscall API returns raw `Int32`. L3-policy
-// callers at swift-posix wrap into POSIX.Kernel.Socket.Descriptor.
+// The created socket is typed at birth: `socket(2)` is the ownership
+// boundary, so the raw fd is wrapped into the move-only Descriptor here
+// rather than handed downstream as `Int32`. Dropping the returned value
+// closes the socket via Descriptor deinit instead of leaking the fd.
 
 extension ISO_9945.Kernel.Socket.Create {
     /// Creates a new socket.
@@ -34,7 +38,8 @@ extension ISO_9945.Kernel.Socket.Create {
     ///   - domain: The address family (e.g., `.inet`, `.inet6`, `.unix`).
     ///   - kind: The socket type (e.g., `.stream`, `.datagram`).
     ///   - protocol: The protocol number (0 for default protocol for the given domain/kind).
-    /// - Returns: A new socket file descriptor (raw POSIX fd).
+    /// - Returns: A new socket descriptor. Move-only; the underlying fd
+    ///   is closed when the value is dropped without explicit close.
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     ///
     /// ## Common Errors
@@ -42,18 +47,17 @@ extension ISO_9945.Kernel.Socket.Create {
     /// - `.platform(.permissionDenied)` (EACCES): Permission denied for socket type.
     /// - `.platform(.invalidArgument)` (EINVAL): Unknown domain or socket type.
     /// - `.platform(.tooManyFiles)` (EMFILE/ENFILE): File descriptor limit reached.
-    @_spi(Syscall)
     public static func create(
         domain: ISO_9945.Kernel.Socket.Address.Family,
         kind: ISO_9945.Kernel.Socket.Kind,
         protocol: Int32 = 0
-    ) throws(ISO_9945.Kernel.Socket.Error) -> Int32 {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> ISO_9945.Kernel.Socket.Descriptor {
         let fd = socket(domain.rawValue, kind.rawValue, `protocol`)
 
         guard fd >= 0 else {
             throw ISO_9945.Kernel.Socket.Error.current()
         }
 
-        return fd
+        return ISO_9945.Kernel.Socket.Descriptor(_raw: fd)
     }
 }

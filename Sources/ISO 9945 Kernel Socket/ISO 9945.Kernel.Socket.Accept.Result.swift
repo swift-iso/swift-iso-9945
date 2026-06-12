@@ -14,17 +14,20 @@ extension ISO_9945.Kernel.Socket.Accept {
     ///
     /// `@frozen` commits the struct's layout so consumers across module
     /// boundaries can partially consume individual stored properties
-    /// without the swap-with-sentinel workaround. The layout is stable by
-    /// construction — the three stored properties mirror the POSIX
-    /// `accept(2)` return shape and are not expected to evolve.
+    /// (`consume result.descriptor`) without the swap-with-sentinel
+    /// workaround. The layout is stable by construction — the three
+    /// stored properties mirror the POSIX `accept(2)` return shape and
+    /// are not expected to evolve.
     ///
-    /// Per Cycle 21, the descriptor is the raw POSIX fd. L3-policy callers
-    /// at swift-posix wrap into POSIX.Kernel.Socket.Descriptor via the
-    /// `ISO_9945.Kernel.Socket.Descriptor` typealias chain at swift-kernel L3.
+    /// The descriptor is typed at birth: `accept(2)` is the ownership
+    /// boundary, so the raw fd is wrapped into the move-only Descriptor
+    /// inside the syscall layer. `Result` is therefore `~Copyable` —
+    /// dropping it without consuming the descriptor closes the accepted
+    /// connection via Descriptor deinit instead of leaking the fd.
     @frozen
-    public struct Result: Sendable {
-        /// The new connected socket file descriptor (raw POSIX fd).
-        public var descriptor: Int32
+    public struct Result: ~Copyable, Sendable {
+        /// The new connected socket descriptor.
+        public var descriptor: ISO_9945.Kernel.Socket.Descriptor
 
         /// The address of the connecting peer.
         public var address: ISO_9945.Kernel.Socket.Address.Storage
@@ -34,7 +37,7 @@ extension ISO_9945.Kernel.Socket.Accept {
 
         @inlinable
         internal init(
-            descriptor: Int32,
+            descriptor: consuming ISO_9945.Kernel.Socket.Descriptor,
             address: ISO_9945.Kernel.Socket.Address.Storage,
             length: ISO_9945.Kernel.Socket.Address.Length
         ) {

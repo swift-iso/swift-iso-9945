@@ -27,9 +27,11 @@ extension ISO_9945.Kernel.Socket {
 // MARK: - Accept typed (Phase 1.5)
 //
 // Typed Phase-1.5 form re-added in Wave 4c-Socket Main (2026-05-01) per
-// [PLAT-ARCH-005] three-tier chain (Prerequisite II). Result.descriptor
-// remains spec-literal `Int32` (the kernel returns a raw fd; wrapping into
-// typed Descriptor is a downstream concern, not a syscall-shape concern).
+// [PLAT-ARCH-005] three-tier chain (Prerequisite II). Result carries the
+// accepted descriptor typed at birth (2026-06-12): the syscall layer is
+// the ownership boundary, so the raw fd is wrapped into the move-only
+// Descriptor here — a dropped Result closes the accepted connection via
+// Descriptor deinit instead of leaking the fd.
 
 extension ISO_9945.Kernel.Socket.Accept {
     /// Accepts an incoming connection on a typed listening descriptor.
@@ -65,7 +67,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         }
 
         return Result(
-            descriptor: acceptedFd,
+            descriptor: ISO_9945.Kernel.Socket.Descriptor(_raw: acceptedFd),
             address: storage,
             length: ISO_9945.Kernel.Socket.Address.Length(addrLen)
         )
