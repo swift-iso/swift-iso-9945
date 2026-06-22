@@ -35,7 +35,7 @@ extension Path.Canonical {
     /// - Throws: ``Path.Canonical.Error`` on syscall failure.
     public static func withCanonicalBytes<R: ~Copyable>(
         _ path: borrowing Path.Borrowed,
-        _ body: (Span<Path.Char>) -> R
+        _ body: (Swift.Span<Path.Char>) -> R
     ) throws(Path.Canonical.Error) -> R {
         try unsafe path.withUnsafePointer { cString throws(Path.Canonical.Error) in
             let unsafePath = unsafe UnsafePointer<CChar>(cString)

@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Send {
     /// Sends data from a span on a connected typed socket descriptor.
     public static func send(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
-        from span: Span<Byte>,
+        from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try send(fd: descriptor._rawValue, from: span, options: options)
@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Socket.Send {
     /// Sends data from a span to a specific address (for connectionless sockets).
     public static func to(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
-        from span: Span<Byte>,
+        from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = [],
         address: ISO_9945.Kernel.Socket.Address.Storage,
         addressLength: ISO_9945.Kernel.Socket.Address.Length
@@ -86,7 +86,7 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
     internal static func send(
         fd: Int32,
-        from span: Span<Byte>,
+        from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
@@ -116,7 +116,7 @@ extension ISO_9945.Kernel.Socket.Send {
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     internal static func to(
         fd: Int32,
-        from span: Span<Byte>,
+        from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = [],
         address: ISO_9945.Kernel.Socket.Address.Storage,
         addressLength: ISO_9945.Kernel.Socket.Address.Length

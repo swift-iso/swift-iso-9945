@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Returns: The result of the closure.
     /// - Throws: ``Error`` on syscall failure.
     public static func withCurrentBytes<R: ~Copyable>(
-        _ body: (Span<Path.Char>) -> R
+        _ body: (Swift.Span<Path.Char>) -> R
     ) throws(Error) -> R {
         var result: R? = nil
         var thrown: Error? = nil

@@ -169,7 +169,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
     /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTargetBytes<R: ~Copyable>(
         at path: borrowing Path.Borrowed,
-        _ body: (Span<Path.Char>) -> R
+        _ body: (Swift.Span<Path.Char>) -> R
     ) throws(Error) -> R {
         try unsafe path.withUnsafePointer { cPath throws(Error) in
             var bufferSize = 256

@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Environment {
     /// - Returns: The result of the closure, or `nil` if the variable is not set.
     public static func withValueBytes<R: ~Copyable>(
         _ name: UnsafePointer<String.Char>,
-        _ body: (Span<String.Char>) -> R
+        _ body: (Swift.Span<String.Char>) -> R
     ) -> R? {
         let cName = unsafe UnsafePointer<CChar>(name)
         guard let valuePtr = unsafe getenv(cName) else {

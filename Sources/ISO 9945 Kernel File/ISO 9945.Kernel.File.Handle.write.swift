@@ -84,7 +84,7 @@ extension ISO_9945.Kernel.File.Handle {
     ///   convenience that loops this method in swift-posix, surfacing EINTR
     ///   identically to this method.
     public borrowing func write(
-        from span: Span<Byte>
+        from span: Swift.Span<Byte>
     ) throws(Either<Error, Interrupt>) -> Int {
         do {
             return try ISO_9945.Kernel.IO.Write.write(descriptor, from: span)
@@ -105,7 +105,7 @@ extension ISO_9945.Kernel.File.Handle {
     /// - Throws: `Either<Error, Interrupt>` — `.left` for domain errors,
     ///   `.right(.occurred)` for EINTR.
     public borrowing func pwrite(
-        from span: Span<Byte>,
+        from span: Swift.Span<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
         do {

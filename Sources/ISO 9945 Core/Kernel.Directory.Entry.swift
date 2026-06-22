@@ -68,7 +68,7 @@ extension ISO_9945.Kernel.Directory {
         ///
         /// `rawName` is null-terminated. This property borrows the array's
         /// heap buffer directly — the view cannot outlive `self`. Consumers
-        /// reach byte content via `name.span` (Span<Path.Char>) or
+        /// reach byte content via `name.span` (Swift.Span<Path.Char>) or
         /// `name.pointer` (UnsafePointer<Path.Char>). Decoding to a Swift
         /// String is consumer responsibility (e.g.,
         /// `Swift.String(decoding: entry.name.span, as: UTF8.self)`).
