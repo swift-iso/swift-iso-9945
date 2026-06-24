@@ -157,6 +157,25 @@ extension ISO_9945.Kernel.Signal.Set {
         try unsafe Swift.withUnsafePointer(to: storage, body)
     }
 
+    /// Yields the set's platform-native bytes to `body` as an opaque
+    /// `UnsafeRawPointer`, for platform packages (e.g. swift-linux-standard)
+    /// that must hand the set to a platform-only syscall such as `signalfd(2)`.
+    ///
+    /// The set's underlying C type (`sigset_t`) never appears on this surface —
+    /// only the stdlib `UnsafeRawPointer` — so the cross-platform POSIX spec
+    /// layer stays free of platform C types in its API (PLAT-ARCH-005a). The
+    /// platform caller binds the pointer to its own platform type inside its
+    /// own (platform-C-importing) scope.
+    @unsafe
+    @_spi(Syscall)
+    public func withUnsafeRawPointer<R, E: Swift.Error>(
+        _ body: (UnsafeRawPointer) throws(E) -> R
+    ) throws(E) -> R {
+        try unsafe withUnsafePointer { (pointer: UnsafePointer<sigset_t>) throws(E) -> R in
+            try body(unsafe UnsafeRawPointer(pointer))
+        }
+    }
+
     /// Provides mutable access to the underlying `sigset_t` for syscall interop.
     @unsafe
     internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(_ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R) throws(E) -> R {
