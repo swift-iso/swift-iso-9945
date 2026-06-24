@@ -20,7 +20,7 @@
 // underlying type (Instant from Time_Primitives), so cross-package
 // consumers see the same ISO_9945.Kernel.Time identity.
 
-public import Time_Primitives_Core
+public import Time_Primitives
 
 extension ISO_9945.Kernel {
     public typealias Time = Instant
