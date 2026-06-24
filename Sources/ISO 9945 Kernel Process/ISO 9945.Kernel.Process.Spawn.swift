@@ -151,11 +151,10 @@ extension ISO_9945.Kernel.Process.Spawn {
     ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         var pid: pid_t = 0
 
-        let typed = unsafe UnsafePointer<posix_spawn_file_actions_t?>(actions._handle)
         let rc = unsafe swift_posix_spawn(
             &pid,
             path,
-            typed,
+            actions._handle,
             nil,  // attrp
             argv,
             envp

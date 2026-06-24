@@ -83,23 +83,32 @@ static inline int swift_execve(
 static inline int swift_posix_spawn(
     pid_t *pid,
     const char *path,
-    const posix_spawn_file_actions_t *file_actions,
+    const void *file_actions,
     const posix_spawnattr_t *attrp,
     const char *const argv[],
     const char *const envp[]
 ) {
-    return posix_spawn(pid, path, file_actions, attrp, (char *const *)argv, (char *const *)envp);
+    return posix_spawn(
+        pid,
+        path,
+        (const posix_spawn_file_actions_t *)file_actions,
+        attrp,
+        (char *const *)argv,
+        (char *const *)envp
+    );
 }
 
 // posix_spawn_file_actions wrappers.
 //
-// posix_spawn_file_actions_t is an opaque platform-specific type whose
-// layout differs (pointer on Darwin, struct on Linux). To avoid exposing
-// the layout to Swift, the init wrapper heap-allocates the actions object
-// and the destroy wrapper frees it. Swift holds an
-// UnsafeMutablePointer<posix_spawn_file_actions_t> across the lifetime.
+// posix_spawn_file_actions_t is a POSIX opaque type whose concrete layout
+// differs per platform (a pointer on Darwin, a struct on glibc/Musl). To keep
+// that divergence entirely out of Swift, the init wrapper heap-allocates the
+// object and hands it back as an opaque `void *`; every other wrapper takes
+// the handle back as `void *` and casts to the concrete type internally. Swift
+// holds the handle as a plain `UnsafeMutableRawPointer` and never names the
+// platform-divergent type — so the L2 spec surface needs no `#if` for it.
 
-static inline posix_spawn_file_actions_t * _Nullable swift_posix_spawn_file_actions_init(int * _Nonnull result) {
+static inline void * _Nullable swift_posix_spawn_file_actions_init(int * _Nonnull result) {
     posix_spawn_file_actions_t *actions =
         (posix_spawn_file_actions_t *)malloc(sizeof(posix_spawn_file_actions_t));
     if (actions == NULL) {
@@ -116,34 +125,38 @@ static inline posix_spawn_file_actions_t * _Nullable swift_posix_spawn_file_acti
     return actions;
 }
 
-static inline int swift_posix_spawn_file_actions_destroy(posix_spawn_file_actions_t * _Nonnull actions) {
+static inline int swift_posix_spawn_file_actions_destroy(void * _Nonnull handle) {
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     int rc = posix_spawn_file_actions_destroy(actions);
     free(actions);
     return rc;
 }
 
 static inline int swift_posix_spawn_file_actions_addopen(
-    posix_spawn_file_actions_t * _Nonnull actions,
+    void * _Nonnull handle,
     int fildes,
     const char * _Nonnull path,
     int oflag,
     mode_t mode
 ) {
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     return posix_spawn_file_actions_addopen(actions, fildes, path, oflag, mode);
 }
 
 static inline int swift_posix_spawn_file_actions_adddup2(
-    posix_spawn_file_actions_t * _Nonnull actions,
+    void * _Nonnull handle,
     int fildes,
     int newfildes
 ) {
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     return posix_spawn_file_actions_adddup2(actions, fildes, newfildes);
 }
 
 static inline int swift_posix_spawn_file_actions_addclose(
-    posix_spawn_file_actions_t * _Nonnull actions,
+    void * _Nonnull handle,
     int fildes
 ) {
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     return posix_spawn_file_actions_addclose(actions, fildes);
 }
 
@@ -164,9 +177,10 @@ extern int posix_spawn_file_actions_addchdir_np(
 #endif
 
 static inline int swift_posix_spawn_file_actions_addchdir(
-    posix_spawn_file_actions_t * _Nonnull actions,
+    void * _Nonnull handle,
     const char * _Nonnull path
 ) {
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
 #if defined(__APPLE__) && defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && (__MAC_OS_X_VERSION_MIN_REQUIRED >= 260000)
     return posix_spawn_file_actions_addchdir(actions, path);
 #else

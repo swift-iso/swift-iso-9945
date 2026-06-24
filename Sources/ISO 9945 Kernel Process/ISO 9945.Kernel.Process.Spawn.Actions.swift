@@ -50,8 +50,11 @@ extension ISO_9945.Kernel.Process.Spawn {
     /// ```
     @safe
     public struct Actions: ~Copyable {
+        // The shim hands back an opaque `void *` (it heap-allocates the
+        // `posix_spawn_file_actions_t` so its platform-divergent layout —
+        // pointer on Darwin, struct on glibc/Musl — never reaches Swift).
         @usableFromInline
-        internal let _handle: OpaquePointer
+        internal let _handle: UnsafeMutableRawPointer
 
         /// Allocate and initialize a new actions builder.
         ///
@@ -62,12 +65,11 @@ extension ISO_9945.Kernel.Process.Spawn {
             guard let raw = unsafe swift_posix_spawn_file_actions_init(&result) else {
                 throw .spawn(.posix(result))
             }
-            unsafe self._handle = OpaquePointer(raw)
+            unsafe self._handle = raw
         }
 
         deinit {
-            let typed = unsafe UnsafeMutablePointer<posix_spawn_file_actions_t?>(_handle)
-            _ = unsafe swift_posix_spawn_file_actions_destroy(typed)
+            _ = unsafe swift_posix_spawn_file_actions_destroy(_handle)
         }
     }
 }
@@ -89,9 +91,8 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
         dup2 source: borrowing ISO_9945.Kernel.Descriptor,
         to target: Target
     ) throws(ISO_9945.Kernel.Process.Error) {
-        let typed = unsafe UnsafeMutablePointer<posix_spawn_file_actions_t?>(_handle)
         let rc = unsafe swift_posix_spawn_file_actions_adddup2(
-            typed,
+            _handle,
             source._raw,
             target._raw
         )
@@ -107,9 +108,8 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
     public mutating func add(
         close target: Target
     ) throws(ISO_9945.Kernel.Process.Error) {
-        let typed = unsafe UnsafeMutablePointer<posix_spawn_file_actions_t?>(_handle)
         let rc = unsafe swift_posix_spawn_file_actions_addclose(
-            typed,
+            _handle,
             target._raw
         )
         guard rc == 0 else { throw .spawn(.posix(rc)) }
@@ -129,9 +129,8 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
         chdir path: UnsafePointer<Path.Char>
     ) throws(ISO_9945.Kernel.Process.Error) {
         let pathCChar = unsafe UnsafePointer<CChar>(path)
-        let typed = unsafe UnsafeMutablePointer<posix_spawn_file_actions_t?>(_handle)
         let rc = unsafe swift_posix_spawn_file_actions_addchdir(
-            typed,
+            _handle,
             pathCChar
         )
         guard rc == 0 else { throw .spawn(.posix(rc)) }
@@ -159,9 +158,8 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
         mode: UInt32
     ) throws(ISO_9945.Kernel.Process.Error) {
         let pathCChar = unsafe UnsafePointer<CChar>(path)
-        let typed = unsafe UnsafeMutablePointer<posix_spawn_file_actions_t?>(_handle)
         let rc = unsafe swift_posix_spawn_file_actions_addopen(
-            typed,
+            _handle,
             target._raw,
             pathCChar,
             flags,
