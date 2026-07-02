@@ -6,13 +6,36 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <errno.h>
+
+// Process-spawning availability. tvOS and watchOS mark the entire family
+// (fork, execve, posix_spawn, posix_spawn_file_actions_*) unavailable in
+// the SDK; the wrappers below compile to ENOSYS stubs there so the L2
+// surface stays uniform and the failure is a runtime error code, matching
+// POSIX semantics for unsupported operations.
+
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#if TARGET_OS_OSX || TARGET_OS_IOS || TARGET_OS_VISION
+#define CPOSIX_PROCESS_SPAWN_UNAVAILABLE 0
+#else
+#define CPOSIX_PROCESS_SPAWN_UNAVAILABLE 1
+#endif
+#else
+#define CPOSIX_PROCESS_SPAWN_UNAVAILABLE 0
+#endif
 
 // fork() wrapper - on Darwin, fork() is marked unavailable in Swift's overlay.
 // We provide a wrapper to bypass the Swift annotation.
 
 #if defined(__APPLE__)
 static inline pid_t swift_fork(void) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    errno = ENOSYS;
+    return -1;
+#else
     return fork();
+#endif
 }
 #endif
 
@@ -68,9 +91,17 @@ static inline int swift_execve(
     const char *const argv[],
     const char *const envp[]
 ) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)path;
+    (void)argv;
+    (void)envp;
+    errno = ENOSYS;
+    return -1;
+#else
     // Cast away const-ness for execve's legacy signature.
     // execve does NOT modify the strings, this is safe.
     return execve(path, (char *const *)argv, (char *const *)envp);
+#endif
 }
 
 // posix_spawn wrapper - similar to execve, expects const pointers.
@@ -88,6 +119,15 @@ static inline int swift_posix_spawn(
     const char *const argv[],
     const char *const envp[]
 ) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)pid;
+    (void)path;
+    (void)file_actions;
+    (void)attrp;
+    (void)argv;
+    (void)envp;
+    return ENOSYS;
+#else
     return posix_spawn(
         pid,
         path,
@@ -96,6 +136,7 @@ static inline int swift_posix_spawn(
         (char *const *)argv,
         (char *const *)envp
     );
+#endif
 }
 
 // posix_spawn_file_actions wrappers.
@@ -109,6 +150,10 @@ static inline int swift_posix_spawn(
 // platform-divergent type — so the L2 spec surface needs no `#if` for it.
 
 static inline void * _Nullable swift_posix_spawn_file_actions_init(int * _Nonnull result) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    *result = ENOSYS;
+    return NULL;
+#else
     posix_spawn_file_actions_t *actions =
         (posix_spawn_file_actions_t *)malloc(sizeof(posix_spawn_file_actions_t));
     if (actions == NULL) {
@@ -123,13 +168,19 @@ static inline void * _Nullable swift_posix_spawn_file_actions_init(int * _Nonnul
     }
     *result = 0;
     return actions;
+#endif
 }
 
 static inline int swift_posix_spawn_file_actions_destroy(void * _Nonnull handle) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)handle;
+    return ENOSYS;
+#else
     posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     int rc = posix_spawn_file_actions_destroy(actions);
     free(actions);
     return rc;
+#endif
 }
 
 static inline int swift_posix_spawn_file_actions_addopen(
@@ -139,8 +190,17 @@ static inline int swift_posix_spawn_file_actions_addopen(
     int oflag,
     mode_t mode
 ) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)handle;
+    (void)fildes;
+    (void)path;
+    (void)oflag;
+    (void)mode;
+    return ENOSYS;
+#else
     posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     return posix_spawn_file_actions_addopen(actions, fildes, path, oflag, mode);
+#endif
 }
 
 static inline int swift_posix_spawn_file_actions_adddup2(
@@ -148,16 +208,29 @@ static inline int swift_posix_spawn_file_actions_adddup2(
     int fildes,
     int newfildes
 ) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)handle;
+    (void)fildes;
+    (void)newfildes;
+    return ENOSYS;
+#else
     posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     return posix_spawn_file_actions_adddup2(actions, fildes, newfildes);
+#endif
 }
 
 static inline int swift_posix_spawn_file_actions_addclose(
     void * _Nonnull handle,
     int fildes
 ) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)handle;
+    (void)fildes;
+    return ENOSYS;
+#else
     posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     return posix_spawn_file_actions_addclose(actions, fildes);
+#endif
 }
 
 // addchdir: change the child's working directory before exec.
@@ -180,11 +253,20 @@ static inline int swift_posix_spawn_file_actions_addchdir(
     void * _Nonnull handle,
     const char * _Nonnull path
 ) {
+#if defined(__APPLE__) && !TARGET_OS_OSX
+    // iOS-family (iOS/tvOS/watchOS/visionOS/Catalyst): both addchdir
+    // variants are marked unavailable in the SDK. Process spawning with a
+    // working directory does not exist there; report ENOSYS at runtime.
+    (void)handle;
+    (void)path;
+    return ENOSYS;
+#else
     posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
 #if defined(__APPLE__) && defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && (__MAC_OS_X_VERSION_MIN_REQUIRED >= 260000)
     return posix_spawn_file_actions_addchdir(actions, path);
 #else
     return posix_spawn_file_actions_addchdir_np(actions, path);
+#endif
 #endif
 }
 
