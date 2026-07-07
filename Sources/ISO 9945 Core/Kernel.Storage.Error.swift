@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Storage {
     /// Space-related errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
@@ -43,4 +42,3 @@ extension ISO_9945.Kernel.Storage.Error: CustomStringConvertible {
 // `init?(code:)` mapping live in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.Storage.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.Storage.Error+code.swift`)
-

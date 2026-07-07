@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Thread.Affinity {
     /// Failure handling policy for affinity operations.
     ///
@@ -41,4 +40,3 @@ extension ISO_9945.Kernel.Thread.Affinity {
         case fatal
     }
 }
-

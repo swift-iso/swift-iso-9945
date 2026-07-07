@@ -1,4 +1,3 @@
-
 extension ISO_9945.Kernel.Socket.Address {
     /// The byte length of a socket address.
     ///

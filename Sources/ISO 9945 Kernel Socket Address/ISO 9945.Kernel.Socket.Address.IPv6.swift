@@ -1,4 +1,3 @@
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -68,7 +67,7 @@ extension ISO_9945.Kernel.Socket.Address {
 extension ISO_9945.Kernel.Socket.Address.IPv6 {
     /// The address family (always `.inet6`).
     public var family: ISO_9945.Kernel.Socket.Address.Family {
-        get { .inet6 }
+        .inet6
     }
 
     /// Port number in host byte order.

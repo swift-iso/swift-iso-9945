@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.IO.Blocking {
     /// Blocking-related errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
@@ -39,4 +38,3 @@ extension ISO_9945.Kernel.IO.Blocking.Error: CustomStringConvertible {
 // `init?(code:)` mapping live in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.IO.Blocking.Error+code.swift`)
 // - Windows: blocking errors are POSIX-only; no Windows binding.
-

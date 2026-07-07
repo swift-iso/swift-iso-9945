@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 public import Cardinal_Primitives
 
 extension ISO_9945.Kernel.File.System {
@@ -23,4 +22,3 @@ extension ISO_9945.Kernel.File.System.File {
     /// Used for total file count and free file count in `File.System.Stats`.
     public typealias Count = Tagged<ISO_9945.Kernel.File.System.File, Cardinal>
 }
-

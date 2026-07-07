@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Lock {
     /// Lock type determining concurrency behavior.
     ///
@@ -62,4 +61,3 @@ extension ISO_9945.Kernel.Lock {
         case exclusive
     }
 }
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Directory iteration operations.
     ///
@@ -22,4 +21,3 @@ extension ISO_9945.Kernel {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Directory`)
     public enum Directory: Sendable {}
 }
-

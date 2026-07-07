@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Open {
     /// File access mode for open operations.
     ///
@@ -48,4 +47,3 @@ extension ISO_9945.Kernel.File.Open {
         }
     }
 }
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - Pipe descriptor split operations
 
 extension ISO_9945.Kernel.Pipe {

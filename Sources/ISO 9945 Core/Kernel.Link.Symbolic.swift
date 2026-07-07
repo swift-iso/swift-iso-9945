@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Link {
     /// Symbolic link operations.
     ///
@@ -83,4 +82,3 @@ extension ISO_9945.Kernel.Link.Symbolic.Error: CustomStringConvertible {
         }
     }
 }
-

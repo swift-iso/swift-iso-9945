@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Device ID.
     ///
@@ -55,4 +54,3 @@ extension ISO_9945.Kernel.Device: ExpressibleByIntegerLiteral {
         self.rawValue = value
     }
 }
-

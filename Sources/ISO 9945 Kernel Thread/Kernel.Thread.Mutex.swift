@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - Thread Mutex
 //
 // Mutex implementation is in platform-specific packages:
@@ -19,4 +18,3 @@
 // Mutexes require platform-specific storage (pthread_mutex_t / SRWLOCK)
 // and initialization/destruction syscalls, so they cannot live in the
 // types-only primitives layer.
-

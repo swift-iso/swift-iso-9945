@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Seek {
     /// Reference point for seek operations.
     ///
@@ -63,4 +62,3 @@ extension ISO_9945.Kernel.File.Seek {
         case end
     }
 }
-

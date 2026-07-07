@@ -9,13 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-import ISO_9945_Kernel
-import Path_Primitives
 import Error_Primitives
+import Path_Primitives
 import Synchronization
-import Testing
 import Tagged_Primitives_Standard_Library_Integration
+import Testing
 
 @testable import ISO_9945_Kernel
 
@@ -324,4 +322,3 @@ extension POSIXThreadSynchronizationTests.Integration {
         #expect(pongCount.load(ordering: .acquiring) == maxRounds)
     }
 }
-

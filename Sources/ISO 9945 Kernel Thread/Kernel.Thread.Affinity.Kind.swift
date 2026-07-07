@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Thread.Affinity {
     /// The kind of affinity constraint.
     public enum Kind: Sendable, Equatable {
@@ -36,4 +35,3 @@ extension ISO_9945.Kernel.Thread.Affinity {
         case numaNode(Int)
     }
 }
-

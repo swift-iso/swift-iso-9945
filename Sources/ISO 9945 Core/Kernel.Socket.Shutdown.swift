@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket {
     /// Socket shutdown operations.
     ///
@@ -20,4 +19,3 @@ extension ISO_9945.Kernel.Socket {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Socket.Shutdown`)
     public enum Shutdown: Sendable {}
 }
-

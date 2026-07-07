@@ -10,10 +10,10 @@
 // ===----------------------------------------------------------------------===//
 
 import ISO_9945_Glob
-import Path_Primitives
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
+import Testing
 
 // MARK: - fnmatch Tests
 
@@ -182,7 +182,7 @@ extension ISO_9945.Glob.Expand.Test.Unit {
                 try ISO_9945.Glob.expand(pattern: pattern)
             }
             Issue.record("Expected noMatch error")
-        } catch where error.body == .noMatch {
+        } catch  where error.body == .noMatch {
             // Expected
         }
     }

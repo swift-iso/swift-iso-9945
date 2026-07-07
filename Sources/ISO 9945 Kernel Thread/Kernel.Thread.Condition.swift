@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - Thread Condition Variable
 //
 // Condition variable implementation is in platform-specific packages:
@@ -19,4 +18,3 @@
 // Condition variables require platform-specific storage (pthread_cond_t / CONDITION_VARIABLE)
 // and initialization/destruction syscalls, so they cannot live in the
 // types-only primitives layer.
-

@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Loader_Primitives
 public import ISO_9945_Core
+public import Loader_Primitives
 
 extension ISO_9945 {
     /// POSIX dynamic loader interface.

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Permission {
     /// Permission-related errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
@@ -52,4 +51,3 @@ extension ISO_9945.Kernel.Permission.Error: CustomStringConvertible {
 // Per [PLAT-ARCH-008c], the platform-specific `init?(code:)` mapping lives in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.Permission.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.Permission.Error+code.swift`)
-

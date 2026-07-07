@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Clone {
     /// The cloning capability of a filesystem/path.
     ///
@@ -28,4 +27,3 @@ extension ISO_9945.Kernel.File.Clone {
         case none
     }
 }
-

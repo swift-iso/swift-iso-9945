@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Directory.Working {
     /// Errors from working directory operations.
     public enum Error: Swift.Error, Sendable {
@@ -49,4 +48,3 @@ extension ISO_9945.Kernel.Directory.Working.Error: CustomStringConvertible {
 // Per [PLAT-ARCH-008c], the platform-specific `init(code:)` mapping lives in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.Directory.Working.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.Directory.Working.Error+code.swift`)
-

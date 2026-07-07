@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.System {
     /// Filesystem statistics.
     ///
@@ -103,4 +102,3 @@ extension ISO_9945.Kernel.File.System {
         }
     }
 }
-

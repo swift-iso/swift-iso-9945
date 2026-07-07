@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
-import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -43,51 +42,51 @@ extension Memory.Map.Anonymous.Test.Unit {
 
 // MARK: - Functional Tests
 
-    extension Memory.Map.Anonymous.Test.Unit {
-        @Test
-        func `map creates a valid region`() throws {
-            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Memory.Map.unmap(region) }
+extension Memory.Map.Anonymous.Test.Unit {
+    @Test
+    func `map creates a valid region`() throws {
+        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let region = try Memory.Map.Anonymous.map(length: pageSize)
+        defer { try? Memory.Map.unmap(region) }
 
-            #expect(region.base != .null)
-            #expect(region.length == pageSize)
-        }
-
-        @Test
-        func `map with custom protection`() throws {
-            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Memory.Map.Anonymous.map(
-                length: pageSize,
-                protection: .read
-            )
-            defer { try? Memory.Map.unmap(region) }
-
-            #expect(region.base != .null)
-        }
-
-        @Test
-        func `map private by default`() throws {
-            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Memory.Map.unmap(region) }
-
-            // Should succeed (private is default)
-            #expect(region.base != .null)
-        }
-
-        @Test
-        func `map shared when specified`() throws {
-            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
-            let region = try Memory.Map.Anonymous.map(
-                length: pageSize,
-                shared: true
-            )
-            defer { try? Memory.Map.unmap(region) }
-
-            #expect(region.base != .null)
-        }
+        #expect(region.base != .null)
+        #expect(region.length == pageSize)
     }
+
+    @Test
+    func `map with custom protection`() throws {
+        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let region = try Memory.Map.Anonymous.map(
+            length: pageSize,
+            protection: .read
+        )
+        defer { try? Memory.Map.unmap(region) }
+
+        #expect(region.base != .null)
+    }
+
+    @Test
+    func `map private by default`() throws {
+        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let region = try Memory.Map.Anonymous.map(length: pageSize)
+        defer { try? Memory.Map.unmap(region) }
+
+        // Should succeed (private is default)
+        #expect(region.base != .null)
+    }
+
+    @Test
+    func `map shared when specified`() throws {
+        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let region = try Memory.Map.Anonymous.map(
+            length: pageSize,
+            shared: true
+        )
+        defer { try? Memory.Map.unmap(region) }
+
+        #expect(region.base != .null)
+    }
+}
 
 // MARK: - Windows Tests
 

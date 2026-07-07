@@ -9,17 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Tests use Apple native Testing framework
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel
-
-@testable import Error_Primitives
-import Path_Primitives
-import Memory_Primitives
-
 // L2 init?(code:) extensions live in ISO 9945 Core
 @_spi(Syscall) import ISO_9945_Core
+import ISO_9945_Kernel
+import Memory_Primitives
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
+// Tests use Apple native Testing framework
+import Testing
+
+@testable import Error_Primitives
 
 // Error_Primitives.Error.Mapping.swift contains extension initializers for error mapping.
 // These tests verify the error mapping functionality using Error_Primitives.Error.Code.

@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.IO.Write {
     /// Errors that can occur during write operations.
     public enum Error: Swift.Error, Sendable {
@@ -51,4 +49,3 @@ extension ISO_9945.Kernel.IO.Write.Error: CustomStringConvertible {
 // `init(code:)` mapping live in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.IO.Write.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.IO.Write.Error+code.swift`)
-

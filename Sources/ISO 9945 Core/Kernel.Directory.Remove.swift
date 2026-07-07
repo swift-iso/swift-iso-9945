@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Directory {
     /// Directory removal operations.
     ///
@@ -77,4 +76,3 @@ extension ISO_9945.Kernel.Directory.Remove.Error: CustomStringConvertible {
         }
     }
 }
-

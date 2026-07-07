@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel {
     /// File locking types and operations.
     ///
@@ -21,4 +19,3 @@ extension ISO_9945.Kernel {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Lock`)
     public enum Lock {}
 }
-

@@ -9,12 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File {
     /// A file descriptor.
     ///
     /// Typealias to `ISO_9945.Kernel.Descriptor` for semantic clarity within the File namespace.
     public typealias Descriptor = ISO_9945.Kernel.Descriptor
 }
-

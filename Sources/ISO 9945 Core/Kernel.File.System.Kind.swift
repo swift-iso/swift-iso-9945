@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.System {
     /// Filesystem type identifier.
     ///
@@ -93,4 +92,3 @@ extension ISO_9945.Kernel.File.System.Kind: CustomStringConvertible {
         #endif
     }
 }
-

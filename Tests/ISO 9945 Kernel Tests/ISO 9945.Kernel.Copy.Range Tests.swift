@@ -11,17 +11,16 @@
 
 #if os(Linux)
     // Tests use Apple native Testing framework
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel
-
+    import Testing
+    import Tagged_Primitives_Standard_Library_Integration
+    import ISO_9945_Kernel
 
     extension ISO_9945.Kernel.Copy.Range {
         @Suite
-    struct Test {
-        @Suite struct Unit {}
-        @Suite struct EdgeCase {}
-    }
+        struct Test {
+            @Suite struct Unit {}
+            @Suite struct EdgeCase {}
+        }
     }
 
     // MARK: - Unit Tests

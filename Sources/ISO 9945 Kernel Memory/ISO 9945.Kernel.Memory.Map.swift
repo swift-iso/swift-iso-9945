@@ -10,7 +10,6 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import ISO_9945_Core
-
 import Memory_Primitives
 
 #if canImport(Darwin)

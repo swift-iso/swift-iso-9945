@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Thread {
     /// Errors from thread operations.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
@@ -39,4 +38,3 @@ extension ISO_9945.Kernel.Thread.Error: CustomStringConvertible {
         }
     }
 }
-

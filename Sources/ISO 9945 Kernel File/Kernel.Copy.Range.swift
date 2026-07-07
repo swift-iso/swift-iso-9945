@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Copy {
     /// Range-based copy operations.
     ///
@@ -28,4 +27,3 @@ extension ISO_9945.Kernel.Copy {
     /// - Linux: `swift-iso-9945` (`ISO_9945.Kernel.Copy.Range.copy`)
     public enum Range {}
 }
-

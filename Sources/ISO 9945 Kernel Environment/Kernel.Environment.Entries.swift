@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - Environment Entries Iterator
 //
 // Environment entries iterator implementation is in platform-specific packages:
@@ -18,4 +17,3 @@
 //
 // Environment iteration requires platform-specific access (environ / GetEnvironmentStringsW),
 // so it cannot live in the types-only primitives layer.
-

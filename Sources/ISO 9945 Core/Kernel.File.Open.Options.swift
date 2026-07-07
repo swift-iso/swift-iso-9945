@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Open {
     /// Options that modify file opening behavior.
     ///
@@ -32,4 +31,3 @@ extension ISO_9945.Kernel.File.Open {
         }
     }
 }
-

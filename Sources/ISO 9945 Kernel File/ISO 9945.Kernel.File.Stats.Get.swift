@@ -11,7 +11,6 @@
 
 @_spi(Syscall) import ISO_9945_Core
 
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -204,76 +203,75 @@ extension ISO_9945.Kernel.File.Stats.Error {
 
 // MARK: - Stats Construction from POSIX stat
 
-
 #if canImport(Darwin)
-extension ISO_9945.Kernel.File.Stats {
-    /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
-    internal init(from sb: Darwin.stat) {
-        let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec), nanosecondFraction: Int32(sb.st_atimespec.tv_nsec))
-        let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtimespec.tv_sec), nanosecondFraction: Int32(sb.st_mtimespec.tv_nsec))
-        let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctimespec.tv_sec), nanosecondFraction: Int32(sb.st_ctimespec.tv_nsec))
+    extension ISO_9945.Kernel.File.Stats {
+        /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
+        internal init(from sb: Darwin.stat) {
+            let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec), nanosecondFraction: Int32(sb.st_atimespec.tv_nsec))
+            let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtimespec.tv_sec), nanosecondFraction: Int32(sb.st_mtimespec.tv_nsec))
+            let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctimespec.tv_sec), nanosecondFraction: Int32(sb.st_ctimespec.tv_nsec))
 
-        self.init(
-            size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
-            type: Kind(mode: sb.st_mode),
-            permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
-            uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
-            gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
-            inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
-            device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
-            linkCount: ISO_9945.Kernel.Link.Count(_unchecked: Cardinal(UInt(sb.st_nlink))),
-            accessTime: atime,
-            modificationTime: mtime,
-            changeTime: ctime
-        )
+            self.init(
+                size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
+                type: Kind(mode: sb.st_mode),
+                permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+                uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
+                gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
+                inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
+                device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
+                linkCount: ISO_9945.Kernel.Link.Count(_unchecked: Cardinal(UInt(sb.st_nlink))),
+                accessTime: atime,
+                modificationTime: mtime,
+                changeTime: ctime
+            )
+        }
     }
-}
 #elseif canImport(Glibc)
-extension ISO_9945.Kernel.File.Stats {
-    /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
-    internal init(from sb: Glibc.stat) {
-        let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
-        let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
-        let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
+    extension ISO_9945.Kernel.File.Stats {
+        /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
+        internal init(from sb: Glibc.stat) {
+            let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
+            let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
+            let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
 
-        self.init(
-            size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
-            type: Kind(mode: sb.st_mode),
-            permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
-            uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
-            gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
-            inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
-            device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
-            linkCount: ISO_9945.Kernel.Link.Count(_unchecked: Cardinal(UInt(sb.st_nlink))),
-            accessTime: atime,
-            modificationTime: mtime,
-            changeTime: ctime
-        )
+            self.init(
+                size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
+                type: Kind(mode: sb.st_mode),
+                permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+                uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
+                gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
+                inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
+                device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
+                linkCount: ISO_9945.Kernel.Link.Count(_unchecked: Cardinal(UInt(sb.st_nlink))),
+                accessTime: atime,
+                modificationTime: mtime,
+                changeTime: ctime
+            )
+        }
     }
-}
 #elseif canImport(Musl)
-extension ISO_9945.Kernel.File.Stats {
-    /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
-    internal init(from sb: Musl.stat) {
-        let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
-        let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
-        let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
+    extension ISO_9945.Kernel.File.Stats {
+        /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
+        internal init(from sb: Musl.stat) {
+            let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
+            let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
+            let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
 
-        self.init(
-            size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
-            type: Kind(mode: sb.st_mode),
-            permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
-            uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
-            gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
-            inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
-            device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
-            linkCount: ISO_9945.Kernel.Link.Count(_unchecked: Cardinal(UInt(sb.st_nlink))),
-            accessTime: atime,
-            modificationTime: mtime,
-            changeTime: ctime
-        )
+            self.init(
+                size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
+                type: Kind(mode: sb.st_mode),
+                permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+                uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
+                gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
+                inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
+                device: ISO_9945.Kernel.Device(UInt64(sb.st_dev)),
+                linkCount: ISO_9945.Kernel.Link.Count(_unchecked: Cardinal(UInt(sb.st_nlink))),
+                accessTime: atime,
+                modificationTime: mtime,
+                changeTime: ctime
+            )
+        }
     }
-}
 #endif
 
 // MARK: - File Kind from POSIX mode

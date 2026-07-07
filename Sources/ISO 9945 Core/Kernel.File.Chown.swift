@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// Change file ownership.
     ///
@@ -75,4 +74,3 @@ extension ISO_9945.Kernel.File.Chown.Error: CustomStringConvertible {
         }
     }
 }
-

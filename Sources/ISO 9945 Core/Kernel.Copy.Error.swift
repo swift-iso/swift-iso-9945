@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Copy {
     /// Errors from copy operations.
     ///
@@ -66,4 +65,3 @@ extension ISO_9945.Kernel.Copy.Error: CustomStringConvertible {
         }
     }
 }
-

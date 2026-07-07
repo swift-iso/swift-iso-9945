@@ -24,10 +24,12 @@ extension Path.Borrowed: @retroactive Path.Decomposition {
     @inlinable
     @_lifetime(copy view)
     public static func parent(of view: borrowing Path.Borrowed) -> Swift.Span<Path.Char>? {
-        guard let lastSep = Path.Scan.lastSeparatorIndex(
-            in: view.span,
-            primary: 0x2F
-        ) else { return nil }
+        guard
+            let lastSep = Path.Scan.lastSeparatorIndex(
+                in: view.span,
+                primary: 0x2F
+            )
+        else { return nil }
         // Root "/" — parent of the root is the root itself, but we return
         // nil to signal "no further parent exists."
         if lastSep == 0 && view.count == 1 { return nil }
@@ -43,10 +45,12 @@ extension Path.Borrowed: @retroactive Path.Decomposition {
     @inlinable
     @_lifetime(copy view)
     public static func component(of view: borrowing Path.Borrowed) -> Swift.Span<Path.Char> {
-        guard let lastSep = Path.Scan.lastSeparatorIndex(
-            in: view.span,
-            primary: 0x2F
-        ) else {
+        guard
+            let lastSep = Path.Scan.lastSeparatorIndex(
+                in: view.span,
+                primary: 0x2F
+            )
+        else {
             // No separator → full view is the component.
             return unsafe _overrideLifetime(
                 Span(_unsafeStart: view.pointer, count: view.count),

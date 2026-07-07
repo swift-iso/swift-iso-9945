@@ -11,7 +11,6 @@
 
 @_spi(Syscall) import ISO_9945_Core
 
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -54,88 +53,88 @@ extension ISO_9945.Kernel.File.Flush {
     }
 
     #if os(Linux)
-    /// Synchronizes a raw file descriptor's data (without metadata) to storage device.
-    ///
-    /// Spec-literal raw `fdatasync(2)`. Like `fsync()`, but does not flush
-    /// modified metadata unless needed to allow subsequent data retrieval.
-    /// The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Flush.fdatasync(_:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// ## EINTR
-    /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.code.isInterrupted` and retry if appropriate.
-    ///
-    /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-    @_spi(Syscall)
-    public static func fdatasync(fd: Int32) throws(Error) {
-        #if canImport(Musl)
-            let result = unsafe Musl.fdatasync(fd)
-        #elseif canImport(Glibc)
-            let result = unsafe Glibc.fdatasync(fd)
-        #endif
+        /// Synchronizes a raw file descriptor's data (without metadata) to storage device.
+        ///
+        /// Spec-literal raw `fdatasync(2)`. Like `fsync()`, but does not flush
+        /// modified metadata unless needed to allow subsequent data retrieval.
+        /// The typed L2 convenience
+        /// (`ISO_9945.Kernel.File.Flush.fdatasync(_:)` taking
+        /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
+        ///
+        /// ## EINTR
+        /// This function does NOT retry on EINTR. On signal interruption, throws
+        /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
+        /// `error.code.isInterrupted` and retry if appropriate.
+        ///
+        /// - Parameter fd: The raw file descriptor.
+        /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+        @_spi(Syscall)
+        public static func fdatasync(fd: Int32) throws(Error) {
+            #if canImport(Musl)
+                let result = unsafe Musl.fdatasync(fd)
+            #elseif canImport(Glibc)
+                let result = unsafe Glibc.fdatasync(fd)
+            #endif
 
-        if result == 0 {
-            return
+            if result == 0 {
+                return
+            }
+
+            throw Error.current()
         }
-
-        throw Error.current()
-    }
     #endif
 
     #if canImport(Darwin)
-    /// Flushes data to permanent storage with full sync (Darwin) on a raw file descriptor.
-    ///
-    /// Spec-literal raw `fcntl(F_FULLFSYNC)`. Ensures data is flushed through
-    /// disk caches — strongest durability guarantee on Darwin. The typed L2
-    /// convenience (`ISO_9945.Kernel.File.Flush.fullFsync(_:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// ## EINTR
-    /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.code.isInterrupted` and retry if appropriate.
-    ///
-    /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-    @_spi(Syscall)
-    public static func fullFsync(fd: Int32) throws(Error) {
-        let result = unsafe Darwin.fcntl(fd, F_FULLFSYNC)
+        /// Flushes data to permanent storage with full sync (Darwin) on a raw file descriptor.
+        ///
+        /// Spec-literal raw `fcntl(F_FULLFSYNC)`. Ensures data is flushed through
+        /// disk caches — strongest durability guarantee on Darwin. The typed L2
+        /// convenience (`ISO_9945.Kernel.File.Flush.fullFsync(_:)` taking
+        /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
+        ///
+        /// ## EINTR
+        /// This function does NOT retry on EINTR. On signal interruption, throws
+        /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
+        /// `error.code.isInterrupted` and retry if appropriate.
+        ///
+        /// - Parameter fd: The raw file descriptor.
+        /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+        @_spi(Syscall)
+        public static func fullFsync(fd: Int32) throws(Error) {
+            let result = unsafe Darwin.fcntl(fd, F_FULLFSYNC)
 
-        if result != -1 {
-            return
+            if result != -1 {
+                return
+            }
+
+            throw Error.current()
         }
 
-        throw Error.current()
-    }
+        /// Flushes data with barrier sync (Darwin) on a raw file descriptor.
+        ///
+        /// Spec-literal raw `fcntl(F_BARRIERFSYNC)`. Lighter than F_FULLFSYNC but
+        /// still provides ordering guarantees: data is flushed to disk and a
+        /// barrier is issued to ensure ordering with subsequent writes. The typed
+        /// L2 convenience (`ISO_9945.Kernel.File.Flush.barrierFsync(_:)` taking
+        /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
+        ///
+        /// ## EINTR
+        /// This function does NOT retry on EINTR. On signal interruption, throws
+        /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
+        /// `error.code.isInterrupted` and retry if appropriate.
+        ///
+        /// - Parameter fd: The raw file descriptor.
+        /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+        @_spi(Syscall)
+        public static func barrierFsync(fd: Int32) throws(Error) {
+            let result = unsafe Darwin.fcntl(fd, F_BARRIERFSYNC)
 
-    /// Flushes data with barrier sync (Darwin) on a raw file descriptor.
-    ///
-    /// Spec-literal raw `fcntl(F_BARRIERFSYNC)`. Lighter than F_FULLFSYNC but
-    /// still provides ordering guarantees: data is flushed to disk and a
-    /// barrier is issued to ensure ordering with subsequent writes. The typed
-    /// L2 convenience (`ISO_9945.Kernel.File.Flush.barrierFsync(_:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// ## EINTR
-    /// This function does NOT retry on EINTR. On signal interruption, throws
-    /// `.platform(Error_Primitives.Error(code: .posix(EINTR)))`. Callers should check
-    /// `error.code.isInterrupted` and retry if appropriate.
-    ///
-    /// - Parameter fd: The raw file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-    @_spi(Syscall)
-    public static func barrierFsync(fd: Int32) throws(Error) {
-        let result = unsafe Darwin.fcntl(fd, F_BARRIERFSYNC)
+            if result != -1 {
+                return
+            }
 
-        if result != -1 {
-            return
+            throw Error.current()
         }
-
-        throw Error.current()
-    }
     #endif
 }
 
@@ -154,40 +153,40 @@ extension ISO_9945.Kernel.File.Flush {
     }
 
     #if os(Linux)
-    /// Synchronizes a file's data (without metadata) to storage device.
-    ///
-    /// Typed L2 form. Delegates to the raw `fdatasync(fd:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func fdatasync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
-        try unsafe fdatasync(fd: descriptor._rawValue)
-    }
+        /// Synchronizes a file's data (without metadata) to storage device.
+        ///
+        /// Typed L2 form. Delegates to the raw `fdatasync(fd:)` SPI via
+        /// `descriptor._rawValue`.
+        ///
+        /// - Parameter descriptor: The file descriptor.
+        /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+        public static func fdatasync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
+            try unsafe fdatasync(fd: descriptor._rawValue)
+        }
     #endif
 
     #if canImport(Darwin)
-    /// Flushes data to permanent storage with full sync (Darwin).
-    ///
-    /// Typed L2 form. Delegates to the raw `fullFsync(fd:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func fullFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
-        try unsafe fullFsync(fd: descriptor._rawValue)
-    }
+        /// Flushes data to permanent storage with full sync (Darwin).
+        ///
+        /// Typed L2 form. Delegates to the raw `fullFsync(fd:)` SPI via
+        /// `descriptor._rawValue`.
+        ///
+        /// - Parameter descriptor: The file descriptor.
+        /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+        public static func fullFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
+            try unsafe fullFsync(fd: descriptor._rawValue)
+        }
 
-    /// Flushes data with barrier sync (Darwin).
-    ///
-    /// Typed L2 form. Delegates to the raw `barrierFsync(fd:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameter descriptor: The file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-    public static func barrierFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
-        try unsafe barrierFsync(fd: descriptor._rawValue)
-    }
+        /// Flushes data with barrier sync (Darwin).
+        ///
+        /// Typed L2 form. Delegates to the raw `barrierFsync(fd:)` SPI via
+        /// `descriptor._rawValue`.
+        ///
+        /// - Parameter descriptor: The file descriptor.
+        /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
+        public static func barrierFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
+            try unsafe barrierFsync(fd: descriptor._rawValue)
+        }
     #endif
 }
 

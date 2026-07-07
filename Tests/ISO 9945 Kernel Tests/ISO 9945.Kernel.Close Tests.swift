@@ -9,14 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
-import Error_Primitives
-@_spi(Syscall) import Path_Primitives
 @_spi(Syscall) import Error_Primitives
-import Testing
+import ISO_9945_Kernel_Test_Support
+@_spi(Syscall) import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
+import Testing
 
 @testable import ISO_9945_Kernel
 

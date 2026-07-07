@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 #if canImport(Darwin)
     public import Darwin
 #elseif canImport(Glibc)
@@ -117,7 +116,7 @@ extension ISO_9945.Kernel.Signal.Information {
             // Darwin siginfo_t exposes si_pid as a direct scalar field.
             switch code {
             case Int32(SI_USER), Int32(SI_QUEUE),
-                 Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
+                Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
             default:
                 return nil
@@ -139,7 +138,7 @@ extension ISO_9945.Kernel.Signal.Information {
             // for both SI_USER/SI_QUEUE and CLD_* (single sibling struct).
             switch code {
             case Int32(SI_USER), Int32(SI_QUEUE),
-                 Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
+                Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid)
             default:
                 return nil
@@ -176,9 +175,9 @@ extension ISO_9945.Kernel.Signal.Information {
         #if canImport(Darwin)
             switch code {
             case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR),
-                 Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
-                 Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
-                 Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
+                Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
+                Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
+                Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
                 guard let address = unsafe cValue.si_addr else { return nil }
                 return UInt(bitPattern: address)
             default:
@@ -187,9 +186,9 @@ extension ISO_9945.Kernel.Signal.Information {
         #elseif canImport(Glibc)
             switch code {
             case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR),
-                 Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
-                 Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
-                 Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
+                Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
+                Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
+                Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
                 guard let address = unsafe cValue._sifields._sigfault.si_addr else { return nil }
                 return UInt(bitPattern: address)
             default:
@@ -198,9 +197,9 @@ extension ISO_9945.Kernel.Signal.Information {
         #elseif canImport(Musl)
             switch code {
             case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR),
-                 Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
-                 Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
-                 Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
+                Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
+                Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
+                Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
                 guard let address = unsafe cValue.__si_fields.__sigfault.si_addr else { return nil }
                 return UInt(bitPattern: address)
             default:

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Stats.Kind {
     /// Link types.
     public enum Link: Sendable, Equatable, Hashable {
@@ -24,4 +23,3 @@ extension ISO_9945.Kernel.File.Stats.Kind {
         case junction
     }
 }
-

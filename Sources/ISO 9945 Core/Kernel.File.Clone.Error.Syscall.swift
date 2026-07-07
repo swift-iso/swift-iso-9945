@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Clone.Error {
     /// Raw syscall-level errors for clone operations.
     ///
@@ -23,4 +22,3 @@ extension ISO_9945.Kernel.File.Clone.Error {
         case notSupported(operation: Operation)
     }
 }
-

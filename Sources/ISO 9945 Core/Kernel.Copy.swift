@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// File copy operations using kernel-accelerated mechanisms.
     ///
@@ -43,4 +42,3 @@ extension ISO_9945.Kernel {
 
     }
 }
-

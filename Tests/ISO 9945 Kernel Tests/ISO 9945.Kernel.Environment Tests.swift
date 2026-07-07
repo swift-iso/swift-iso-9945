@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
-import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -66,7 +65,7 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
 // NOTE: isSet API not yet implemented in ISO_9945.Kernel.Environment
 // These tests are disabled until the API is added.
 
-//extension ISO_9945.Kernel.Environment.Test.Unit {
+// extension ISO_9945.Kernel.Environment.Test.Unit {
 //    @Test("isSet returns false for unset variable")
 //    func isSetUnsetVariable() {
 //        let result = ISO_9945.Kernel.Environment.isSet("__KERNEL_TEST_UNSET_VAR_12345__")
@@ -85,4 +84,4 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
 //        let result = ISO_9945.Kernel.Environment.isSet("PATH", to: "__IMPOSSIBLE_VALUE__")
 //        #expect(result == false)
 //    }
-//}
+// }

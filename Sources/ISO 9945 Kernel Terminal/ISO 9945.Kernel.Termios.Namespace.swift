@@ -42,10 +42,11 @@ extension ISO_9945.Kernel.Termios {
         /// Sized to hold any conformant POSIX termios layout
         /// (macOS: ~72 bytes, Linux: ~60 bytes).
         public struct Storage: Sendable {
-            public var bytes: (
-                UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64,
-                UInt64, UInt64, UInt64, UInt64
-            ) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            public var bytes:
+                (
+                    UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64,
+                    UInt64, UInt64, UInt64, UInt64
+                ) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
             public init() {}
         }

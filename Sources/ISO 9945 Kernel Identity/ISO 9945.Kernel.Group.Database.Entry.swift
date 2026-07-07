@@ -1,4 +1,3 @@
-
 extension ISO_9945.Kernel.Group.Database {
     /// A group database entry (from /etc/group or equivalent).
     public struct Entry: Sendable {

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Thread {
     /// Thread affinity specification.
     ///
@@ -58,4 +57,3 @@ extension ISO_9945.Kernel.Thread {
         }
     }
 }
-

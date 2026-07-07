@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -37,13 +36,13 @@ extension ISO_9945.Kernel.Close {
     /// - Returns: 0 on success, -1 on failure (`errno` set).
     internal static func close(_ fd: Int32) -> Int32 {
         #if canImport(Darwin)
-        return Darwin.close(fd)
+            return Darwin.close(fd)
         #elseif canImport(Glibc)
-        return unsafe Glibc.close(fd)
+            return unsafe Glibc.close(fd)
         #elseif canImport(Musl)
-        return unsafe Musl.close(fd)
+            return unsafe Musl.close(fd)
         #else
-        return -1
+            return -1
         #endif
     }
 }

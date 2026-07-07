@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File {
     /// File flush (synchronization) operations.
     ///
@@ -53,4 +51,3 @@ extension ISO_9945.Kernel.File.Flush.Error: CustomStringConvertible {
 // Per [PLAT-ARCH-008c], the platform-specific `var code` accessor lives in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.Flush.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.File.Flush.Error+code.swift`)
-

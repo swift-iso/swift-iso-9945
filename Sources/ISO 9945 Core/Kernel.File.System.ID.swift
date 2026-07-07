@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.System {
     /// Filesystem identifier.
     ///
@@ -17,4 +16,3 @@ extension ISO_9945.Kernel.File.System {
     /// On Windows, this is the volume serial number.
     public typealias ID = Tagged<ISO_9945.Kernel.File.System, UInt64>
 }
-

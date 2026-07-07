@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Open {
     /// Cache behavior options.
     public enum Cache: Sendable {
@@ -22,4 +21,3 @@ extension ISO_9945.Kernel.File.Open {
         case disabled
     }
 }
-

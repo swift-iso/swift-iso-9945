@@ -1,4 +1,3 @@
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -34,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Address {
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
     /// The address family (always `.inet`).
     public var family: ISO_9945.Kernel.Socket.Address.Family {
-        get { .inet }
+        .inet
     }
 
     /// Port number in host byte order.
@@ -89,7 +88,6 @@ extension ISO_9945.Kernel.Socket.Address.IPv4 {
 
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.cValue.sin_port == rhs.cValue.sin_port &&
-        lhs.cValue.sin_addr.s_addr == rhs.cValue.sin_addr.s_addr
+        lhs.cValue.sin_port == rhs.cValue.sin_port && lhs.cValue.sin_addr.s_addr == rhs.cValue.sin_addr.s_addr
     }
 }

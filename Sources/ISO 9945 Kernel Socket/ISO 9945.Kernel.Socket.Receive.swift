@@ -108,7 +108,10 @@ extension ISO_9945.Kernel.Socket.Receive {
         into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
-        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) in
+        try unsafe span.withUnsafeMutableBytes {
+            (
+                buffer: UnsafeMutableRawBufferPointer
+            ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) in
             guard let base = buffer.baseAddress else {
                 return (count: 0, address: ISO_9945.Kernel.Socket.Address.Storage(), addressLength: ISO_9945.Kernel.Socket.Address.Length(UInt(0)))
             }

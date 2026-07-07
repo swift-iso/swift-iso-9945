@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct.Mode {
     /// Policy for automatic mode selection.
     public enum Policy: Sendable, Equatable {
@@ -33,4 +32,3 @@ extension ISO_9945.Kernel.File.Direct.Mode {
         case errorOnViolation
     }
 }
-

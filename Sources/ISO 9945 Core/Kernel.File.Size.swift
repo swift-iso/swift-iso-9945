@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 public import Binary_Primitives
 
 extension ISO_9945.Kernel.File {
@@ -37,8 +36,8 @@ extension ISO_9945.Kernel.File {
 // MARK: - Size Constants
 
 extension ISO_9945.Kernel.File.Size {
-    /// Zero bytes.
-//    public static let zero: Self = 0
+    // Zero bytes.
+    //    public static let zero: Self = 0
 
     /// One kilobyte (1024 bytes).
     public static let kilobyte: Self = Self(1024)

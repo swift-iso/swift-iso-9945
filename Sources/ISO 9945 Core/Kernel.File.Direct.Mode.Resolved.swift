@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct.Mode {
     /// The resolved mode after platform-specific evaluation.
     ///
@@ -26,4 +25,3 @@ extension ISO_9945.Kernel.File.Direct.Mode {
         case buffered
     }
 }
-

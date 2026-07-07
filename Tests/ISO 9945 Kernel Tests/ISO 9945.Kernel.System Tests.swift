@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
-import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -105,13 +104,13 @@ extension System.Test.Unit {
         #expect(size & (size - 1) == 0)
     }
 
-        @Test
-        func `allocationGranularity equals pageSize on POSIX`() {
-            let granularity = Memory.Allocation.system
-            // Compare underlying values since these are different types
-            let size: Int = granularity.underlying.magnitude()
-            #expect(size == Int(System.pageSize))
-        }
+    @Test
+    func `allocationGranularity equals pageSize on POSIX`() {
+        let granularity = Memory.Allocation.system
+        // Compare underlying values since these are different types
+        let size: Int = granularity.underlying.magnitude()
+        #expect(size == Int(System.pageSize))
+    }
 }
 
 // MARK: - Consistency Tests

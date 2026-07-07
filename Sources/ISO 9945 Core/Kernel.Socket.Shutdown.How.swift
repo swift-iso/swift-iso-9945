@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket.Shutdown {
     /// Specifies which half of the connection to shut down.
     public enum How: Int32, Sendable {
@@ -23,4 +22,3 @@ extension ISO_9945.Kernel.Socket.Shutdown {
         case both = 2  // SHUT_RDWR
     }
 }
-

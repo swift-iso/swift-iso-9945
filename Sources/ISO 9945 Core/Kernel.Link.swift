@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel {
     /// Hard link operations.
     ///
@@ -28,4 +26,3 @@ extension ISO_9945.Kernel.Link {
     /// Hard link count for a file.
     public typealias Count = Tagged<ISO_9945.Kernel.Link, Cardinal>
 }
-

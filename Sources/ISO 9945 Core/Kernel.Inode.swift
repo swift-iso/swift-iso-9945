@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Filesystem inode number.
     ///
@@ -58,4 +57,3 @@ extension ISO_9945.Kernel.Inode: CustomStringConvertible {
         "\(rawValue)"
     }
 }
-

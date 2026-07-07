@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+@_spi(Syscall) import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-@_spi(Syscall) import Path_Primitives
-@_spi(Syscall) import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -183,73 +182,73 @@ extension ISO_9945.Kernel.Copy.Error.Test.EdgeCase {
 
 // MARK: - POSIX Error Mapping Tests
 
-    #if canImport(Darwin)
-        import Darwin
-    #elseif canImport(Glibc)
-        import Glibc
-    #elseif canImport(Musl)
-        import Musl
-    #endif
+#if canImport(Darwin)
+    import Darwin
+#elseif canImport(Glibc)
+    import Glibc
+#elseif canImport(Musl)
+    import Musl
+#endif
 
-    extension ISO_9945.Kernel.Copy.Error.Test.Unit {
-        @Test
-        func `EBADF maps to invalidDescriptor`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EBADF)
-            #expect(error == .invalidDescriptor)
-        }
-
-        @Test
-        func `EXDEV maps to crossDevice`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EXDEV)
-            #expect(error == .crossDevice)
-        }
-
-        @Test
-        func `EINVAL maps to unsupported`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EINVAL)
-            #expect(error == .unsupported)
-        }
-
-        @Test
-        func `ENOTSUP maps to unsupported`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: ENOTSUP)
-            #expect(error == .unsupported)
-        }
-
-        @Test
-        func `EOPNOTSUPP maps to unsupported`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EOPNOTSUPP)
-            #expect(error == .unsupported)
-        }
-
-        @Test
-        func `ENOSPC maps to noSpace`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: ENOSPC)
-            #expect(error == .noSpace)
-        }
-
-        @Test
-        func `EIO maps to io`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EIO)
-            #expect(error == .io)
-        }
-
-        @Test
-        func `EACCES maps to permissionDenied`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EACCES)
-            #expect(error == .permissionDenied)
-        }
-
-        @Test
-        func `EPERM maps to permissionDenied`() {
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: EPERM)
-            #expect(error == .permissionDenied)
-        }
-
-        @Test
-        func `unknown error maps to unsupported`() {
-            // Use an unlikely error code
-            let error = ISO_9945.Kernel.Copy.Error(posixErrno: 999)
-            #expect(error == .unsupported)
-        }
+extension ISO_9945.Kernel.Copy.Error.Test.Unit {
+    @Test
+    func `EBADF maps to invalidDescriptor`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EBADF)
+        #expect(error == .invalidDescriptor)
     }
+
+    @Test
+    func `EXDEV maps to crossDevice`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EXDEV)
+        #expect(error == .crossDevice)
+    }
+
+    @Test
+    func `EINVAL maps to unsupported`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EINVAL)
+        #expect(error == .unsupported)
+    }
+
+    @Test
+    func `ENOTSUP maps to unsupported`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: ENOTSUP)
+        #expect(error == .unsupported)
+    }
+
+    @Test
+    func `EOPNOTSUPP maps to unsupported`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EOPNOTSUPP)
+        #expect(error == .unsupported)
+    }
+
+    @Test
+    func `ENOSPC maps to noSpace`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: ENOSPC)
+        #expect(error == .noSpace)
+    }
+
+    @Test
+    func `EIO maps to io`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EIO)
+        #expect(error == .io)
+    }
+
+    @Test
+    func `EACCES maps to permissionDenied`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EACCES)
+        #expect(error == .permissionDenied)
+    }
+
+    @Test
+    func `EPERM maps to permissionDenied`() {
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: EPERM)
+        #expect(error == .permissionDenied)
+    }
+
+    @Test
+    func `unknown error maps to unsupported`() {
+        // Use an unlikely error code
+        let error = ISO_9945.Kernel.Copy.Error(posixErrno: 999)
+        #expect(error == .unsupported)
+    }
+}

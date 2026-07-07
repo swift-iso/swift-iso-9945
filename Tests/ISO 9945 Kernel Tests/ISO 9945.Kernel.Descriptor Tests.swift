@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+@_spi(Syscall) import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+@_spi(Syscall) import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-@_spi(Syscall) import Path_Primitives
-@_spi(Syscall) import Error_Primitives
 
 @testable import ISO_9945_Kernel
 

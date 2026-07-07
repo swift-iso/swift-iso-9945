@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Open {
     public enum Error: Swift.Error, Sendable {
         case path(Path.Resolution.Error)
@@ -45,4 +43,3 @@ extension ISO_9945.Kernel.File.Open.Error: CustomStringConvertible {
 // Per [PLAT-ARCH-008c], the platform-specific `init(code:)` mapping lives in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.Open.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.File.Open.Error+code.swift`)
-

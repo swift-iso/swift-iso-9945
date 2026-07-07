@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct {
     /// The cache mode for file I/O operations.
     ///
@@ -167,4 +166,3 @@ extension ISO_9945.Kernel.File.Direct.Mode {
         }
     #endif
 }
-

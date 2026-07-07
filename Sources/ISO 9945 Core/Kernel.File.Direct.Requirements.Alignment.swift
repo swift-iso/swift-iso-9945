@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Direct.Requirements {
     /// Concrete alignment values for Direct I/O.
     public struct Alignment: Sendable, Equatable {
@@ -95,4 +93,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
         return nil
     }
 }
-

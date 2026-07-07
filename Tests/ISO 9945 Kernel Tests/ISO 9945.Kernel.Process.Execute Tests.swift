@@ -17,7 +17,6 @@
     import Path_Primitives
     import Error_Primitives
     @testable import ISO_9945_Kernel
-    import ISO_9945_Kernel
 
     extension ISO_9945.Kernel.Process.Execute {
         @Suite
@@ -73,8 +72,10 @@
 
             func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>) -> ISO_9945.Kernel.Process.ID {
                 try Path.scope.array(argv, envp) {
-                    (argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
-                     envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID in
+                    (
+                        argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
+                        envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>
+                    ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID in
                     // argv[0] is already the path, use it directly
                     try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                         path: argvPtr[0]!,

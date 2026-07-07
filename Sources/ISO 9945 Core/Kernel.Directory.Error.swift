@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Directory {
     /// Errors that can occur during directory operations.
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -45,4 +44,3 @@ extension ISO_9945.Kernel.Directory.Error: CustomStringConvertible {
         }
     }
 }
-

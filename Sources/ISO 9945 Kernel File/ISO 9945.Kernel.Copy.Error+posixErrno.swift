@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)

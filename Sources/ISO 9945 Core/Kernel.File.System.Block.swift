@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 internal import Cardinal_Primitives
 
 extension ISO_9945.Kernel.File.System {
@@ -60,5 +59,3 @@ extension ISO_9945.Kernel.File.System.Block {
     /// ```
     public typealias Count = Tagged<ISO_9945.Kernel.File.System.Block, Cardinal>
 }
-
-

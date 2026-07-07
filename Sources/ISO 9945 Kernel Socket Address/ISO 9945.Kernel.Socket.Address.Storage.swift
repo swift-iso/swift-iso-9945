@@ -1,4 +1,3 @@
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -28,7 +27,7 @@ extension ISO_9945.Kernel.Socket.Address {
 extension ISO_9945.Kernel.Socket.Address.Storage {
     /// The address family.
     public var family: ISO_9945.Kernel.Socket.Address.Family {
-        get { ISO_9945.Kernel.Socket.Address.Family(rawValue: Int32(cValue.ss_family)) }
+        ISO_9945.Kernel.Socket.Address.Family(rawValue: Int32(cValue.ss_family))
     }
 
     /// The size of the underlying `sockaddr_storage` structure.

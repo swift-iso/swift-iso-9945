@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File open operations and configuration types.
     ///
@@ -33,4 +32,3 @@ extension ISO_9945.Kernel.File {
     /// - ``Kernel/File/Permissions``
     public struct Open {}
 }
-

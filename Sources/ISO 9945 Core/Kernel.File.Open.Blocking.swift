@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Open {
     /// Blocking behavior options.
     public enum Blocking: Sendable {
@@ -23,4 +22,3 @@ extension ISO_9945.Kernel.File.Open {
         case disabled
     }
 }
-

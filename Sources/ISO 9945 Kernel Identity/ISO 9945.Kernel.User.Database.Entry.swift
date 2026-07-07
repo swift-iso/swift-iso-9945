@@ -1,4 +1,3 @@
-
 extension ISO_9945.Kernel.User.Database {
     /// A user database entry (from /etc/passwd or equivalent).
     public struct Entry: Sendable {

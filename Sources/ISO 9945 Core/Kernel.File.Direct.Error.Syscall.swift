@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct.Error {
     /// Raw syscall-level error with platform-specific details.
     ///
@@ -29,4 +28,3 @@ extension ISO_9945.Kernel.File.Direct.Error {
         case notSupported(operation: Operation)
     }
 }
-

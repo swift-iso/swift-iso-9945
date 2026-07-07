@@ -10,9 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Testing
 import Tagged_Primitives_Standard_Library_Integration
+import Testing
 
 @testable import ISO_9945_Kernel
 
@@ -59,7 +58,10 @@ extension KeyTests.Unit {
         let b = ISO_9945.Kernel.Thread.Key()
         let bufferA = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         let bufferB = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
-        defer { unsafe bufferA.deallocate(); unsafe bufferB.deallocate() }
+        defer {
+            unsafe bufferA.deallocate()
+            unsafe bufferB.deallocate()
+        }
 
         unsafe (a.value = UnsafeMutableRawPointer(bufferA))
         unsafe (b.value = UnsafeMutableRawPointer(bufferB))

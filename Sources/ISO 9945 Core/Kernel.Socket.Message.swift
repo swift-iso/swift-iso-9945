@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket {
     /// Socket message operations and types.
     ///
@@ -21,4 +20,3 @@ extension ISO_9945.Kernel.Socket {
     /// - Darwin: `swift-darwin-primitives` (`Darwin.Kernel.Socket.Message`)
     public struct Message: Sendable {}
 }
-

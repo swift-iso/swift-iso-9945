@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket.Message {
     /// Socket message flags (MSG_* constants).
     ///
@@ -32,4 +31,3 @@ extension ISO_9945.Kernel.Socket.Message {
         }
     }
 }
-

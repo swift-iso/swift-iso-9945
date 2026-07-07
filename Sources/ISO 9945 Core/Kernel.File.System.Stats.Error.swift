@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.System.Stats {
     /// Error type for filesystem statistics operations.
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -35,4 +33,3 @@ extension ISO_9945.Kernel.File.System.Stats.Error: CustomStringConvertible {
 // Per [PLAT-ARCH-008c], the platform-specific `init(code:)` mapping lives in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.System.Stats.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.File.System.Stats.Error+code.swift`)
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// POSIX file permissions.
     ///
@@ -172,4 +171,3 @@ extension ISO_9945.Kernel.File.Permissions: CustomStringConvertible {
         return "\(owner)\(group)\(other)"
     }
 }
-

@@ -11,8 +11,6 @@
 
 public import String_Primitives
 
-
-
 extension ISO_9945.Kernel.Environment {
     /// A single environment variable entry with borrowed name and value.
     ///
@@ -84,4 +82,3 @@ extension ISO_9945.Kernel.Environment.Entry {
         unsafe String.length(of: _value)
     }
 }
-

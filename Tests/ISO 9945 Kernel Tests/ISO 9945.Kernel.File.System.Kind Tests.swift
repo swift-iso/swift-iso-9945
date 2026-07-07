@@ -9,11 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import ISO_9945_Kernel
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel
-
 
 extension ISO_9945.Kernel.File.System.Kind {
     @Suite
@@ -148,27 +147,27 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
         }
     }
 
-// MARK: - Edge Cases
+    // MARK: - Edge Cases
 
-extension ISO_9945.Kernel.File.System.Kind.Test.EdgeCase {
-    @Test
-    func `zero raw value`() {
-        let kind = ISO_9945.Kernel.File.System.Kind(0)
-        #expect(kind.rawValue == 0)
-    }
+    extension ISO_9945.Kernel.File.System.Kind.Test.EdgeCase {
+        @Test
+        func `zero raw value`() {
+            let kind = ISO_9945.Kernel.File.System.Kind(0)
+            #expect(kind.rawValue == 0)
+        }
 
-    @Test
-    func `maximum raw value`() {
-        let kind = ISO_9945.Kernel.File.System.Kind(UInt64.max)
-        #expect(kind.rawValue == UInt64.max)
-    }
+        @Test
+        func `maximum raw value`() {
+            let kind = ISO_9945.Kernel.File.System.Kind(UInt64.max)
+            #expect(kind.rawValue == UInt64.max)
+        }
 
-    @Test
-    func `different raw values are distinct`() {
-        let kind1 = ISO_9945.Kernel.File.System.Kind(0x1234)
-        let kind2 = ISO_9945.Kernel.File.System.Kind(0x5678)
-        #expect(kind1 != kind2)
+        @Test
+        func `different raw values are distinct`() {
+            let kind1 = ISO_9945.Kernel.File.System.Kind(0x1234)
+            let kind2 = ISO_9945.Kernel.File.System.Kind(0x5678)
+            #expect(kind1 != kind2)
+        }
     }
-}
 
 #endif

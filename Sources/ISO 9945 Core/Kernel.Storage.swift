@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Storage domain - storage space exhaustion.
     ///
@@ -19,4 +18,3 @@ extension ISO_9945.Kernel {
 
     }
 }
-

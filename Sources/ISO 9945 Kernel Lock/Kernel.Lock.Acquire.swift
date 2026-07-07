@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 public import Clock_Primitives
 
 extension ISO_9945.Kernel.Lock {
@@ -27,4 +26,3 @@ extension ISO_9945.Kernel.Lock {
         case deadline(Clock.Continuous.Instant)
     }
 }
-

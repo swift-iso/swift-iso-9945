@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Direct {
     /// Errors that can occur during Direct I/O operations.
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -78,4 +76,3 @@ extension ISO_9945.Kernel.File.Direct.Error: CustomStringConvertible {
 // `init(code:operation:)` mapping live in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.Direct.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.File.Direct.Error+code.swift`)
-

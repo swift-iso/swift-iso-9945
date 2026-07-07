@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Thread.Affinity {
     /// Platform support level for thread affinity.
     ///
@@ -47,4 +46,3 @@ extension ISO_9945.Kernel.Thread.Affinity {
         case enforced
     }
 }
-

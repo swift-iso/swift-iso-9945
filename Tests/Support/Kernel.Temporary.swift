@@ -15,7 +15,6 @@ public import Path_Primitives
 public import Error_Primitives
 public import String_Primitives
 public import ISO_9945_Kernel
-public import ISO_9945_Kernel
 
 extension ISO_9945.Kernel {
     /// Namespace for temporary path operations in tests.

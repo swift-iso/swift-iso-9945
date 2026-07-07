@@ -9,13 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-import ISO_9945_Kernel
+import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
-import Error_Primitives
-import Testing
 import Tagged_Primitives_Standard_Library_Integration
+import Testing
 
 @testable import ISO_9945_Kernel
 
@@ -170,4 +168,3 @@ extension FileIOIntegrationTests {
         #expect(threwError)
     }
 }
-

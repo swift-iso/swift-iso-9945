@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 /// Namespace for high-level file copy operations.
 ///
 /// Provides a complete file copy operation that handles:
@@ -44,4 +43,3 @@
 extension ISO_9945.Kernel.File {
     public enum Copy {}
 }
-

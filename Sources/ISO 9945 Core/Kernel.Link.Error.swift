@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Link {
     /// Errors that can occur during hard link operations.
     public enum Error: Swift.Error, Sendable, Equatable {

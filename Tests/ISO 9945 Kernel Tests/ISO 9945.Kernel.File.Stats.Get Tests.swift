@@ -9,11 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import ISO_9945_Kernel
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel
-
 
 // ISO_9945.Kernel.File.Stats.Get.swift contains the fstat syscall implementation
 // No type to extend with #Tests

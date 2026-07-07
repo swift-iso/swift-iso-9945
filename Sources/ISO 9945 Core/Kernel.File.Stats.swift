@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File metadata from stat/fstat syscalls.
     ///
@@ -133,4 +132,3 @@ extension ISO_9945.Kernel.File {
         }
     }
 }
-

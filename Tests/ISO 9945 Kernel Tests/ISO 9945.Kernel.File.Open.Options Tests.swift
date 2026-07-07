@@ -9,13 +9,14 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
-import Error_Primitives
+
+@testable import ISO_9945_Kernel
 
 #if canImport(Darwin)
     import Darwin
@@ -24,8 +25,6 @@ import Error_Primitives
 #elseif canImport(Musl)
     import Musl
 #endif
-
-@testable import ISO_9945_Kernel
 
 extension ISO_9945.Kernel.File.Open.Options {
     @Suite

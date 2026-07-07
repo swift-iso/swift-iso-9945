@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - Thread Handle
 //
 // Thread handle implementation is in platform-specific packages:
@@ -19,4 +18,3 @@
 // Thread handles require platform-specific storage (pthread_t / HANDLE)
 // and operations (pthread_join / WaitForSingleObject), so they cannot live
 // in the types-only primitives layer.
-

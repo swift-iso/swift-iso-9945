@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Open.Exec {
     /// Close descriptor options.
     public enum Close: Sendable {
@@ -20,4 +19,3 @@ extension ISO_9945.Kernel.File.Open.Exec {
         case enabled
     }
 }
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Anonymous pipe operations for inter-process/inter-thread communication.
     ///
@@ -31,4 +30,3 @@ extension ISO_9945.Kernel {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Pipe`)
     public enum Pipe: Sendable {}
 }
-

@@ -9,11 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Open {
     /// Exec behavior options.
     public enum Exec: Sendable {
 
     }
 }
-

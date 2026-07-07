@@ -10,7 +10,6 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import ISO_9945_Core
-
 import Memory_Primitives
 
 #if canImport(Darwin)
@@ -72,12 +71,13 @@ extension Memory.Shared {
         permissions: ISO_9945.Kernel.File.Permissions = .ownerReadWrite
     ) throws(Memory.Shared.Error) -> Int32 {
         // Convert Access to POSIX flags at syscall boundary
-        let accessMode: Int32 = switch (access.read, access.write) {
-        case (true, false):  O_RDONLY
-        case (false, true):  O_WRONLY
-        case (true, true):   O_RDWR
-        case (false, false): O_RDONLY
-        }
+        let accessMode: Int32 =
+            switch (access.read, access.write) {
+            case (true, false): O_RDONLY
+            case (false, true): O_WRONLY
+            case (true, true): O_RDWR
+            case (false, false): O_RDONLY
+            }
 
         let flags = accessMode | options.rawValue
 

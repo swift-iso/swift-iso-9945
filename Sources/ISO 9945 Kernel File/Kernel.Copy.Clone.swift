@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Copy {
     /// Clone operations (copy-on-write).
     ///
@@ -31,4 +30,3 @@ extension ISO_9945.Kernel.Copy {
     /// - macOS: `swift-iso-9945` (`ISO_9945.Kernel.Copy.Clone.file`)
     public enum Clone {}
 }
-

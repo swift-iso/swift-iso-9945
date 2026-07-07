@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// A move-only file handle with Direct I/O support.
     ///
@@ -99,4 +98,3 @@ extension ISO_9945.Kernel.File.Handle {
         }
     }
 }
-

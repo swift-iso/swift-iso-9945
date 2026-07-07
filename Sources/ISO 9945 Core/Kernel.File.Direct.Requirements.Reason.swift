@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct.Requirements {
     /// Reason why requirements could not be determined.
     public enum Reason: Sendable, Equatable, CustomStringConvertible {
@@ -47,4 +46,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
         }
     }
 }
-

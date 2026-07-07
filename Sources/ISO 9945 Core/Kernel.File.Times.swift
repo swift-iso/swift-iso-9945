@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File timestamp operations.
     ///
@@ -77,4 +76,3 @@ extension ISO_9945.Kernel.File.Times.Error: CustomStringConvertible {
         }
     }
 }
-

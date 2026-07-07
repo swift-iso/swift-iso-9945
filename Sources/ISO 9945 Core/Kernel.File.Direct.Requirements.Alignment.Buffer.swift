@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for buffer alignment validation.
     public struct Buffer: Sendable {
@@ -28,4 +26,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for buffer alignment validation.
     public var buffer: Buffer { Buffer(alignment: self) }
 }
-

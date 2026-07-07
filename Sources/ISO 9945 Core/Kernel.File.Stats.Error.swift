@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Stats {
     /// Errors that can occur during stat operations.
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -32,4 +30,3 @@ extension ISO_9945.Kernel.File.Stats.Error: CustomStringConvertible {
         }
     }
 }
-

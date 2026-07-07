@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -30,17 +29,17 @@ extension ISO_9945.Kernel.Directory {
     @safe
     public final class Stream: @unchecked Sendable {
         #if canImport(Darwin)
-        private var dir: UnsafeMutablePointer<DIR>?
+            private var dir: UnsafeMutablePointer<DIR>?
 
-        fileprivate init(dir: UnsafeMutablePointer<DIR>) {
-            unsafe self.dir = dir
-        }
+            fileprivate init(dir: UnsafeMutablePointer<DIR>) {
+                unsafe self.dir = dir
+            }
         #else
-        private var dir: OpaquePointer?
+            private var dir: OpaquePointer?
 
-        fileprivate init(dir: OpaquePointer) {
-            unsafe self.dir = dir
-        }
+            fileprivate init(dir: OpaquePointer) {
+                unsafe self.dir = dir
+            }
         #endif
 
         deinit {
@@ -127,7 +126,7 @@ extension ISO_9945.Kernel.Directory.Stream {
             case Int(DT_BLK): return .device(.block)
             case Int(DT_FIFO): return .fifo
             case Int(DT_SOCK): return .socket
-            default: return nil // DT_UNKNOWN
+            default: return nil  // DT_UNKNOWN
             }
         }()
 

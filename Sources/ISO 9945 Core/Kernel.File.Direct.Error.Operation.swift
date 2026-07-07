@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct.Error {
     /// Direct I/O operation types for syscall error context.
     public enum Operation: Sendable, Equatable {
@@ -31,4 +30,3 @@ extension ISO_9945.Kernel.File.Direct.Error {
         }
     }
 }
-

@@ -14,7 +14,6 @@
     public import Path_Primitives
     public import Error_Primitives
     public import ISO_9945_Kernel
-    public import ISO_9945_Kernel
     @_spi(Syscall) import ISO_9945_Kernel_File  // Wave 3.5-Corrective-2 tail: File.Open.open is @_spi(Syscall) public
 
     /// Test utilities for I/O operations.

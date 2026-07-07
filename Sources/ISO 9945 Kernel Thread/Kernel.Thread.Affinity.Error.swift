@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Thread.Affinity {
     /// Errors from thread affinity operations.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
@@ -48,4 +47,3 @@ extension ISO_9945.Kernel.Thread.Affinity.Error: CustomStringConvertible {
         }
     }
 }
-

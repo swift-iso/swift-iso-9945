@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File attributes operations.
     ///
@@ -77,4 +76,3 @@ extension ISO_9945.Kernel.File.Attributes.Error: CustomStringConvertible {
         }
     }
 }
-

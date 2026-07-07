@@ -72,12 +72,13 @@ extension ISO_9945.Kernel.File.Open {
         let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
         // Convert Mode to POSIX access flags at syscall boundary
-        let accessMode: Int32 = switch (mode.read, mode.write) {
-        case (true, false):  O_RDONLY
-        case (false, true):  O_WRONLY
-        case (true, true):   O_RDWR
-        case (false, false): O_RDONLY
-        }
+        let accessMode: Int32 =
+            switch (mode.read, mode.write) {
+            case (true, false): O_RDONLY
+            case (false, true): O_WRONLY
+            case (true, true): O_RDWR
+            case (false, false): O_RDONLY
+            }
 
         #if canImport(Darwin)
             let flags = accessMode | options.rawValue

@@ -9,9 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
-
 extension ISO_9945.Kernel.File.Handle {
     /// Errors that can occur during file handle operations.
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -117,4 +114,3 @@ extension ISO_9945.Kernel.File.Handle.Error: CustomStringConvertible {
         }
     }
 }
-

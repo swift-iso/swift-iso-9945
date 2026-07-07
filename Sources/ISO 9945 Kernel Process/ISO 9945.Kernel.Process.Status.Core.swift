@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 #if canImport(Darwin)
     internal import Darwin
     internal import CPOSIXProcessShim

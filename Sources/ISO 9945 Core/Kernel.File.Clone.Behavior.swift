@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Clone {
     /// The behavior policy for clone operations.
     public enum Behavior: Sendable, Equatable {
@@ -32,4 +31,3 @@ extension ISO_9945.Kernel.File.Clone {
         case copyOnly
     }
 }
-

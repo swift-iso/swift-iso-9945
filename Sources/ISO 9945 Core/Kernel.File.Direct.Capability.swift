@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct {
     /// The Direct I/O capability of a file handle or path.
     ///
@@ -103,4 +102,3 @@ extension ISO_9945.Kernel.File.Direct.Capability {
         return nil
     }
 }
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket {
     /// POSIX socket descriptor — typealiased to `ISO_9945.Kernel.Descriptor`.
     ///

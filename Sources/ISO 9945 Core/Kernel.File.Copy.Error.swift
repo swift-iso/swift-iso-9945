@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Copy {
     /// Errors that can occur during copy operations.
     ///
@@ -117,4 +116,3 @@ extension ISO_9945.Kernel.File.Copy.Error {
         return false
     }
 }
-

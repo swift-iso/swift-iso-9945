@@ -9,12 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
 import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
+import Testing
 
 @testable import ISO_9945_Kernel
 

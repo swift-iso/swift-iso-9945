@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 #if canImport(Darwin)
     public import Darwin
 #elseif canImport(Glibc)

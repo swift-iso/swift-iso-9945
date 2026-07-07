@@ -12,8 +12,8 @@
 // Signal.Error only exists on POSIX platforms
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
+    import Testing
+    import Tagged_Primitives_Standard_Library_Integration
 
     import Path_Primitives
     import Error_Primitives

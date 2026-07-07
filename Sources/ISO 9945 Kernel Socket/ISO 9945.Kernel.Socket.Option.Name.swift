@@ -70,7 +70,7 @@ extension ISO_9945.Kernel.Socket.Option.Name {
 
     /// Suppress SIGPIPE on broken-pipe writes — Darwin only (`SO_NOSIGPIPE`).
     #if canImport(Darwin)
-    public static let noSIGPIPE = Self(rawValue: SO_NOSIGPIPE)
+        public static let noSIGPIPE = Self(rawValue: SO_NOSIGPIPE)
     #endif
 
     /// Get the socket type (`SO_TYPE`). Read-only via `getsockopt`.
@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.Socket.Option.Name {
 
     /// Get the protocol family of the socket (`SO_DOMAIN`) — Linux only.
     #if canImport(Glibc) || canImport(Musl)
-    public static let domain = Self(rawValue: SO_DOMAIN)
+        public static let domain = Self(rawValue: SO_DOMAIN)
     #endif
 }
 

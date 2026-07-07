@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File and directory move operations.
     ///
@@ -87,4 +86,3 @@ extension ISO_9945.Kernel.File.Move.Error: CustomStringConvertible {
         }
     }
 }
-

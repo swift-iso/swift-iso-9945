@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for offset alignment validation.
     public struct Offset: Sendable {
@@ -29,4 +27,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for offset alignment validation.
     public var offset: Offset { Offset(alignment: self) }
 }
-

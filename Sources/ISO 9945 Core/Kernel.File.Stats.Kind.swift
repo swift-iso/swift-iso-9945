@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Stats {
     /// File type.
     public enum Kind: Sendable, Equatable, Hashable {
@@ -35,4 +34,3 @@ extension ISO_9945.Kernel.File.Stats {
         case unknown
     }
 }
-

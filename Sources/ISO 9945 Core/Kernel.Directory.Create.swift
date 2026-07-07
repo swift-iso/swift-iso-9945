@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Directory {
     /// Directory creation operations.
     ///
@@ -76,4 +75,3 @@ extension ISO_9945.Kernel.Directory.Create.Error: CustomStringConvertible {
         }
     }
 }
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Lock {
     /// The range of bytes to lock within a file.
     ///
@@ -87,4 +86,3 @@ extension ISO_9945.Kernel.Lock {
         }
     }
 }
-

@@ -29,15 +29,15 @@ extension Clock.Continuous {
     /// - Linux: Uses `CLOCK_BOOTTIME` which advances during system sleep.
     public static var now: Clock.Continuous.Instant {
         #if canImport(Darwin)
-        let ns = clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)
+            let ns = clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW)
         #elseif canImport(Musl)
-        var ts = Musl.timespec()
-        clock_gettime(CLOCK_BOOTTIME, &ts)
-        let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+            var ts = Musl.timespec()
+            clock_gettime(CLOCK_BOOTTIME, &ts)
+            let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #elseif canImport(Glibc)
-        var ts = Glibc.timespec()
-        clock_gettime(CLOCK_BOOTTIME, &ts)
-        let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+            var ts = Glibc.timespec()
+            clock_gettime(CLOCK_BOOTTIME, &ts)
+            let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #endif
         return Clock.Continuous.Instant(nanoseconds: ns)
     }
@@ -50,15 +50,15 @@ extension Clock.Suspending {
     /// - Linux: Uses `CLOCK_MONOTONIC` which pauses during system sleep.
     public static var now: Clock.Suspending.Instant {
         #if canImport(Darwin)
-        let ns = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
+            let ns = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
         #elseif canImport(Musl)
-        var ts = Musl.timespec()
-        clock_gettime(CLOCK_MONOTONIC, &ts)
-        let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+            var ts = Musl.timespec()
+            clock_gettime(CLOCK_MONOTONIC, &ts)
+            let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #elseif canImport(Glibc)
-        var ts = Glibc.timespec()
-        clock_gettime(CLOCK_MONOTONIC, &ts)
-        let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+            var ts = Glibc.timespec()
+            clock_gettime(CLOCK_MONOTONIC, &ts)
+            let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #endif
         return Clock.Suspending.Instant(nanoseconds: ns)
     }

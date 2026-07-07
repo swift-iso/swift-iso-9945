@@ -10,11 +10,11 @@
 // ===----------------------------------------------------------------------===//
 
 #if canImport(Darwin)
-internal import Darwin
+    internal import Darwin
 #elseif canImport(Glibc)
-internal import Glibc
+    internal import Glibc
 #elseif canImport(Musl)
-internal import Musl
+    internal import Musl
 #endif
 
 extension ISO_9945.Kernel {
@@ -50,11 +50,11 @@ extension ISO_9945.Kernel {
         deinit {
             guard isValid else { return }
             #if canImport(Darwin)
-            _ = Darwin.close(_raw)
+                _ = Darwin.close(_raw)
             #elseif canImport(Glibc)
-            _ = unsafe Glibc.close(_raw)
+                _ = unsafe Glibc.close(_raw)
             #elseif canImport(Musl)
-            _ = unsafe Musl.close(_raw)
+                _ = unsafe Musl.close(_raw)
             #endif
         }
 

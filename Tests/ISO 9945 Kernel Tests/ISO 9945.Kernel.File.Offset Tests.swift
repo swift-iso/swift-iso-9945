@@ -9,12 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Tests use Apple native Testing framework
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
-
+import Tagged_Primitives_Standard_Library_Integration
+// Tests use Apple native Testing framework
+import Testing
 
 // ISO_9945.Kernel.File.Offset is a typealias to Coordinate.X<Space>.Value<Int64>
 // #Tests cannot be used on typealiases

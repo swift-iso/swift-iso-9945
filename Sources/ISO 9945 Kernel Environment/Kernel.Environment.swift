@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel {
     /// Environment variable access using platform-native strings.
     ///
@@ -29,4 +27,3 @@ extension ISO_9945.Kernel {
     /// Higher-level packages (swift-environment) provide synchronized access.
     public enum Environment {}
 }
-

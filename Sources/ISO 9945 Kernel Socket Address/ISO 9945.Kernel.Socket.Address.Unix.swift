@@ -1,4 +1,3 @@
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -27,7 +26,7 @@ extension ISO_9945.Kernel.Socket.Address {
 extension ISO_9945.Kernel.Socket.Address.Unix {
     /// The address family (always `.unix`).
     public var family: ISO_9945.Kernel.Socket.Address.Family {
-        get { .unix }
+        .unix
     }
 
     /// The size of the underlying sockaddr_un structure.

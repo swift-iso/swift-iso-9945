@@ -21,11 +21,12 @@ extension Path.Borrowed: @retroactive Path.Modification {
         _ view: borrowing Path.Borrowed,
         _ other: borrowing Path.Borrowed
     ) -> Path {
-        let selfEndsWithSep: Bool = if view.count > 0 {
-            unsafe view.pointer[view.count - 1] == 0x2F
-        } else {
-            false
-        }
+        let selfEndsWithSep: Bool =
+            if view.count > 0 {
+                unsafe view.pointer[view.count - 1] == 0x2F
+            } else {
+                false
+            }
         let separatorSize = selfEndsWithSep ? 0 : 1
         let totalCount = view.count + separatorSize + other.count
 

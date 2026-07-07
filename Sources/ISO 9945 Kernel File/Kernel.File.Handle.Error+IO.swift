@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // L2-side conversion factory for L1 ISO_9945.Kernel.File.Handle.Error from
 // ISO_9945.Kernel.IO.Read.Error / ISO_9945.Kernel.IO.Write.Error (both L2 types
 // post-Cycle-18h). Per the L1-domain-only/L3-composes architecture

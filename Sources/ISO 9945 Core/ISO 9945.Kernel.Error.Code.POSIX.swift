@@ -146,147 +146,147 @@ extension Error_Primitives.Error.Code.POSIX {
 // MARK: - Darwin-Specific Values
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
-extension Error_Primitives.Error.Code.POSIX {
-    /// Resource temporarily unavailable (Darwin errno 35).
-    ///
-    /// On Darwin, EAGAIN and EWOULDBLOCK have the same value (35).
-    @inlinable
-    public static var EAGAIN: Error_Primitives.Error.Code { .posix(35) }
+    extension Error_Primitives.Error.Code.POSIX {
+        /// Resource temporarily unavailable (Darwin errno 35).
+        ///
+        /// On Darwin, EAGAIN and EWOULDBLOCK have the same value (35).
+        @inlinable
+        public static var EAGAIN: Error_Primitives.Error.Code { .posix(35) }
 
-    /// Operation would block (Darwin errno 35).
-    ///
-    /// On Darwin, EAGAIN and EWOULDBLOCK have the same value (35).
-    @inlinable
-    public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(35) }
+        /// Operation would block (Darwin errno 35).
+        ///
+        /// On Darwin, EAGAIN and EWOULDBLOCK have the same value (35).
+        @inlinable
+        public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(35) }
 
-    /// Too many levels of symbolic links (Darwin errno 62).
-    @inlinable
-    public static var ELOOP: Error_Primitives.Error.Code { .posix(62) }
+        /// Too many levels of symbolic links (Darwin errno 62).
+        @inlinable
+        public static var ELOOP: Error_Primitives.Error.Code { .posix(62) }
 
-    /// File name too long (Darwin errno 63).
-    @inlinable
-    public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(63) }
+        /// File name too long (Darwin errno 63).
+        @inlinable
+        public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(63) }
 
-    /// Directory not empty (Darwin errno 66).
-    @inlinable
-    public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(66) }
+        /// Directory not empty (Darwin errno 66).
+        @inlinable
+        public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(66) }
 
-    /// Disc quota exceeded (Darwin errno 69).
-    @inlinable
-    public static var EDQUOT: Error_Primitives.Error.Code { .posix(69) }
+        /// Disc quota exceeded (Darwin errno 69).
+        @inlinable
+        public static var EDQUOT: Error_Primitives.Error.Code { .posix(69) }
 
-    /// Connection reset by peer (Darwin errno 54).
-    @inlinable
-    public static var ECONNRESET: Error_Primitives.Error.Code { .posix(54) }
+        /// Connection reset by peer (Darwin errno 54).
+        @inlinable
+        public static var ECONNRESET: Error_Primitives.Error.Code { .posix(54) }
 
-    /// Operation not supported (Darwin errno 45).
-    @inlinable
-    public static var ENOTSUP: Error_Primitives.Error.Code { .posix(45) }
+        /// Operation not supported (Darwin errno 45).
+        @inlinable
+        public static var ENOTSUP: Error_Primitives.Error.Code { .posix(45) }
 
-    /// Deadlock detected (Darwin errno 11).
-    @inlinable
-    public static var EDEADLK: Error_Primitives.Error.Code { .posix(11) }
+        /// Deadlock detected (Darwin errno 11).
+        @inlinable
+        public static var EDEADLK: Error_Primitives.Error.Code { .posix(11) }
 
-    /// No locks available (Darwin errno 77).
-    @inlinable
-    public static var ENOLCK: Error_Primitives.Error.Code { .posix(77) }
-}
+        /// No locks available (Darwin errno 77).
+        @inlinable
+        public static var ENOLCK: Error_Primitives.Error.Code { .posix(77) }
+    }
 #endif
 
 // MARK: - Linux-Specific Values
 
 #if os(Linux) || os(Android)
-extension Error_Primitives.Error.Code.POSIX {
-    /// Resource temporarily unavailable (Linux errno 11).
-    ///
-    /// On Linux, EAGAIN and EWOULDBLOCK have the same value (11).
-    @inlinable
-    public static var EAGAIN: Error_Primitives.Error.Code { .posix(11) }
+    extension Error_Primitives.Error.Code.POSIX {
+        /// Resource temporarily unavailable (Linux errno 11).
+        ///
+        /// On Linux, EAGAIN and EWOULDBLOCK have the same value (11).
+        @inlinable
+        public static var EAGAIN: Error_Primitives.Error.Code { .posix(11) }
 
-    /// Operation would block (Linux errno 11).
-    ///
-    /// On Linux, EAGAIN and EWOULDBLOCK have the same value (11).
-    @inlinable
-    public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(11) }
+        /// Operation would block (Linux errno 11).
+        ///
+        /// On Linux, EAGAIN and EWOULDBLOCK have the same value (11).
+        @inlinable
+        public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(11) }
 
-    /// File name too long (Linux errno 36).
-    @inlinable
-    public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(36) }
+        /// File name too long (Linux errno 36).
+        @inlinable
+        public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(36) }
 
-    /// Directory not empty (Linux errno 39).
-    @inlinable
-    public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(39) }
+        /// Directory not empty (Linux errno 39).
+        @inlinable
+        public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(39) }
 
-    /// Too many levels of symbolic links (Linux errno 40).
-    @inlinable
-    public static var ELOOP: Error_Primitives.Error.Code { .posix(40) }
+        /// Too many levels of symbolic links (Linux errno 40).
+        @inlinable
+        public static var ELOOP: Error_Primitives.Error.Code { .posix(40) }
 
-    /// Disc quota exceeded (Linux errno 122).
-    @inlinable
-    public static var EDQUOT: Error_Primitives.Error.Code { .posix(122) }
+        /// Disc quota exceeded (Linux errno 122).
+        @inlinable
+        public static var EDQUOT: Error_Primitives.Error.Code { .posix(122) }
 
-    /// Connection reset by peer (Linux errno 104).
-    @inlinable
-    public static var ECONNRESET: Error_Primitives.Error.Code { .posix(104) }
+        /// Connection reset by peer (Linux errno 104).
+        @inlinable
+        public static var ECONNRESET: Error_Primitives.Error.Code { .posix(104) }
 
-    /// Operation not supported (Linux errno 95).
-    @inlinable
-    public static var ENOTSUP: Error_Primitives.Error.Code { .posix(95) }
+        /// Operation not supported (Linux errno 95).
+        @inlinable
+        public static var ENOTSUP: Error_Primitives.Error.Code { .posix(95) }
 
-    /// Deadlock detected (Linux errno 35).
-    @inlinable
-    public static var EDEADLK: Error_Primitives.Error.Code { .posix(35) }
+        /// Deadlock detected (Linux errno 35).
+        @inlinable
+        public static var EDEADLK: Error_Primitives.Error.Code { .posix(35) }
 
-    /// No locks available (Linux errno 37).
-    @inlinable
-    public static var ENOLCK: Error_Primitives.Error.Code { .posix(37) }
-}
+        /// No locks available (Linux errno 37).
+        @inlinable
+        public static var ENOLCK: Error_Primitives.Error.Code { .posix(37) }
+    }
 #endif
 
 // MARK: - OpenBSD-Specific Values
 
 #if os(OpenBSD)
-extension Error_Primitives.Error.Code.POSIX {
-    /// Resource temporarily unavailable (OpenBSD errno 35).
-    @inlinable
-    public static var EAGAIN: Error_Primitives.Error.Code { .posix(35) }
+    extension Error_Primitives.Error.Code.POSIX {
+        /// Resource temporarily unavailable (OpenBSD errno 35).
+        @inlinable
+        public static var EAGAIN: Error_Primitives.Error.Code { .posix(35) }
 
-    /// Operation would block (OpenBSD errno 35).
-    @inlinable
-    public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(35) }
+        /// Operation would block (OpenBSD errno 35).
+        @inlinable
+        public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(35) }
 
-    /// Too many levels of symbolic links (OpenBSD errno 62).
-    @inlinable
-    public static var ELOOP: Error_Primitives.Error.Code { .posix(62) }
+        /// Too many levels of symbolic links (OpenBSD errno 62).
+        @inlinable
+        public static var ELOOP: Error_Primitives.Error.Code { .posix(62) }
 
-    /// File name too long (OpenBSD errno 63).
-    @inlinable
-    public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(63) }
+        /// File name too long (OpenBSD errno 63).
+        @inlinable
+        public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(63) }
 
-    /// Directory not empty (OpenBSD errno 66).
-    @inlinable
-    public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(66) }
+        /// Directory not empty (OpenBSD errno 66).
+        @inlinable
+        public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(66) }
 
-    /// Disc quota exceeded (OpenBSD errno 69).
-    @inlinable
-    public static var EDQUOT: Error_Primitives.Error.Code { .posix(69) }
+        /// Disc quota exceeded (OpenBSD errno 69).
+        @inlinable
+        public static var EDQUOT: Error_Primitives.Error.Code { .posix(69) }
 
-    /// Connection reset by peer (OpenBSD errno 54).
-    @inlinable
-    public static var ECONNRESET: Error_Primitives.Error.Code { .posix(54) }
+        /// Connection reset by peer (OpenBSD errno 54).
+        @inlinable
+        public static var ECONNRESET: Error_Primitives.Error.Code { .posix(54) }
 
-    /// Operation not supported (OpenBSD errno 91).
-    @inlinable
-    public static var ENOTSUP: Error_Primitives.Error.Code { .posix(91) }
+        /// Operation not supported (OpenBSD errno 91).
+        @inlinable
+        public static var ENOTSUP: Error_Primitives.Error.Code { .posix(91) }
 
-    /// Deadlock detected (OpenBSD errno 11).
-    @inlinable
-    public static var EDEADLK: Error_Primitives.Error.Code { .posix(11) }
+        /// Deadlock detected (OpenBSD errno 11).
+        @inlinable
+        public static var EDEADLK: Error_Primitives.Error.Code { .posix(11) }
 
-    /// No locks available (OpenBSD errno 77).
-    @inlinable
-    public static var ENOLCK: Error_Primitives.Error.Code { .posix(77) }
-}
+        /// No locks available (OpenBSD errno 77).
+        @inlinable
+        public static var ENOLCK: Error_Primitives.Error.Code { .posix(77) }
+    }
 #endif
 
 // MARK: - Cross-Platform Matching Helpers

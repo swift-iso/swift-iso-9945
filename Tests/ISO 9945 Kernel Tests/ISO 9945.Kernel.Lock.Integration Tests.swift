@@ -9,22 +9,20 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-import ISO_9945_Kernel
+import Error_Primitives
 @_spi(Syscall) import ISO_9945_Kernel_Lock
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
-import Error_Primitives
-import Testing
 import Tagged_Primitives_Standard_Library_Integration
+import Testing
+
+@testable import ISO_9945_Kernel
 
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
     import Glibc
 #endif
-
-@testable import ISO_9945_Kernel
 
 // MARK: - Lock Test Helper
 
@@ -432,4 +430,3 @@ extension POSIXLockIntegration {
         #expect(exitedCleanly, "Helper should acquire lock after Token.release()")
     }
 }
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Socket operations and types.
     ///
@@ -23,4 +22,3 @@ extension ISO_9945.Kernel {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Socket`)
     public enum Socket: Sendable {}
 }
-

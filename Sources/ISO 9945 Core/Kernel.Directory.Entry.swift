@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Directory {
     /// A directory entry returned by iteration.
     ///
@@ -17,18 +16,18 @@ extension ISO_9945.Kernel.Directory {
     /// filesystems with names that cannot be decoded to valid Unicode.
     public struct Entry: Sendable {
         #if os(Windows)
-        /// Raw UTF-16 code units of the name.
-        public let rawName: [UInt16]
+            /// Raw UTF-16 code units of the name.
+            public let rawName: [UInt16]
         #else
-        /// Raw bytes of the name.
-        ///
-        /// Available via `@_spi(Syscall)` for syscall-implementation
-        /// layers (e.g., `ISO_9945.Kernel.Directory.Stream.next()` and
-        /// directory iteration internals). Application-layer consumers
-        /// should use `nameView` for byte access without depending on
-        /// the array storage shape.
-        @_spi(Syscall)
-        public let rawName: [UInt8]
+            /// Raw bytes of the name.
+            ///
+            /// Available via `@_spi(Syscall)` for syscall-implementation
+            /// layers (e.g., `ISO_9945.Kernel.Directory.Stream.next()` and
+            /// directory iteration internals). Application-layer consumers
+            /// should use `nameView` for byte access without depending on
+            /// the array storage shape.
+            @_spi(Syscall)
+            public let rawName: [UInt8]
         #endif
 
         /// The inode number (POSIX only, nil on Windows).
@@ -38,18 +37,18 @@ extension ISO_9945.Kernel.Directory {
         public let type: ISO_9945.Kernel.File.Stats.Kind?
 
         #if os(Windows)
-        public init(rawName: [UInt16], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
-            self.rawName = rawName
-            self.inode = inode
-            self.type = type
-        }
+            public init(rawName: [UInt16], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
+                self.rawName = rawName
+                self.inode = inode
+                self.type = type
+            }
         #else
-        @_spi(Syscall)
-        public init(rawName: [UInt8], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
-            self.rawName = rawName
-            self.inode = inode
-            self.type = type
-        }
+            @_spi(Syscall)
+            public init(rawName: [UInt8], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
+                self.rawName = rawName
+                self.inode = inode
+                self.type = type
+            }
         #endif
 
         /// Returns true if this entry is "." or "..".
@@ -58,9 +57,9 @@ extension ISO_9945.Kernel.Directory {
         /// and ".." is `[0x2E, 0x2E, 0x00]`.
         public var isDotOrDotDot: Bool {
             #if os(Windows)
-            rawName == [0x002E, 0x0000] || rawName == [0x002E, 0x002E, 0x0000]
+                rawName == [0x002E, 0x0000] || rawName == [0x002E, 0x002E, 0x0000]
             #else
-            rawName == [0x2E, 0x00] || rawName == [0x2E, 0x2E, 0x00]
+                rawName == [0x2E, 0x00] || rawName == [0x2E, 0x2E, 0x00]
             #endif
         }
 
@@ -87,4 +86,3 @@ extension ISO_9945.Kernel.Directory {
         }
     }
 }
-

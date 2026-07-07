@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File control operations (fcntl wrapper).
     ///
@@ -20,4 +19,3 @@ extension ISO_9945.Kernel.File {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Control`)
     public enum Control: Sendable {}
 }
-

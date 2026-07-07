@@ -9,12 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Clock_Primitives
+import ISO_9945_Kernel
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel
-import Clock_Primitives
-
 
 extension ISO_9945.Kernel.Lock.Acquire {
     @Suite

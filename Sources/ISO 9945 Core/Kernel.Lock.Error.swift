@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Lock {
     /// Lock operation errors.
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
@@ -66,4 +65,3 @@ extension ISO_9945.Kernel.Lock.Error {
 // Per [PLAT-ARCH-008c], the platform-specific `init?(code:)` mapping lives in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.Lock.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.Lock.Error+code.swift`)
-

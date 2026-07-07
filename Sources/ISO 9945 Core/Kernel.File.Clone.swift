@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 /// Namespace for file cloning (copy-on-write reflink) operations.
 ///
 /// File cloning creates a lightweight copy that shares storage with the original
@@ -81,4 +80,3 @@ extension ISO_9945.Kernel.File.Clone {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Clone.Metadata`)
     public enum Metadata {}
 }
-

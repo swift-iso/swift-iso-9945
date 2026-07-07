@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for length validation.
     public struct Length: Sendable {
@@ -29,4 +27,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for length validation.
     public var length: Length { Length(alignment: self) }
 }
-

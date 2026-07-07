@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - Typed Pointer Arithmetic
 
 extension UnsafeMutableRawPointer {
@@ -35,4 +34,3 @@ extension UnsafeRawPointer {
         unsafe advanced(by: Int(size))
     }
 }
-

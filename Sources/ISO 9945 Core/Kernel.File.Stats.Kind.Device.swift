@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Stats.Kind {
     /// Device types.
     public enum Device: Sendable, Equatable, Hashable {
@@ -20,4 +19,3 @@ extension ISO_9945.Kernel.File.Stats.Kind {
         case character
     }
 }
-

@@ -29,7 +29,8 @@ extension Memory.Allocation {
     /// Use this for memory mapping offset alignment.
     public static var system: Memory.Allocation.Granularity {
         let pageSize = Int(sysconf(Int32(_SC_PAGESIZE)))
-        // Safe: page size is always a power of 2
+        // Safe: page size is always a power of 2, so Memory.Alignment(pageSize) cannot throw.
+        // swiftlint:disable:next force_try
         return Memory.Allocation.Granularity(_unchecked: try! Memory.Alignment(pageSize))
     }
 }

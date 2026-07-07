@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Copy {
     /// Options for copy operations.
     public struct Options: Sendable, Equatable {
@@ -48,4 +47,3 @@ extension ISO_9945.Kernel.File.Copy {
         }
     }
 }
-

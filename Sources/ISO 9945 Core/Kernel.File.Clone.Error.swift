@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Clone {
     /// Errors that can occur during clone operations.
     public enum Error: Swift.Error, Sendable, Equatable, CustomStringConvertible {
@@ -69,4 +68,3 @@ extension ISO_9945.Kernel.File.Clone {
 // `init(code:operation:)` mapping live in L2:
 // - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.Clone.Error+code.swift`)
 // - Windows: `swift-windows-standard` (`Windows.Kernel.File.Clone.Error+code.swift`)
-

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Permission domain - access control errors.
     ///
@@ -17,4 +16,3 @@ extension ISO_9945.Kernel {
     /// permissions to perform the requested operation.
     public enum Permission: Sendable {}
 }
-

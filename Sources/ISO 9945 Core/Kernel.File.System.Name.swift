@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 internal import Cardinal_Primitives
 
 extension ISO_9945.Kernel.File.System {
@@ -24,4 +23,3 @@ extension ISO_9945.Kernel.File.System.Name {
     /// or `maxComponentLength` on Windows.
     public typealias Length = Tagged<ISO_9945.Kernel.File.System.Name, Cardinal>
 }
-

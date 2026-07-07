@@ -24,50 +24,50 @@
 
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
-// MARK: - UInt8 → CChar Projection (for calling C APIs)
+    // MARK: - UInt8 → CChar Projection (for calling C APIs)
 
-extension UnsafePointer where Pointee == CChar {
-    /// Projects a `UInt8` pointer as a `CChar` pointer for syscall use.
-    ///
-    /// This is a zero-cost reinterpretation, not a conversion. `UInt8` and `CChar`
-    /// have identical memory layout.
-    @inlinable
-    @unsafe
-    package init(_ pointer: UnsafePointer<UInt8>) {
-        unsafe (self = UnsafeRawPointer(pointer).assumingMemoryBound(to: CChar.self))
+    extension UnsafePointer where Pointee == CChar {
+        /// Projects a `UInt8` pointer as a `CChar` pointer for syscall use.
+        ///
+        /// This is a zero-cost reinterpretation, not a conversion. `UInt8` and `CChar`
+        /// have identical memory layout.
+        @inlinable
+        @unsafe
+        package init(_ pointer: UnsafePointer<UInt8>) {
+            unsafe (self = UnsafeRawPointer(pointer).assumingMemoryBound(to: CChar.self))
+        }
     }
-}
 
-extension UnsafeMutablePointer where Pointee == CChar {
-    /// Projects a mutable `UInt8` pointer as a mutable `CChar` pointer for syscall use.
-    @inlinable
-    @unsafe
-    package init(_ pointer: UnsafeMutablePointer<UInt8>) {
-        unsafe (self = UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: CChar.self))
+    extension UnsafeMutablePointer where Pointee == CChar {
+        /// Projects a mutable `UInt8` pointer as a mutable `CChar` pointer for syscall use.
+        @inlinable
+        @unsafe
+        package init(_ pointer: UnsafeMutablePointer<UInt8>) {
+            unsafe (self = UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: CChar.self))
+        }
     }
-}
 
-// MARK: - CChar → UInt8 Projection (for reading from C APIs)
+    // MARK: - CChar → UInt8 Projection (for reading from C APIs)
 
-extension UnsafePointer where Pointee == UInt8 {
-    /// Projects a `CChar` pointer as a `UInt8` pointer when reading from C APIs.
-    ///
-    /// Use this when receiving pointers from C functions (like `environ`, `readdir`, etc.)
-    /// that return `CChar*` but need to be accessed as `UInt8*` (the canonical Swift type).
-    @inlinable
-    @unsafe
-    package init(_ pointer: UnsafePointer<CChar>) {
-        unsafe (self = UnsafeRawPointer(pointer).assumingMemoryBound(to: UInt8.self))
+    extension UnsafePointer where Pointee == UInt8 {
+        /// Projects a `CChar` pointer as a `UInt8` pointer when reading from C APIs.
+        ///
+        /// Use this when receiving pointers from C functions (like `environ`, `readdir`, etc.)
+        /// that return `CChar*` but need to be accessed as `UInt8*` (the canonical Swift type).
+        @inlinable
+        @unsafe
+        package init(_ pointer: UnsafePointer<CChar>) {
+            unsafe (self = UnsafeRawPointer(pointer).assumingMemoryBound(to: UInt8.self))
+        }
     }
-}
 
-extension UnsafeMutablePointer where Pointee == UInt8 {
-    /// Projects a mutable `CChar` pointer as a mutable `UInt8` pointer.
-    @inlinable
-    @unsafe
-    package init(_ pointer: UnsafeMutablePointer<CChar>) {
-        unsafe (self = UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: UInt8.self))
+    extension UnsafeMutablePointer where Pointee == UInt8 {
+        /// Projects a mutable `CChar` pointer as a mutable `UInt8` pointer.
+        @inlinable
+        @unsafe
+        package init(_ pointer: UnsafeMutablePointer<CChar>) {
+            unsafe (self = UnsafeMutableRawPointer(pointer).assumingMemoryBound(to: UInt8.self))
+        }
     }
-}
 
-#endif // canImport(Darwin) || canImport(Glibc) || canImport(Musl)
+#endif  // canImport(Darwin) || canImport(Glibc) || canImport(Musl)

@@ -11,14 +11,13 @@
 
 #if os(macOS)
 
-import Testing
-import Tagged_Primitives_Standard_Library_Integration
+    import Testing
+    import Tagged_Primitives_Standard_Library_Integration
 
     import Path_Primitives
     import Error_Primitives
     @testable import ISO_9945_Kernel
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
+    import ISO_9945_Kernel_Test_Support
 
     extension ISO_9945.Kernel.Process.Wait {
         @Suite

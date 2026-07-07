@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Error_Primitives
+import ISO_9945_Kernel_Test_Support
+import Path_Primitives
+import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
-import Tagged_Primitives_Standard_Library_Integration
-import ISO_9945_Kernel_Test_Support
-import ISO_9945_Kernel
-import Path_Primitives
-import Error_Primitives
 
 @testable import ISO_9945_Kernel
 
@@ -66,11 +65,11 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
         #expect(ISO_9945.Kernel.Socket.Backlog.large.rawValue == 4096)
     }
 
-        @Test
-        func `Backlog.max uses SOMAXCONN`() {
-            let max = ISO_9945.Kernel.Socket.Backlog.max
-            #expect(max.rawValue > 0)
-        }
+    @Test
+    func `Backlog.max uses SOMAXCONN`() {
+        let max = ISO_9945.Kernel.Socket.Backlog.max
+        #expect(max.rawValue > 0)
+    }
 }
 
 // MARK: - ExpressibleByIntegerLiteral Tests

@@ -34,7 +34,6 @@
     import Path_Primitives
     import Error_Primitives
     @testable import ISO_9945_Kernel
-import ISO_9945_Kernel
 
     // MARK: - POSIXTestHelper
 

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File {
     /// File position seeking operations.
     ///
@@ -79,4 +78,3 @@ extension ISO_9945.Kernel.File.Seek.Error: CustomStringConvertible {
         }
     }
 }
-

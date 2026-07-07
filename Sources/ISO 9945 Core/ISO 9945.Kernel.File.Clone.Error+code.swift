@@ -34,7 +34,7 @@ extension ISO_9945.Kernel.File.Clone.Error {
         case _ where code == .POSIX.EEXIST:
             self = .destinationExists
         case _ where code == .POSIX.EACCES,
-             _ where code == .POSIX.EPERM:
+            _ where code == .POSIX.EPERM:
             self = .permissionDenied
         case _ where code == .POSIX.EXDEV:
             self = .crossDevice

@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel {
     /// Raw thread syscall wrappers.
     ///
@@ -22,4 +21,3 @@ extension ISO_9945.Kernel {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Thread`)
     public enum Thread {}
 }
-

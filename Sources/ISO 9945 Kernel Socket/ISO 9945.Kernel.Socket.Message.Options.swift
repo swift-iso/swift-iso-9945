@@ -1,4 +1,3 @@
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -36,6 +35,6 @@ extension ISO_9945.Kernel.Socket.Message.Options {
 
     /// Do not generate SIGPIPE (MSG_NOSIGNAL).
     #if os(Linux)
-    public static let noSignal = Self(rawValue: Int32(MSG_NOSIGNAL))
+        public static let noSignal = Self(rawValue: Int32(MSG_NOSIGNAL))
     #endif
 }

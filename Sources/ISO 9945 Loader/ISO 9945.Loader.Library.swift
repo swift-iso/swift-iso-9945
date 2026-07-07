@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Loader_Primitives
 public import ISO_9945_Core  // For ISO_9945.Loader typealias
+public import Loader_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
@@ -24,45 +24,45 @@ public import ISO_9945_Core  // For ISO_9945.Loader typealias
 
 #if !os(Windows)
 
-extension ISO_9945.Loader.Library {
-    /// Opens a dynamic library (POSIX).
-    ///
-    /// Wraps `dlopen` on POSIX systems.
-    ///
-    /// - Parameters:
-    ///   - path: Path to the library, or `nil` for the main executable.
-    ///   - options: Loading options. Default: `.now` (fail-early).
-    /// - Returns: Handle to the loaded library.
-    /// - Throws: `Loader.Error.open` with dlerror message.
-    @unsafe
-    public static func open(
-        path: UnsafePointer<CChar>?,
-        options: Options = .now
-    ) throws(Loader.Error) -> Handle {
-        // Clear stale error
-        _ = unsafe dlerror()
+    extension ISO_9945.Loader.Library {
+        /// Opens a dynamic library (POSIX).
+        ///
+        /// Wraps `dlopen` on POSIX systems.
+        ///
+        /// - Parameters:
+        ///   - path: Path to the library, or `nil` for the main executable.
+        ///   - options: Loading options. Default: `.now` (fail-early).
+        /// - Returns: Handle to the loaded library.
+        /// - Throws: `Loader.Error.open` with dlerror message.
+        @unsafe
+        public static func open(
+            path: UnsafePointer<CChar>?,
+            options: Options = .now
+        ) throws(Loader.Error) -> Handle {
+            // Clear stale error
+            _ = unsafe dlerror()
 
-        guard let handle = unsafe dlopen(path, options.rawValue) else {
-            throw .open(ISO_9945.Loader.Error.captureError())
+            guard let handle = unsafe dlopen(path, options.rawValue) else {
+                throw .open(ISO_9945.Loader.Error.captureError())
+            }
+            return unsafe Handle(rawValue: handle)
         }
-        return unsafe Handle(rawValue: handle)
-    }
 
-    /// Closes a dynamic library (POSIX).
-    ///
-    /// Wraps `dlclose` on POSIX systems.
-    ///
-    /// - Parameter handle: The library handle to close.
-    /// - Throws: `Loader.Error.close` on failure.
-    @unsafe
-    public static func close(_ handle: Handle) throws(Loader.Error) {
-        // Clear stale error
-        _ = unsafe dlerror()
+        /// Closes a dynamic library (POSIX).
+        ///
+        /// Wraps `dlclose` on POSIX systems.
+        ///
+        /// - Parameter handle: The library handle to close.
+        /// - Throws: `Loader.Error.close` on failure.
+        @unsafe
+        public static func close(_ handle: Handle) throws(Loader.Error) {
+            // Clear stale error
+            _ = unsafe dlerror()
 
-        guard unsafe dlclose(handle.rawValue) == 0 else {
-            throw .close(ISO_9945.Loader.Error.captureError())
+            guard unsafe dlclose(handle.rawValue) == 0 else {
+                throw .close(ISO_9945.Loader.Error.captureError())
+            }
         }
     }
-}
 
 #endif

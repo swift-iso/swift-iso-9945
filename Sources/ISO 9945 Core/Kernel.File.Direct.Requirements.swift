@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.File.Direct {
     /// Alignment requirements for Direct I/O operations.
     ///
@@ -67,4 +66,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
         #endif
     }
 }
-

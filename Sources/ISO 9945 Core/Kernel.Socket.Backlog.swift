@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket {
     /// Listen backlog size.
     ///
@@ -71,4 +70,3 @@ extension ISO_9945.Kernel.Socket.Backlog: CustomStringConvertible {
         "\(rawValue)"
     }
 }
-

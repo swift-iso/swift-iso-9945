@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 public import Binary_Primitives
 public import Dimension_Primitives
 
@@ -39,8 +38,8 @@ extension ISO_9945.Kernel.File {
 // MARK: - Offset Constants
 
 extension ISO_9945.Kernel.File.Offset {
-//    /// Zero offset (beginning of file).
-//    public static let zero: Self = 0
+    //    /// Zero offset (beginning of file).
+    //    public static let zero: Self = 0
 
     /// Maximum offset (end of file marker for lock ranges).
     public static let max = Self(Int64.max)

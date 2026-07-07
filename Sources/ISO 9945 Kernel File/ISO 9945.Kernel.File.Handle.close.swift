@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 // MARK: - POSIX close on ISO_9945.Kernel.File.Handle
 
 extension ISO_9945.Kernel.File.Handle {

@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
-
 /// Namespace for Direct I/O operations (cache bypass).
 ///
 /// Direct I/O bypasses the operating system's page cache, allowing data to flow
@@ -109,4 +107,3 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
         self = .known(Alignment(uniform: alignment))
     }
 }
-

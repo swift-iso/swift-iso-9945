@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Directory {
     /// Working directory operations.
     ///
@@ -20,4 +19,3 @@ extension ISO_9945.Kernel.Directory {
     /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Directory.Working`)
     public enum Working {}
 }
-

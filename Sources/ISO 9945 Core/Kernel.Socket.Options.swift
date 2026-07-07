@@ -9,7 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-
 extension ISO_9945.Kernel.Socket {
     /// Socket creation options.
     ///
@@ -34,4 +33,3 @@ extension ISO_9945.Kernel.Socket {
         public static let none = Options([])
     }
 }
-
