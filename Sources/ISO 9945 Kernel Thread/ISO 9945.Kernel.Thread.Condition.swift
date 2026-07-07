@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.Thread {
             self.cond = pthread_cond_t()
             var attr = pthread_condattr_t()
             unsafe pthread_condattr_init(&attr)
-            #if !os(macOS) && !os(iOS) && !os(tvOS) && !os(watchOS)
+            #if !os(macOS) && !os(iOS) && !os(tvOS) && !os(watchOS) && !os(visionOS)
                 unsafe pthread_condattr_setclock(&attr, CLOCK_MONOTONIC)
             #endif
             unsafe pthread_cond_init(&self.cond, &attr)
