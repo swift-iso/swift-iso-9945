@@ -24,17 +24,19 @@ extension ISO_9945.Kernel.Socket.Pair {
     public enum Error: Swift.Error, Sendable, Equatable {
         /// Platform-specific error.
         case platform(Platform)
-
-        /// Platform-specific error details.
-        public enum Platform: Sendable, Equatable {
-            /// A POSIX errno value.
-            case posix(Int32)
-        }
     }
 
     /// Creates the current error from errno.
     static func currentError() -> Error {
         .platform(.posix(errno))
+    }
+}
+
+extension ISO_9945.Kernel.Socket.Pair.Error {
+    /// Platform-specific error details.
+    public enum Platform: Sendable, Equatable {
+        /// A POSIX errno value.
+        case posix(Int32)
     }
 }
 

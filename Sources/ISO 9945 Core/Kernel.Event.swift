@@ -35,10 +35,12 @@ extension ISO_9945.Kernel {
             self.interest = interest
             self.flags = flags
         }
-
-        /// An empty event for buffer initialization.
-        public static let empty = Event(id: .zero, interest: [], flags: [])
     }
+}
+
+extension ISO_9945.Kernel.Event {
+    /// An empty event for buffer initialization.
+    public static let empty = Self(id: .zero, interest: [], flags: [])
 }
 
 extension ISO_9945.Kernel.Event: CustomStringConvertible {

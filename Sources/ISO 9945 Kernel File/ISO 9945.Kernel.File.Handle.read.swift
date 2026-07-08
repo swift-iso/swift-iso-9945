@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.File.Handle {
     public borrowing func read(
         into buffer: UnsafeMutableRawBufferPointer
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Read.Error) {
             return try unsafe ISO_9945.Kernel.IO.Read.read(descriptor, into: buffer)
         } catch {
             if error.code.isInterrupted {
@@ -51,7 +51,7 @@ extension ISO_9945.Kernel.File.Handle {
         into buffer: UnsafeMutableRawBufferPointer,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Read.Error) {
             return try unsafe ISO_9945.Kernel.IO.Read.pread(descriptor, into: buffer, at: offset)
         } catch {
             if error.code.isInterrupted {
@@ -74,7 +74,7 @@ extension ISO_9945.Kernel.File.Handle {
     public borrowing func read(
         into span: inout MutableSpan<Byte>
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Read.Error) {
             return try ISO_9945.Kernel.IO.Read.read(descriptor, into: &span)
         } catch {
             if error.code.isInterrupted {
@@ -96,7 +96,7 @@ extension ISO_9945.Kernel.File.Handle {
         into span: inout MutableSpan<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Read.Error) {
             return try ISO_9945.Kernel.IO.Read.pread(descriptor, into: &span, at: offset)
         } catch {
             if error.code.isInterrupted {

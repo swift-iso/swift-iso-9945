@@ -35,7 +35,7 @@
         /// - Returns: Terminal size in rows and columns
         /// - Throws: ``Terminal.Error`` if query fails
         public static func query(stream: Terminal.Stream = .stdout) throws(Terminal.Error) -> Self {
-            do {
+            do throws(Error_Primitives.Error) {
                 let kernelSize = try ISO_9945.Kernel.TTY.Size.query(fd: stream.rawValue)
                 return Terminal.Size(rows: kernelSize.rows, columns: kernelSize.columns)
             } catch let error {

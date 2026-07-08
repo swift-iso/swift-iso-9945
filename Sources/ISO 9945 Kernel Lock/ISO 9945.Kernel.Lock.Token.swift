@@ -101,22 +101,6 @@ extension ISO_9945.Kernel.Lock {
             self.isReleased = false
         }
 
-        /// Releases the lock.
-        ///
-        /// On success, the token is marked released and subsequent calls
-        /// are no-ops. On failure, the token remains valid for retry —
-        /// the lock is preserved.
-        ///
-        /// The Token retains ownership of the descriptor after release;
-        /// the fd is closed when the Token goes out of scope.
-        ///
-        /// - Throws: `ISO_9945.Kernel.Lock.Error` if the unlock syscall fails.
-        public mutating func release() throws(ISO_9945.Kernel.Lock.Error) {
-            guard !isReleased else { return }
-            try ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
-            isReleased = true
-        }
-
         deinit {
             // Backstop release: if the token was dropped without calling
             // release(), unlock via the owned descriptor. The descriptor's
@@ -124,6 +108,24 @@ extension ISO_9945.Kernel.Lock {
             guard !isReleased else { return }
             try? ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
         }
+    }
+}
+
+extension ISO_9945.Kernel.Lock.Token {
+    /// Releases the lock.
+    ///
+    /// On success, the token is marked released and subsequent calls
+    /// are no-ops. On failure, the token remains valid for retry —
+    /// the lock is preserved.
+    ///
+    /// The Token retains ownership of the descriptor after release;
+    /// the fd is closed when the Token goes out of scope.
+    ///
+    /// - Throws: `ISO_9945.Kernel.Lock.Error` if the unlock syscall fails.
+    public mutating func release() throws(ISO_9945.Kernel.Lock.Error) {
+        guard !isReleased else { return }
+        try ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
+        isReleased = true
     }
 }
 
@@ -240,7 +242,7 @@ extension ISO_9945.Kernel.Lock {
         _ body: () throws(E) -> T
     ) throws(ISO_9945.Kernel.Lock.Scope.Error<E>) -> T {
         var token: Token
-        do {
+        do throws(ISO_9945.Kernel.Lock.Error) {
             token = try Token(
                 descriptor: consume descriptor,
                 range: range,
@@ -253,7 +255,7 @@ extension ISO_9945.Kernel.Lock {
         // Token owns the descriptor. On scope exit, the token is destroyed
         // and the descriptor's deinit closes the fd exactly once.
         defer { try? token.release() }
-        do {
+        do throws(E) {
             return try body()
         } catch {
             throw .body(error)
@@ -278,7 +280,7 @@ extension ISO_9945.Kernel.Lock {
         _ body: () throws(E) -> T
     ) throws(ISO_9945.Kernel.Lock.Scope.Error<E>) -> T {
         var token: Token
-        do {
+        do throws(ISO_9945.Kernel.Lock.Error) {
             token = try Token(
                 descriptor: consume descriptor,
                 range: range,
@@ -289,7 +291,7 @@ extension ISO_9945.Kernel.Lock {
             throw .lock(error)
         }
         defer { try? token.release() }
-        do {
+        do throws(E) {
             return try body()
         } catch {
             throw .body(error)

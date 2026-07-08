@@ -34,24 +34,26 @@ extension ISO_9945.Kernel.Socket {
         public init(_ value: Int32) {
             self.rawValue = value
         }
-
-        // MARK: - Common Values
-
-        /// Default backlog (128).
-        ///
-        /// A reasonable default for most applications.
-        public static let `default` = Backlog(128)
-
-        /// Small backlog (16).
-        ///
-        /// Suitable for low-traffic services.
-        public static let small = Backlog(16)
-
-        /// Large backlog (4096).
-        ///
-        /// For high-traffic servers that can handle many pending connections.
-        public static let large = Backlog(4096)
     }
+}
+
+extension ISO_9945.Kernel.Socket.Backlog {
+    // MARK: - Common Values
+
+    /// Default backlog (128).
+    ///
+    /// A reasonable default for most applications.
+    public static let `default` = Self(128)
+
+    /// Small backlog (16).
+    ///
+    /// Suitable for low-traffic services.
+    public static let small = Self(16)
+
+    /// Large backlog (4096).
+    ///
+    /// For high-traffic servers that can handle many pending connections.
+    public static let large = Self(4096)
 }
 
 // MARK: - ExpressibleByIntegerLiteral

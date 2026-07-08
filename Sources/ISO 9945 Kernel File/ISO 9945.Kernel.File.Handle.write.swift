@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.File.Handle {
     public borrowing func write(
         from buffer: UnsafeRawBufferPointer
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Write.Error) {
             return try unsafe ISO_9945.Kernel.IO.Write.write(descriptor, from: buffer)
         } catch {
             if error.code.isInterrupted {
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.File.Handle {
         from buffer: UnsafeRawBufferPointer,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Write.Error) {
             return try unsafe ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: buffer, at: offset)
         } catch {
             if error.code.isInterrupted {
@@ -86,7 +86,7 @@ extension ISO_9945.Kernel.File.Handle {
     public borrowing func write(
         from span: Swift.Span<Byte>
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Write.Error) {
             return try ISO_9945.Kernel.IO.Write.write(descriptor, from: span)
         } catch {
             if error.code.isInterrupted {
@@ -108,7 +108,7 @@ extension ISO_9945.Kernel.File.Handle {
         from span: Swift.Span<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<Error, Interrupt>) -> Int {
-        do {
+        do throws(ISO_9945.Kernel.IO.Write.Error) {
             return try ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: span, at: offset)
         } catch {
             if error.code.isInterrupted {

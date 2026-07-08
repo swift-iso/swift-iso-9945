@@ -37,24 +37,26 @@ extension ISO_9945.Kernel.Termios {
         @usableFromInline
         internal var _storage: Storage
 
-        /// Platform-specific opaque storage.
-        ///
-        /// Sized to hold any conformant POSIX termios layout
-        /// (macOS: ~72 bytes, Linux: ~60 bytes).
-        public struct Storage: Sendable {
-            public var bytes:
-                (
-                    UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64,
-                    UInt64, UInt64, UInt64, UInt64
-                ) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
-            public init() {}
-        }
-
         @usableFromInline
         internal init() {
             self._storage = Storage()
         }
+    }
+}
+
+extension ISO_9945.Kernel.Termios.Attributes {
+    /// Platform-specific opaque storage.
+    ///
+    /// Sized to hold any conformant POSIX termios layout
+    /// (macOS: ~72 bytes, Linux: ~60 bytes).
+    public struct Storage: Sendable {
+        public var bytes:
+            (
+                UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64, UInt64,
+                UInt64, UInt64, UInt64, UInt64
+            ) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+        public init() {}
     }
 }
 
@@ -112,9 +114,11 @@ extension ISO_9945.Kernel.Termios.Attributes {
         public init(_rawValue: Int32) {
             self._rawValue = _rawValue
         }
-
-        @_spi(Syscall)
-        @inlinable
-        public var rawValue: Int32 { _rawValue }
     }
+}
+
+extension ISO_9945.Kernel.Termios.Attributes.Action {
+    @_spi(Syscall)
+    @inlinable
+    public var rawValue: Int32 { _rawValue }
 }

@@ -56,12 +56,14 @@ extension ISO_9945.Kernel.File.Direct.Capability {
         init(capability: ISO_9945.Kernel.File.Direct.Capability) {
             self.capability = capability
         }
+    }
+}
 
-        /// Whether strict Direct I/O is available.
-        public var isSupported: Bool {
-            if case .directSupported = capability { return true }
-            return false
-        }
+extension ISO_9945.Kernel.File.Direct.Capability.Direct {
+    /// Whether strict Direct I/O is available.
+    public var isSupported: Bool {
+        if case .directSupported = capability { return true }
+        return false
     }
 }
 
@@ -78,15 +80,17 @@ extension ISO_9945.Kernel.File.Direct.Capability {
         init(capability: ISO_9945.Kernel.File.Direct.Capability) {
             self.capability = capability
         }
+    }
+}
 
-        /// Whether any form of cache bypass is available.
-        public var isSupported: Bool {
-            switch capability {
-            case .directSupported, .uncachedOnly:
-                return true
-            case .bufferedOnly:
-                return false
-            }
+extension ISO_9945.Kernel.File.Direct.Capability.Bypass {
+    /// Whether any form of cache bypass is available.
+    public var isSupported: Bool {
+        switch capability {
+        case .directSupported, .uncachedOnly:
+            return true
+        case .bufferedOnly:
+            return false
         }
     }
 }

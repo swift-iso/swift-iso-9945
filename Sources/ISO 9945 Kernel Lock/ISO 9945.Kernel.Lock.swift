@@ -153,38 +153,40 @@ extension ISO_9945.Kernel.Lock {
 
 extension ISO_9945.Kernel.Lock {
     /// Non-blocking lock operations.
-    public enum Immediate {
-        /// Attempts to acquire a lock without blocking.
-        ///
-        /// Wraps `fcntl(fd, F_SETLK, &flock)`. The typed L2 convenience
-        /// (`ISO_9945.Kernel.Lock.Immediate.lock(_:range:kind:)` taking
-        /// `borrowing ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
-        /// (`POSIX.Kernel.Lock.Immediate.lock(_:range:kind:)` in swift-posix)
-        /// both call this raw SPI internally.
-        ///
-        /// - Parameters:
-        ///   - fd: The file descriptor.
-        ///   - range: The byte range to lock.
-        ///   - kind: The lock kind (shared or exclusive).
-        /// - Throws: `Error.contention` if the lock is held by another process,
-        ///           `Error.deadlock` if a deadlock is detected,
-        ///           `Error.unavailable` if the system lock table is exhausted.
-        @_spi(Syscall)
-        public static func lock(
-            fd: Int32,
-            range: ISO_9945.Kernel.Lock.Range,
-            kind: ISO_9945.Kernel.Lock.Kind
-        ) throws(ISO_9945.Kernel.Lock.Error) {
-            var fl = ISO_9945.Kernel.Lock.makeFlock(range: range, kind: kind)
+    public enum Immediate {}
+}
 
-            let result = unsafe fcntl(fd, F_SETLK, &fl)
-            if result == -1 {
-                // EAGAIN or EACCES means the lock is held by another process
-                if errno == EAGAIN || errno == EACCES {
-                    throw .contention
-                }
-                throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+extension ISO_9945.Kernel.Lock.Immediate {
+    /// Attempts to acquire a lock without blocking.
+    ///
+    /// Wraps `fcntl(fd, F_SETLK, &flock)`. The typed L2 convenience
+    /// (`ISO_9945.Kernel.Lock.Immediate.lock(_:range:kind:)` taking
+    /// `borrowing ISO_9945.Kernel.Descriptor`) and the L3-policy wrapper
+    /// (`POSIX.Kernel.Lock.Immediate.lock(_:range:kind:)` in swift-posix)
+    /// both call this raw SPI internally.
+    ///
+    /// - Parameters:
+    ///   - fd: The file descriptor.
+    ///   - range: The byte range to lock.
+    ///   - kind: The lock kind (shared or exclusive).
+    /// - Throws: `Error.contention` if the lock is held by another process,
+    ///           `Error.deadlock` if a deadlock is detected,
+    ///           `Error.unavailable` if the system lock table is exhausted.
+    @_spi(Syscall)
+    public static func lock(
+        fd: Int32,
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind
+    ) throws(ISO_9945.Kernel.Lock.Error) {
+        var fl = ISO_9945.Kernel.Lock.makeFlock(range: range, kind: kind)
+
+        let result = unsafe fcntl(fd, F_SETLK, &fl)
+        if result == -1 {
+            // EAGAIN or EACCES means the lock is held by another process
+            if errno == EAGAIN || errno == EACCES {
+                throw .contention
             }
+            throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
         }
     }
 }

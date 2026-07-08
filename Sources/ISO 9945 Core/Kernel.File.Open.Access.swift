@@ -29,21 +29,23 @@ extension ISO_9945.Kernel.File.Open {
         case writeOnly
         /// Read-write access (O_RDWR).
         case readWrite
+    }
+}
 
-        /// The POSIX raw value for this access mode.
-        ///
-        /// These values are standardized by POSIX and identical across
-        /// all conforming platforms:
-        /// - `readOnly`: 0 (O_RDONLY)
-        /// - `writeOnly`: 1 (O_WRONLY)
-        /// - `readWrite`: 2 (O_RDWR)
-        @inlinable
-        public var rawValue: Int32 {
-            switch self {
-            case .readOnly: 0
-            case .writeOnly: 1
-            case .readWrite: 2
-            }
+extension ISO_9945.Kernel.File.Open.Access {
+    /// The POSIX raw value for this access mode.
+    ///
+    /// These values are standardized by POSIX and identical across
+    /// all conforming platforms:
+    /// - `readOnly`: 0 (O_RDONLY)
+    /// - `writeOnly`: 1 (O_WRONLY)
+    /// - `readWrite`: 2 (O_RDWR)
+    @inlinable
+    public var rawValue: Int32 {
+        switch self {
+        case .readOnly: 0
+        case .writeOnly: 1
+        case .readWrite: 2
         }
     }
 }

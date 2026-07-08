@@ -39,7 +39,7 @@ extension Tagged where Tag == ISO_9945.Kernel.Pipe, Underlying == Pair<ISO_9945.
 
     /// Creates pipe descriptors from read and write ends.
     @inlinable
-    internal init(read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) {
+    package init(read: consuming ISO_9945.Kernel.Descriptor, write: consuming ISO_9945.Kernel.Descriptor) {
         self.init(_unchecked: Pair(read, write))
     }
 }

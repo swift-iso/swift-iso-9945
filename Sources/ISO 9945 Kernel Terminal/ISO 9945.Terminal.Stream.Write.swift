@@ -48,7 +48,7 @@
             var written = 0
             while written < raw.count {
                 let remaining = unsafe UnsafeRawBufferPointer(rebasing: raw[written..<raw.count])
-                do {
+                do throws(ISO_9945.Kernel.IO.Write.Error) {
                     let n = try unsafe ISO_9945.Kernel.IO.Write.write(stream, from: remaining)
                     written += n
                 } catch let error {

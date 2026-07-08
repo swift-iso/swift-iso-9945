@@ -57,17 +57,19 @@ extension ISO_9945.Kernel {
                 _ = unsafe Musl.close(_raw)
             #endif
         }
+    }
+}
 
-        /// Invalid descriptor sentinel (`-1`).
-        public static var invalid: Descriptor {
-            Descriptor(_raw: -1)
-        }
+extension ISO_9945.Kernel.Descriptor {
+    /// Invalid descriptor sentinel (`-1`).
+    public static var invalid: Self {
+        Self(_raw: -1)
+    }
 
-        /// Whether the descriptor is valid (not the sentinel).
-        @inlinable
-        public var isValid: Bool {
-            _raw >= 0
-        }
+    /// Whether the descriptor is valid (not the sentinel).
+    @inlinable
+    public var isValid: Bool {
+        _raw >= 0
     }
 }
 

@@ -31,16 +31,18 @@ extension Memory.Lock.All {
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
+    }
+}
 
-        /// Combines multiple flags.
-        public static func | (lhs: Options, rhs: Options) -> Options {
-            Options(rawValue: lhs.rawValue | rhs.rawValue)
-        }
+extension Memory.Lock.All.Options {
+    /// Combines multiple flags.
+    public static func | (lhs: Self, rhs: Self) -> Self {
+        Self(rawValue: lhs.rawValue | rhs.rawValue)
+    }
 
-        /// Checks if this contains another flag.
-        public func contains(_ other: Options) -> Bool {
-            (rawValue & other.rawValue) == other.rawValue
-        }
+    /// Checks if this contains another flag.
+    public func contains(_ other: Self) -> Bool {
+        (rawValue & other.rawValue) == other.rawValue
     }
 }
 

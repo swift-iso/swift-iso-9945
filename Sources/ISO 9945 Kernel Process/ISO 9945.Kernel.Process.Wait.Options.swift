@@ -38,36 +38,38 @@ extension ISO_9945.Kernel.Process.Wait {
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
-
-        // MARK: - Nest.Name Pattern for Compound Identifiers
-
-        /// Accessor for `no.hang` (WNOHANG).
-        public static var no: No { No() }
-
-        // MARK: - Direct Options
-
-        /// Report stopped children (WUNTRACED).
-        ///
-        /// Also report status for children that are stopped but not
-        /// yet reported (traced children stop on any signal).
-        public static let untraced = Self(rawValue: WUNTRACED)
-
-        /// Report continued children (WCONTINUED).
-        ///
-        /// Also report status for children that have been continued
-        /// from a stopped state by delivery of SIGCONT.
-        public static let continued = Self(rawValue: WCONTINUED)
-
-        // MARK: - waitid Options
-
-        /// Wait for children that have exited (WEXITED).
-        ///
-        /// Used with `waitid`. Reports children that have terminated.
-        public static let exited = Self(rawValue: WEXITED)
-
-        /// Wait for children that have been stopped by a signal (WSTOPPED).
-        ///
-        /// Used with `waitid`. Reports children that have been stopped.
-        public static let stopped = Self(rawValue: WSTOPPED)
     }
+}
+
+extension ISO_9945.Kernel.Process.Wait.Options {
+    // MARK: - Nest.Name Pattern for Compound Identifiers
+
+    /// Accessor for `no.hang` (WNOHANG).
+    public static var no: No { No() }
+
+    // MARK: - Direct Options
+
+    /// Report stopped children (WUNTRACED).
+    ///
+    /// Also report status for children that are stopped but not
+    /// yet reported (traced children stop on any signal).
+    public static let untraced = Self(rawValue: WUNTRACED)
+
+    /// Report continued children (WCONTINUED).
+    ///
+    /// Also report status for children that have been continued
+    /// from a stopped state by delivery of SIGCONT.
+    public static let continued = Self(rawValue: WCONTINUED)
+
+    // MARK: - waitid Options
+
+    /// Wait for children that have exited (WEXITED).
+    ///
+    /// Used with `waitid`. Reports children that have terminated.
+    public static let exited = Self(rawValue: WEXITED)
+
+    /// Wait for children that have been stopped by a signal (WSTOPPED).
+    ///
+    /// Used with `waitid`. Reports children that have been stopped.
+    public static let stopped = Self(rawValue: WSTOPPED)
 }

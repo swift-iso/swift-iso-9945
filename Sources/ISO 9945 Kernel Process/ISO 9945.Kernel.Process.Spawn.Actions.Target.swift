@@ -24,18 +24,9 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
         internal let _raw: Int32
 
         @inlinable
-        internal init(_raw: Int32) {
+        package init(_raw: Int32) {
             self._raw = _raw
         }
-
-        /// The child's standard input slot (fd 0).
-        public static let stdin = Target(_raw: 0)
-
-        /// The child's standard output slot (fd 1).
-        public static let stdout = Target(_raw: 1)
-
-        /// The child's standard error slot (fd 2).
-        public static let stderr = Target(_raw: 2)
 
         /// A target naming the same fd number as `descriptor`.
         ///
@@ -47,4 +38,15 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
             self._raw = descriptor._raw
         }
     }
+}
+
+extension ISO_9945.Kernel.Process.Spawn.Actions.Target {
+    /// The child's standard input slot (fd 0).
+    public static let stdin = Self(_raw: 0)
+
+    /// The child's standard output slot (fd 1).
+    public static let stdout = Self(_raw: 1)
+
+    /// The child's standard error slot (fd 2).
+    public static let stderr = Self(_raw: 2)
 }

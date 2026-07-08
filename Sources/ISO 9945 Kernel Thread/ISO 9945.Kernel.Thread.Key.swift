@@ -109,16 +109,18 @@ extension ISO_9945.Kernel.Thread {
         deinit {
             pthread_key_delete(key)
         }
+    }
+}
 
-        /// The calling thread's slot value. `nil` if the thread has not
-        /// set a value, or if the slot was just allocated.
-        public var value: UnsafeMutableRawPointer? {
-            get {
-                unsafe pthread_getspecific(key)
-            }
-            set {
-                unsafe (_ = pthread_setspecific(key, newValue))
-            }
+extension ISO_9945.Kernel.Thread.Key {
+    /// The calling thread's slot value. `nil` if the thread has not
+    /// set a value, or if the slot was just allocated.
+    public var value: UnsafeMutableRawPointer? {
+        get {
+            unsafe pthread_getspecific(key)
+        }
+        set {
+            unsafe (_ = pthread_setspecific(key, newValue))
         }
     }
 }

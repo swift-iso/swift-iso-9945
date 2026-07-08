@@ -17,16 +17,18 @@ extension ISO_9945.Kernel.File.Direct.Error {
         case sector(Sector)
         case read
         case write
+    }
+}
 
-        /// Cache operation types.
-        public enum Cache: Swift.String, Sendable, Equatable {
-            case set
-            case clear
-        }
+extension ISO_9945.Kernel.File.Direct.Error.Operation {
+    /// Cache operation types.
+    public enum Cache: Swift.String, Sendable, Equatable {
+        case set
+        case clear
+    }
 
-        /// Sector operation types.
-        public enum Sector: Swift.String, Sendable, Equatable {
-            case getSize
-        }
+    /// Sector operation types.
+    public enum Sector: Swift.String, Sendable, Equatable {
+        case getSize
     }
 }

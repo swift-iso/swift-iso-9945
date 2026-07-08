@@ -28,8 +28,10 @@ extension ISO_9945.Kernel.Socket {
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
-
-        /// No special options.
-        public static let none = Options([])
     }
+}
+
+extension ISO_9945.Kernel.Socket.Options {
+    /// No special options.
+    public static let none = Self([])
 }

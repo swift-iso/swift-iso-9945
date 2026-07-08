@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         public var length: ISO_9945.Kernel.Socket.Address.Length
 
         @inlinable
-        internal init(
+        package init(
             descriptor: consuming ISO_9945.Kernel.Socket.Descriptor,
             address: ISO_9945.Kernel.Socket.Address.Storage,
             length: ISO_9945.Kernel.Socket.Address.Length

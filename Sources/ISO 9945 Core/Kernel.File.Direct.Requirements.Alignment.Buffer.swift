@@ -13,16 +13,18 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     /// Accessor for buffer alignment validation.
     public struct Buffer: Sendable {
         let alignment: ISO_9945.Kernel.File.Direct.Requirements.Alignment
-
-        /// Validates that a buffer address is properly aligned.
-        ///
-        /// - Parameter address: The memory address to validate.
-        /// - Returns: `true` if the address is aligned to `bufferAlignment`.
-        public func isAligned(_ address: Memory.Address) -> Bool {
-            alignment.bufferAlignment.isAligned(address.bitPattern)
-        }
     }
 
     /// Accessor for buffer alignment validation.
     public var buffer: Buffer { Buffer(alignment: self) }
+}
+
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer {
+    /// Validates that a buffer address is properly aligned.
+    ///
+    /// - Parameter address: The memory address to validate.
+    /// - Returns: `true` if the address is aligned to `bufferAlignment`.
+    public func isAligned(_ address: Memory.Address) -> Bool {
+        alignment.bufferAlignment.isAligned(address.bitPattern)
+    }
 }

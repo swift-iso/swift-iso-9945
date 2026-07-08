@@ -54,16 +54,6 @@ extension ISO_9945.Kernel.Lock {
         /// to different parts of a file.
         case bytes(start: ISO_9945.Kernel.File.Offset, end: ISO_9945.Kernel.File.Offset)
 
-        /// Creates a byte range from start to end offsets.
-        ///
-        /// - Parameters:
-        ///   - start: The starting byte offset (inclusive).
-        ///   - length: The number of bytes to lock.
-        @inlinable
-        public static func bytes(start: ISO_9945.Kernel.File.Offset, length: ISO_9945.Kernel.File.Size) -> Range {
-            .bytes(start: start, end: start + length)
-        }
-
         /// Creates a lock range suitable for a memory mapping.
         ///
         /// The range is rounded up to the specified allocation granularity
@@ -84,5 +74,17 @@ extension ISO_9945.Kernel.Lock {
             let roundedEnd = granularity.underlying.alignUp(endOffset)
             self = .bytes(start: offset, end: roundedEnd)
         }
+    }
+}
+
+extension ISO_9945.Kernel.Lock.Range {
+    /// Creates a byte range from start to end offsets.
+    ///
+    /// - Parameters:
+    ///   - start: The starting byte offset (inclusive).
+    ///   - length: The number of bytes to lock.
+    @inlinable
+    public static func bytes(start: ISO_9945.Kernel.File.Offset, length: ISO_9945.Kernel.File.Size) -> Self {
+        .bytes(start: start, end: start + length)
     }
 }

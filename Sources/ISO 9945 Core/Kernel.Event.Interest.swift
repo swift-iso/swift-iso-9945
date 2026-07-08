@@ -31,16 +31,18 @@ extension ISO_9945.Kernel.Event {
         public init(rawValue: UInt8) {
             self.rawValue = rawValue
         }
-
-        /// Interest in read readiness (data available to read).
-        public static let read = Interest(rawValue: 1 << 0)
-
-        /// Interest in write readiness (buffer space available for writing).
-        public static let write = Interest(rawValue: 1 << 1)
-
-        /// Interest in priority/out-of-band data (platform-specific).
-        public static let priority = Interest(rawValue: 1 << 2)
     }
+}
+
+extension ISO_9945.Kernel.Event.Interest {
+    /// Interest in read readiness (data available to read).
+    public static let read = Self(rawValue: 1 << 0)
+
+    /// Interest in write readiness (buffer space available for writing).
+    public static let write = Self(rawValue: 1 << 1)
+
+    /// Interest in priority/out-of-band data (platform-specific).
+    public static let priority = Self(rawValue: 1 << 2)
 }
 
 extension ISO_9945.Kernel.Event.Interest: CustomStringConvertible {

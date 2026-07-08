@@ -51,38 +51,41 @@ extension ISO_9945.Kernel.Directory {
             }
         #endif
 
-        /// Returns true if this entry is "." or "..".
-        ///
-        /// `rawName` is null-terminated, so "." is `[0x2E, 0x00]`
-        /// and ".." is `[0x2E, 0x2E, 0x00]`.
-        public var isDotOrDotDot: Bool {
-            #if os(Windows)
-                rawName == [0x002E, 0x0000] || rawName == [0x002E, 0x002E, 0x0000]
-            #else
-                rawName == [0x2E, 0x00] || rawName == [0x2E, 0x2E, 0x00]
-            #endif
-        }
+    }
+}
 
-        /// The entry name as a `Path.Borrowed`. Zero allocation.
-        ///
-        /// `rawName` is null-terminated. This property borrows the array's
-        /// heap buffer directly — the view cannot outlive `self`. Consumers
-        /// reach byte content via `name.span` (Swift.Span<Path.Char>) or
-        /// `name.pointer` (UnsafePointer<Path.Char>). Decoding to a Swift
-        /// String is consumer responsibility (e.g.,
-        /// `Swift.String(decoding: entry.name.span, as: UTF8.self)`).
-        ///
-        /// Not `@inlinable`: its body references the `@_spi(Syscall)` `rawName`
-        /// storage; Swift forbids `@inlinable` bodies from naming SPI
-        /// declarations. The cross-module function-call cost is negligible
-        /// relative to the syscall (readdir) driving directory iteration.
-        public var name: Path.Borrowed {
-            @_lifetime(borrow self)
-            borrowing get {
-                let ptr = unsafe rawName.withUnsafeBufferPointer { $0.baseAddress! }
-                let view = unsafe Path.Borrowed(ptr, count: rawName.count - 1)
-                return unsafe _overrideLifetime(view, borrowing: self)
-            }
+extension ISO_9945.Kernel.Directory.Entry {
+    /// Returns true if this entry is "." or "..".
+    ///
+    /// `rawName` is null-terminated, so "." is `[0x2E, 0x00]`
+    /// and ".." is `[0x2E, 0x2E, 0x00]`.
+    public var isDotOrDotDot: Bool {
+        #if os(Windows)
+            rawName == [0x002E, 0x0000] || rawName == [0x002E, 0x002E, 0x0000]
+        #else
+            rawName == [0x2E, 0x00] || rawName == [0x2E, 0x2E, 0x00]
+        #endif
+    }
+
+    /// The entry name as a `Path.Borrowed`. Zero allocation.
+    ///
+    /// `rawName` is null-terminated. This property borrows the array's
+    /// heap buffer directly — the view cannot outlive `self`. Consumers
+    /// reach byte content via `name.span` (Swift.Span<Path.Char>) or
+    /// `name.pointer` (UnsafePointer<Path.Char>). Decoding to a Swift
+    /// String is consumer responsibility (e.g.,
+    /// `Swift.String(decoding: entry.name.span, as: UTF8.self)`).
+    ///
+    /// Not `@inlinable`: its body references the `@_spi(Syscall)` `rawName`
+    /// storage; Swift forbids `@inlinable` bodies from naming SPI
+    /// declarations. The cross-module function-call cost is negligible
+    /// relative to the syscall (readdir) driving directory iteration.
+    public var name: Path.Borrowed {
+        @_lifetime(borrow self)
+        borrowing get {
+            let ptr = unsafe rawName.withUnsafeBufferPointer { $0.baseAddress! }
+            let view = unsafe Path.Borrowed(ptr, count: rawName.count - 1)
+            return unsafe _overrideLifetime(view, borrowing: self)
         }
     }
 }

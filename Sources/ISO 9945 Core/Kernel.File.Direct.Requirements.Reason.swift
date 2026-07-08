@@ -31,18 +31,20 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
 
         /// The file handle is not suitable for Direct I/O.
         case invalidHandle
+    }
+}
 
-        public var description: Swift.String {
-            switch self {
-            case .platformUnsupported:
-                return "Platform does not support strict Direct I/O"
-            case .sectorSizeUndetermined:
-                return "Could not determine sector size"
-            case .filesystemUnsupported:
-                return "Filesystem does not support Direct I/O"
-            case .invalidHandle:
-                return "Invalid file handle"
-            }
+extension ISO_9945.Kernel.File.Direct.Requirements.Reason {
+    public var description: Swift.String {
+        switch self {
+        case .platformUnsupported:
+            return "Platform does not support strict Direct I/O"
+        case .sectorSizeUndetermined:
+            return "Could not determine sector size"
+        case .filesystemUnsupported:
+            return "Filesystem does not support Direct I/O"
+        case .invalidHandle:
+            return "Invalid file handle"
         }
     }
 }
