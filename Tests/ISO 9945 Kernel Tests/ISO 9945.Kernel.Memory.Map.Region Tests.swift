@@ -46,16 +46,18 @@ extension Memory.Map.Region.Test.Unit {
 extension Memory.Map.Region.Test.Unit {
     @Test
     func `Region stores base address`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        #expect(region.base != .null)
+        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
+        // assert the bit pattern is non-zero as the observable equivalent.
+        #expect(region.base.bitPattern != 0)
     }
 
     @Test
     func `Region stores length`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -64,7 +66,7 @@ extension Memory.Map.Region.Test.Unit {
 
     @Test
     func `Region init sets values correctly`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -81,7 +83,7 @@ extension Memory.Map.Region.Test.Unit {
     extension Memory.Map.Region.Test.Unit {
         @Test
         func `Region stores mappingHandle on Windows`() throws {
-            let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+            let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 

@@ -48,28 +48,6 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
     }
 
     @Test
-    func `io case stores IO.Error`() {
-        let ioError = ISO_9945.Kernel.IO.Error.broken
-        let error = ISO_9945.Kernel.IO.Write.Error.io(ioError)
-        if case .io(let stored) = error {
-            #expect(stored == ioError)
-        } else {
-            Issue.record("Expected .io case")
-        }
-    }
-
-    @Test
-    func `space case stores Storage.Error`() {
-        let spaceError = ISO_9945.Kernel.Storage.Error.exhausted
-        let error = ISO_9945.Kernel.IO.Write.Error.space(spaceError)
-        if case .space(let stored) = error {
-            #expect(stored == spaceError)
-        } else {
-            Issue.record("Expected .space case")
-        }
-    }
-
-    @Test
     func `platform case stores Error_Primitives.Error`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmappedError = Error_Primitives.Error(code: code)
@@ -97,18 +75,6 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
         #expect(error.description.contains("blocking:"))
     }
 
-    @Test
-    func `io description format`() {
-        let error = ISO_9945.Kernel.IO.Write.Error.io(.broken)
-        #expect(error.description.contains("io:"))
-    }
-
-    @Test
-    func `space description format`() {
-        let error = ISO_9945.Kernel.IO.Write.Error.space(.exhausted)
-        #expect(error.description.contains("space:"))
-    }
-
 }
 
 // MARK: - Conformance Tests
@@ -128,9 +94,9 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
 
     @Test
     func `Error is Equatable`() {
-        let a = ISO_9945.Kernel.IO.Write.Error.space(.exhausted)
-        let b = ISO_9945.Kernel.IO.Write.Error.space(.exhausted)
-        let c = ISO_9945.Kernel.IO.Write.Error.space(.quota)
+        let a = ISO_9945.Kernel.IO.Write.Error.handle(.invalid)
+        let b = ISO_9945.Kernel.IO.Write.Error.handle(.invalid)
+        let c = ISO_9945.Kernel.IO.Write.Error.blocking(.wouldBlock)
         #expect(a == b)
         #expect(a != c)
     }
@@ -144,8 +110,6 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.EdgeCase {
         let cases: [ISO_9945.Kernel.IO.Write.Error] = [
             .handle(.invalid),
             .blocking(.wouldBlock),
-            .io(.broken),
-            .space(.exhausted),
             .platform(Error_Primitives.Error(code: .posix(1))),
         ]
 
@@ -153,24 +117,6 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.EdgeCase {
             for j in (i + 1)..<cases.count {
                 #expect(cases[i] != cases[j])
             }
-        }
-    }
-
-    @Test
-    func `space exhausted vs quota`() {
-        let exhausted = ISO_9945.Kernel.IO.Write.Error.space(.exhausted)
-        let quota = ISO_9945.Kernel.IO.Write.Error.space(.quota)
-        #expect(exhausted != quota)
-    }
-
-    @Test
-    func `Write has space case that Read lacks`() {
-        // Verify the space case exists (unique to Write.Error vs Read.Error)
-        let error = ISO_9945.Kernel.IO.Write.Error.space(.exhausted)
-        if case .space = error {
-            // Expected - this case exists
-        } else {
-            Issue.record("Expected .space case")
         }
     }
 }

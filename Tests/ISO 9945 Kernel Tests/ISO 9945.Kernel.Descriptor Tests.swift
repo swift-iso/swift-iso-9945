@@ -16,6 +16,9 @@ import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
 
+// Descriptor._rawValue is @_spi(Syscall)-gated (declared in ISO 9945 Core,
+// re-exported by ISO_9945_Kernel via @_exported import).
+@_spi(Syscall) import ISO_9945_Kernel
 @testable import ISO_9945_Kernel
 
 extension ISO_9945.Kernel.Descriptor {

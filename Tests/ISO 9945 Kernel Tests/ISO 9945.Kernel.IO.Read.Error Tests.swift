@@ -48,17 +48,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     }
 
     @Test
-    func `io case stores IO.Error`() {
-        let ioError = ISO_9945.Kernel.IO.Error.broken
-        let error = ISO_9945.Kernel.IO.Read.Error.io(ioError)
-        if case .io(let stored) = error {
-            #expect(stored == ioError)
-        } else {
-            Issue.record("Expected .io case")
-        }
-    }
-
-    @Test
     func `platform case stores Error_Primitives.Error`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmappedError = Error_Primitives.Error(code: code)
@@ -85,13 +74,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
         let error = ISO_9945.Kernel.IO.Read.Error.blocking(.wouldBlock)
         #expect(error.description.contains("blocking:"))
     }
-
-    @Test
-    func `io description format`() {
-        let error = ISO_9945.Kernel.IO.Read.Error.io(.broken)
-        #expect(error.description.contains("io:"))
-    }
-
 }
 
 // MARK: - Conformance Tests
@@ -111,22 +93,22 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
 
     @Test
     func `Error is Equatable - same case same value`() {
-        let a = ISO_9945.Kernel.IO.Read.Error.io(.broken)
-        let b = ISO_9945.Kernel.IO.Read.Error.io(.broken)
+        let a = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
+        let b = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
         #expect(a == b)
     }
 
     @Test
     func `Error is Equatable - same case different value`() {
-        let a = ISO_9945.Kernel.IO.Read.Error.io(.broken)
-        let b = ISO_9945.Kernel.IO.Read.Error.io(.reset)
+        let a = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
+        let b = ISO_9945.Kernel.IO.Read.Error.handle(.limit(.process))
         #expect(a != b)
     }
 
     @Test
     func `Error is Equatable - different cases`() {
         let a = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
-        let b = ISO_9945.Kernel.IO.Read.Error.io(.broken)
+        let b = ISO_9945.Kernel.IO.Read.Error.blocking(.wouldBlock)
         #expect(a != b)
     }
 }
@@ -139,7 +121,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.EdgeCase {
         let cases: [ISO_9945.Kernel.IO.Read.Error] = [
             .handle(.invalid),
             .blocking(.wouldBlock),
-            .io(.broken),
             .platform(Error_Primitives.Error(code: .posix(1))),
         ]
 
@@ -147,6 +128,56 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.EdgeCase {
             for j in (i + 1)..<cases.count {
                 #expect(cases[i] != cases[j])
             }
+        }
+    }
+}
+
+// MARK: - POSIX Error Mapping (Fold) Tests
+//
+// Per the ratified 3-case shape (.handle, .blocking, .platform — Path X
+// Cycle 2 dropped the .io(Kernel.IO.Error) mapping; commit a5a5db4),
+// init(code:) cascades handle -> blocking -> .platform only. Codes that
+// used to route to the dedicated .io case now fold into .platform.
+
+#if canImport(Darwin)
+    import Darwin
+#elseif canImport(Glibc)
+    import Glibc
+#elseif canImport(Musl)
+    import Musl
+#endif
+
+extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
+    @Test
+    func `broken-classed code (EPIPE) folds into platform`() {
+        let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(EPIPE))
+        if case .platform = error {
+            // Expected: EPIPE is not handle- or blocking-mapped, so it
+            // cascades through to .platform under the ratified 3-case shape.
+        } else {
+            Issue.record("Expected .platform case for EPIPE")
+        }
+    }
+
+    @Test
+    func `reset-classed code (ECONNRESET) folds into platform`() {
+        let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(ECONNRESET))
+        if case .platform = error {
+            // Expected: ECONNRESET is not handle- or blocking-mapped, so it
+            // cascades through to .platform under the ratified 3-case shape.
+        } else {
+            Issue.record("Expected .platform case for ECONNRESET")
+        }
+    }
+
+    @Test
+    func `hardware-classed code (EIO) folds into platform`() {
+        let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(EIO))
+        if case .platform = error {
+            // Expected: EIO is not handle- or blocking-mapped, so it
+            // cascades through to .platform under the ratified 3-case shape.
+        } else {
+            Issue.record("Expected .platform case for EIO")
         }
     }
 }

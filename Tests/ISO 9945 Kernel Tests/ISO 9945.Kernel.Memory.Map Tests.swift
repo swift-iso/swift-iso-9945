@@ -31,17 +31,19 @@ extension Memory.Map {
 extension Memory.Map.Test.Unit {
     @Test
     func `anonymous map succeeds`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        #expect(region.base != .null)
+        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
+        // assert the bit pattern is non-zero as the observable equivalent.
+        #expect(region.base.bitPattern != 0)
         #expect(region.length == pageSize)
     }
 
     @Test
     func `map and unmap cycle works`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
 
         // Unmap should succeed
@@ -53,7 +55,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `mapped memory is readable and writable`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(
             length: pageSize,
             protection: .readWrite
@@ -72,7 +74,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `sync succeeds on mapped region`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -82,7 +84,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `protect changes memory protection`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(
             length: pageSize,
             protection: .readWrite
@@ -108,7 +110,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `advise does not throw`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -122,7 +124,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `multi-page mapping works`() throws {
-        let multiPageSize = ISO_9945.Kernel.File.Size(pages: 4, pageSize: UInt(Int(System.pageSize)))
+        let multiPageSize = Memory.Address.Count(4 * UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: multiPageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -140,12 +142,14 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `Region struct stores base and length`() throws {
-        let pageSize = ISO_9945.Kernel.File.Size.page(size: UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
         // Verify region fields
-        #expect(region.base != .null)
+        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
+        // assert the bit pattern is non-zero as the observable equivalent.
+        #expect(region.base.bitPattern != 0)
         #expect(region.length == pageSize)
     }
 }

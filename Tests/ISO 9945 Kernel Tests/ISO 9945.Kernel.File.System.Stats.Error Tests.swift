@@ -46,26 +46,6 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     }
 
     @Test
-    func `permission case exists`() {
-        let error = ISO_9945.Kernel.File.System.Stats.Error.permission(.denied)
-        if case .permission = error {
-            // Expected
-        } else {
-            Issue.record("Expected .permission case")
-        }
-    }
-
-    @Test
-    func `io case exists`() {
-        let error = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
-        if case .io = error {
-            // Expected
-        } else {
-            Issue.record("Expected .io case")
-        }
-    }
-
-    @Test
     func `platform case exists`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmapped = Error_Primitives.Error(code: code)
@@ -93,17 +73,6 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
         #expect(error.description.contains("handle:"))
     }
 
-    @Test
-    func `permission description format`() {
-        let error = ISO_9945.Kernel.File.System.Stats.Error.permission(.denied)
-        #expect(error.description.contains("permission:"))
-    }
-
-    @Test
-    func `io description format`() {
-        let error = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
-        #expect(error.description.contains("io:"))
-    }
 }
 
 // MARK: - Conformance Tests
@@ -125,7 +94,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     func `Error is Equatable`() {
         let a = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
         let b = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
-        let c = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
+        let c = ISO_9945.Kernel.File.System.Stats.Error.path(.notFound)
         #expect(a == b)
         #expect(a != c)
     }
@@ -148,8 +117,6 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
         let cases: [ISO_9945.Kernel.File.System.Stats.Error] = [
             .path(.notFound),
             .handle(.invalid),
-            .permission(.denied),
-            .io(.hardware),
             .platform(unmapped),
         ]
 
@@ -175,13 +142,6 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
     }
 
     @Test
-    func `different io errors are distinct`() {
-        let hardware = ISO_9945.Kernel.File.System.Stats.Error.io(.hardware)
-        let broken = ISO_9945.Kernel.File.System.Stats.Error.io(.broken)
-        #expect(hardware != broken)
-    }
-
-    @Test
     func `all descriptions are non-empty`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmapped = Error_Primitives.Error(code: code)
@@ -189,8 +149,6 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
         let cases: [ISO_9945.Kernel.File.System.Stats.Error] = [
             .path(.notFound),
             .handle(.invalid),
-            .permission(.denied),
-            .io(.hardware),
             .platform(unmapped),
         ]
 

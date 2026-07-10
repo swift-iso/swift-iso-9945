@@ -15,6 +15,9 @@ import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
 
+// Descriptor._rawValue is @_spi(Syscall)-gated (declared in ISO 9945 Core,
+// re-exported by ISO_9945_Kernel via @_exported import).
+@_spi(Syscall) import ISO_9945_Kernel
 @testable import ISO_9945_Kernel
 
 // ISO_9945.Kernel.Event.ID is a typealias to Tagged<ISO_9945.Kernel.Event, UInt>
@@ -47,37 +50,28 @@ struct EventIDTests {
 
     @Test
     func `ID from descriptor reflects the fd raw value`() throws {
-        // Use a real owned descriptor from pipe(2) so the borrow into
-        // ISO_9945.Kernel.Event.ID(descriptor:) does not alias an unrelated fd.
-        // pipe goes out of scope at function exit; both ends close cleanly
-        // through their respective ISO_9945.Kernel.Descriptor deinits.
+        // Use a real owned descriptor from pipe(2) so the raw value read
+        // does not alias an unrelated fd. pipe goes out of scope at function
+        // exit; both ends close cleanly through their respective
+        // ISO_9945.Kernel.Descriptor deinits.
         let pipe = try ISO_9945.Kernel.Pipe.pipe()
-        let id = ISO_9945.Kernel.Event.ID(descriptor: pipe.read)
+        let id = ISO_9945.Kernel.Event.ID(pipe.read._rawValue)
         #expect(id.underlying == UInt(bitPattern: Int(pipe.read._rawValue)))
     }
 
     @Test
     func `Round-trip from descriptor through ID is symmetric`() throws {
         // Verify the round-trip mathematically: the ID's raw value fits in
-        // Int32 (so ISO_9945.Kernel.Descriptor.init?(_:) would succeed) and the bit
-        // pattern matches the original descriptor's fd. This avoids actually
-        // constructing the recovered Descriptor, which would alias pipe.read
-        // and double-close at scope exit.
+        // Int32 and the bit pattern matches the original descriptor's fd.
+        // There is no reverse ID -> Descriptor conversion in the current
+        // shape, so this checks the bit pattern directly rather than
+        // reconstructing a Descriptor (which would also alias pipe.read
+        // and double-close at scope exit).
         let pipe = try ISO_9945.Kernel.Pipe.pipe()
         let originalRaw = pipe.read._rawValue
-        let id = ISO_9945.Kernel.Event.ID(descriptor: pipe.read)
+        let id = ISO_9945.Kernel.Event.ID(pipe.read._rawValue)
         #expect(id.underlying <= UInt(Int32.max))
         #expect(Int32(id.underlying) == originalRaw)
-    }
-
-    @Test
-    func `Descriptor from ID fails for large values`() {
-        // Values larger than Int32.max cannot be converted to a descriptor.
-        // No fd is constructed (init? returns nil), so no aliasing risk.
-        let largeID = ISO_9945.Kernel.Event.ID(_unchecked: UInt(Int32.max) + 1)
-        let descriptor = ISO_9945.Kernel.Descriptor(largeID)
-        let isNil = (descriptor == nil)
-        #expect(isNil)
     }
 
     // MARK: - Conformances

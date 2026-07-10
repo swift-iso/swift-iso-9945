@@ -166,25 +166,19 @@ import Testing
         }
     }
 
-    // MARK: - Memory.Error Mapping Tests
+    // MARK: - Memory.Allocation.Error Mapping Tests
 
-    @Suite("Memory.Error Mapping")
-    struct MemoryErrorMappingTests {
-        @Test
-        func `fault from EFAULT`() {
-            let error = Memory.Error(code: .posix(EFAULT))
-            #expect(error == .fault)
-        }
-
+    @Suite("Memory.Allocation.Error Mapping")
+    struct MemoryAllocationErrorMappingTests {
         @Test
         func `exhausted from ENOMEM`() {
-            let error = Memory.Error(code: .posix(ENOMEM))
+            let error = Memory.Allocation.Error(code: .posix(ENOMEM))
             #expect(error == .exhausted)
         }
 
         @Test
         func `returns nil for unmapped errno`() {
-            let error = Memory.Error(code: .posix(EINTR))
+            let error = Memory.Allocation.Error(code: .posix(EINTR))
             #expect(error == nil)
         }
     }

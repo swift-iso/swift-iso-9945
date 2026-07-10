@@ -37,17 +37,6 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     }
 
     @Test
-    func `io case stores IO.Error`() {
-        let ioError = ISO_9945.Kernel.IO.Error.hardware
-        let error = ISO_9945.Kernel.File.Stats.Error.io(ioError)
-        if case .io(let stored) = error {
-            #expect(stored == ioError)
-        } else {
-            Issue.record("Expected .io case")
-        }
-    }
-
-    @Test
     func `platform case stores Error_Primitives.Error`() {
         let code = Error_Primitives.Error.Code.posix(999)
         let unmappedError = Error_Primitives.Error(code: code)
@@ -69,11 +58,6 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
         #expect(error.description.contains("handle:"))
     }
 
-    @Test
-    func `io description format`() {
-        let error = ISO_9945.Kernel.File.Stats.Error.io(.hardware)
-        #expect(error.description.contains("io:"))
-    }
 }
 
 // MARK: - Conformance Tests
@@ -95,7 +79,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     func `Error is Equatable`() {
         let a = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
         let b = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
-        let c = ISO_9945.Kernel.File.Stats.Error.io(.hardware)
+        let c = ISO_9945.Kernel.File.Stats.Error.platform(Error_Primitives.Error(code: .posix(2)))
         #expect(a == b)
         #expect(a != c)
     }
@@ -108,7 +92,6 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.EdgeCase {
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Stats.Error] = [
             .handle(.invalid),
-            .io(.hardware),
             .platform(Error_Primitives.Error(code: .posix(1))),
         ]
 
@@ -128,10 +111,4 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.EdgeCase {
         #expect(processLimit != systemLimit)
     }
 
-    @Test
-    func `different io errors are distinct`() {
-        let hardware = ISO_9945.Kernel.File.Stats.Error.io(.hardware)
-        let broken = ISO_9945.Kernel.File.Stats.Error.io(.broken)
-        #expect(hardware != broken)
-    }
 }

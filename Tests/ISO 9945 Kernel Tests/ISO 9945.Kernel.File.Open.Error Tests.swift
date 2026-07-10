@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import ISO_9945_Kernel
+@_spi(Syscall) import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
 // Tests use Apple native Testing framework
 import Testing
@@ -37,17 +37,6 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     }
 
     @Test
-    func `permission case stores Permission.Error`() {
-        let permError = ISO_9945.Kernel.Permission.Error.denied
-        let error = ISO_9945.Kernel.File.Open.Error.permission(permError)
-        if case .permission(let stored) = error {
-            #expect(stored == permError)
-        } else {
-            Issue.record("Expected .permission case")
-        }
-    }
-
-    @Test
     func `handle case stores Descriptor.Validity.Error`() {
         let handleError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
         let error = ISO_9945.Kernel.File.Open.Error.handle(handleError)
@@ -55,28 +44,6 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
             #expect(stored == handleError)
         } else {
             Issue.record("Expected .handle case")
-        }
-    }
-
-    @Test
-    func `space case stores Storage.Error`() {
-        let spaceError = ISO_9945.Kernel.Storage.Error.exhausted
-        let error = ISO_9945.Kernel.File.Open.Error.space(spaceError)
-        if case .space(let stored) = error {
-            #expect(stored == spaceError)
-        } else {
-            Issue.record("Expected .space case")
-        }
-    }
-
-    @Test
-    func `io case stores IO.Error`() {
-        let ioError = ISO_9945.Kernel.IO.Error.hardware
-        let error = ISO_9945.Kernel.File.Open.Error.io(ioError)
-        if case .io(let stored) = error {
-            #expect(stored == ioError)
-        } else {
-            Issue.record("Expected .io case")
         }
     }
 
@@ -103,27 +70,9 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     }
 
     @Test
-    func `permission description format`() {
-        let error = ISO_9945.Kernel.File.Open.Error.permission(.denied)
-        #expect(error.description.contains("permission:"))
-    }
-
-    @Test
     func `handle description format`() {
         let error = ISO_9945.Kernel.File.Open.Error.handle(.invalid)
         #expect(error.description.contains("handle:"))
-    }
-
-    @Test
-    func `space description format`() {
-        let error = ISO_9945.Kernel.File.Open.Error.space(.exhausted)
-        #expect(error.description.contains("space:"))
-    }
-
-    @Test
-    func `io description format`() {
-        let error = ISO_9945.Kernel.File.Open.Error.io(.hardware)
-        #expect(error.description.contains("io:"))
     }
 }
 
@@ -159,10 +108,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.EdgeCase {
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Open.Error] = [
             .path(.notFound),
-            .permission(.denied),
             .handle(.invalid),
-            .space(.exhausted),
-            .io(.hardware),
             .platform(Error_Primitives.Error(code: .posix(1))),
         ]
 
@@ -181,13 +127,54 @@ extension ISO_9945.Kernel.File.Open.Error.Test.EdgeCase {
         #expect(notFound != exists)
         #expect(exists != isDirectory)
     }
+}
+
+// MARK: - POSIX Error Mapping (Fold) Tests
+//
+// Per the ratified 3-case shape (.path, .handle, .platform — Path X Cycle 18g
+// dropped .space; commit 6c67958), init(code:) cascades path -> descriptor ->
+// .platform only. Codes that used to route to dedicated .permission/.space/.io
+// cases now fold into .platform.
+
+#if canImport(Darwin)
+    import Darwin
+#elseif canImport(Glibc)
+    import Glibc
+#elseif canImport(Musl)
+    import Musl
+#endif
+
+extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
+    @Test
+    func `permission-classed code (EACCES) folds into platform`() {
+        let error = ISO_9945.Kernel.File.Open.Error(code: .posix(EACCES))
+        if case .platform = error {
+            // Expected: EACCES is not path- or handle-mapped, so it cascades
+            // through to .platform under the ratified 3-case shape.
+        } else {
+            Issue.record("Expected .platform case for EACCES")
+        }
+    }
 
     @Test
-    func `permission cases are distinct`() {
-        let denied = ISO_9945.Kernel.File.Open.Error.permission(.denied)
-        let notPermitted = ISO_9945.Kernel.File.Open.Error.permission(.notPermitted)
-        let readOnly = ISO_9945.Kernel.File.Open.Error.permission(.readOnlyFilesystem)
-        #expect(denied != notPermitted)
-        #expect(notPermitted != readOnly)
+    func `space-classed code (ENOSPC) folds into platform`() {
+        let error = ISO_9945.Kernel.File.Open.Error(code: .posix(ENOSPC))
+        if case .platform = error {
+            // Expected: ENOSPC is not path- or handle-mapped, so it cascades
+            // through to .platform under the ratified 3-case shape.
+        } else {
+            Issue.record("Expected .platform case for ENOSPC")
+        }
+    }
+
+    @Test
+    func `io-classed code (EIO) folds into platform`() {
+        let error = ISO_9945.Kernel.File.Open.Error(code: .posix(EIO))
+        if case .platform = error {
+            // Expected: EIO is not path- or handle-mapped, so it cascades
+            // through to .platform under the ratified 3-case shape.
+        } else {
+            Issue.record("Expected .platform case for EIO")
+        }
     }
 }

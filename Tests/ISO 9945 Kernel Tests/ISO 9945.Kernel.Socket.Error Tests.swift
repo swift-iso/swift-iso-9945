@@ -31,17 +31,6 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     }
 
     @Test
-    func `handle case exists`() {
-        let handleError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
-        let error = ISO_9945.Kernel.Socket.Error.handle(handleError)
-        if case .handle(let e) = error {
-            #expect(e == handleError)
-        } else {
-            Issue.record("Expected .handle case")
-        }
-    }
-
-    @Test
     func `platform case exists`() {
         let platformError = Error_Primitives.Error(code: .posix(999))
         let error = ISO_9945.Kernel.Socket.Error.platform(platformError)
@@ -58,21 +47,25 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
 extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Socket.Error.handle(.invalid)
+        let error: any Swift.Error = ISO_9945.Kernel.Socket.Error.platform(
+            Error_Primitives.Error(code: .posix(1))
+        )
         #expect(error is ISO_9945.Kernel.Socket.Error)
     }
 
     @Test
     func `Error is Sendable`() {
-        let value: any Sendable = ISO_9945.Kernel.Socket.Error.handle(.invalid)
+        let value: any Sendable = ISO_9945.Kernel.Socket.Error.platform(
+            Error_Primitives.Error(code: .posix(1))
+        )
         #expect(value is ISO_9945.Kernel.Socket.Error)
     }
 
     @Test
     func `Error is Equatable`() {
-        let a = ISO_9945.Kernel.Socket.Error.handle(.invalid)
-        let b = ISO_9945.Kernel.Socket.Error.handle(.invalid)
-        let c = ISO_9945.Kernel.Socket.Error.platform(Error_Primitives.Error(code: .posix(1)))
+        let a = ISO_9945.Kernel.Socket.Error.platform(Error_Primitives.Error(code: .posix(1)))
+        let b = ISO_9945.Kernel.Socket.Error.platform(Error_Primitives.Error(code: .posix(1)))
+        let c = ISO_9945.Kernel.Socket.Error.platform(Error_Primitives.Error(code: .posix(2)))
         #expect(a == b)
         #expect(a != c)
     }
@@ -82,12 +75,6 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
 
 extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     @Test
-    func `handle error description contains 'handle'`() {
-        let error = ISO_9945.Kernel.Socket.Error.handle(.invalid)
-        #expect(error.description.contains("handle"))
-    }
-
-    @Test
     func `platform error description`() {
         let platformError = Error_Primitives.Error(code: .posix(42))
         let error = ISO_9945.Kernel.Socket.Error.platform(platformError)
@@ -96,14 +83,19 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
 }
 
 // MARK: - Edge Cases
+//
+// Per commit 29a7a63 (Path X Cycle 21 — Socket: absorb L1 Socket vocab into
+// L2), the '.handle(Kernel.Descriptor.Validity.Error)' case was dropped from
+// both Socket.Error and Socket.Shutdown.Error per the L1-domain-only /
+// L3-composes principle, leaving the ratified 1-case shape (.platform only).
+// With no second case left, there is no cross-case comparison to exercise;
+// only same-case/different-value distinctness applies.
 
 extension ISO_9945.Kernel.Socket.Error.Test.EdgeCase {
     @Test
-    func `Different cases are not equal`() {
-        let handleError = ISO_9945.Kernel.Socket.Error.handle(.invalid)
-        let platformError = ISO_9945.Kernel.Socket.Error.platform(
-            Error_Primitives.Error(code: .posix(1))
-        )
-        #expect(handleError != platformError)
+    func `Same case with different values are not equal`() {
+        let a = ISO_9945.Kernel.Socket.Error.platform(Error_Primitives.Error(code: .posix(1)))
+        let b = ISO_9945.Kernel.Socket.Error.platform(Error_Primitives.Error(code: .posix(2)))
+        #expect(a != b)
     }
 }
