@@ -15,11 +15,6 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
-#elseif os(Windows)
-    // CRT is the Swift overlay over ucrt: `errno` and the standard streams are
-    // vended as computed accessors, and errno.h / string.h / stdlib.h symbols
-    // (E* constants, strerror, getenv) import directly.
-    internal import CRT
 #endif
 
 extension ISO_9945.Kernel {
@@ -60,10 +55,6 @@ extension ISO_9945.Kernel.Close {
             result = unsafe Glibc.close(raw)
         #elseif canImport(Musl)
             result = unsafe Musl.close(raw)
-        #elseif os(Windows)
-            // The CRT descriptor-close analogue (corecrt_io.h). CRT file
-            // descriptors are the POSIX-shaped fd surface on Windows.
-            result = unsafe _close(raw)
         #endif
         if result == -1 {
             throw .platform(Error_Primitives.Error(code: .posix(errno)))
