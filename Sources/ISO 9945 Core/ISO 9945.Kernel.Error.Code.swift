@@ -15,6 +15,11 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif os(Windows)
+    // CRT is the Swift overlay over ucrt: `errno` and the standard streams are
+    // vended as computed accessors, and errno.h / string.h / stdlib.h symbols
+    // (E* constants, strerror, getenv) import directly.
+    internal import CRT
 #endif
 
 // MARK: - POSIX errno capture

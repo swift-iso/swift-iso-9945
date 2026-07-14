@@ -11,37 +11,43 @@
 
 // MARK: - POSIX Error Code Access
 
-extension ISO_9945.Kernel.Storage.Error {
-    /// The underlying POSIX error code.
-    @inlinable
-    public var code: Error_Primitives.Error.Code {
-        switch self {
-        case .exhausted:
-            return .POSIX.ENOSPC
-        case .quota:
-            return .POSIX.EDQUOT
+// POSIX-gated: the Windows CRT defines no EDQUOT (disk-quota errors do not
+// surface via errno on Windows), so `.quota` has no honest errno mapping
+// there. The errno bridge is POSIX-only surface; the `Storage.Error` type
+// itself remains available on Windows.
+#if !os(Windows)
+    extension ISO_9945.Kernel.Storage.Error {
+        /// The underlying POSIX error code.
+        @inlinable
+        public var code: Error_Primitives.Error.Code {
+            switch self {
+            case .exhausted:
+                return .POSIX.ENOSPC
+            case .quota:
+                return .POSIX.EDQUOT
+            }
         }
     }
-}
 
-// MARK: - POSIX Error Code Mapping
+    // MARK: - POSIX Error Code Mapping
 
-extension ISO_9945.Kernel.Storage.Error {
-    /// Creates an error from a POSIX error code, if applicable.
-    ///
-    /// Returns `nil` if the error code doesn't map to a storage error.
-    ///
-    /// - Parameter code: The platform error code.
-    /// - Returns: A storage error, or `nil` if not applicable.
-    @inlinable
-    public init?(code: Error_Primitives.Error.Code) {
-        switch code {
-        case .POSIX.ENOSPC:
-            self = .exhausted
-        case _ where Error_Primitives.Error.Code.POSIX.isEDQUOT(code):
-            self = .quota
-        default:
-            return nil
+    extension ISO_9945.Kernel.Storage.Error {
+        /// Creates an error from a POSIX error code, if applicable.
+        ///
+        /// Returns `nil` if the error code doesn't map to a storage error.
+        ///
+        /// - Parameter code: The platform error code.
+        /// - Returns: A storage error, or `nil` if not applicable.
+        @inlinable
+        public init?(code: Error_Primitives.Error.Code) {
+            switch code {
+            case .POSIX.ENOSPC:
+                self = .exhausted
+            case _ where Error_Primitives.Error.Code.POSIX.isEDQUOT(code):
+                self = .quota
+            default:
+                return nil
+            }
         }
     }
-}
+#endif

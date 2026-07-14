@@ -41,7 +41,13 @@ extension ISO_9945.Kernel.Process.Group {
 // MARK: - Process.Group.ID Constants
 
 extension Tagged where Tag == ISO_9945.Kernel.Process.Group, Underlying == Int32 {
-    /// The current process group.
+    // Process groups are a POSIX concept with no Win32 analogue (`getpgrp`
+    // has no CRT counterpart; Windows job objects are a different model,
+    // owned by swift-windows-standard). The ID type itself stays available
+    // on Windows; only the live accessor is POSIX-gated.
+    #if !os(Windows)
+        /// The current process group.
 
-    public static var current: Self { Self(_unchecked: getpgrp()) }
+        public static var current: Self { Self(_unchecked: getpgrp()) }
+    #endif
 }

@@ -243,6 +243,59 @@ extension Error_Primitives.Error.Code.POSIX {
     }
 #endif
 
+// MARK: - Windows-Specific Values
+
+// Values from the Windows CRT (`errno.h`; Microsoft "errno constants",
+// ucrt). Note two Windows-only quirks: EAGAIN (11) and EWOULDBLOCK (140)
+// are DISTINCT values — unlike Darwin and Linux, where they alias — and
+// the CRT defines no EDQUOT at all (disk-quota errors do not surface via
+// errno on Windows), so no EDQUOT member exists on this platform; see
+// `isEDQUOT(_:)` and the POSIX-gated bridge in
+// `ISO 9945.Kernel.Storage.Error+code.swift`.
+#if os(Windows)
+    extension Error_Primitives.Error.Code.POSIX {
+        /// Resource temporarily unavailable (Windows CRT errno 11).
+        ///
+        /// On Windows, EAGAIN and EWOULDBLOCK are distinct values.
+        @inlinable
+        public static var EAGAIN: Error_Primitives.Error.Code { .posix(11) }
+
+        /// Operation would block (Windows CRT errno 140).
+        ///
+        /// On Windows, EAGAIN and EWOULDBLOCK are distinct values.
+        @inlinable
+        public static var EWOULDBLOCK: Error_Primitives.Error.Code { .posix(140) }
+
+        /// File name too long (Windows CRT errno 38).
+        @inlinable
+        public static var ENAMETOOLONG: Error_Primitives.Error.Code { .posix(38) }
+
+        /// Directory not empty (Windows CRT errno 41).
+        @inlinable
+        public static var ENOTEMPTY: Error_Primitives.Error.Code { .posix(41) }
+
+        /// Too many levels of symbolic links (Windows CRT errno 114).
+        @inlinable
+        public static var ELOOP: Error_Primitives.Error.Code { .posix(114) }
+
+        /// Connection reset by peer (Windows CRT errno 108).
+        @inlinable
+        public static var ECONNRESET: Error_Primitives.Error.Code { .posix(108) }
+
+        /// Operation not supported (Windows CRT errno 129).
+        @inlinable
+        public static var ENOTSUP: Error_Primitives.Error.Code { .posix(129) }
+
+        /// Deadlock detected (Windows CRT errno 36).
+        @inlinable
+        public static var EDEADLK: Error_Primitives.Error.Code { .posix(36) }
+
+        /// No locks available (Windows CRT errno 39).
+        @inlinable
+        public static var ENOLCK: Error_Primitives.Error.Code { .posix(39) }
+    }
+#endif
+
 // MARK: - OpenBSD-Specific Values
 
 #if os(OpenBSD)
@@ -324,7 +377,7 @@ extension Error_Primitives.Error.Code.POSIX {
     @inlinable
     public static func isENAMETOOLONG(_ code: Error_Primitives.Error.Code) -> Bool {
         switch code {
-        case .posix(36), .posix(63):  // Linux 36, Darwin/OpenBSD 63
+        case .posix(36), .posix(63), .posix(38):  // Linux 36, Darwin/OpenBSD 63, Windows 38
             return true
         default:
             return false
@@ -337,7 +390,7 @@ extension Error_Primitives.Error.Code.POSIX {
     @inlinable
     public static func isEAGAIN(_ code: Error_Primitives.Error.Code) -> Bool {
         switch code {
-        case .posix(11), .posix(35):  // Linux 11, Darwin/OpenBSD 35
+        case .posix(11), .posix(35), .posix(140):  // Linux/Windows 11, Darwin/OpenBSD 35, Windows EWOULDBLOCK 140
             return true
         default:
             return false
@@ -347,6 +400,7 @@ extension Error_Primitives.Error.Code.POSIX {
     /// Returns `true` if the code represents EDQUOT on any platform.
     ///
     /// Use this for cross-platform matching when the value differs by platform.
+    /// The Windows CRT defines no EDQUOT; no Windows value is matched here.
     @inlinable
     public static func isEDQUOT(_ code: Error_Primitives.Error.Code) -> Bool {
         switch code {
