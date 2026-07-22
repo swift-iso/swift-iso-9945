@@ -65,6 +65,9 @@ extension Error_Primitives.Error.Number {
     /// Resource temporarily unavailable / would block (EAGAIN).
     public static var wouldBlock: Self { Self(_unchecked: EAGAIN) }
 
+    /// Non-blocking connection is in progress (EINPROGRESS).
+    public static var inProgress: Self { Self(_unchecked: EINPROGRESS) }
+
     /// No such device (ENODEV).
     public static var noDevice: Self { Self(_unchecked: ENODEV) }
 

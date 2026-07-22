@@ -59,6 +59,33 @@ extension ISO_9945.Kernel.Socket.Address {
                 }
             }
         }
+
+        /// Creates an IPv6 socket address from eight host-order segments.
+        public init(
+            segments: (
+                UInt16, UInt16, UInt16, UInt16,
+                UInt16, UInt16, UInt16, UInt16
+            ),
+            port: UInt16 = 0,
+            flowInfo: UInt32 = 0,
+            scopeId: UInt32 = 0
+        ) {
+            self.init(
+                address: (
+                    UInt8(truncatingIfNeeded: segments.0 >> 8), UInt8(truncatingIfNeeded: segments.0),
+                    UInt8(truncatingIfNeeded: segments.1 >> 8), UInt8(truncatingIfNeeded: segments.1),
+                    UInt8(truncatingIfNeeded: segments.2 >> 8), UInt8(truncatingIfNeeded: segments.2),
+                    UInt8(truncatingIfNeeded: segments.3 >> 8), UInt8(truncatingIfNeeded: segments.3),
+                    UInt8(truncatingIfNeeded: segments.4 >> 8), UInt8(truncatingIfNeeded: segments.4),
+                    UInt8(truncatingIfNeeded: segments.5 >> 8), UInt8(truncatingIfNeeded: segments.5),
+                    UInt8(truncatingIfNeeded: segments.6 >> 8), UInt8(truncatingIfNeeded: segments.6),
+                    UInt8(truncatingIfNeeded: segments.7 >> 8), UInt8(truncatingIfNeeded: segments.7)
+                ),
+                port: port,
+                flowInfo: flowInfo,
+                scopeId: scopeId
+            )
+        }
     }
 }
 
@@ -86,6 +113,24 @@ extension ISO_9945.Kernel.Socket.Address.IPv6 {
     public var scopeId: UInt32 {
         get { cValue.sin6_scope_id }
         set { cValue.sin6_scope_id = newValue }
+    }
+
+    /// The eight IPv6 address segments in host byte order.
+    public var segments: (
+        UInt16, UInt16, UInt16, UInt16,
+        UInt16, UInt16, UInt16, UInt16
+    ) {
+        unsafe withUnsafeBytes(of: cValue.sin6_addr) { bytes in
+            func segment(_ offset: Int) -> UInt16 {
+                let high = unsafe UInt16(bytes[offset])
+                let low = unsafe UInt16(bytes[offset + 1])
+                return high << 8 | low
+            }
+            return (
+                segment(0), segment(2), segment(4), segment(6),
+                segment(8), segment(10), segment(12), segment(14)
+            )
+        }
     }
 
     /// The size of the underlying sockaddr_in6 structure.

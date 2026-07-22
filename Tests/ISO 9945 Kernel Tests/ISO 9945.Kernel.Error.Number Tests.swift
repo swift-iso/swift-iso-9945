@@ -88,6 +88,14 @@ extension Error_Primitives.Error.Number.Test.Unit {
     }
 
     @Test
+    func `inProgress equals EINPROGRESS and classifies its code`() {
+        let number = Error_Primitives.Error.Number.inProgress
+        #expect(number == Error_Primitives.Error.Number(_unchecked: EINPROGRESS))
+        #expect(Error_Primitives.Error.Code.posix(number.underlying).isInProgress)
+        #expect(!Error_Primitives.Error.Code.POSIX.EINTR.isInProgress)
+    }
+
+    @Test
     func `noDevice equals ENODEV`() {
         #expect(Error_Primitives.Error.Number.noDevice == Error_Primitives.Error.Number(_unchecked: ENODEV))
     }
