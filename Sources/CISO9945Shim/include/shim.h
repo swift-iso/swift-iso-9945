@@ -2,7 +2,7 @@
 //
 // This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -17,6 +17,25 @@
 // - C macros that Swift cannot import
 
 #if defined(__APPLE__) || defined(__linux__) || defined(__OpenBSD__)
+
+// ===----------------------------------------------------------------------===//
+// MARK: - CPU clocks
+// ===----------------------------------------------------------------------===//
+
+#include <stdint.h>
+#include <time.h>
+
+/// Return calling-thread CPU time in nanoseconds.
+/// A clock failure preserves the Swift wrapper's previous zero result.
+static inline uint64_t iso9945_clock_thread_cpu_time_nanoseconds(void) {
+    struct timespec value = {0, 0};
+    if (clock_gettime(CLOCK_THREAD_CPUTIME_ID, &value) != 0 ||
+        value.tv_sec < 0 || value.tv_nsec < 0) {
+        return 0;
+    }
+    return (uint64_t)value.tv_sec * UINT64_C(1000000000) +
+           (uint64_t)value.tv_nsec;
+}
 
 // ===----------------------------------------------------------------------===//
 // MARK: - Terminal I/O (ioctl is variadic)

@@ -304,6 +304,7 @@ let package = Package(
             name: "ISO 9945 Kernel Clock",
             dependencies: [
                 "ISO 9945 Core",
+                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
             ]
         ),
