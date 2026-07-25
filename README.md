@@ -1,5 +1,7 @@
 # ISO 9945
 
+![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
+
 Swift implementation of ISO/IEC/IEEE 9945 (POSIX.1) — the **System Interfaces** volume:
 kernel and C-library surfaces (file descriptors, errno, processes, signals, sockets,
 threads, time) under the `ISO_9945` namespace.
