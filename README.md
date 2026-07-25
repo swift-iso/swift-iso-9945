@@ -24,3 +24,7 @@ Neither package supersedes the other; they implement disjoint volumes of one spe
 
 POSIX targets POSIX systems: CI runs the Apple and Linux legs; the Windows leg is declared
 out via the CI `platform-support` input (Windows is not a POSIX system).
+
+## License
+
+Apache 2.0. See [LICENSE.md](LICENSE.md).
