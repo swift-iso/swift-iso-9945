@@ -40,52 +40,16 @@
     enum POSIXTestHelper {
         /// Path to the posix-test-helper executable.
         ///
-        /// Resolution order:
-        /// 1. `POSIX_TEST_HELPER` environment variable (CI-friendly)
-        /// 2. `.build/debug/` relative to package root via #filePath (SwiftPM)
-        /// 3. Xcode DerivedData via environment variables
-        static func executablePath(filePath: StaticString = #filePath) -> Swift.String {
-            let helperName = "iso-9945-test-helper"
-
-            // 1. Prefer explicit env var (CI-friendly)
-            if let envPath = getenv("ISO_9945_TEST_HELPER") ?? getenv("POSIX_TEST_HELPER") {
-                return Swift.String(cString: envPath)
-            }
-
-            // 2. Use #filePath to find package root, then .build/debug/
-            //    filePath: .../swift-posix-primitives/Tests/POSIX Kernel Primitives Tests/ISO_9945.TestHelper.swift
-            //    package root: .../swift-posix-primitives/
-            //    helper: .../swift-posix-primitives/.build/debug/posix-test-helper
-            var path = filePath.description
-            // Go up: ISO_9945.TestHelper.swift -> POSIX Kernel Primitives Tests -> Tests -> swift-posix-primitives
-            for _ in 0..<3 {
-                if let lastSlash = path.lastIndex(of: "/") {
-                    path = Swift.String(path[..<lastSlash])
-                }
-            }
-            let swiftPMPath = "\(path)/.build/debug/\(helperName)"
-            if isExecutable(swiftPMPath) {
-                return swiftPMPath
-            }
-
-            // 3. Try __XPC_DYLD_FRAMEWORK_PATH (set by Xcode test runner)
-            if let xpcPath = getenv("__XPC_DYLD_FRAMEWORK_PATH") {
-                let candidate = "\(Swift.String(cString: xpcPath))/\(helperName)"
-                if isExecutable(candidate) {
-                    return candidate
-                }
-            }
-
-            // 4. Try DYLD_FRAMEWORK_PATH (also set by Xcode)
-            if let dyldPath = getenv("DYLD_FRAMEWORK_PATH") {
-                let candidate = "\(Swift.String(cString: dyldPath))/\(helperName)"
-                if isExecutable(candidate) {
-                    return candidate
-                }
-            }
-
-            // Fallback: return helperName and let spawn fail with clear error
-            return helperName
+        /// Derived from the running test binary's own directory — see
+        /// ``TestExecutable``. Previously this hardcoded `.build/debug/`, which
+        /// resolved only in a debug SwiftPM build and then fell through to a bare
+        /// executable name; spawning that with an empty `envp` failed as an opaque
+        /// `ENOENT` (`posix(2)`) because `posix_spawn` does not search `PATH`.
+        static func executablePath() -> Swift.String? {
+            TestExecutable.path(
+                "iso-9945-test-helper",
+                overrides: ["ISO_9945_TEST_HELPER", "POSIX_TEST_HELPER"]
+            )
         }
 
         /// Check if path is an executable file using withCString for proper C interop.
@@ -137,7 +101,9 @@
         /// - Returns: The process ID of the spawned helper.
         /// - Throws: `ISO_9945.Kernel.Process.Error.spawn` on failure.
         static func spawn(_ args: [Swift.String]) throws -> ISO_9945.Kernel.Process.ID {
-            let path = executablePath()
+            guard let path = executablePath() else {
+                throw TestExecutable.NotFound(name: "iso-9945-test-helper")
+            }
             let allArgs = [path] + args
             let envp: [Swift.String] = []
 

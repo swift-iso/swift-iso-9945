@@ -29,41 +29,16 @@ import Testing
 /// Utility for spawning the lock helper executable for multi-process lock tests.
 private enum LockTestHelper {
     /// Path to the lock helper executable.
-    static func executablePath(filePath: StaticString = #filePath) -> Swift.String {
-        let helperName = "iso-9945-lock-helper"
-
-        // 1. Prefer explicit env var (CI-friendly)
-        if let envPath = getenv("ISO_9945_LOCK_HELPER") {
-            return Swift.String(cString: envPath)
-        }
-
-        // 2. Use #filePath to find package root, then .build/debug/
-        var path = filePath.description
-        for _ in 0..<3 {
-            if let lastSlash = path.lastIndex(of: "/") {
-                path = Swift.String(path[..<lastSlash])
-            }
-        }
-        let swiftPMPath = "\(path)/.build/debug/\(helperName)"
-        if isExecutable(swiftPMPath) {
-            return swiftPMPath
-        }
-
-        // 3. Try Xcode paths
-        if let xpcPath = getenv("__XPC_DYLD_FRAMEWORK_PATH") {
-            let candidate = "\(Swift.String(cString: xpcPath))/\(helperName)"
-            if isExecutable(candidate) {
-                return candidate
-            }
-        }
-
-        return helperName
-    }
-
-    private static func isExecutable(_ path: Swift.String) -> Bool {
-        path.withCString { cPath in
-            access(cPath, X_OK) == 0
-        }
+    /// Path to the lock helper executable, derived from the running test binary's
+    /// own directory.
+    ///
+    /// Previously this hardcoded `.build/debug/`, which resolved only in a debug
+    /// SwiftPM build and then fell through to a bare executable name — spawning
+    /// that with an empty `envp` failed as an opaque `ENOENT` (`posix(2)`) because
+    /// `posix_spawn` does not search `PATH`. See ``TestExecutable`` for the
+    /// derivation and the layouts it covers.
+    static func executablePath() -> Swift.String? {
+        TestExecutable.path("iso-9945-lock-helper", overrides: ["ISO_9945_LOCK_HELPER"])
     }
 
     /// Spawns the lock helper to hold a lock on the given file path.
@@ -73,7 +48,9 @@ private enum LockTestHelper {
     ///   - milliseconds: How long to hold the lock.
     /// - Returns: The process ID of the spawned helper.
     static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> ISO_9945.Kernel.Process.ID {
-        let helperPath = executablePath()
+        guard let helperPath = executablePath() else {
+            throw TestExecutable.NotFound(name: "iso-9945-lock-helper")
+        }
         let allArgs = [helperPath, filePath, "\(milliseconds)"]
         let envp: [Swift.String] = []
 
