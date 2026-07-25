@@ -116,10 +116,12 @@ extension ISO_9945.Kernel.Socket.Address.IPv6 {
     }
 
     /// The eight IPv6 address segments in host byte order.
-    public var segments: (
-        UInt16, UInt16, UInt16, UInt16,
-        UInt16, UInt16, UInt16, UInt16
-    ) {
+    public var segments:
+        (
+            UInt16, UInt16, UInt16, UInt16,
+            UInt16, UInt16, UInt16, UInt16
+        )
+    {
         unsafe withUnsafeBytes(of: cValue.sin6_addr) { bytes in
             func segment(_ offset: Int) -> UInt16 {
                 let high = unsafe UInt16(bytes[offset])

@@ -29,12 +29,12 @@ extension Clock.CPU.Thread {
 }
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux)
-extension Clock.CPU.Thread {
-    /// Returns the current instant on the calling-thread CPU clock.
-    public static func now() -> Instant {
-        Instant(
-            nanoseconds: iso9945_clock_thread_cpu_time_nanoseconds()
-        )
+    extension Clock.CPU.Thread {
+        /// Returns the current instant on the calling-thread CPU clock.
+        public static func now() -> Instant {
+            Instant(
+                nanoseconds: iso9945_clock_thread_cpu_time_nanoseconds()
+            )
+        }
     }
-}
 #endif
