@@ -62,14 +62,23 @@ extension Memory.Map.Test.Unit {
         )
         defer { try? Memory.Map.unmap(region) }
 
-        // Write to the mapped memory via mutableSpan
-        var mutableSpan = region.mutableSpan
-        mutableSpan[0] = 42
-        mutableSpan[1] = 123
+        // Write to the mapped memory through the region's raw pointer.
+        //
+        // `Region` deliberately exposes no `span` / `mutableSpan` (upstream
+        // swift-memory-map-primitives `fa6ccff`): it is a plain Copyable value
+        // (base + length) carrying no lifetime relationship to the mapping's
+        // liveness, so a byte view taken from it could outlive `munmap` and
+        // silently dangle. Safe zero-copy access lives only on the ~Copyable
+        // `Memory.Map` envelope, whose `@_lifetime(borrow self)` is anchored to
+        // the owner. For a bare `Region` the honest surface is an explicitly
+        // unsafe pointer access — the pattern `Anonymous.map(_:)`'s own doc
+        // comment prescribes.
+        unsafe region.base.mutablePointer.storeBytes(of: UInt8(42), toByteOffset: 0, as: UInt8.self)
+        unsafe region.base.mutablePointer.storeBytes(of: UInt8(123), toByteOffset: 1, as: UInt8.self)
 
-        // Read back via span
-        #expect(region.span[0] == 42)
-        #expect(region.span[1] == 123)
+        // Read back through the read-only pointer.
+        #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 42)
+        #expect(unsafe region.base.pointer.load(fromByteOffset: 1, as: UInt8.self) == 123)
     }
 
     @Test
@@ -91,9 +100,9 @@ extension Memory.Map.Test.Unit {
         )
         defer { try? Memory.Map.unmap(region) }
 
-        // Write some data first
-        var mutableSpan = region.mutableSpan
-        mutableSpan[0] = 99
+        // Write some data first (see `mapped memory is readable and writable`
+        // for why a bare `Region` uses an explicitly unsafe pointer access).
+        unsafe region.base.mutablePointer.storeBytes(of: UInt8(99), toByteOffset: 0, as: UInt8.self)
 
         // Change to read-only (should succeed)
         try Memory.Map.protect(
@@ -103,7 +112,7 @@ extension Memory.Map.Test.Unit {
         )
 
         // Reading should still work
-        #expect(region.span[0] == 99)
+        #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 99)
 
         // Note: Writing would now cause SIGBUS/SIGSEGV, which we can't test safely
     }
@@ -130,14 +139,14 @@ extension Memory.Map.Test.Unit {
 
         #expect(region.length == multiPageSize)
 
-        // Write to first and last page
-        var mutableSpan = region.mutableSpan
-        mutableSpan[0] = 1
-        let lastIndex = mutableSpan.count - 1
-        mutableSpan[lastIndex] = 255
+        // Write to first and last page (see `mapped memory is readable and
+        // writable` for why a bare `Region` uses an unsafe pointer access).
+        let lastOffset = Int(bitPattern: region.length) - 1
+        unsafe region.base.mutablePointer.storeBytes(of: UInt8(1), toByteOffset: 0, as: UInt8.self)
+        unsafe region.base.mutablePointer.storeBytes(of: UInt8(255), toByteOffset: lastOffset, as: UInt8.self)
 
-        #expect(region.span[0] == 1)
-        #expect(region.span[region.span.count - 1] == 255)
+        #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 1)
+        #expect(unsafe region.base.pointer.load(fromByteOffset: lastOffset, as: UInt8.self) == 255)
     }
 
     @Test
