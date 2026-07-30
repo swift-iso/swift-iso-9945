@@ -92,7 +92,7 @@ extension ISO_9945.Kernel.Directory.Create {
         #elseif canImport(Glibc)
             return Glibc.mkdirat(descriptor, cPath, mode_t(permissions.rawValue))
         #else
-            return -1
+            #error("ISO_9945.Kernel.Directory.Create.mkdirat: unsupported platform (no Darwin, Glibc, or Musl)")
         #endif
     }
 

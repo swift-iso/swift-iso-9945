@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Close {
         #elseif canImport(Musl)
             return unsafe Musl.close(fd)
         #else
-            return -1
+            #error("ISO_9945.Kernel.Close: unsupported platform (no Darwin, Glibc, or Musl)")
         #endif
     }
 }
