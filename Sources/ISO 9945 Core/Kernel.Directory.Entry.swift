@@ -37,14 +37,18 @@ extension ISO_9945.Kernel.Directory {
         public let type: ISO_9945.Kernel.File.Stats.Kind?
 
         #if os(Windows)
+            /// - Precondition: `rawName` is non-empty and null-terminated.
             public init(rawName: [UInt16], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
+                precondition(rawName.last == 0, "Directory.Entry rawName must be a non-empty, null-terminated sequence")
                 self.rawName = rawName
                 self.inode = inode
                 self.type = type
             }
         #else
+            /// - Precondition: `rawName` is non-empty and null-terminated.
             @_spi(Syscall)
             public init(rawName: [UInt8], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
+                precondition(rawName.last == 0, "Directory.Entry rawName must be a non-empty, null-terminated sequence")
                 self.rawName = rawName
                 self.inode = inode
                 self.type = type
@@ -67,25 +71,30 @@ extension ISO_9945.Kernel.Directory.Entry {
         #endif
     }
 
-    /// The entry name as a `Path.Borrowed`. Zero allocation.
+    /// Calls `body` with the entry name as a `Path.Borrowed`. Zero allocation.
     ///
-    /// `rawName` is null-terminated. This property borrows the array's
-    /// heap buffer directly — the view cannot outlive `self`. Consumers
-    /// reach byte content via `name.span` (Swift.Span<Path.Char>) or
-    /// `name.pointer` (UnsafePointer<Path.Char>). Decoding to a Swift
-    /// String is consumer responsibility (e.g.,
-    /// `Swift.String(decoding: entry.name.span, as: UTF8.self)`).
+    /// `rawName` is non-empty and null-terminated (enforced by the
+    /// initializer). The borrowed view is valid only for the duration of
+    /// `body`; the underlying buffer pointer never escapes the scope of
+    /// `withUnsafeBufferPointer`, honouring its lifetime contract.
+    /// Decoding to a Swift String is consumer responsibility (e.g.,
+    /// `Swift.String(decoding: view.span, as: UTF8.self)`).
     ///
     /// Not `@inlinable`: its body references the `@_spi(Syscall)` `rawName`
     /// storage; Swift forbids `@inlinable` bodies from naming SPI
     /// declarations. The cross-module function-call cost is negligible
     /// relative to the syscall (readdir) driving directory iteration.
-    public var name: Path.Borrowed {
-        @_lifetime(borrow self)
-        borrowing get {
-            let ptr = unsafe rawName.withUnsafeBufferPointer { $0.baseAddress! }
-            let view = unsafe Path.Borrowed(ptr, count: rawName.count - 1)
-            return unsafe _overrideLifetime(view, borrowing: self)
+    public func withName<R, E: Swift.Error>(
+        _ body: (borrowing Path.Borrowed) throws(E) -> R
+    ) throws(E) -> R {
+        let result: Swift.Result<R, E> = unsafe rawName.withUnsafeBufferPointer { buffer in
+            let view = unsafe Path.Borrowed(buffer.baseAddress!, count: buffer.count - 1)
+            do throws(E) {
+                return .success(try body(view))
+            } catch {
+                return .failure(error)
+            }
         }
+        return try result.get()
     }
 }

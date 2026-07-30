@@ -26,8 +26,12 @@ extension ISO_9945.Kernel.Directory {
     public typealias Error = ISO_9945.Kernel.Directory.Error
 
     /// A directory stream for iterating over directory entries.
+    ///
+    /// Not `Sendable`: a directory stream is an inherently non-shared
+    /// resource. `readdir` on one `DIR *` must not be interleaved across
+    /// threads, and the type performs no internal synchronization.
     @safe
-    public final class Stream: @unchecked Sendable {
+    public final class Stream {
         #if canImport(Darwin)
             private var dir: UnsafeMutablePointer<DIR>?
 
@@ -89,9 +93,12 @@ extension ISO_9945.Kernel.Directory.Stream {
     }
 
     /// Returns the next entry, or nil if at end of directory.
+    ///
+    /// - Throws: `.closed` if the stream was closed, so use after `close()`
+    ///   is distinguishable from exhaustion.
     public func next() throws(ISO_9945.Kernel.Directory.Error) -> ISO_9945.Kernel.Directory.Entry? {
         guard let d = unsafe dir else {
-            return nil
+            throw ISO_9945.Kernel.Directory.Error.closed
         }
 
         // Reset errno before calling readdir
@@ -104,7 +111,9 @@ extension ISO_9945.Kernel.Directory.Stream {
             return nil
         }
 
-        // Extract raw bytes from d_name tuple
+        // Extract raw bytes from d_name tuple. The scan never reads past
+        // the field, and the copied name is always NUL-terminated — the
+        // invariant `Entry.init(rawName:)` enforces.
         let rawName: [UInt8] = unsafe withUnsafePointer(to: entry.pointee.d_name) { ptr in
             let bufferSize = MemoryLayout.size(ofValue: unsafe entry.pointee.d_name)
             return unsafe ptr.withMemoryRebound(to: UInt8.self, capacity: bufferSize) { bytes in
@@ -112,7 +121,9 @@ extension ISO_9945.Kernel.Directory.Stream {
                 while length < bufferSize && (unsafe bytes[length]) != 0 {
                     length += 1
                 }
-                return unsafe Array(UnsafeBufferPointer(start: bytes, count: length + 1))
+                var name = unsafe Array(UnsafeBufferPointer(start: bytes, count: length))
+                name.append(0)
+                return name
             }
         }
 
