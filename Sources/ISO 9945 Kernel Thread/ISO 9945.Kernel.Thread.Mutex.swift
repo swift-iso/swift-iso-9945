@@ -71,12 +71,23 @@ extension ISO_9945.Kernel.Thread {
         private var mutex: pthread_mutex_t
 
         /// Creates a new mutex.
+        ///
+        /// - Note: `pthread_mutex_init` can only fail here with `ENOMEM` or
+        ///   `EAGAIN` (default attributes are always valid), both of which
+        ///   mean the process cannot create any more synchronization
+        ///   primitives. There is no useful recovery at a non-throwing,
+        ///   value-type initializer used pervasively as `Mutex()` (including
+        ///   from non-throwing thread-body closures), so failure is reported
+        ///   loudly via `precondition` rather than silently leaving
+        ///   every subsequent lock operation running against an
+        ///   uninitialized mutex.
         public init() {
             self.mutex = pthread_mutex_t()
             var attr = pthread_mutexattr_t()
             unsafe pthread_mutexattr_init(&attr)
-            unsafe pthread_mutex_init(&self.mutex, &attr)
+            let result = unsafe pthread_mutex_init(&self.mutex, &attr)
             unsafe pthread_mutexattr_destroy(&attr)
+            precondition(result == 0, "pthread_mutex_init failed with code \(result)")
         }
 
         deinit {
@@ -96,8 +107,15 @@ extension ISO_9945.Kernel.Thread.Mutex {
     /// - May silently corrupt internal state
     /// - May cause other threads to deadlock or crash
     /// - Behavior is platform-specific and unpredictable
+    ///
+    /// - Note: `pthread_mutex_unlock` failure (`EPERM`, `EINVAL`) means the
+    ///   precondition above was already violated by the caller. This is a
+    ///   non-throwing entry point — including from non-throwing thread-body
+    ///   closures via `ISO_9945.Kernel.Thread.create` — so the failure is
+    ///   reported via `precondition` rather than silently discarded.
     public func unlock() {
-        unsafe pthread_mutex_unlock(&mutex)
+        let result = unsafe pthread_mutex_unlock(&mutex)
+        precondition(result == 0, "pthread_mutex_unlock failed with code \(result)")
     }
 
     /// Accessor for lock operation variants.
@@ -111,15 +129,28 @@ extension ISO_9945.Kernel.Thread.Mutex {
 
 extension ISO_9945.Kernel.Thread.Mutex {
     /// Internal blocking lock implementation.
+    ///
+    /// - Note: `pthread_mutex_lock` on a default (non-error-checking) mutex
+    ///   only fails with `EINVAL` (uninitialized/destroyed mutex) or
+    ///   `EDEADLK` on platforms whose default type happens to detect
+    ///   self-deadlock. Both are programmer-error invariant violations, not
+    ///   recoverable runtime conditions, and this is a non-throwing entry
+    ///   point reachable from non-throwing thread-body closures, so the
+    ///   failure is reported via `precondition` rather than silently
+    ///   discarded.
     func acquireBlocking() {
-        unsafe pthread_mutex_lock(&mutex)
+        let result = unsafe pthread_mutex_lock(&mutex)
+        precondition(result == 0, "pthread_mutex_lock failed with code \(result)")
     }
 
     /// Internal non-blocking lock attempt.
     ///
-    /// - Returns: `true` if the lock was acquired, `false` on contention.
-    func tryAcquire() -> Bool {
-        unsafe pthread_mutex_trylock(&mutex) == 0
+    /// - Returns: The raw `pthread_mutex_trylock` result: `0` on success,
+    ///   `EBUSY` if another thread holds the lock, or another errno value
+    ///   (e.g. `EINVAL`, `EAGAIN`) for a genuine misuse the caller did not
+    ///   verify — kept distinct from contention by `Lock.immediate()`.
+    func tryAcquire() -> Int32 {
+        unsafe pthread_mutex_trylock(&mutex)
     }
 
     /// Executes a closure while holding the mutex.

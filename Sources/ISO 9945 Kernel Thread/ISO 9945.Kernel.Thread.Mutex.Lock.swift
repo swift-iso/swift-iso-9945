@@ -35,8 +35,14 @@ extension ISO_9945.Kernel.Thread.Mutex {
 extension ISO_9945.Kernel.Thread.Mutex.Lock {
     /// Error thrown when a non-blocking lock cannot be acquired.
     public enum Error: Swift.Error, Sendable {
-        /// The mutex is held by another thread.
+        /// The mutex is held by another thread (`EBUSY`).
         case contention
+
+        /// `pthread_mutex_trylock` failed for a reason other than
+        /// contention (e.g. `EINVAL` uninitialized mutex, `EAGAIN`
+        /// recursion limit) — a misuse the caller did not verify, not
+        /// "held by another thread".
+        case platform(Error_Primitives.Error.Code)
     }
 }
 
@@ -60,10 +66,15 @@ extension ISO_9945.Kernel.Thread.Mutex.Lock {
     /// ## Threading
     /// Never blocks. Returns immediately regardless of mutex state.
     ///
-    /// - Throws: `Error.contention` if the mutex is held by another thread.
+    /// - Throws: `Error.contention` if the mutex is held by another thread,
+    ///   or `Error.platform` if `pthread_mutex_trylock` failed for any
+    ///   other reason.
     public func immediate() throws(Error) {
-        guard mutex.tryAcquire() else {
-            throw .contention
+        let result = mutex.tryAcquire()
+        guard result != 0 else { return }
+        guard result == EBUSY else {
+            throw .platform(.posix(result))
         }
+        throw .contention
     }
 }

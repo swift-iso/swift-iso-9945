@@ -100,7 +100,7 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
         }
 
         done.store(true, ordering: .releasing)
-        handle.join()
+        try handle.join()
 
         #expect(tryResult.load(ordering: .acquiring) == false)
     }
@@ -184,7 +184,7 @@ extension POSIXThreadSynchronizationTests.Integration {
         condition.signal()
         mutex.unlock()
 
-        handle.join()
+        try handle.join()
 
         #expect(waiterWoken.load(ordering: .acquiring) == true)
     }
@@ -231,9 +231,9 @@ extension POSIXThreadSynchronizationTests.Integration {
         condition.broadcast()
         mutex.unlock()
 
-        handle1.join()
-        handle2.join()
-        handle3.join()
+        try handle1.join()
+        try handle2.join()
+        try handle3.join()
 
         #expect(waitersWoken.load(ordering: .acquiring) == numWaiters)
     }
@@ -251,7 +251,7 @@ extension POSIXThreadSynchronizationTests.Integration {
             mutex.unlock()
         }
 
-        handle.join()
+        try handle.join()
 
         #expect(timedOut.load(ordering: .acquiring) == true)
     }
@@ -272,7 +272,7 @@ extension POSIXThreadSynchronizationTests.Integration {
                     mutex.unlock()
                 }
             }
-            handle.join()
+            try handle.join()
         }
 
         #expect(counter.load(ordering: .acquiring) == numThreads * iterations)
@@ -315,8 +315,8 @@ extension POSIXThreadSynchronizationTests.Integration {
             mutex.unlock()
         }
 
-        ping.join()
-        pong.join()
+        try ping.join()
+        try pong.join()
 
         #expect(pingCount.load(ordering: .acquiring) == maxRounds)
         #expect(pongCount.load(ordering: .acquiring) == maxRounds)

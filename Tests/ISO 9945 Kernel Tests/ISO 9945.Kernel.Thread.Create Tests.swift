@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
         let handle = try ISO_9945.Kernel.Thread.create {
             executed.store(true, ordering: .releasing)
         }
-        handle.join()
+        try handle.join()
         #expect(executed.load(ordering: .acquiring) == true)
     }
 
@@ -51,7 +51,7 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
             completed.store(true, ordering: .releasing)
         }
 
-        handle.join()
+        try handle.join()
         #expect(completed.load(ordering: .acquiring) == true)
     }
 
@@ -64,7 +64,7 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
         // From main thread, isCurrent should be false
         #expect(handle.isCurrent == false)
 
-        handle.join()
+        try handle.join()
     }
 }
 
@@ -81,7 +81,7 @@ extension ISO_9945.Kernel.Thread.Test.Integration {
             let handle = try ISO_9945.Kernel.Thread.create {
                 counter.wrappingAdd(1, ordering: .relaxed)
             }
-            handle.join()
+            try handle.join()
         }
 
         #expect(counter.load(ordering: .acquiring) == numThreads)
@@ -95,7 +95,7 @@ extension ISO_9945.Kernel.Thread.Test.Integration {
             started.store(true, ordering: .releasing)
         }
 
-        handle.detach()
+        try handle.detach()
 
         // Give the thread time to run
         var iterations = 0

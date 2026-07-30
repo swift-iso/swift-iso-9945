@@ -52,9 +52,15 @@ extension ISO_9945.Kernel.Thread.Handle {
     ///
     /// - Precondition: Must NOT be called from the same thread (deadlock).
     /// - Note: Must be called exactly once. The `~Copyable` constraint enforces this.
+    /// - Throws: `ISO_9945.Kernel.Thread.Error.join` if `pthread_join` reports
+    ///   a failure (e.g. `EDEADLK` joining self, `EINVAL` already detached or
+    ///   joined, `ESRCH` no such thread).
 
-    public consuming func join() {
-        _ = unsafe pthread_join(rawValue, nil)
+    public consuming func join() throws(ISO_9945.Kernel.Thread.Error) {
+        let result = unsafe pthread_join(rawValue, nil)
+        guard result == 0 else {
+            throw .join(.posix(result))
+        }
     }
 
     /// Detaches the thread, allowing it to run independently.
@@ -62,9 +68,16 @@ extension ISO_9945.Kernel.Thread.Handle {
     /// After detaching, resources are automatically cleaned up when the thread exits.
     /// This is a consuming operation - the handle cannot be used after calling `detach()`.
     /// Calls `pthread_detach`.
+    ///
+    /// - Throws: `ISO_9945.Kernel.Thread.Error.detach` if `pthread_detach`
+    ///   reports a failure (e.g. `EINVAL` already detached, `ESRCH` no such
+    ///   thread).
 
-    public consuming func detach() {
-        _ = unsafe pthread_detach(rawValue)
+    public consuming func detach() throws(ISO_9945.Kernel.Thread.Error) {
+        let result = unsafe pthread_detach(rawValue)
+        guard result == 0 else {
+            throw .detach(.posix(result))
+        }
     }
 
     /// Check if this handle refers to the current thread.
