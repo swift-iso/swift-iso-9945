@@ -36,6 +36,28 @@ extension ISO_9945.Kernel.Lock {
         ///
         /// This is resource exhaustion, not contention.
         case unavailable
+
+        /// Lock acquisition timed out.
+        ///
+        /// Thrown when `.deadline(...)` acquisition cannot acquire the lock
+        /// before the deadline expires. Distinct from ``contention``: the
+        /// lock may or may not still be held when the deadline expires.
+        case timedOut
+
+        /// The blocking lock wait was interrupted by a signal.
+        /// - POSIX: `EINTR` on `F_SETLKW`
+        ///
+        /// The lock was not acquired; the caller may retry.
+        case interrupted
+
+        /// The requested byte range is invalid (end precedes start).
+        case invalidRange(start: Int64, end: Int64)
+
+        /// A platform error the lock vocabulary does not classify.
+        ///
+        /// Carries the platform code so a misuse errno (`EBADF`, `EINVAL`,
+        /// `EOVERFLOW`, …) stays distinguishable from contention.
+        case platform(code: Error_Primitives.Error.Code)
     }
 }
 
@@ -45,19 +67,12 @@ extension ISO_9945.Kernel.Lock.Error: CustomStringConvertible {
         case .contention: return "lock contention"
         case .deadlock: return "deadlock detected"
         case .unavailable: return "no locks available"
+        case .timedOut: return "lock acquisition timed out"
+        case .interrupted: return "lock wait interrupted by a signal"
+        case .invalidRange(let start, let end): return "invalid lock range: start \(start), end \(end)"
+        case .platform(let code): return "platform error \(code)"
         }
     }
-}
-
-extension ISO_9945.Kernel.Lock.Error {
-    /// Lock acquisition timed out.
-    ///
-    /// Thrown when `.deadline(...)` acquisition cannot acquire the lock
-    /// before the deadline expires.
-    public static let timedOut = Self.contention  // Reuse contention semantically
-
-    /// Lock would block (for `.try` acquisition).
-    public static let wouldBlock = Self.contention
 }
 
 // MARK: - Platform Bindings

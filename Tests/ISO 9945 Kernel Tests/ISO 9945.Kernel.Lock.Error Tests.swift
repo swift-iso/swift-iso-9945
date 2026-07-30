@@ -56,22 +56,17 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     }
 }
 
-// MARK: - Static Properties Tests
+// MARK: - Case Distinctness Tests
 
 extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     @Test
-    func `timedOut equals contention`() {
-        #expect(ISO_9945.Kernel.Lock.Error.timedOut == ISO_9945.Kernel.Lock.Error.contention)
+    func `timedOut is distinct from contention`() {
+        #expect(ISO_9945.Kernel.Lock.Error.timedOut != ISO_9945.Kernel.Lock.Error.contention)
     }
 
     @Test
-    func `wouldBlock equals contention`() {
-        #expect(ISO_9945.Kernel.Lock.Error.wouldBlock == ISO_9945.Kernel.Lock.Error.contention)
-    }
-
-    @Test
-    func `timedOut and wouldBlock are equal`() {
-        #expect(ISO_9945.Kernel.Lock.Error.timedOut == ISO_9945.Kernel.Lock.Error.wouldBlock)
+    func `interrupted is distinct from contention`() {
+        #expect(ISO_9945.Kernel.Lock.Error.interrupted != ISO_9945.Kernel.Lock.Error.contention)
     }
 }
 
@@ -147,6 +142,8 @@ extension ISO_9945.Kernel.Lock.Error.Test.EdgeCase {
             .contention,
             .deadlock,
             .unavailable,
+            .timedOut,
+            .interrupted,
         ]
 
         for i in 0..<cases.count {
@@ -162,6 +159,8 @@ extension ISO_9945.Kernel.Lock.Error.Test.EdgeCase {
             .contention,
             .deadlock,
             .unavailable,
+            .timedOut,
+            .interrupted,
         ]
 
         for error in cases {
@@ -175,6 +174,8 @@ extension ISO_9945.Kernel.Lock.Error.Test.EdgeCase {
             ISO_9945.Kernel.Lock.Error.contention.description,
             ISO_9945.Kernel.Lock.Error.deadlock.description,
             ISO_9945.Kernel.Lock.Error.unavailable.description,
+            ISO_9945.Kernel.Lock.Error.timedOut.description,
+            ISO_9945.Kernel.Lock.Error.interrupted.description,
         ]
 
         let unique = Set(descriptions)

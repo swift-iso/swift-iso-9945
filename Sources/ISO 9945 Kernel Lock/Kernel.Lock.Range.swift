@@ -37,10 +37,12 @@ extension ISO_9945.Kernel.Lock {
     /// - ``Kernel/Lock/lock(_:range:kind:)``
     /// - ``Kernel/Lock/unlock(_:range:)``
     public enum Range: Sendable, Equatable, Hashable {
-        /// Locks the entire file.
+        /// Locks the entire file, including any bytes appended later.
         ///
-        /// Equivalent to `.bytes(start: 0, end: .max)`. Use this for simple
-        /// mutual exclusion when you don't need fine-grained locking.
+        /// Emits `l_len == 0` ("lock from start to end of file"), which
+        /// covers future growth. `.bytes(start: 0, end: .max)` is a bounded
+        /// range that does not. Use `.file` for simple mutual exclusion
+        /// when you don't need fine-grained locking.
         case file
 
         /// Locks a specific byte range.
@@ -70,8 +72,14 @@ extension ISO_9945.Kernel.Lock {
             length: ISO_9945.Kernel.File.Size,
             granularity: Memory.Allocation.Granularity
         ) {
-            let endOffset = offset + length
-            let roundedEnd = granularity.underlying.alignUp(endOffset)
+            // Saturate rather than trap: a sum beyond Int64.max clamps to
+            // the maximum representable offset ("to end of file" in effect).
+            let (sum, overflow) = offset.underlying.addingReportingOverflow(length.underlying)
+            guard !overflow else {
+                self = .bytes(start: offset, end: .max)
+                return
+            }
+            let roundedEnd = granularity.underlying.alignUp(ISO_9945.Kernel.File.Offset(sum))
             self = .bytes(start: offset, end: roundedEnd)
         }
     }
@@ -85,6 +93,9 @@ extension ISO_9945.Kernel.Lock.Range {
     ///   - length: The number of bytes to lock.
     @inlinable
     public static func bytes(start: ISO_9945.Kernel.File.Offset, length: ISO_9945.Kernel.File.Size) -> Self {
-        .bytes(start: start, end: start + length)
+        // Saturate rather than trap: a sum beyond Int64.max clamps to the
+        // maximum representable offset ("to end of file" in effect).
+        let (sum, overflow) = start.underlying.addingReportingOverflow(length.underlying)
+        return .bytes(start: start, end: overflow ? .max : ISO_9945.Kernel.File.Offset(sum))
     }
 }

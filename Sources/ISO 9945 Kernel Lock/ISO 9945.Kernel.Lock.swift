@@ -46,18 +46,35 @@ extension ISO_9945.Kernel.Lock {
     ///   - range: The byte range to lock.
     ///   - kind: The lock kind (shared or exclusive).
     /// - Throws: `Error.deadlock` if a deadlock is detected,
-    ///           `Error.unavailable` if the system lock table is exhausted.
+    ///           `Error.unavailable` if the system lock table is exhausted,
+    ///           `Error.interrupted` if a signal interrupted the wait,
+    ///           `Error.invalidRange` if the range's end precedes its start,
+    ///           `Error.platform` for any other platform failure.
     package static func lock(
         fd: Int32,
         range: ISO_9945.Kernel.Lock.Range,
         kind: ISO_9945.Kernel.Lock.Kind
     ) throws(ISO_9945.Kernel.Lock.Error) {
+        guard try validate(range) else { return }  // empty range locks nothing
         var fl = makeFlock(range: range, kind: kind)
 
         let result = unsafe fcntl(fd, F_SETLKW, &fl)
         guard result != -1 else {
             throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
         }
+    }
+
+    /// Validates a byte range.
+    ///
+    /// - Returns: `false` for an empty range (which locks nothing — POSIX
+    ///   would read `l_len == 0` as "to end of file"), `true` otherwise.
+    /// - Throws: `Error.invalidRange` when the end precedes the start.
+    static func validate(_ range: ISO_9945.Kernel.Lock.Range) throws(ISO_9945.Kernel.Lock.Error) -> Bool {
+        guard case .bytes(let start, let end) = range else { return true }
+        if end.underlying < start.underlying {
+            throw .invalidRange(start: start.underlying, end: end.underlying)
+        }
+        return end.underlying != start.underlying
     }
 
     /// Releases a lock on a byte range.
@@ -83,6 +100,7 @@ extension ISO_9945.Kernel.Lock {
         fd: Int32,
         range: ISO_9945.Kernel.Lock.Range
     ) throws(ISO_9945.Kernel.Lock.Error) {
+        guard try validate(range) else { return }  // empty range unlocks nothing
         var fl = flock()
         fl.l_type = Int16(F_UNLCK)
         fl.l_whence = Int16(SEEK_SET)
@@ -178,6 +196,7 @@ extension ISO_9945.Kernel.Lock.Immediate {
         range: ISO_9945.Kernel.Lock.Range,
         kind: ISO_9945.Kernel.Lock.Kind
     ) throws(ISO_9945.Kernel.Lock.Error) {
+        guard try ISO_9945.Kernel.Lock.validate(range) else { return }  // empty range locks nothing
         var fl = ISO_9945.Kernel.Lock.makeFlock(range: range, kind: kind)
 
         let result = unsafe fcntl(fd, F_SETLK, &fl)
@@ -217,12 +236,18 @@ extension ISO_9945.Kernel.Lock.Error {
                 self = .deadlock
             case ENOLCK:
                 self = .unavailable
-            default:
-                // EAGAIN/EACCES are handled in Immediate.lock
+            case EINTR:
+                self = .interrupted
+            case EAGAIN, EACCES:
+                // POSIX.1-2017 fcntl: "[EACCES] or [EAGAIN]" for a held lock.
                 self = .contention
+            default:
+                // Misuse errnos (EBADF, EINVAL, EOVERFLOW, …) stay
+                // distinguishable from contention.
+                self = .platform(code: code)
             }
         case .win32:
-            self = .contention
+            self = .platform(code: code)
         }
     }
 }

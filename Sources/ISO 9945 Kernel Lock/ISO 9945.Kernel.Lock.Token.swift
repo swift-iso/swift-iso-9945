@@ -172,7 +172,7 @@ extension ISO_9945.Kernel.Lock.Token {
             // Check deadline first
             let now = Clock.Continuous.now
             if now >= deadline {
-                throw .contention
+                throw .timedOut
             }
 
             // Try to acquire
@@ -182,15 +182,18 @@ extension ISO_9945.Kernel.Lock.Token {
                 // If deadline passed, unlock and throw to maintain invariant:
                 // "success means lock was acquired before deadline"
                 if Clock.Continuous.now >= deadline {
-                    try? ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
-                    throw ISO_9945.Kernel.Lock.Error.contention
+                    // If the compensating unlock fails, the lock is still
+                    // held: surface that failure rather than reporting a
+                    // timeout the caller would read as "never acquired".
+                    try ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
+                    throw ISO_9945.Kernel.Lock.Error.timedOut
                 }
                 return
             } catch {
                 switch error {
                 case .contention:
                     break  // Lock held, continue polling
-                case .deadlock, .unavailable:
+                default:
                     throw error
                 }
             }
@@ -198,7 +201,7 @@ extension ISO_9945.Kernel.Lock.Token {
             // Calculate sleep time (don't overshoot deadline)
             let remaining = deadline - Clock.Continuous.now
             if remaining <= .zero {
-                throw .contention
+                throw .timedOut
             }
 
             let sleepDuration = min(backoff, remaining)

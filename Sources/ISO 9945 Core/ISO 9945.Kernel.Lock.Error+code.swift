@@ -18,12 +18,16 @@ extension ISO_9945.Kernel.Lock.Error {
     /// - Returns: A lock error, or `nil` if not applicable.
     @inlinable
     public init?(code: Error_Primitives.Error.Code) {
-        if code == Error_Primitives.Error.Code.POSIX.EAGAIN {
+        if code == Error_Primitives.Error.Code.POSIX.EAGAIN || code == Error_Primitives.Error.Code.POSIX.EACCES {
+            // POSIX.1-2017 specifies the fcntl F_SETLK held-lock failure
+            // as "[EACCES] or [EAGAIN]"; both mean contention here.
             self = .contention
         } else if code == Error_Primitives.Error.Code.POSIX.EDEADLK {
             self = .deadlock
         } else if code == Error_Primitives.Error.Code.POSIX.ENOLCK {
             self = .unavailable
+        } else if code == Error_Primitives.Error.Code.POSIX.EINTR {
+            self = .interrupted
         } else {
             return nil
         }
