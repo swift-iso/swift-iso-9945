@@ -174,9 +174,26 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
             let sigactionPtr = unsafe action.sa_sigaction
         #endif
 
+        // SIG_DFL and SIG_IGN are sentinel handler values (typically 0 and 1)
+        // that may be installed together with SA_SIGINFO — sa_handler and
+        // sa_sigaction are the same union storage, so the sentinel check
+        // applies to either arm's raw bit pattern before deciding which arm
+        // actually holds a callable handler. Checking this only on the
+        // non-SA_SIGINFO branch (as before) let a SIG_IGN/SIG_DFL
+        // disposition installed with SA_SIGINFO read back as `.customInfo`
+        // carrying the sentinel bit pattern as if it were a function
+        // pointer.
+        let sigDflRaw = unsafe unsafeBitCast(SIG_DFL, to: Int.self)
+        let sigIgnRaw = unsafe unsafeBitCast(SIG_IGN, to: Int.self)
+
         if flags.contains(.sigInfo) {
             // SA_SIGINFO set, use sa_sigaction
-            if let ptr = unsafe sigactionPtr {
+            let handlerRaw = unsafe unsafeBitCast(sigactionPtr, to: Int.self)
+            if handlerRaw == sigDflRaw {
+                unsafe (handler = .default)
+            } else if handlerRaw == sigIgnRaw {
+                unsafe (handler = .ignore)
+            } else if let ptr = unsafe sigactionPtr {
                 unsafe (handler = .customInfo(ptr))
             } else {
                 // Shouldn't happen, but fallback to default
@@ -184,10 +201,7 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
             }
         } else {
             // Check for special handler values using raw pointer comparison
-            // SIG_DFL and SIG_IGN are special constants (typically 0 and 1)
             let handlerRaw = unsafe unsafeBitCast(handlerPtr, to: Int.self)
-            let sigDflRaw = unsafe unsafeBitCast(SIG_DFL, to: Int.self)
-            let sigIgnRaw = unsafe unsafeBitCast(SIG_IGN, to: Int.self)
 
             if handlerRaw == sigDflRaw {
                 unsafe (handler = .default)
