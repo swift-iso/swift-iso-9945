@@ -30,11 +30,12 @@ extension Error_Primitives.Error.Code {
     ///
     /// ## Platform Differences
     ///
-    /// Some errno values differ between platforms (Darwin vs Linux).
-    /// Where values differ, both platform-specific constants are provided:
-    /// - `ELOOP_darwin`, `ELOOP_linux`
-    /// - `ENOTEMPTY_darwin`, `ENOTEMPTY_linux`
-    /// - `ENAMETOOLONG_darwin`, `ENAMETOOLONG_linux`
+    /// Some errno values differ between platforms (Darwin vs Linux vs OpenBSD).
+    /// Where values differ, a single constant of the standard name (`ELOOP`,
+    /// `ENOTEMPTY`, `ENAMETOOLONG`, `EAGAIN`, …) is declared per platform under
+    /// conditional compilation, so `.POSIX.ELOOP` always carries the value of
+    /// the platform being compiled for. The `is*` predicates (`isELOOP(_:)`,
+    /// `isEAGAIN(_:)`, …) are equivalent tests spelled as functions.
     public enum POSIX {}
 }
 
@@ -289,97 +290,77 @@ extension Error_Primitives.Error.Code.POSIX {
     }
 #endif
 
-// MARK: - Cross-Platform Matching Helpers
+// MARK: - Platform-Correct Matching Helpers
 
 extension Error_Primitives.Error.Code.POSIX {
-    /// Returns `true` if the code represents ELOOP on any platform.
+    /// Returns `true` if the code is this platform's `ELOOP`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
     @inlinable
     public static func isELOOP(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(40), .posix(62):  // Linux 40, Darwin/OpenBSD 62
-            return true
-        default:
-            return false
-        }
+        code == Self.ELOOP
     }
 
-    /// Returns `true` if the code represents ENOTEMPTY on any platform.
+    /// Returns `true` if the code is this platform's `ENOTEMPTY`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
     @inlinable
     public static func isENOTEMPTY(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(39), .posix(66):  // Linux 39, Darwin/OpenBSD 66
-            return true
-        default:
-            return false
-        }
+        code == Self.ENOTEMPTY
     }
 
-    /// Returns `true` if the code represents ENAMETOOLONG on any platform.
+    /// Returns `true` if the code is this platform's `ENAMETOOLONG`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
     @inlinable
     public static func isENAMETOOLONG(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(36), .posix(63):  // Linux 36, Darwin/OpenBSD 63
-            return true
-        default:
-            return false
-        }
+        code == Self.ENAMETOOLONG
     }
 
-    /// Returns `true` if the code represents EAGAIN/EWOULDBLOCK on any platform.
+    /// Returns `true` if the code is this platform's `EAGAIN`/`EWOULDBLOCK`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
+    /// `EAGAIN` and `EWOULDBLOCK` share one value on every supported platform.
     @inlinable
     public static func isEAGAIN(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(11), .posix(35):  // Linux 11, Darwin/OpenBSD 35
-            return true
-        default:
-            return false
-        }
+        code == Self.EAGAIN || code == Self.EWOULDBLOCK
     }
 
-    /// Returns `true` if the code represents EDQUOT on any platform.
+    /// Returns `true` if the code is this platform's `EDQUOT`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
     @inlinable
     public static func isEDQUOT(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(69), .posix(122):  // Darwin/OpenBSD 69, Linux 122
-            return true
-        default:
-            return false
-        }
+        code == Self.EDQUOT
     }
 
-    /// Returns `true` if the code represents ECONNRESET on any platform.
+    /// Returns `true` if the code is this platform's `ECONNRESET`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
     @inlinable
     public static func isECONNRESET(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(54), .posix(104):  // Darwin/OpenBSD 54, Linux 104
-            return true
-        default:
-            return false
-        }
+        code == Self.ECONNRESET
     }
 
-    /// Returns `true` if the code represents ENOTSUP on any platform.
+    /// Returns `true` if the code is this platform's `ENOTSUP`.
     ///
-    /// Use this for cross-platform matching when the value differs by platform.
+    /// An errno captured in this process is a value in this platform's
+    /// numbering, so the comparison is against the single platform-correct
+    /// constant — never against a union of other platforms' values.
     @inlinable
     public static func isENOTSUP(_ code: Error_Primitives.Error.Code) -> Bool {
-        switch code {
-        case .posix(45), .posix(91), .posix(95):  // Darwin 45, OpenBSD 91, Linux 95
-            return true
-        default:
-            return false
-        }
+        code == Self.ENOTSUP
     }
 }
