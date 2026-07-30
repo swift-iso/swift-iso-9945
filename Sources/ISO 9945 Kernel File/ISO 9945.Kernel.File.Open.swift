@@ -71,7 +71,13 @@ extension ISO_9945.Kernel.File.Open {
     ) throws(ISO_9945.Kernel.File.Open.Error) -> ISO_9945.Kernel.Descriptor {
         let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
-        // Convert Mode to POSIX access flags at syscall boundary
+        // Convert Mode to POSIX access flags at syscall boundary.
+        // (false, false) requests neither read nor write access — an
+        // unrepresentable combination in O_RDONLY/O_WRONLY/O_RDWR — and is
+        // rejected rather than silently promoted to O_RDONLY.
+        guard mode.read || mode.write else {
+            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+        }
         let accessMode: Int32 =
             switch (mode.read, mode.write) {
             case (true, false): O_RDONLY

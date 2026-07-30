@@ -70,7 +70,13 @@ extension Memory.Shared {
         options: Memory.Shared.Options = [],
         permissions: ISO_9945.Kernel.File.Permissions = .ownerReadWrite
     ) throws(Memory.Shared.Error) -> Int32 {
-        // Convert Access to POSIX flags at syscall boundary
+        // Convert Access to POSIX flags at syscall boundary.
+        // (false, false) requests neither read nor write access — an
+        // unrepresentable combination in O_RDONLY/O_WRONLY/O_RDWR — and is
+        // rejected rather than silently promoted to O_RDONLY.
+        guard access.read || access.write else {
+            throw .open(.posix(EINVAL))
+        }
         let accessMode: Int32 =
             switch (access.read, access.write) {
             case (true, false): O_RDONLY
