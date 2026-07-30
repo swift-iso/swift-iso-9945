@@ -51,7 +51,7 @@ extension ISO_9945.Kernel.User.Login {
         while true {
             var buffer = [CChar](repeating: 0, count: bufferSize)
             let rc = unsafe buffer.withUnsafeMutableBufferPointer { bufferPtr in
-                unsafe getlogin_r(bufferPtr.baseAddress, numericCast(bufferPtr.count))
+                unsafe getlogin_r(bufferPtr.baseAddress!, numericCast(bufferPtr.count))
             }
 
             if rc == 0 {
