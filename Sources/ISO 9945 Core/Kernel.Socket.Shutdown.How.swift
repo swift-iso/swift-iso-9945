@@ -11,6 +11,12 @@
 
 extension ISO_9945.Kernel.Socket.Shutdown {
     /// Specifies which half of the connection to shut down.
+    ///
+    /// POSIX.1-2017 `<sys/socket.h>` defines `SHUT_RD`/`SHUT_WR`/`SHUT_RDWR`
+    /// as symbolic constants only; it does not fix their numeric values.
+    /// The raw values below are not a spec guarantee — they are the value
+    /// every platform this package supports (Darwin, Linux, the BSDs)
+    /// happens to agree on in practice.
     public enum How: Int32, Sendable {
         /// Shut down the read side of the connection.
         case read = 0  // SHUT_RD

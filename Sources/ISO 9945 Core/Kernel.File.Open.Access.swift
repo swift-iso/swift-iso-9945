@@ -35,8 +35,11 @@ extension ISO_9945.Kernel.File.Open {
 extension ISO_9945.Kernel.File.Open.Access {
     /// The POSIX raw value for this access mode.
     ///
-    /// These values are standardized by POSIX and identical across
-    /// all conforming platforms:
+    /// POSIX.1-2017 `<fcntl.h>` defines `O_RDONLY`/`O_WRONLY`/`O_RDWR` as
+    /// symbolic constants only; it does not fix their numeric values. The
+    /// literals below are not a spec guarantee — they are the value every
+    /// platform this package supports (Darwin, Linux, the BSDs) happens
+    /// to agree on in practice:
     /// - `readOnly`: 0 (O_RDONLY)
     /// - `writeOnly`: 1 (O_WRONLY)
     /// - `readWrite`: 2 (O_RDWR)
