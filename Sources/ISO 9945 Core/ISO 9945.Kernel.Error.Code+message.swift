@@ -29,19 +29,14 @@ extension Error_Primitives.Error.Code {
         switch self {
         case .posix(let rawValue):
             var buffer = [CChar](repeating: 0, count: 256)
-            #if canImport(Glibc)
-                // glibc exposes the GNU variant: returns a pointer to the
-                // message, which may be the supplied buffer or a static
-                // immutable string; either is safe to read here.
-                let message = unsafe strerror_r(rawValue, &buffer, buffer.count)
-                return unsafe message.map { unsafe Swift.String(cString: $0) }
-            #else
-                // XSI variant: fills the supplied buffer and returns 0 on
-                // success.
-                let result = unsafe strerror_r(rawValue, &buffer, buffer.count)
-                guard result == 0 else { return nil }
-                return unsafe buffer.withUnsafeBufferPointer { unsafe Swift.String(cString: $0.baseAddress!) }
-            #endif
+            // The XSI variant, which every supported libc exposes to Swift:
+            // it fills the supplied buffer and returns 0 on success, or an
+            // errno (EINVAL for an unknown code, ERANGE for a short buffer).
+            // glibc's GNU variant, which returns a pointer instead, is not
+            // the prototype the Glibc module surfaces.
+            let result = unsafe strerror_r(rawValue, &buffer, buffer.count)
+            guard result == 0 else { return nil }
+            return unsafe buffer.withUnsafeBufferPointer { unsafe Swift.String(cString: $0.baseAddress!) }
         case .win32:
             return nil
         }
