@@ -36,9 +36,6 @@ extension ISO_9945.Kernel.File {
 // MARK: - Size Constants
 
 extension ISO_9945.Kernel.File.Size {
-    // Zero bytes.
-    //    public static let zero: Self = 0
-
     /// One kilobyte (1024 bytes).
     public static let kilobyte: Self = Self(1024)
 
@@ -79,9 +76,13 @@ extension ISO_9945.Kernel.File.Size {
     }
 
     /// Creates a file size from a UInt64 value.
+    ///
+    /// - Precondition: `value` must be representable as `Int64`.
+    ///   A size is a magnitude; no conversion may produce a negative value.
     @inlinable
     public init(_ value: UInt64) {
-        self.init(Int64(bitPattern: value))
+        precondition(value <= UInt64(Int64.max), "File.Size cannot represent \(value); it exceeds Int64.max")
+        self.init(Int64(value))
     }
 
     /// Creates a file size from a file delta.
