@@ -110,39 +110,46 @@ extension ISO_9945.Kernel.Signal.Information {
     ///
     /// - POSIX: `si_pid`
     public var sender: ISO_9945.Kernel.Process.ID? {
+        let signo = unsafe cValue.si_signo
         let code = unsafe cValue.si_code
 
-        #if canImport(Darwin)
-            // Darwin siginfo_t exposes si_pid as a direct scalar field.
+        // si_code is only meaningful relative to si_signo: CLD_EXITED,
+        // SEGV_MAPERR, BUS_ADRALN, ILL_ILLOPC, and FPE_INTDIV are all
+        // numerically 1 (and further codes collide the same way), so a
+        // SIGSEGV/SIGBUS/SIGILL/SIGFPE fault can present a code that
+        // matches a CLD_* case here. si_signo is checked first so this
+        // accessor only answers for a signal it can legitimately describe.
+        let isUserOrQueue = code == Int32(SI_USER) || code == Int32(SI_QUEUE)
+        var isChildCode = false
+        if signo == Int32(SIGCHLD) {
             switch code {
-            case Int32(SI_USER), Int32(SI_QUEUE),
-                Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
-                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
+            case Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
+                isChildCode = true
             default:
-                return nil
+                isChildCode = false
             }
+        }
+
+        guard isUserOrQueue || isChildCode else { return nil }
+
+        #if canImport(Darwin)
+            // Darwin siginfo_t exposes si_pid as a direct scalar field —
+            // no union arm to misread, but still gated above so this only
+            // answers for SI_USER/SI_QUEUE or SIGCHLD's CLD_* codes.
+            return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
         #elseif canImport(Glibc)
             // glibc siginfo_t uses the _sifields union; Swift's C importer
             // does not expand libc's `#define si_pid …` macro, so we reach
-            // the union branch appropriate to the si_code class.
-            switch code {
-            case Int32(SI_USER), Int32(SI_QUEUE):
+            // the union branch appropriate to the now-verified si_signo class.
+            if isUserOrQueue {
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._kill.si_pid)
-            case Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
+            } else {
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._sigchld.si_pid)
-            default:
-                return nil
             }
         #elseif canImport(Musl)
             // musl siginfo_t lays out pid/uid under __si_fields.__si_common.__first.__piduid
             // for both SI_USER/SI_QUEUE and CLD_* (single sibling struct).
-            switch code {
-            case Int32(SI_USER), Int32(SI_QUEUE),
-                Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
-                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid)
-            default:
-                return nil
-            }
+            return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid)
         #endif
     }
 
@@ -170,41 +177,52 @@ extension ISO_9945.Kernel.Signal.Information {
     ///
     /// - POSIX: `si_addr`
     public var fault: UInt? {
+        let signo = unsafe cValue.si_signo
         let code = unsafe cValue.si_code
 
+        // As in `sender` above: si_code values collide numerically across
+        // signal classes (SEGV_MAPERR, BUS_ADRALN, ILL_ILLOPC, FPE_INTDIV,
+        // and CLD_EXITED are all 1), so si_signo is checked first and each
+        // code is matched only against the signal whose fault table it
+        // belongs to — a SIGCHLD carrying CLD_EXITED (1) no longer matches
+        // the SIGSEGV table's SEGV_MAPERR (also 1).
+        let matches: Bool
+        switch signo {
+        case Int32(SIGSEGV):
+            switch code {
+            case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR): matches = true
+            default: matches = false
+            }
+        case Int32(SIGBUS):
+            switch code {
+            case Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR): matches = true
+            default: matches = false
+            }
+        case Int32(SIGILL):
+            switch code {
+            case Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK): matches = true
+            default: matches = false
+            }
+        case Int32(SIGFPE):
+            switch code {
+            case Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB): matches = true
+            default: matches = false
+            }
+        default:
+            matches = false
+        }
+
+        guard matches else { return nil }
+
         #if canImport(Darwin)
-            switch code {
-            case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR),
-                Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
-                Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
-                Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
-                guard let address = unsafe cValue.si_addr else { return nil }
-                return UInt(bitPattern: address)
-            default:
-                return nil
-            }
+            guard let address = unsafe cValue.si_addr else { return nil }
+            return UInt(bitPattern: address)
         #elseif canImport(Glibc)
-            switch code {
-            case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR),
-                Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
-                Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
-                Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
-                guard let address = unsafe cValue._sifields._sigfault.si_addr else { return nil }
-                return UInt(bitPattern: address)
-            default:
-                return nil
-            }
+            guard let address = unsafe cValue._sifields._sigfault.si_addr else { return nil }
+            return UInt(bitPattern: address)
         #elseif canImport(Musl)
-            switch code {
-            case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR),
-                Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR),
-                Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK),
-                Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
-                guard let address = unsafe cValue.__si_fields.__sigfault.si_addr else { return nil }
-                return UInt(bitPattern: address)
-            default:
-                return nil
-            }
+            guard let address = unsafe cValue.__si_fields.__sigfault.si_addr else { return nil }
+            return UInt(bitPattern: address)
         #endif
     }
 }
