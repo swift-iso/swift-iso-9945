@@ -9,7 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-internal import CISO9945Shim
+#if canImport(Darwin)
+    internal import Darwin
+#elseif canImport(Glibc)
+    internal import Glibc
+#elseif canImport(Musl)
+    internal import Musl
+#endif
 
 extension ISO_9945.Glob.Expand {
     /// Options for `glob(3)` — wraps `GLOB_*` flags.
@@ -25,17 +31,17 @@ extension ISO_9945.Glob.Expand {
 
 extension ISO_9945.Glob.Expand.Options {
     /// Return on error (`GLOB_ERR`).
-    public static let err = Self(rawValue: iso9945_glob_err())
+    public static let err = Self(rawValue: GLOB_ERR)
 
     /// Append `/` to names that are directories (`GLOB_MARK`).
-    public static let mark = Self(rawValue: iso9945_glob_mark())
+    public static let mark = Self(rawValue: GLOB_MARK)
 
     /// Do not sort the results (`GLOB_NOSORT`).
-    public static let nosort = Self(rawValue: iso9945_glob_nosort())
+    public static let nosort = Self(rawValue: GLOB_NOSORT)
 
     /// If no matches, return the pattern itself (`GLOB_NOCHECK`).
-    public static let nocheck = Self(rawValue: iso9945_glob_nocheck())
+    public static let nocheck = Self(rawValue: GLOB_NOCHECK)
 
     /// Disable backslash escaping (`GLOB_NOESCAPE`).
-    public static let noescape = Self(rawValue: iso9945_glob_noescape())
+    public static let noescape = Self(rawValue: GLOB_NOESCAPE)
 }

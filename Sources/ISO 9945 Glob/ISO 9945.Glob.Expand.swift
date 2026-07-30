@@ -9,7 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-internal import CISO9945Shim
+#if canImport(Darwin)
+    internal import Darwin
+#elseif canImport(Glibc)
+    internal import Glibc
+#elseif canImport(Musl)
+    internal import Musl
+#endif
 
 // MARK: - Expand Namespace
 
@@ -39,13 +45,13 @@ extension ISO_9945.Glob {
     ) throws(Expand.Error) -> [Swift.String] {
         var gt = unsafe glob_t()
 
-        let result = unsafe iso9945_glob(
+        let result = unsafe glob(
             UnsafeRawPointer(pattern.pointer).assumingMemoryBound(to: CChar.self),
             options.rawValue,
             nil,
             &gt
         )
-        defer { unsafe iso9945_globfree(&gt) }
+        defer { unsafe globfree(&gt) }
 
         switch result {
         case 0:
@@ -60,13 +66,13 @@ extension ISO_9945.Glob {
             }
             return paths
 
-        case iso9945_glob_nomatch():
+        case GLOB_NOMATCH:
             throw .noMatch
 
-        case iso9945_glob_nospace():
+        case GLOB_NOSPACE:
             throw .noSpace
 
-        case iso9945_glob_aborted():
+        case GLOB_ABORTED:
             throw .aborted
 
         default:

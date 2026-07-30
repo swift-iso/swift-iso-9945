@@ -19,15 +19,18 @@
 // _GNU_SOURCE is required on glibc to expose FNM_CASEFOLD (POSIX Issue 8).
 // It must be defined before ANY libc header is included: <features.h> is
 // include-guarded, so a later define is a no-op. Defined here, before the
-// first include, and left defined for the rest of the translation unit:
-// undefining it after glob.h/fnmatch.h/sys/types.h have already been parsed
-// under it does not "un-leak" anything (the header guards prevent a second
-// parse), but it does make this header's view of feature-gated system
-// structs (glob_t's GNU fields, in particular) diverge from the Swift
-// toolchain's own SwiftGlibc module, which keeps _GNU_SOURCE defined for
-// its own lifetime — surfacing as a Clang-modules "not present in
-// definition" error across the module boundary. Leaving the macro defined
-// keeps both modules' view of these structs consistent.
+// first include, and left defined for the rest of the translation unit.
+//
+// This deliberately makes every feature-gated struct this header's system
+// includes can see (glibc's __USE_GNU-conditional fields) wider than the
+// Swift toolchain's own SwiftGlibc module, which does not define
+// _GNU_SOURCE. Clang's modules system requires two modules that both parse
+// the same system header to agree on its expansion, so this header must
+// never itself declare, or expose a function signature naming, a type
+// whose layout _GNU_SOURCE affects — glob_t in particular (see the Glob
+// section below, which deliberately does not include <glob.h> here for
+// this reason). A type unaffected by _GNU_SOURCE (dev_t, struct winsize,
+// the FNM_* int constants) is unaffected by which module parsed it first.
 #if !defined(_GNU_SOURCE)
 #define _GNU_SOURCE 1
 #endif
@@ -74,11 +77,10 @@ static inline uint64_t iso9945_device_make(unsigned int major_number, unsigned i
 }
 
 // ===----------------------------------------------------------------------===//
-// MARK: - Glob / Fnmatch (POSIX Issue 8)
+// MARK: - Fnmatch (POSIX Issue 8)
 // ===----------------------------------------------------------------------===//
 
 #include <fnmatch.h>
-#include <glob.h>
 
 // fnmatch constants
 static inline int iso9945_fnm_pathname(void) { return FNM_PATHNAME; }
@@ -101,28 +103,21 @@ static inline int iso9945_fnmatch(const char *pattern, const char *string, int f
     return fnmatch(pattern, string, flags);
 }
 
-// glob constants
-static inline int iso9945_glob_err(void)      { return GLOB_ERR; }
-static inline int iso9945_glob_mark(void)     { return GLOB_MARK; }
-static inline int iso9945_glob_nosort(void)   { return GLOB_NOSORT; }
-static inline int iso9945_glob_nocheck(void)  { return GLOB_NOCHECK; }
-static inline int iso9945_glob_noescape(void) { return GLOB_NOESCAPE; }
-
-// glob error codes
-static inline int iso9945_glob_nomatch(void)  { return GLOB_NOMATCH; }
-static inline int iso9945_glob_nospace(void)  { return GLOB_NOSPACE; }
-static inline int iso9945_glob_aborted(void)  { return GLOB_ABORTED; }
-
-// glob function
-static inline int iso9945_glob(const char *pattern, int flags,
-                               int (*errfunc)(const char *, int),
-                               glob_t *pglob) {
-    return glob(pattern, flags, errfunc, pglob);
-}
-
-static inline void iso9945_globfree(glob_t *pglob) {
-    globfree(pglob);
-}
+// ===----------------------------------------------------------------------===//
+// MARK: - Glob (POSIX Issue 8)
+// ===----------------------------------------------------------------------===//
+//
+// glob(3)/globfree(3) are not variadic and glob_t carries no macro Swift
+// cannot import, so this package has no shim reason to redeclare them.
+// Deliberately not wrapped here: including <glob.h> under this header's
+// permanent _GNU_SOURCE would give glob_t extra __USE_GNU-gated fields
+// (gl_readdir/gl_stat/gl_lstat) that the Swift toolchain's own SwiftGlibc
+// module — compiled without _GNU_SOURCE — does not have, and Clang's
+// modules system rejects the two disagreeing views of the same struct
+// the moment both modules are loaded together. ISO 9945 Glob calls
+// glob(3)/globfree(3) and reads GLOB_*/glob_t directly through the
+// platform module (Darwin/Glibc/Musl) instead, so only one module ever
+// declares the type.
 
 #endif /* __APPLE__ || __linux__ || __OpenBSD__ */
 
