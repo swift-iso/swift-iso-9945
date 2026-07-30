@@ -73,7 +73,15 @@
             var t = termios()
             unsafe attributes.withUnsafeStorageBytes { buffer in
                 unsafe withUnsafeMutableBytes(of: &t) { dest in
-                    unsafe dest.copyMemory(from: buffer)
+                    // Storage is a fixed 96-byte tuple, sized to fit the
+                    // largest platform's termios; the local termios here is
+                    // the current platform's true (smaller-or-equal) size.
+                    // copyMemory(from:) requires source.count <= dest.count,
+                    // so only the platform's own termios-sized prefix of
+                    // Storage is copied — the rest is this platform's unused
+                    // padding, never live termios data.
+                    let source = unsafe UnsafeRawBufferPointer(rebasing: buffer[0..<dest.count])
+                    unsafe dest.copyMemory(from: source)
                 }
             }
             let result = unsafe tcsetattr(fd, action.rawValue, &t)
@@ -127,23 +135,29 @@
         ///
         /// Raw mode disables:
         /// - Line buffering (ICANON)
-        /// - Echo (ECHO, ECHOE, ECHOK, ECHONL)
+        /// - Echo (ECHO, ECHONL) — not ECHOE/ECHOK, which this method leaves
+        ///   untouched
         /// - Signal generation (ISIG)
+        /// - Extended input processing (IEXTEN)
         /// - Input processing (BRKINT, ICRNL, INPCK, ISTRIP, IXON)
         /// - Output processing (OPOST)
-        /// - Parity checking
+        /// - Parity checking (clears PARENB; does not set it)
         ///
         /// Sets:
         /// - Character size to 8 bits (CS8)
         /// - Minimum read of 1 byte (VMIN = 1)
         /// - No timeout (VTIME = 0)
         ///
-        /// This is equivalent to `cfmakeraw()` on systems that support it.
+        /// Close to, but not identical to, `cfmakeraw()`: this method does not
+        /// touch `IGNBRK`, `PARMRK`, `INLCR`, or `IGNCR`, which `cfmakeraw()`
+        /// also clears.
         public func withRaw() -> Self {
             var t = termios()
             unsafe self.withUnsafeStorageBytes { buffer in
                 unsafe withUnsafeMutableBytes(of: &t) { dest in
-                    unsafe dest.copyMemory(from: buffer)
+                    // See the identical comment in `set(_:fd:action:)`.
+                    let source = unsafe UnsafeRawBufferPointer(rebasing: buffer[0..<dest.count])
+                    unsafe dest.copyMemory(from: source)
                 }
             }
 
