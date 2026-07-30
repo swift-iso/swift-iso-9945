@@ -16,24 +16,19 @@
 // - Variadic C functions
 // - C macros that Swift cannot import
 
-// _GNU_SOURCE is required on glibc to expose FNM_CASEFOLD (POSIX Issue 8).
-// It must be defined before ANY libc header is included: <features.h> is
-// include-guarded, so a later define is a no-op. Defined here, before the
-// first include, and left defined for the rest of the translation unit.
-//
-// This deliberately makes every feature-gated struct this header's system
-// includes can see (glibc's __USE_GNU-conditional fields) wider than the
-// Swift toolchain's own SwiftGlibc module, which does not define
-// _GNU_SOURCE. Clang's modules system requires two modules that both parse
-// the same system header to agree on its expansion, so this header must
-// never itself declare, or expose a function signature naming, a type
-// whose layout _GNU_SOURCE affects — glob_t in particular (see the Glob
-// section below, which deliberately does not include <glob.h> here for
-// this reason). A type unaffected by _GNU_SOURCE (dev_t, struct winsize,
-// the FNM_* int constants) is unaffected by which module parsed it first.
-#if !defined(_GNU_SOURCE)
-#define _GNU_SOURCE 1
-#endif
+// This header deliberately never defines _GNU_SOURCE (or any other
+// feature-test macro) before its system includes. Defining it would
+// widen every __USE_GNU-gated struct these includes reach — not just
+// glob_t (see the Glob section below) but, e.g., fd_set via
+// <sys/types.h>'s transitive <sys/select.h> — beyond what the Swift
+// toolchain's own SwiftGlibc module sees, since that module does not
+// define _GNU_SOURCE. Clang's modules system requires two modules that
+// both parse the same system header to agree on its expansion, so any
+// such widening surfaces as a Clang-modules "not present in definition"
+// error the moment both modules are loaded together, for whichever
+// struct happened to be reached first. FNM_CASEFOLD, the one constant
+// here that glibc gates behind _GNU_SOURCE, is exposed via its stable
+// glibc ABI value instead — see iso9945_fnm_casefold below.
 
 #if defined(__APPLE__) || defined(__linux__) || defined(__OpenBSD__)
 
@@ -91,6 +86,13 @@ static inline int iso9945_fnm_period(void)   { return FNM_PERIOD; }
 // Musl does not implement it yet.
 #ifdef FNM_CASEFOLD
 static inline int iso9945_fnm_casefold(void) { return FNM_CASEFOLD; }
+#elif defined(__GLIBC__)
+// glibc only exposes the FNM_CASEFOLD macro under _GNU_SOURCE
+// (posix/fnmatch.h gates it on __USE_GNU), which this header does not
+// define — see the file-level comment above. The bit position is
+// stable glibc ABI (unchanged since the flag's introduction), so it is
+// used directly instead of forcing _GNU_SOURCE on this whole header.
+static inline int iso9945_fnm_casefold(void) { return 1 << 4; }
 #else
 static inline int iso9945_fnm_casefold(void) { return 0; }
 #endif
@@ -108,16 +110,12 @@ static inline int iso9945_fnmatch(const char *pattern, const char *string, int f
 // ===----------------------------------------------------------------------===//
 //
 // glob(3)/globfree(3) are not variadic and glob_t carries no macro Swift
-// cannot import, so this package has no shim reason to redeclare them.
-// Deliberately not wrapped here: including <glob.h> under this header's
-// permanent _GNU_SOURCE would give glob_t extra __USE_GNU-gated fields
-// (gl_readdir/gl_stat/gl_lstat) that the Swift toolchain's own SwiftGlibc
-// module — compiled without _GNU_SOURCE — does not have, and Clang's
-// modules system rejects the two disagreeing views of the same struct
-// the moment both modules are loaded together. ISO 9945 Glob calls
-// glob(3)/globfree(3) and reads GLOB_*/glob_t directly through the
-// platform module (Darwin/Glibc/Musl) instead, so only one module ever
-// declares the type.
+// cannot import, so this package has no shim reason to redeclare them —
+// deliberately not wrapped here (see the file-level _GNU_SOURCE comment
+// above: <glob.h> is precisely the header whose glob_t widens under
+// _GNU_SOURCE). ISO 9945 Glob calls glob(3)/globfree(3) and reads
+// GLOB_*/glob_t directly through the platform module (Darwin/Glibc/Musl)
+// instead, so only one module ever declares the type.
 
 #endif /* __APPLE__ || __linux__ || __OpenBSD__ */
 
