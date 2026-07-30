@@ -71,7 +71,9 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
 
         try ISO_9945.Kernel.Environment.unset(name)
         let removed = ISO_9945.Kernel.Environment.get(name)
-        #expect(removed == nil)
+        // String is ~Copyable, so we check nil-ness differently
+        let isNil = (removed == nil)
+        #expect(isNil)
     }
 
     @Test
