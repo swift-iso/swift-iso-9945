@@ -123,7 +123,10 @@ extension ISO_9945.Kernel.Socket.Bind {
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Unix
     ) throws(ISO_9945.Kernel.Socket.Error) {
-        try bind(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_un>.size)))
+        // Pass the used portion of sun_path, not the full struct size:
+        // a full-struct length runs past the terminator, which Linux
+        // reads as an abstract-namespace name and Darwin rejects.
+        try bind(fd: fd, address: address.storage, length: address.length)
     }
 }
 
