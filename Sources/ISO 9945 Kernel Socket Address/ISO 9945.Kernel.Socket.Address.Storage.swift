@@ -12,7 +12,7 @@ extension ISO_9945.Kernel.Socket.Address {
     /// Wraps `sockaddr_storage` — large enough to hold any address family.
     /// Used as the pointer type in accept/connect/bind operations. Callers
     /// create typed addresses (IPv4, IPv6, Unix) and convert via `.storage`.
-    public struct Storage: @unchecked Sendable {
+    public struct Storage: Sendable {
         internal var cValue: sockaddr_storage
 
         /// Creates a zeroed address storage.

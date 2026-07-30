@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.Socket.Address {
     /// IPv6 socket address.
     ///
     /// Wraps `sockaddr_in6`.
-    public struct IPv6: @unchecked Sendable {
+    public struct IPv6: Sendable {
         internal var cValue: sockaddr_in6
 
         /// Creates an IPv6 address with only the port set; the address bytes
@@ -22,6 +22,12 @@ extension ISO_9945.Kernel.Socket.Address {
             self.cValue = sockaddr_in6()
             self.cValue.sin6_family = sa_family_t(AF_INET6)
             self.cValue.sin6_port = port.bigEndian
+            #if canImport(Darwin)
+                // Kernel-returned addresses carry a populated length byte;
+                // constructors set it too so raw-byte comparisons do not
+                // diverge by provenance.
+                self.cValue.sin6_len = UInt8(MemoryLayout<sockaddr_in6>.size)
+            #endif
         }
 
         /// Creates an IPv6 address from 16 raw bytes plus port / flow /
@@ -53,6 +59,13 @@ extension ISO_9945.Kernel.Socket.Address {
             self.cValue.sin6_port = port.bigEndian
             self.cValue.sin6_flowinfo = flowInfo
             self.cValue.sin6_scope_id = scopeId
+            #if canImport(Darwin)
+                // Kernel-returned addresses carry a populated length byte;
+                // constructors set it too so raw-byte comparisons do not
+                // diverge by provenance.
+                self.cValue.sin6_len = UInt8(MemoryLayout<sockaddr_in6>.size)
+            #endif
+
             unsafe withUnsafeMutableBytes(of: &self.cValue.sin6_addr) { dst in
                 unsafe withUnsafeBytes(of: address) { src in
                     unsafe dst.copyMemory(from: src)

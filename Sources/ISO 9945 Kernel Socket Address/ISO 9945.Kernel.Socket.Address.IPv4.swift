@@ -11,7 +11,7 @@ extension ISO_9945.Kernel.Socket.Address {
     ///
     /// Wraps `sockaddr_in`. Port and address are stored in network byte order
     /// internally; accessors present host byte order.
-    public struct IPv4: @unchecked Sendable, Equatable {
+    public struct IPv4: Sendable, Equatable {
         internal var cValue: sockaddr_in
 
         /// Creates an IPv4 address.
@@ -24,6 +24,12 @@ extension ISO_9945.Kernel.Socket.Address {
             self.cValue.sin_family = sa_family_t(AF_INET)
             self.cValue.sin_port = port.bigEndian
             self.cValue.sin_addr.s_addr = address
+            #if canImport(Darwin)
+                // Kernel-returned addresses carry a populated length byte;
+                // constructors set it too so raw-byte comparisons do not
+                // diverge by provenance.
+                self.cValue.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+            #endif
         }
     }
 }
