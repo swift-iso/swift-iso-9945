@@ -9,8 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux)
-    internal import CISO9945Shim
+#if canImport(Darwin)
+    internal import Darwin
+#elseif canImport(Glibc)
+    internal import Glibc
+#elseif canImport(Musl)
+    internal import Musl
 #endif
 
 extension Clock.CPU {
@@ -31,10 +35,20 @@ extension Clock.CPU.Thread {
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux)
     extension Clock.CPU.Thread {
         /// Returns the current instant on the calling-thread CPU clock.
+        ///
+        /// Wraps `clock_gettime(CLOCK_THREAD_CPUTIME_ID)` directly — Swift
+        /// expresses the call, so no C shim is involved. A failed clock
+        /// read reports the clock epoch (zero nanoseconds), the same
+        /// explicit rule as `Clock.CPU.Process.now()`.
         public static func now() -> Instant {
-            Instant(
-                nanoseconds: iso9945_clock_thread_cpu_time_nanoseconds()
-            )
+            var ts = timespec()
+            guard unsafe clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts) == 0,
+                ts.tv_sec >= 0, ts.tv_nsec >= 0
+            else {
+                return Instant(nanoseconds: 0)
+            }
+            let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
+            return Instant(nanoseconds: ns)
         }
     }
 #endif

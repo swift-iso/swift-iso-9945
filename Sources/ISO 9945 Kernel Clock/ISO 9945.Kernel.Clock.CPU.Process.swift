@@ -59,9 +59,16 @@ extension Clock.CPU.Process {
     /// // If no thread is working, expect ~.zero;
     /// // a hot-spinning thread shows ~.milliseconds(50).
     /// ```
+    /// A failed clock read reports the clock epoch (zero nanoseconds),
+    /// the same explicit rule as `Clock.CPU.Thread.now()` — never a trap
+    /// on garbage fields.
     public static func now() -> Instant {
         var ts = timespec()
-        _ = unsafe clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts)
+        guard unsafe clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == 0,
+            ts.tv_sec >= 0, ts.tv_nsec >= 0
+        else {
+            return Instant(nanoseconds: 0)
+        }
         let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         return Instant(nanoseconds: ns)
     }
