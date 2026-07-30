@@ -34,6 +34,13 @@ extension ISO_9945.Kernel.IO.Vector {
         fd: Int32,
         buffers: [Segment]
     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
+        // POSIX rejects iovcnt <= 0 and iovcnt > IOV_MAX with EINVAL; validated
+        // here rather than force-unwrapping an empty array's nil baseAddress
+        // (which traps) or converting an unbounded count to Int32 (which
+        // traps for very large arrays).
+        guard !buffers.isEmpty, buffers.count <= IOV_MAX else {
+            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+        }
         let iovecs = buffers.map { $0.cValue }
         let result = unsafe iovecs.withUnsafeBufferPointer { buf in
             unsafe readv(fd, buf.baseAddress!, Int32(buf.count))
@@ -68,6 +75,10 @@ extension ISO_9945.Kernel.IO.Vector {
         fd: Int32,
         buffers: [Segment]
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
+        // See the identical iovcnt validation in read(fd:buffers:) above.
+        guard !buffers.isEmpty, buffers.count <= IOV_MAX else {
+            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+        }
         let iovecs = buffers.map { $0.cValue }
         let result = unsafe iovecs.withUnsafeBufferPointer { buf in
             unsafe writev(fd, buf.baseAddress!, Int32(buf.count))
