@@ -107,7 +107,14 @@ extension ISO_9945.Kernel.Signal.Send {
         _ signal: ISO_9945.Kernel.Signal.Number,
         pgid: ISO_9945.Kernel.Process.Group.ID
     ) throws(ISO_9945.Kernel.Signal.Error) {
-        // Negative PID means process group
+        // Negative PID means process group. kill(-1, sig) is POSIX-defined as
+        // "every process the caller has permission to signal" — a group ID of
+        // 1 would silently negate into that broadcast form, and Int32.min has
+        // no negation. Both are rejected before the call rather than handed
+        // to the kernel under a different meaning than the caller intended.
+        guard pgid.underlying != 1, pgid.underlying != Int32.min else {
+            throw .send(.posix(EINVAL))
+        }
         guard kill(-pgid.underlying, signal.rawValue) == 0 else {
             throw .send(Error_Primitives.Error.captureErrno())
         }
