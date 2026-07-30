@@ -46,8 +46,11 @@ extension ISO_9945.Kernel.File.Seek {
         /// The file descriptor is invalid.
         case invalidDescriptor
 
-        /// The resulting offset would be negative.
-        case negativeOffset
+        /// The seek request is invalid: an unrecognized `whence`, a
+        /// resulting offset that would be negative, or a resulting offset
+        /// beyond the maximum the seekable device supports. POSIX reports
+        /// all three as `EINVAL`; the errno alone does not distinguish them.
+        case invalidSeek
 
         /// The file descriptor refers to a pipe, socket, or FIFO.
         case notSeekable
@@ -67,8 +70,8 @@ extension ISO_9945.Kernel.File.Seek.Error: CustomStringConvertible {
         switch self {
         case .invalidDescriptor:
             return "Invalid file descriptor"
-        case .negativeOffset:
-            return "Resulting offset would be negative"
+        case .invalidSeek:
+            return "Invalid seek request (unrecognized whence, negative resulting offset, or offset beyond the device's maximum)"
         case .notSeekable:
             return "File descriptor is not seekable (pipe, socket, or FIFO)"
         case .overflow:

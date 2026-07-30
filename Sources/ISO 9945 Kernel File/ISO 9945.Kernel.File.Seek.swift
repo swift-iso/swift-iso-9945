@@ -133,7 +133,7 @@ extension ISO_9945.Kernel.File.Seek.Error {
         case .EBADF:
             return .invalidDescriptor
         case .EINVAL:
-            return .negativeOffset
+            return .invalidSeek
         case .ESPIPE:
             return .notSeekable
         case .EOVERFLOW:
