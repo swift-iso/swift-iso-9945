@@ -101,7 +101,8 @@ extension ISO_9945.Kernel.Environment.Entries {
         var separator = -1
         var length = 0
         while unsafe (entry[length] != 0) {
-            if separator == -1 && unsafe (entry[length] == 0x3D) {
+            let byte = unsafe entry[length]
+            if separator == -1 && byte == 0x3D {
                 separator = length
             }
             length += 1
