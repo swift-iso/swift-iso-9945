@@ -54,6 +54,11 @@ extension ISO_9945.Kernel.Thread {
         ///
         /// On Linux, configures the condition to use `CLOCK_MONOTONIC` for
         /// timed waits, which is more robust than `CLOCK_REALTIME`.
+        ///
+        /// This platform set (every Darwin OS excluded) must match the one
+        /// guarding the deadline computation in `wait(mutex:timeout:)` below —
+        /// that computation must be against the same clock this condition
+        /// variable was initialized with.
         public init() {
             self.cond = pthread_cond_t()
             var attr = pthread_condattr_t()
@@ -98,7 +103,15 @@ extension ISO_9945.Kernel.Thread.Condition {
     public func wait(mutex: ISO_9945.Kernel.Thread.Mutex, timeout: Duration) -> Bool {
         unsafe mutex.withUnsafeMutablePointer { mutexPtr in
             var ts = timespec()
-            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+            // This condition must name the same platform set as init()'s
+            // pthread_condattr_setclock guard above: the condition variable
+            // is initialized with CLOCK_REALTIME (Darwin's default) on
+            // exactly these platforms, and CLOCK_MONOTONIC everywhere else.
+            // A deadline computed against the wrong clock is either decades
+            // in the past (CLOCK_REALTIME epoch vs. CLOCK_MONOTONIC uptime)
+            // or decades in the future, and pthread_cond_timedwait either
+            // times out immediately or never wakes on that deadline.
+            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
                 // macOS uses absolute time from gettimeofday
                 var tv = timeval()
                 unsafe gettimeofday(&tv, nil)
