@@ -27,9 +27,13 @@ extension ISO_9945.Kernel.File.Handle.Error {
                 self = .invalidHandle
             }
         case .blocking:
-            self = .platform(code: .posix(-1), operation: operation)
-        case .platform:
-            self = .platform(code: .posix(-1), operation: operation)
+            // A would-block condition is EAGAIN by definition; preserve the
+            // platform-correct code rather than fabricating one.
+            self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+        case .platform(let platformError):
+            // Preserve the real errno so ENOSPC, EIO, EFBIG, … stay
+            // distinguishable at the Handle surface.
+            self = .platform(code: platformError.code, operation: operation)
         }
     }
 
@@ -41,9 +45,13 @@ extension ISO_9945.Kernel.File.Handle.Error {
                 self = .invalidHandle
             }
         case .blocking:
-            self = .platform(code: .posix(-1), operation: operation)
-        case .platform:
-            self = .platform(code: .posix(-1), operation: operation)
+            // A would-block condition is EAGAIN by definition; preserve the
+            // platform-correct code rather than fabricating one.
+            self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+        case .platform(let platformError):
+            // Preserve the real errno so ENOSPC, EIO, EFBIG, … stay
+            // distinguishable at the Handle surface.
+            self = .platform(code: platformError.code, operation: operation)
         }
     }
 }
