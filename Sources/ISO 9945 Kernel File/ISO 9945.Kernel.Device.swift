@@ -1,57 +1,62 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-posix open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
+// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - Major/Minor Extraction
+#if canImport(CISO9945Shim)
+    internal import CISO9945Shim
 
-extension ISO_9945.Kernel.Device {
-    /// The major device number (identifies device type/driver).
-    ///
-    /// This uses the standard Linux encoding for dev_t.
+    // MARK: - Major/Minor Extraction
 
-    public var major: Major {
-        Major(rawValue: UInt32((rawValue >> 8) & 0xFFF))
+    extension ISO_9945.Kernel.Device {
+        /// The major device number (identifies device type/driver).
+        ///
+        /// POSIX defines no `dev_t` encoding; the decomposition is a
+        /// platform mechanism. This uses the platform's own `major()`
+        /// macro via the C shim, so the value is correct and lossless on
+        /// every supported platform.
+        public var major: Major {
+            Major(rawValue: UInt32(iso9945_device_major(rawValue)))
+        }
+
+        /// The minor device number (identifies specific device instance).
+        ///
+        /// Uses the platform's own `minor()` macro via the C shim.
+        public var minor: Minor {
+            Minor(rawValue: UInt32(iso9945_device_minor(rawValue)))
+        }
+
+        /// Creates a device ID from raw major and minor numbers.
+        ///
+        /// Uses the platform's own `makedev()` macro via the C shim, so
+        /// `Device(major: m, minor: n)` round-trips losslessly through
+        /// `major`/`minor`.
+        internal init(major: UInt32, minor: UInt32) {
+            self.init(rawValue: iso9945_device_make(major, minor))
+        }
     }
 
-    /// The minor device number (identifies specific device instance).
-    ///
-    /// This uses the standard Linux encoding for dev_t.
+    // MARK: - Typed Accessors
 
-    public var minor: Minor {
-        Minor(rawValue: UInt32((rawValue & 0xFF) | ((rawValue >> 12) & 0xFFF00)))
+    extension ISO_9945.Kernel.Device {
+        /// Creates a device ID from typed major and minor numbers.
+        public init(major: Major, minor: Minor) {
+            self.init(major: major.rawValue, minor: minor.rawValue)
+        }
     }
 
-    /// Creates a device ID from raw major and minor numbers.
+    // MARK: - CustomStringConvertible
 
-    internal init(major: UInt32, minor: UInt32) {
-        let majorPart = UInt64(major & 0xFFF) << 8
-        let minorLow = UInt64(minor & 0xFF)
-        let minorHigh = UInt64((minor & 0xFFF00)) << 12
-        self.init(rawValue: majorPart | minorLow | minorHigh)
+    extension ISO_9945.Kernel.Device: CustomStringConvertible {
+        /// Returns "major:minor" format for POSIX device IDs.
+        public var description: Swift.String {
+            "\(major):\(minor)"
+        }
     }
-}
-
-// MARK: - Typed Accessors
-
-extension ISO_9945.Kernel.Device {
-    /// Creates a device ID from typed major and minor numbers.
-    public init(major: Major, minor: Minor) {
-        self.init(major: major.rawValue, minor: minor.rawValue)
-    }
-}
-
-// MARK: - CustomStringConvertible
-
-extension ISO_9945.Kernel.Device: CustomStringConvertible {
-    /// Returns "major:minor" format for POSIX device IDs.
-    public var description: Swift.String {
-        "\(major):\(minor)"
-    }
-}
+#endif

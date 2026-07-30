@@ -179,6 +179,7 @@ let package = Package(
             name: "ISO 9945 Kernel File",
             dependencies: [
                 "ISO 9945 Core",
+                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Either Primitives", package: "swift-either-primitives"),
                 .product(name: "Pair Primitives", package: "swift-pair-primitives"),

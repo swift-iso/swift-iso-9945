@@ -103,4 +103,20 @@ extension ISO_9945.Kernel.Device.Test.EdgeCase {
             #expect(device.rawValue == value)
         }
     }
+
+    @Test
+    func `major and minor roundtrip through the platform encoding`() {
+        // Includes a minor above 2^20, which the old hand-rolled Linux
+        // masks truncated. Values stay within every supported platform's
+        // encodable field widths (Darwin: 8-bit major, 24-bit minor).
+        let pairs: [(UInt32, UInt32)] = [(0, 0), (1, 3), (8, 0), (254, 255), (200, 0x123456)]
+        for (major, minor) in pairs {
+            let device = ISO_9945.Kernel.Device(
+                major: ISO_9945.Kernel.Device.Major(rawValue: major),
+                minor: ISO_9945.Kernel.Device.Minor(rawValue: minor)
+            )
+            #expect(device.major.rawValue == major)
+            #expect(device.minor.rawValue == minor)
+        }
+    }
 }
