@@ -10,13 +10,14 @@
 // ===----------------------------------------------------------------------===//
 
 @_spi(Syscall) import Error_Primitives
-// Descriptor._rawValue is @_spi(Syscall)-gated (declared in ISO 9945 Core,
-// re-exported by ISO_9945_Kernel via @_exported import).
-@testable @_spi(Syscall) import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
+
+// Descriptor._rawValue is @_spi(Syscall)-gated (declared in ISO 9945 Core,
+// re-exported by ISO_9945_Kernel via @_exported import).
+@testable @_spi(Syscall) import ISO_9945_Kernel
 
 // ISO_9945.Kernel.Event.ID is a typealias to Tagged<ISO_9945.Kernel.Event, UInt>
 // Test struct pattern cannot be used on typealiases
