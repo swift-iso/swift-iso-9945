@@ -112,6 +112,10 @@ extension ISO_9945.Kernel.Environment {
         to value: UnsafePointer<String.Char>,
         overwrite: Bool = true
     ) throws(ISO_9945.Kernel.Environment.Error) {
+        // POSIX reports every invalid name as one EINVAL, so the distinct
+        // conditions are validated before the call — errno alone cannot
+        // distinguish an empty name from one containing '='.
+        try validate(name: name)
         let cName = unsafe UnsafePointer<CChar>(name)
         let cValue = unsafe UnsafePointer<CChar>(value)
         let result = unsafe setenv(cName, cValue, overwrite ? 1 : 0)
@@ -128,10 +132,26 @@ extension ISO_9945.Kernel.Environment {
     /// - Note: Does not fail if the variable does not exist.
 
     public static func unset(_ name: UnsafePointer<String.Char>) throws(ISO_9945.Kernel.Environment.Error) {
+        try validate(name: name)
         let cName = unsafe UnsafePointer<CChar>(name)
         let result = unsafe unsetenv(cName)
         guard result == 0 else {
             throw .current()
+        }
+    }
+
+    /// Validates a variable name against the conditions POSIX folds into
+    /// one `EINVAL`: an empty name, or a name containing `=`.
+    internal static func validate(name: UnsafePointer<String.Char>) throws(ISO_9945.Kernel.Environment.Error) {
+        guard unsafe (name[0] != 0) else {
+            throw .invalid(.emptyName)
+        }
+        var index = 0
+        while unsafe (name[index] != 0) {
+            if unsafe (name[index] == 0x3D) {
+                throw .invalid(.nameContainsEquals)
+            }
+            index += 1
         }
     }
 }

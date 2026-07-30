@@ -25,11 +25,11 @@ extension ISO_9945.Kernel.Environment.Error {
             self = .permission(e)
             return
         }
-        // EINVAL maps to invalid argument
-        if case .posix(let errno) = code, errno == EINVAL {
-            self = .invalid(.nameContainsEquals)
-            return
-        }
+        // EINVAL covers a name that is null, empty, or contains '=' —
+        // indistinguishable from errno alone. The distinct .invalid
+        // conditions are produced by pre-call validation in
+        // Environment.set/unset; an EINVAL that still reaches here passes
+        // through as a platform error rather than a wrong diagnosis.
         self = .platform(Error_Primitives.Error(code: code))
     }
 
