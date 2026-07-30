@@ -14,22 +14,89 @@ extension ISO_9945.Kernel.Group {
 // MARK: - Lookup
 
 extension ISO_9945.Kernel.Group.Database {
+    /// The largest buffer this type will grow to before giving up on
+    /// `ERANGE` and reporting a lookup failure instead of looping forever
+    /// against a database entry (or a broken NSS module) that never fits.
+    private static let maximumBufferSize = 1 << 20  // 1 MiB
+
     /// Looks up a group by name.
     ///
+    /// Uses the reentrant `getgrnam_r(3)`, which reads into a caller-owned
+    /// buffer rather than the shared static storage `getgrnam(3)` returns —
+    /// safe under concurrent lookups on other threads.
+    ///
     /// - Parameter name: The group name to look up.
-    /// - Returns: The group entry, or `nil` if not found.
-    public static func find(name: String) -> Entry? {
-        guard let gr = unsafe getgrnam(name) else { return nil }
-        return unsafe entry(from: gr)
+    /// - Returns: The group entry, or `nil` if no such group exists.
+    /// - Throws: `Error.lookup` if the lookup itself fails (distinct from
+    ///   the name simply having no entry).
+    public static func find(name: String) throws(Error) -> Entry? {
+        try unsafe withReentrantLookup { buffer, gr, result in
+            unsafe name.withCString { cName in
+                unsafe getgrnam_r(cName, gr, buffer.baseAddress, numericCast(buffer.count), result)
+            }
+        }
     }
 
     /// Looks up a group by group ID.
     ///
+    /// Uses the reentrant `getgrgid_r(3)`; see `find(name:)`.
+    ///
     /// - Parameter gid: The group ID to look up.
-    /// - Returns: The group entry, or `nil` if not found.
-    public static func find(gid: ISO_9945.Kernel.Group.ID) -> Entry? {
-        guard let gr = unsafe getgrgid(gid.underlying) else { return nil }
-        return unsafe entry(from: gr)
+    /// - Returns: The group entry, or `nil` if no such group exists.
+    /// - Throws: `Error.lookup` if the lookup itself fails (distinct from
+    ///   the ID simply having no entry).
+    public static func find(gid: ISO_9945.Kernel.Group.ID) throws(Error) -> Entry? {
+        try unsafe withReentrantLookup { buffer, gr, result in
+            unsafe getgrgid_r(gid.underlying, gr, buffer.baseAddress, numericCast(buffer.count), result)
+        }
+    }
+
+    /// Runs a `getgrnam_r`/`getgrgid_r`-shaped lookup, growing the scratch
+    /// buffer on `ERANGE` up to `maximumBufferSize`.
+    ///
+    /// - Parameter lookup: Invokes the underlying `_r` call with the
+    ///   current buffer, the `group` storage to fill, and the out
+    ///   parameter that is set non-nil iff an entry was found. Returns the
+    ///   `_r` call's raw result code (`0` on success, whether or not an
+    ///   entry was found; nonzero is a genuine failure).
+    private static func withReentrantLookup(
+        _ lookup: (
+            UnsafeMutableBufferPointer<CChar>,
+            UnsafeMutablePointer<group>,
+            UnsafeMutablePointer<UnsafeMutablePointer<group>?>
+        ) -> Int32
+    ) throws(Error) -> Entry? {
+        var bufferSize = initialBufferSize()
+        while true {
+            var gr = group()
+            var resultPtr: UnsafeMutablePointer<group>?
+            var buffer = [CChar](repeating: 0, count: bufferSize)
+
+            let rc = unsafe buffer.withUnsafeMutableBufferPointer { bufferPtr in
+                unsafe withUnsafeMutablePointer(to: &gr) { grPtr in
+                    unsafe withUnsafeMutablePointer(to: &resultPtr) { resultPtrPtr in
+                        unsafe lookup(bufferPtr, grPtr, resultPtrPtr)
+                    }
+                }
+            }
+
+            if rc == 0 {
+                guard let resultPtr = unsafe resultPtr else { return nil }
+                return unsafe entry(from: resultPtr)
+            }
+
+            if rc == ERANGE, bufferSize < maximumBufferSize {
+                bufferSize *= 2
+                continue
+            }
+
+            throw .lookup(.posix(rc))
+        }
+    }
+
+    private static func initialBufferSize() -> Int {
+        let suggested = unsafe sysconf(Int32(_SC_GETGR_R_SIZE_MAX))
+        return suggested > 0 ? Int(suggested) : 1024
     }
 
     private static func entry(from gr: UnsafePointer<group>) -> Entry {
