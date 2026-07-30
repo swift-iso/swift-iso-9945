@@ -6,8 +6,6 @@ Swift implementation of ISO/IEC/IEEE 9945 (POSIX.1) — the **System Interfaces*
 kernel and C-library surfaces (file descriptors, errno, processes, signals, sockets,
 threads, time) under the `ISO_9945` namespace.
 
-Swift Embedded compatible.
-
 ## Specification identity
 
 ISO/IEC/IEEE 9945 and IEEE Std 1003.1 are the **same joint standard** (POSIX), published

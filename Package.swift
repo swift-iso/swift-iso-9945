@@ -140,7 +140,7 @@ let package = Package(
         .package(url: "https://github.com/swift-iso/swift-iso-9899.git", branch: "main")
     ],
     targets: [
-        // MARK: - Core (internal — not a published product)
+        // MARK: - Core (published product; see "ISO 9945 Core" library above)
 
         .target(
             name: "ISO 9945 Core",
