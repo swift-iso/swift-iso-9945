@@ -60,6 +60,8 @@ extension ISO_9945.Kernel.File.Control {
             guard result >= 0 else {
                 throw Error.current()
             }
+        #else
+            #error("ISO_9945.Kernel.File.Control.setNonBlocking: unsupported platform (no Darwin, Glibc, or Musl)")
         #endif
     }
 
@@ -101,6 +103,8 @@ extension ISO_9945.Kernel.File.Control {
             guard result >= 0 else {
                 throw Error.current()
             }
+        #else
+            #error("ISO_9945.Kernel.File.Control.setBlocking: unsupported platform (no Darwin, Glibc, or Musl)")
         #endif
     }
 }
