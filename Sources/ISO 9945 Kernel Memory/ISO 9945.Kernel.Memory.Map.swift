@@ -47,13 +47,15 @@ extension Memory.Map {
         fd: Int32 = -1,
         offset: ISO_9945.Kernel.File.Offset = .zero
     ) throws(Error) -> Memory.Address {
-        guard length.underlying.rawValue > 0 else {
+        guard length.underlying.rawValue > 0,
+            let byteCount = Int(exactly: length.underlying.rawValue)
+        else {
             throw .invalid(.length)
         }
 
         let result = unsafe mmap(
             addr?.mutablePointer,
-            Int(bitPattern: length.underlying.rawValue),
+            byteCount,
             protection.rawValue,
             flags.rawValue,
             fd,
@@ -100,7 +102,12 @@ extension Memory.Map {
         addr: Memory.Address,
         length: Memory.Address.Count
     ) throws(Error) {
-        guard unsafe munmap(addr.mutablePointer, Int(bitPattern: length.underlying.rawValue)) == 0 else {
+        guard length.underlying.rawValue > 0,
+            let byteCount = Int(exactly: length.underlying.rawValue)
+        else {
+            throw .invalid(.length)
+        }
+        guard unsafe munmap(addr.mutablePointer, byteCount) == 0 else {
             throw .unmap(.captureErrno())
         }
     }
@@ -127,7 +134,12 @@ extension Memory.Map {
         length: Memory.Address.Count,
         flags: Sync.Options = .sync
     ) throws(Error) {
-        guard unsafe msync(addr.mutablePointer, Int(bitPattern: length.underlying.rawValue), flags.rawValue) == 0 else {
+        guard length.underlying.rawValue > 0,
+            let byteCount = Int(exactly: length.underlying.rawValue)
+        else {
+            throw .invalid(.length)
+        }
+        guard unsafe msync(addr.mutablePointer, byteCount, flags.rawValue) == 0 else {
             throw .sync(.captureErrno())
         }
     }
@@ -145,7 +157,12 @@ extension Memory.Map {
         length: Memory.Address.Count,
         protection: Protection
     ) throws(Error) {
-        guard unsafe mprotect(addr.mutablePointer, Int(bitPattern: length.underlying.rawValue), protection.rawValue) == 0 else {
+        guard length.underlying.rawValue > 0,
+            let byteCount = Int(exactly: length.underlying.rawValue)
+        else {
+            throw .invalid(.length)
+        }
+        guard unsafe mprotect(addr.mutablePointer, byteCount, protection.rawValue) == 0 else {
             throw .protect(.captureErrno())
         }
     }
@@ -164,6 +181,12 @@ extension Memory.Map {
         length: Memory.Address.Count,
         advice: Advice
     ) {
-        unsafe _ = madvise(addr.mutablePointer, Int(bitPattern: length.underlying.rawValue), advice.rawValue)
+        // Advisory only: a length that doesn't fit in Int (or the kernel
+        // rejecting it) is silently ignored rather than handed to madvise
+        // as a bit-cast negative value.
+        guard let byteCount = Int(exactly: length.underlying.rawValue) else {
+            return
+        }
+        unsafe _ = madvise(addr.mutablePointer, byteCount, advice.rawValue)
     }
 }

@@ -37,6 +37,10 @@ extension ISO_9945.Kernel.File.Times {
         /// I/O errors.
         case io(IO)
 
+        /// The requested time cannot be represented as this platform's `time_t`
+        /// (for example, a post-2038 epoch second on a 32-bit `time_t`).
+        case unrepresentable
+
         /// Platform-specific error.
         case platform(Error_Primitives.Error)
     }
@@ -72,6 +76,8 @@ extension ISO_9945.Kernel.File.Times.Error: CustomStringConvertible {
             return "file times permission error: \(permError)"
         case .io(let ioError):
             return "file times I/O error: \(ioError)"
+        case .unrepresentable:
+            return "file times error: requested time is not representable as this platform's time_t"
         case .platform(let e):
             return "file times error: \(e)"
         }

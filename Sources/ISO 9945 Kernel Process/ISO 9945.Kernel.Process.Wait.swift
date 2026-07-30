@@ -71,17 +71,24 @@ extension ISO_9945.Kernel.Process.Wait {
         _ selector: Selector,
         options: Options = []
     ) throws(ISO_9945.Kernel.Process.Error) -> Result? {
-        let pid: pid_t =
-            switch selector {
-            case .any:
-                -1
-            case .process(let id):
-                id.rawValue
-            case .group(let pgid):
-                -pgid.underlying
-            case .current:
-                0
+        let pid: pid_t
+        switch selector {
+        case .any:
+            pid = -1
+        case .process(let id):
+            pid = id.rawValue
+        case .group(let pgid):
+            // Negating pid_t.min traps; no process group can have that
+            // magnitude as its ID (getpgid/setpgid never produce it), so
+            // report it the way the kernel would report any other
+            // unrepresentable pgid: EINVAL.
+            guard pgid.underlying != pid_t.min else {
+                throw .wait(.posix(EINVAL))
             }
+            pid = -pgid.underlying
+        case .current:
+            pid = 0
+        }
 
         var status: Int32 = 0
         let result = unsafe waitpid(pid, &status, options.rawValue)

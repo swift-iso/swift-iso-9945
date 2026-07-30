@@ -62,15 +62,21 @@ extension ISO_9945.Kernel.File.Times {
         path: UnsafePointer<Path.Char>,
         followSymlinks: Bool = true
     ) throws(Error) {
+        guard let accessSeconds = time_t(exactly: accessTime.secondsSinceUnixEpoch),
+            let modificationSeconds = time_t(exactly: modificationTime.secondsSinceUnixEpoch)
+        else {
+            throw Error.unrepresentable
+        }
+
         let cPath = unsafe UnsafePointer<CChar>(path)
         var times = [timespec](repeating: timespec(), count: 2)
 
         // Access time
-        times[0].tv_sec = time_t(accessTime.secondsSinceUnixEpoch)
+        times[0].tv_sec = accessSeconds
         times[0].tv_nsec = Int(accessTime.nanosecondFraction)
 
         // Modification time
-        times[1].tv_sec = time_t(modificationTime.secondsSinceUnixEpoch)
+        times[1].tv_sec = modificationSeconds
         times[1].tv_nsec = Int(modificationTime.nanosecondFraction)
 
         let flags: Int32 = followSymlinks ? 0 : AT_SYMLINK_NOFOLLOW
@@ -109,14 +115,20 @@ extension ISO_9945.Kernel.File.Times {
         modification modificationTime: ISO_9945.Kernel.Time,
         fd: Int32
     ) throws(Error) {
+        guard let accessSeconds = time_t(exactly: accessTime.secondsSinceUnixEpoch),
+            let modificationSeconds = time_t(exactly: modificationTime.secondsSinceUnixEpoch)
+        else {
+            throw Error.unrepresentable
+        }
+
         var times = [timespec](repeating: timespec(), count: 2)
 
         // Access time
-        times[0].tv_sec = time_t(accessTime.secondsSinceUnixEpoch)
+        times[0].tv_sec = accessSeconds
         times[0].tv_nsec = Int(accessTime.nanosecondFraction)
 
         // Modification time
-        times[1].tv_sec = time_t(modificationTime.secondsSinceUnixEpoch)
+        times[1].tv_sec = modificationSeconds
         times[1].tv_nsec = Int(modificationTime.nanosecondFraction)
 
         #if canImport(Darwin)
