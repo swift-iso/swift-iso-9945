@@ -17,6 +17,11 @@ extension ISO_9945.Kernel.Directory.Working {
 
         /// Platform-specific error.
         case platform(Error_Primitives.Error)
+
+        /// The caller-supplied buffer is empty (no `baseAddress`, or zero
+        /// `count`). A Swift-side precondition failure, not a syscall
+        /// result — no errno is associated with it.
+        case invalidBuffer
     }
 }
 
@@ -27,6 +32,7 @@ extension ISO_9945.Kernel.Directory.Working.Error: Equatable {
         switch (lhs, rhs) {
         case (.path(let l), .path(let r)): return l == r
         case (.platform(let l), .platform(let r)): return l == r
+        case (.invalidBuffer, .invalidBuffer): return true
         default: return false
         }
     }
@@ -39,6 +45,7 @@ extension ISO_9945.Kernel.Directory.Working.Error: CustomStringConvertible {
         switch self {
         case .path(let e): return "working directory: \(e)"
         case .platform(let e): return "working directory: \(e)"
+        case .invalidBuffer: return "working directory: caller-supplied buffer is empty"
         }
     }
 }

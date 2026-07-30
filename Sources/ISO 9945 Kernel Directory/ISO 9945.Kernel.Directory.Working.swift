@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Directory.Working {
         into buffer: UnsafeMutableBufferPointer<CChar>
     ) throws(Error) -> Int {
         guard let base = buffer.baseAddress, buffer.count > 0 else {
-            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+            throw .invalidBuffer
         }
 
         #if canImport(Darwin)
@@ -73,41 +73,60 @@ extension ISO_9945.Kernel.Directory.Working {
     public static func withCurrentBytes<R: ~Copyable>(
         _ body: (Swift.Span<Path.Char>) -> R
     ) throws(Error) -> R {
-        var result: R? = nil
-        var thrown: Error? = nil
+        // getcwd(3) reports ERANGE when the buffer is too small for the
+        // actual path — reachable on Linux via nested chdir past 4095
+        // bytes. Retry with a larger buffer instead of surfacing an opaque
+        // platform error for a working directory that is simply long.
+        var capacity = 4096
+        let maxCapacity = 1 << 20  // 1 MiB: a bound on retries, not a spec limit.
 
-        unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
-            guard let base = buffer.baseAddress, buffer.count > 0 else {
-                thrown = .platform(Error_Primitives.Error(code: .posix(EINVAL)))
-                return
+        while true {
+            var result: R? = nil
+            var thrown: Error? = nil
+            var rangeExceeded = false
+
+            unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: capacity) { buffer in
+                guard let base = buffer.baseAddress, buffer.count > 0 else {
+                    thrown = .invalidBuffer
+                    return
+                }
+
+                #if canImport(Darwin)
+                    let cwdResult = unsafe Darwin.getcwd(base, buffer.count)
+                #elseif canImport(Musl)
+                    let cwdResult = unsafe Musl.getcwd(base, buffer.count)
+                #elseif canImport(Glibc)
+                    let cwdResult = unsafe Glibc.getcwd(base, buffer.count)
+                #endif
+
+                guard unsafe (cwdResult != nil) else {
+                    let code = Error_Primitives.Error.Code.current()
+                    if case .posix(ERANGE) = code, capacity < maxCapacity {
+                        rangeExceeded = true
+                        return
+                    }
+                    thrown = ISO_9945.Kernel.Directory.Working.Error.current(code: code)
+                    return
+                }
+
+                // Find null terminator to get length
+                var length = 0
+                while length < buffer.count && (unsafe base[length]) != 0 {
+                    length += 1
+                }
+
+                let u8Ptr = unsafe UnsafePointer<UInt8>(base)
+                let span = unsafe Span(_unsafeStart: u8Ptr, count: length)
+                result = body(span)
             }
 
-            #if canImport(Darwin)
-                let cwdResult = unsafe Darwin.getcwd(base, buffer.count)
-            #elseif canImport(Musl)
-                let cwdResult = unsafe Musl.getcwd(base, buffer.count)
-            #elseif canImport(Glibc)
-                let cwdResult = unsafe Glibc.getcwd(base, buffer.count)
-            #endif
-
-            guard unsafe (cwdResult != nil) else {
-                thrown = ISO_9945.Kernel.Directory.Working.Error.current()
-                return
+            if rangeExceeded {
+                capacity *= 2
+                continue
             }
-
-            // Find null terminator to get length
-            var length = 0
-            while length < buffer.count && (unsafe base[length]) != 0 {
-                length += 1
-            }
-
-            let u8Ptr = unsafe UnsafePointer<UInt8>(base)
-            let span = unsafe Span(_unsafeStart: u8Ptr, count: length)
-            result = body(span)
+            if let thrown { throw thrown }
+            return result!
         }
-
-        if let thrown { throw thrown }
-        return result!
     }
 
     /// Convenience: scoped access as NUL-terminated view.
@@ -122,36 +141,52 @@ extension ISO_9945.Kernel.Directory.Working {
     public static func withCurrent<R: ~Copyable>(
         _ body: (borrowing String.Borrowed) -> R
     ) throws(Error) -> R {
-        var result: R? = nil
-        var thrown: Error? = nil
+        // See the identical retry rationale in withCurrentBytes above.
+        var capacity = 4096
+        let maxCapacity = 1 << 20  // 1 MiB: a bound on retries, not a spec limit.
 
-        unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: 4096) { buffer in
-            guard let base = buffer.baseAddress, buffer.count > 0 else {
-                thrown = .platform(Error_Primitives.Error(code: .posix(EINVAL)))
-                return
+        while true {
+            var result: R? = nil
+            var thrown: Error? = nil
+            var rangeExceeded = false
+
+            unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: capacity) { buffer in
+                guard let base = buffer.baseAddress, buffer.count > 0 else {
+                    thrown = .invalidBuffer
+                    return
+                }
+
+                #if canImport(Darwin)
+                    let cwdResult = unsafe Darwin.getcwd(base, buffer.count)
+                #elseif canImport(Musl)
+                    let cwdResult = unsafe Musl.getcwd(base, buffer.count)
+                #elseif canImport(Glibc)
+                    let cwdResult = unsafe Glibc.getcwd(base, buffer.count)
+                #endif
+
+                guard unsafe (cwdResult != nil) else {
+                    let code = Error_Primitives.Error.Code.current()
+                    if case .posix(ERANGE) = code, capacity < maxCapacity {
+                        rangeExceeded = true
+                        return
+                    }
+                    thrown = ISO_9945.Kernel.Directory.Working.Error.current(code: code)
+                    return
+                }
+
+                // getcwd NUL-terminates; create view directly
+                let u8Ptr = unsafe UnsafePointer<UInt8>(base)
+                let view = unsafe String.Borrowed(u8Ptr, count: String.length(of: u8Ptr))
+                result = body(view)
             }
 
-            #if canImport(Darwin)
-                let cwdResult = unsafe Darwin.getcwd(base, buffer.count)
-            #elseif canImport(Musl)
-                let cwdResult = unsafe Musl.getcwd(base, buffer.count)
-            #elseif canImport(Glibc)
-                let cwdResult = unsafe Glibc.getcwd(base, buffer.count)
-            #endif
-
-            guard unsafe (cwdResult != nil) else {
-                thrown = ISO_9945.Kernel.Directory.Working.Error.current()
-                return
+            if rangeExceeded {
+                capacity *= 2
+                continue
             }
-
-            // getcwd NUL-terminates; create view directly
-            let u8Ptr = unsafe UnsafePointer<UInt8>(base)
-            let view = unsafe String.Borrowed(u8Ptr, count: String.length(of: u8Ptr))
-            result = body(view)
+            if let thrown { throw thrown }
+            return result!
         }
-
-        if let thrown { throw thrown }
-        return result!
     }
 
     /// Owned convenience: returns allocated string.
@@ -176,12 +211,22 @@ extension ISO_9945.Kernel.Directory.Working {
 // MARK: - Error Conversion
 
 extension ISO_9945.Kernel.Directory.Working.Error {
-    /// Creates an error from the current errno value.
-    internal static func current() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+    /// Creates an error from an already-captured error code.
+    ///
+    /// Callers that need to inspect the code before deciding whether it is
+    /// this error (e.g. to retry on `ERANGE` rather than throw) capture it
+    /// once via `Error_Primitives.Error.Code.current()` and pass it here,
+    /// instead of calling ``current()`` and re-reading (possibly stale)
+    /// errno a second time.
+    internal static func current(code: Error_Primitives.Error.Code) -> Self {
         if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
         return .platform(Error_Primitives.Error(code: code))
+    }
+
+    /// Creates an error from the current errno value.
+    internal static func current() -> Self {
+        current(code: Error_Primitives.Error.Code.current())
     }
 }
