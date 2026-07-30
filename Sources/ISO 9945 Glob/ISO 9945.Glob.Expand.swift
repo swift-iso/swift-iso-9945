@@ -70,7 +70,7 @@ extension ISO_9945.Glob {
             throw .aborted
 
         default:
-            throw .aborted
+            throw .unrecognized(code: result)
         }
     }
 }

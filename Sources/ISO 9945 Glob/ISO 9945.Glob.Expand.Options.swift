@@ -39,17 +39,3 @@ extension ISO_9945.Glob.Expand.Options {
     /// Disable backslash escaping (`GLOB_NOESCAPE`).
     public static let noescape = Self(rawValue: iso9945_glob_noescape())
 }
-
-extension ISO_9945.Glob.Expand {
-    /// Errors from `glob(3)`.
-    public enum Error: Swift.Error, Sendable {
-        /// Memory allocation failure (`GLOB_NOSPACE`).
-        case noSpace
-
-        /// Read error or error function returned non-zero (`GLOB_ABORTED`).
-        case aborted
-
-        /// No matches found (`GLOB_NOMATCH`).
-        case noMatch
-    }
-}
