@@ -23,7 +23,6 @@ extension ISO_9945 {
     /// ## Design
     ///
     /// ISO_9945.Loader is organized into:
-    /// - `ISO_9945.Loader.Symbol` - dlsym-based symbol lookup
     /// - `ISO_9945.Loader.Library` - dlopen/dlclose
     ///
     /// ## Semantic Correctness

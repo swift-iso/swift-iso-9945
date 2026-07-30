@@ -67,7 +67,13 @@ public import Loader_Primitives
 
 #endif
 
-// MARK: - Darwin-Only Options
+// MARK: - Non-POSIX Extension Options (Darwin)
+//
+// RTLD_NOLOAD and RTLD_NODELETE are not POSIX; both are Darwin extensions,
+// and glibc has provided both since 2.2 — this package currently exposes
+// them only where the platform header requires no feature-test-macro
+// workaround to see them (Darwin). Not "Darwin-only": that would claim
+// glibc lacks them, which is false.
 
 #if canImport(Darwin)
 
@@ -76,12 +82,16 @@ public import Loader_Primitives
         ///
         /// Returns the handle if the library is already loaded,
         /// or fails without loading. Useful for probing.
+        ///
+        /// Non-POSIX extension. Also available on glibc (since 2.2).
         public static let noLoad = Self(rawValue: RTLD_NOLOAD)
 
         /// Don't delete on close (RTLD_NODELETE).
         ///
         /// Keeps the library in memory even after `close`.
         /// The library's static destructors will not run.
+        ///
+        /// Non-POSIX extension. Also available on glibc (since 2.2).
         public static let noDelete = Self(rawValue: RTLD_NODELETE)
     }
 
