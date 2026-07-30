@@ -54,7 +54,7 @@ extension ISO_9945.Kernel.Thread {
     ///
     /// ## Usage
     /// ```swift
-    /// let key = ISO_9945.Kernel.Thread.Key()
+    /// let key = try ISO_9945.Kernel.Thread.Key()
     /// key.value = UnsafeMutableRawPointer(...)
     /// // ... synchronous code on the same thread reads `key.value` ...
     /// ```
@@ -67,9 +67,20 @@ extension ISO_9945.Kernel.Thread {
         /// callers must clear the slot before threads exit, or accept
         /// the leak. For automatic per-thread cleanup, use
         /// ``init(destructor:)``.
-        public init() {
+        ///
+        /// - Throws: ``Kernel/Thread/Error/keyCreate(_:)`` if
+        ///   `pthread_key_create` fails (`EAGAIN` — `PTHREAD_KEYS_MAX`
+        ///   exhausted — or `ENOMEM`). A failed creation never leaves a
+        ///   `Key` whose operations would silently touch key `0`, which
+        ///   may be owned by another key in the process.
+        public init() throws(ISO_9945.Kernel.Thread.Error) {
             self.key = pthread_key_t()
-            unsafe pthread_key_create(&self.key, nil)
+            // pthread_key_create returns the error number directly; it does
+            // not set errno.
+            let result = unsafe pthread_key_create(&self.key, nil)
+            guard result == 0 else {
+                throw .keyCreate(.posix(result))
+            }
         }
 
         /// Allocates a new TLS key with a per-thread destructor.
@@ -85,10 +96,15 @@ extension ISO_9945.Kernel.Thread {
         /// `PTHREAD_DESTRUCTOR_ITERATIONS` times — typically 4. A
         /// destructor that only releases (and does not re-set) avoids
         /// re-entry.
-        public init(destructor: @convention(c) (UnsafeMutableRawPointer) -> Void) {
+        public init(
+            destructor: @convention(c) (UnsafeMutableRawPointer) -> Void
+        ) throws(ISO_9945.Kernel.Thread.Error) {
             self.key = pthread_key_t()
+            // pthread_key_create returns the error number directly; it does
+            // not set errno.
+            let result: Int32
             #if canImport(Darwin)
-                unsafe pthread_key_create(&self.key, destructor)
+                result = unsafe pthread_key_create(&self.key, destructor)
             #else
                 // Linux/Musl glibc imports pthread_key_create's destructor as
                 // `(UnsafeMutableRawPointer?) -> Void` (Optional input), while
@@ -102,8 +118,11 @@ extension ISO_9945.Kernel.Thread {
                     destructor,
                     to: (@convention(c) (UnsafeMutableRawPointer?) -> Void).self
                 )
-                unsafe pthread_key_create(&self.key, optDestructor)
+                result = unsafe pthread_key_create(&self.key, optDestructor)
             #endif
+            guard result == 0 else {
+                throw .keyCreate(.posix(result))
+            }
         }
 
         deinit {
@@ -121,6 +140,20 @@ extension ISO_9945.Kernel.Thread.Key {
         }
         set {
             unsafe (_ = pthread_setspecific(key, newValue))
+        }
+    }
+
+    /// Sets the calling thread's slot value, surfacing a failed
+    /// `pthread_setspecific` (`ENOMEM`) instead of dropping it as the
+    /// ``value`` setter does — a property setter cannot throw.
+    ///
+    /// - Throws: ``Kernel/Thread/Error/keySet(_:)`` on failure.
+    public func setValue(_ newValue: UnsafeMutableRawPointer?) throws(ISO_9945.Kernel.Thread.Error) {
+        // pthread_setspecific returns the error number directly; it does
+        // not set errno.
+        let result = unsafe pthread_setspecific(key, newValue)
+        guard result == 0 else {
+            throw .keySet(.posix(result))
         }
     }
 }

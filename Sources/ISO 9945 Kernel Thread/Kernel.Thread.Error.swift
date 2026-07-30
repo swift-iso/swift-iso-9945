@@ -23,6 +23,14 @@ extension ISO_9945.Kernel.Thread {
 
         /// Thread detach failed.
         case detach(Error_Primitives.Error.Code)
+
+        /// Thread-local storage key creation failed (`pthread_key_create`).
+        ///
+        /// `EAGAIN` (`PTHREAD_KEYS_MAX` exhausted) or `ENOMEM`.
+        case keyCreate(Error_Primitives.Error.Code)
+
+        /// Thread-local storage slot write failed (`pthread_setspecific`).
+        case keySet(Error_Primitives.Error.Code)
     }
 }
 
@@ -35,6 +43,10 @@ extension ISO_9945.Kernel.Thread.Error: CustomStringConvertible {
             return "Thread join failed: \(code)"
         case .detach(let code):
             return "Thread detach failed: \(code)"
+        case .keyCreate(let code):
+            return "Thread-local storage key creation failed: \(code)"
+        case .keySet(let code):
+            return "Thread-local storage slot write failed: \(code)"
         }
     }
 }

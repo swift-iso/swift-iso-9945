@@ -24,14 +24,14 @@ struct KeyTests {
 extension KeyTests.Unit {
 
     @Test
-    func `freshly-allocated slot reads as nil`() {
-        let key = ISO_9945.Kernel.Thread.Key()
+    func `freshly-allocated slot reads as nil`() throws {
+        let key = try ISO_9945.Kernel.Thread.Key()
         unsafe (#expect(key.value == nil))
     }
 
     @Test
-    func `set then get returns the same pointer`() {
-        let key = ISO_9945.Kernel.Thread.Key()
+    func `set then get returns the same pointer`() throws {
+        let key = try ISO_9945.Kernel.Thread.Key()
         let buffer = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         defer { unsafe buffer.deallocate() }
         let raw = unsafe UnsafeMutableRawPointer(buffer)
@@ -41,8 +41,8 @@ extension KeyTests.Unit {
     }
 
     @Test
-    func `set to nil clears the slot`() {
-        let key = ISO_9945.Kernel.Thread.Key()
+    func `set to nil clears the slot`() throws {
+        let key = try ISO_9945.Kernel.Thread.Key()
         let buffer = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         defer { unsafe buffer.deallocate() }
         unsafe (key.value = UnsafeMutableRawPointer(buffer))
@@ -53,9 +53,9 @@ extension KeyTests.Unit {
     }
 
     @Test
-    func `multiple Key instances have independent slots`() {
-        let a = ISO_9945.Kernel.Thread.Key()
-        let b = ISO_9945.Kernel.Thread.Key()
+    func `multiple Key instances have independent slots`() throws {
+        let a = try ISO_9945.Kernel.Thread.Key()
+        let b = try ISO_9945.Kernel.Thread.Key()
         let bufferA = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         let bufferB = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         defer {
@@ -75,12 +75,12 @@ extension KeyTests.Unit {
 extension KeyTests.Lifecycle {
 
     @Test
-    func `Key can be allocated and deallocated repeatedly`() {
+    func `Key can be allocated and deallocated repeatedly`() throws {
         // Stress-test the pthread_key_create / pthread_key_delete cycle.
         // POSIX guarantees PTHREAD_KEYS_MAX (typically 128 or 1024) — the
         // delete must reliably free the key for reuse.
         for _ in 0..<200 {
-            let key = ISO_9945.Kernel.Thread.Key()
+            let key = try ISO_9945.Kernel.Thread.Key()
             unsafe (key.value = nil)
             // key goes out of scope — pthread_key_delete fires
             _ = key
