@@ -14,24 +14,24 @@ import Testing
 @testable import ISO_9945_Kernel
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux)
-extension Clock.CPU.Thread {
-    @Suite
-    struct Test {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-        @Suite struct Integration {}
+    extension Clock.CPU.Thread {
+        @Suite
+        struct Test {
+            @Suite struct Unit {}
+            @Suite struct `Edge Case` {}
+            @Suite struct Integration {}
+        }
     }
-}
 
-extension Clock.CPU.Thread.Test.Unit {
-    @Test
-    func `now advances while the calling thread consumes CPU`() {
-        let before = Clock.CPU.Thread.now()
+    extension Clock.CPU.Thread.Test.Unit {
+        @Test
+        func `now advances while the calling thread consumes CPU`() {
+            let before = Clock.CPU.Thread.now()
 
-        #expect((0..<100_000).reduce(0, &+) != 0)
+            #expect((0..<100_000).reduce(0, &+) != 0)
 
-        let after = Clock.CPU.Thread.now()
-        #expect(after > before)
+            let after = Clock.CPU.Thread.now()
+            #expect(after > before)
+        }
     }
-}
 #endif
