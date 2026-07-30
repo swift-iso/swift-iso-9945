@@ -1,8 +1,8 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-kernel open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -45,7 +45,6 @@
 ///
 /// Clone operations are in platform-specific packages:
 /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Clone`)
-/// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Clone`)
 extension ISO_9945.Kernel.File {
     public enum Clone {}
 }
@@ -59,7 +58,6 @@ extension ISO_9945.Kernel.File.Clone.Capability {
     ///
     /// Capability probing is in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Clone.Capability.probe`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Clone.Capability.probe`)
     ///
     /// Returns `.none` by default. Use platform packages for actual probing.
     public static func probeDefault(at path: borrowing Path) -> ISO_9945.Kernel.File.Clone.Capability {
@@ -77,6 +75,5 @@ extension ISO_9945.Kernel.File.Clone {
     ///
     /// Metadata operations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Clone.Metadata`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Clone.Metadata`)
     public enum Metadata {}
 }

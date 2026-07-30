@@ -1,8 +1,8 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-kernel open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -21,7 +21,6 @@ extension ISO_9945.Kernel.Copy {
     /// |----------|-----------|------------------------|
     /// | Linux | `FICLONE` ioctl | `swift-iso-9945` |
     /// | macOS | `clonefile()` | `swift-iso-9945` |
-    /// | Windows | Block cloning | `swift-windows-primitives` |
     ///
     /// ## Platform Implementation
     ///

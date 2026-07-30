@@ -1,8 +1,8 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-kernel open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -32,7 +32,6 @@
 ///
 /// Syscall implementations are in platform-specific packages:
 /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Direct`)
-/// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Direct`)
 extension ISO_9945.Kernel.File {
     public enum Direct {}
 }

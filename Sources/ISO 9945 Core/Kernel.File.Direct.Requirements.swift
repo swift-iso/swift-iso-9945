@@ -1,8 +1,8 @@
 // ===----------------------------------------------------------------------===//
 //
-// This source file is part of the swift-kernel open source project
+// This source file is part of the swift-iso-9945 open source project
 //
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-kernel project authors
+// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE for license information
@@ -34,7 +34,6 @@ extension ISO_9945.Kernel.File.Direct {
     ///
     /// Requirements discovery is in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Direct.Requirements`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Direct.Requirements`)
     public enum Requirements: Sendable, Equatable {
         /// Alignment requirements are known and can be satisfied.
         case known(Alignment)
