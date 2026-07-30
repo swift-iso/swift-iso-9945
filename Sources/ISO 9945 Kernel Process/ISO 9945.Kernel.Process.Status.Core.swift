@@ -40,11 +40,7 @@ extension ISO_9945.Kernel.Process.Status.Core {
             return swift_WCOREDUMP(status.rawValue) != 0
         #elseif canImport(Glibc)
             guard status.signaled else { return false }
-            #if _GNU_SOURCE
-                return swift_WCOREDUMP(status.rawValue) != 0
-            #else
-                return false
-            #endif
+            return swift_WCOREDUMP(status.rawValue) != 0
         #else
             return false
         #endif
