@@ -34,7 +34,11 @@ extension ISO_9945.Kernel.Socket.Message.Options {
     public static let dontWait = Self(rawValue: Int32(MSG_DONTWAIT))
 
     /// Do not generate SIGPIPE (MSG_NOSIGNAL).
-    #if os(Linux)
+    ///
+    /// POSIX.1-2008; absent only on Darwin (which uses the `SO_NOSIGPIPE`
+    /// socket option instead). Keyed on the libc, not on `os(Linux)`, so
+    /// Musl- and Android-style platforms that define it keep it.
+    #if canImport(Glibc) || canImport(Musl) || canImport(Android)
         public static let noSignal = Self(rawValue: Int32(MSG_NOSIGNAL))
     #endif
 }
