@@ -25,22 +25,28 @@ extension System {
     /// Wraps the POSIX `uname()` syscall, extracting `sysname`, `release`,
     /// and `machine` fields from `struct utsname`.
     ///
-    /// - Returns: System identification with name, release version, and hardware type.
-    public static var name: System.Name {
+    /// - Returns: System identification with name, release version, and
+    ///   hardware type, or `nil` when `uname()` fails — never garbage
+    ///   strings read from a partially written struct.
+    public static var name: System.Name? {
         var buf = utsname()
-        unsafe uname(&buf)
+        guard unsafe uname(&buf) == 0 else { return nil }
+        // The rebind capacity is the field's actual size (65 on glibc,
+        // 256 on Darwin) — claiming a larger capacity than the field is
+        // an out-of-bounds capacity claim.
+        let capacity = MemoryLayout.size(ofValue: buf.sysname)
         let system = unsafe withUnsafePointer(to: &buf.sysname) {
-            unsafe $0.withMemoryRebound(to: CChar.self, capacity: 256) {
+            unsafe $0.withMemoryRebound(to: CChar.self, capacity: capacity) {
                 unsafe Swift.String(cString: $0)
             }
         }
         let release = unsafe withUnsafePointer(to: &buf.release) {
-            unsafe $0.withMemoryRebound(to: CChar.self, capacity: 256) {
+            unsafe $0.withMemoryRebound(to: CChar.self, capacity: capacity) {
                 unsafe Swift.String(cString: $0)
             }
         }
         let machine = unsafe withUnsafePointer(to: &buf.machine) {
-            unsafe $0.withMemoryRebound(to: CChar.self, capacity: 256) {
+            unsafe $0.withMemoryRebound(to: CChar.self, capacity: capacity) {
                 unsafe Swift.String(cString: $0)
             }
         }

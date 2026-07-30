@@ -22,14 +22,12 @@
 extension System {
     /// Platform path length limit.
     ///
-    /// Falls back to 4096 if the platform constant is undefined.
+    /// The platform's `PATH_MAX` (1024 on Darwin, usually 4096 on Linux).
+    /// A platform that does not define `PATH_MAX` fails to compile here;
+    /// there is no runtime fallback.
     /// Note: This is a conservative limit, not a universal truth.
     public static var pathMax: System.Path.Length {
-        #if canImport(Darwin)
-            return System.Path.Length(_unchecked: Cardinal(UInt(PATH_MAX)))  // 1024
-        #else
-            return System.Path.Length(_unchecked: Cardinal(UInt(PATH_MAX)))  // Usually 4096
-        #endif
+        System.Path.Length(_unchecked: Cardinal(UInt(PATH_MAX)))
     }
 
     /// Memory page size in bytes.
@@ -53,13 +51,21 @@ extension System {
 
     /// Sleeps for the specified duration.
     ///
+    /// Restarts on `EINTR` using the remaining time `nanosleep` reports,
+    /// so the full duration elapses even when signals are delivered. A
+    /// non-positive duration returns immediately rather than handing
+    /// `nanosleep` an invalid `timespec`.
+    ///
     /// - Parameter duration: The duration to sleep.
-
     public static func sleep(_ duration: Duration) {
+        guard duration > .zero else { return }
         let (seconds, attoseconds) = duration.components
         var ts = timespec()
         ts.tv_sec = Int(seconds)
         ts.tv_nsec = Int(attoseconds / 1_000_000_000)
-        unsafe nanosleep(&ts, nil)
+        var rem = timespec()
+        while unsafe nanosleep(&ts, &rem) == -1, errno == EINTR {
+            ts = rem
+        }
     }
 }
