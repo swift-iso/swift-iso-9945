@@ -15,6 +15,10 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif canImport(Android)
+    internal import Android
+#else
+    #error("ISO_9945.Kernel.Socket.Backlog: unsupported platform (no Darwin, Glibc, Musl, or Android)")
 #endif
 
 // MARK: - POSIX socket backlog
@@ -31,6 +35,10 @@ extension ISO_9945.Kernel.Socket.Backlog {
             ISO_9945.Kernel.Socket.Backlog(Musl.SOMAXCONN)
         #elseif canImport(Glibc)
             ISO_9945.Kernel.Socket.Backlog(Glibc.SOMAXCONN)
+        #elseif canImport(Android)
+            ISO_9945.Kernel.Socket.Backlog(Android.SOMAXCONN)
+        #else
+            #error("ISO_9945.Kernel.Socket.Backlog.max: unsupported platform (no Darwin, Glibc, Musl, or Android)")
         #endif
     }
 }

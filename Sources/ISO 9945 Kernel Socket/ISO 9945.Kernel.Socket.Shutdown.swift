@@ -17,6 +17,10 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif canImport(Android)
+    internal import Android
+#else
+    #error("ISO_9945.Kernel.Socket.Shutdown: unsupported platform (no Darwin, Glibc, Musl, or Android)")
 #endif
 
 // MARK: - Shutdown typed (Phase 1.5)
@@ -50,6 +54,10 @@ extension ISO_9945.Kernel.Socket.Shutdown {
             let result = Musl.shutdown(fd, how.rawValue)
         #elseif canImport(Glibc)
             let result = Glibc.shutdown(fd, how.rawValue)
+        #elseif canImport(Android)
+            let result = Android.shutdown(fd, how.rawValue)
+        #else
+            #error("ISO_9945.Kernel.Socket.Shutdown.shutdown: unsupported platform (no Darwin, Glibc, Musl, or Android)")
         #endif
 
         guard result == 0 else {

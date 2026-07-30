@@ -4,6 +4,10 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif canImport(Android)
+    internal import Android
+#else
+    #error("ISO_9945.Kernel.Poll: unsupported platform (no Darwin, Glibc, Musl, or Android)")
 #endif
 
 // MARK: - Poll Operation
@@ -69,5 +73,9 @@ private func Darwin_or_Glibc_poll(_ fds: UnsafeMutablePointer<pollfd>, _ nfds: n
         unsafe Glibc.poll(fds, nfds, timeout)
     #elseif canImport(Musl)
         unsafe Musl.poll(fds, nfds, timeout)
+    #elseif canImport(Android)
+        unsafe Android.poll(fds, nfds, timeout)
+    #else
+        #error("ISO_9945.Kernel.Poll.poll: unsupported platform (no Darwin, Glibc, Musl, or Android)")
     #endif
 }

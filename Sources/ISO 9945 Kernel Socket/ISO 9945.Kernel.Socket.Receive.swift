@@ -17,6 +17,10 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif canImport(Android)
+    internal import Android
+#else
+    #error("ISO_9945.Kernel.Socket.Receive: unsupported platform (no Darwin, Glibc, Musl, or Android)")
 #endif
 
 extension ISO_9945.Kernel.Socket {
@@ -180,5 +184,9 @@ private func Darwin_or_Glibc_recv(_ fd: Int32, _ buf: UnsafeMutableRawPointer, _
         unsafe Glibc.recv(fd, buf, len, flags)
     #elseif canImport(Musl)
         unsafe Musl.recv(fd, buf, len, flags)
+    #elseif canImport(Android)
+        unsafe Android.recv(fd, buf, len, flags)
+    #else
+        #error("ISO_9945.Kernel.Socket.Receive: unsupported platform (no Darwin, Glibc, Musl, or Android)")
     #endif
 }

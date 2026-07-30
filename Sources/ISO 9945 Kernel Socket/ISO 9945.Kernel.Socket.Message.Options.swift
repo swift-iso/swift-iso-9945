@@ -4,6 +4,10 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif canImport(Android)
+    internal import Android
+#else
+    #error("ISO_9945.Kernel.Socket.Message.Options: unsupported platform (no Darwin, Glibc, Musl, or Android)")
 #endif
 
 // MARK: - POSIX Socket Message Flags

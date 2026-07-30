@@ -17,6 +17,10 @@
     internal import Glibc
 #elseif canImport(Musl)
     internal import Musl
+#elseif canImport(Android)
+    internal import Android
+#else
+    #error("ISO_9945.Kernel.Socket.Listen: unsupported platform (no Darwin, Glibc, Musl, or Android)")
 #endif
 
 extension ISO_9945.Kernel.Socket {
@@ -72,5 +76,9 @@ private func Darwin_or_Glibc_listen(_ fd: Int32, _ backlog: Int32) -> Int32 {
         unsafe Glibc.listen(fd, backlog)
     #elseif canImport(Musl)
         unsafe Musl.listen(fd, backlog)
+    #elseif canImport(Android)
+        unsafe Android.listen(fd, backlog)
+    #else
+        #error("ISO_9945.Kernel.Socket.Listen: unsupported platform (no Darwin, Glibc, Musl, or Android)")
     #endif
 }
