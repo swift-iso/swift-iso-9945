@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.File {
     ///
     /// For platform-specific features like birthtime/creationTime, use:
     /// - `Darwin.File.Stats.birthtime` from swift-darwin-primitives
-    /// - `Windows.File.Stats.creationTime` from swift-windows-primitives
+    /// - `Windows.File.Stats.creationTime` from swift-windows-32
     ///
     /// ## See Also
     ///
@@ -101,7 +101,7 @@ extension ISO_9945.Kernel.File {
 
         // Note: creationTime/birthtime is NOT included here because it's not available
         // on all platforms. Use platform-specific packages (swift-darwin-primitives,
-        // swift-windows-primitives) for birthtime/creationTime access.
+        // swift-windows-32) for birthtime/creationTime access.
 
         /// Creates a Stat value.
         @inlinable

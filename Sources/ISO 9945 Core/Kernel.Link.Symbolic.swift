@@ -21,7 +21,6 @@ extension ISO_9945.Kernel.Link {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.Link.Symbolic`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Link.Symbolic`)
     public enum Symbolic: Sendable {}
 }
 

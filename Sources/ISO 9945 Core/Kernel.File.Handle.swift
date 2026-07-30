@@ -37,7 +37,6 @@ extension ISO_9945.Kernel.File {
     ///
     /// Handle operations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Handle`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Handle`)
     @frozen
     public struct Handle: ~Copyable, Sendable {
         /// The underlying file descriptor.
@@ -70,7 +69,6 @@ extension ISO_9945.Kernel.File {
 
         // Note: deinit, read(), write(), and close() implementations are in platform packages:
         // - POSIX: swift-iso-9945 (ISO_9945.Kernel.File.Handle)
-        // - Windows: swift-windows-primitives (Windows.Kernel.File.Handle)
     }
 }
 

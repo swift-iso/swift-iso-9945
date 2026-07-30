@@ -16,6 +16,5 @@ extension ISO_9945.Kernel.Socket {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Socket.Shutdown`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Socket.Shutdown`)
     public enum Shutdown: Sendable {}
 }

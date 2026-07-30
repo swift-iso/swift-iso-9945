@@ -20,7 +20,6 @@ extension ISO_9945.Kernel.Directory {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.Directory.Remove`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Directory.Remove`)
     ///
     /// - Note: To remove files, use ``Kernel/File/Delete``. To remove non-empty
     ///   directories, you must first remove all contents recursively.

@@ -21,7 +21,6 @@ extension ISO_9945.Kernel.File {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.File.Move`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Move`)
     public enum Move: Sendable {}
 }
 

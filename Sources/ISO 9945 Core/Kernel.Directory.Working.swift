@@ -16,6 +16,5 @@ extension ISO_9945.Kernel.Directory {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Directory.Working`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Directory.Working`)
     public enum Working {}
 }

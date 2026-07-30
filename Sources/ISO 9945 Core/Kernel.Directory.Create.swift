@@ -22,7 +22,6 @@ extension ISO_9945.Kernel.Directory {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.Directory.Create`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Directory.Create`)
     public enum Create: Sendable {}
 }
 

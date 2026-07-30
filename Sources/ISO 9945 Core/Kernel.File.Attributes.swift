@@ -20,7 +20,6 @@ extension ISO_9945.Kernel.File {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.File.Attributes`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Attributes`)
     public enum Attributes {}
 }
 

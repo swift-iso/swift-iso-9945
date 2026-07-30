@@ -23,7 +23,6 @@ extension ISO_9945.Kernel.File {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.File.Delete`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Delete`)
     ///
     /// - Note: To remove directories, use ``Kernel/Directory/Remove``.
     public enum Delete: Sendable {}

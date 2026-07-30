@@ -18,7 +18,6 @@ extension ISO_9945.Kernel.File {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Chown`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Chown`)
     public enum Chown {}
 }
 

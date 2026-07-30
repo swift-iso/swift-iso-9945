@@ -19,7 +19,6 @@ extension ISO_9945.Kernel {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Environment`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Environment`)
     ///
     /// ## Thread Safety
     ///

@@ -95,7 +95,7 @@ L2  swift-iso-9945
 L1  swift-kernel-primitives
     ├── swift-linux-primitives  ← here
     ├── swift-darwin-primitives ← here
-    └── swift-windows-primitives ← here
+    └── swift-windows-32 ← here
     ├── swift-cpu-primitives
     ├── swift-arm-primitives
     └── swift-x86-primitives
@@ -127,7 +127,7 @@ L3  swift-kernel → swift-linux → swift-darwin → swift-windows
 L2  swift-iso-9945 (POSIX)
     ├── swift-linux-primitives  (Linux kernel API)   ← moved here
     ├── swift-darwin-primitives (Darwin/Mach API)    ← moved here
-    └── swift-windows-primitives (Win32 API)         ← moved here
+    └── swift-windows-32 (Win32 API)         ← moved here
 L1  swift-kernel-primitives (cross-platform namespace + types)
     ├── swift-cpu-primitives (hardware)
     ├── swift-arm-primitives (hardware)
@@ -319,7 +319,7 @@ L1  swift-primitives/swift-kernel-primitives   — Cross-platform namespace + ty
 |-----|-----|-------|-------------|
 | `swift-linux-primitives` | **`swift-linux-standard`** | **L2** | `swift-linux-foundation` (new org) |
 | `swift-darwin-primitives` | `swift-darwin-standard` | L2 | (TBD) |
-| `swift-windows-primitives` | `swift-windows-standard` | L2 | `swift-microsoft` (new org) |
+| `swift-windows-32` | `swift-windows-standard` | L2 | `swift-microsoft` (new org) |
 | `swift-linux` (L3) | unchanged | L3 | `swift-foundations` |
 | `swift-kernel-primitives` | unchanged | L1 | `swift-primitives` |
 | `swift-cpu-primitives` | unchanged | L1 | `swift-primitives` |

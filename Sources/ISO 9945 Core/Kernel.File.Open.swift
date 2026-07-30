@@ -23,10 +23,6 @@ extension ISO_9945.Kernel.File {
     ///   - `ISO_9945.Kernel.File.Open.Mode` - O_RDONLY, O_WRONLY, O_RDWR
     ///   - `ISO_9945.Kernel.File.Open.Options` - O_CREAT, O_TRUNC, etc.
     ///   - `ISO_9945.Kernel.File.Open.open()` - POSIX open() syscall
-    /// - Windows: `swift-windows-primitives` (`Windows_Kernel`)
-    ///   - `ISO_9945.Kernel.File.Open.Mode` - GENERIC_READ, GENERIC_WRITE
-    ///   - `ISO_9945.Kernel.File.Open.Options` - CREATE_NEW, TRUNCATE_EXISTING, etc.
-    ///   - `ISO_9945.Kernel.File.Open.open()` - CreateFileW syscall
     ///
     /// ## See Also
     /// - ``Kernel/File/Permissions``

@@ -16,6 +16,5 @@ extension ISO_9945.Kernel.File {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Control`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Control`)
     public enum Control: Sendable {}
 }

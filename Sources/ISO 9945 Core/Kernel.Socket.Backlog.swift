@@ -19,7 +19,6 @@ extension ISO_9945.Kernel.Socket {
     ///
     /// Platform-specific maximum values are defined in:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Socket.Backlog.max`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Socket.Backlog.max`)
     public struct Backlog: RawRepresentable, Sendable, Equatable, Hashable {
         public let rawValue: Int32
 

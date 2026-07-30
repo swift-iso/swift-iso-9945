@@ -19,7 +19,6 @@ extension ISO_9945.Kernel.Socket {
     ///
     /// Option values are defined in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Socket.Options`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Socket.Options`)
     public struct Options: OptionSet, Sendable {
         public let rawValue: Int32
 

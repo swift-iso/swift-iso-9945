@@ -68,4 +68,3 @@ extension ISO_9945.Kernel.Environment.Error.Invalid: CustomStringConvertible {
 //
 // Error code mapping and current() helpers are in platform-specific packages:
 // - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Environment.Error.current()`)
-// - Windows: `swift-windows-primitives` (`ISO_9945.Kernel.Environment.Error.current()`)

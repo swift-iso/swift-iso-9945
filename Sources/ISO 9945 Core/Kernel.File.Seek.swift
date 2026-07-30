@@ -18,7 +18,6 @@ extension ISO_9945.Kernel.File {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.File.Seek`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.File.Seek`)
     public enum Seek: Sendable {}
 }
 

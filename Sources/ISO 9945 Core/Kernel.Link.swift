@@ -16,7 +16,6 @@ extension ISO_9945.Kernel {
     ///
     /// Syscall implementations are in platform-specific packages:
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Link`)
-    /// - Windows: `swift-windows-primitives` (`Windows.Kernel.Link`)
     public enum Link {}
 }
 
