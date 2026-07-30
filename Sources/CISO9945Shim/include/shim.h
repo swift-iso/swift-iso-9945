@@ -18,12 +18,18 @@
 
 // _GNU_SOURCE is required on glibc to expose FNM_CASEFOLD (POSIX Issue 8).
 // It must be defined before ANY libc header is included: <features.h> is
-// include-guarded, so a later define is a no-op. Defined here — before the
-// first include — and undefined again at the end of this header so the
-// feature-test macro does not leak into consumers of this public header.
+// include-guarded, so a later define is a no-op. Defined here, before the
+// first include, and left defined for the rest of the translation unit:
+// undefining it after glob.h/fnmatch.h/sys/types.h have already been parsed
+// under it does not "un-leak" anything (the header guards prevent a second
+// parse), but it does make this header's view of feature-gated system
+// structs (glob_t's GNU fields, in particular) diverge from the Swift
+// toolchain's own SwiftGlibc module, which keeps _GNU_SOURCE defined for
+// its own lifetime — surfacing as a Clang-modules "not present in
+// definition" error across the module boundary. Leaving the macro defined
+// keeps both modules' view of these structs consistent.
 #if !defined(_GNU_SOURCE)
 #define _GNU_SOURCE 1
-#define ISO9945_SHIM_DEFINED_GNU_SOURCE 1
 #endif
 
 #if defined(__APPLE__) || defined(__linux__) || defined(__OpenBSD__)
@@ -136,10 +142,5 @@ static inline int iso9945_shm_open(const char *name, int oflag, mode_t mode) {
 }
 
 #endif /* __APPLE__ */
-
-#if defined(ISO9945_SHIM_DEFINED_GNU_SOURCE)
-#undef _GNU_SOURCE
-#undef ISO9945_SHIM_DEFINED_GNU_SOURCE
-#endif
 
 #endif /* CISO9945_SHIM_H */
