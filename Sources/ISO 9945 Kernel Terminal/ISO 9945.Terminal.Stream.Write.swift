@@ -27,9 +27,11 @@
         /// non-contiguous sequences (e.g., a lazy filter) pay the materialization.
         ///
         /// - Parameter bytes: The bytes to write.
-        /// - Returns: Total number of bytes written (equals `bytes.count` on
-        ///   success; may be less on partial completion before a non-EINTR error).
+        /// - Returns: `bytes.count` on success — this method only returns once
+        ///   every byte has been written.
         /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on a non-EINTR failure.
+        ///   The count already written before the failing syscall is not part
+        ///   of the thrown error and is not otherwise observable by the caller.
         @discardableResult
         public func callAsFunction(
             _ bytes: some Swift.Sequence<Byte>
