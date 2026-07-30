@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.File.Flush {
         throw Error.current()
     }
 
-    #if os(Linux)
+    #if canImport(Glibc) || canImport(Musl)
         /// Synchronizes a raw file descriptor's data (without metadata) to storage device.
         ///
         /// Spec-literal raw `fdatasync(2)`. Like `fsync()`, but does not flush
@@ -152,7 +152,7 @@ extension ISO_9945.Kernel.File.Flush {
         try unsafe fsync(fd: descriptor._rawValue)
     }
 
-    #if os(Linux)
+    #if canImport(Glibc) || canImport(Musl)
         /// Synchronizes a file's data (without metadata) to storage device.
         ///
         /// Typed L2 form. Delegates to the raw `fdatasync(fd:)` SPI via
