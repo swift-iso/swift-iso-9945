@@ -25,17 +25,24 @@
 
         /// Suspends until the given deadline, checking for cancellation.
         ///
+        /// Sleeps once for the remaining duration (re-checking after wake to
+        /// handle early return) rather than polling — a one-second sleep
+        /// consumes approximately no CPU. `tolerance` is forwarded to the
+        /// underlying suspension.
+        ///
         /// - Parameters:
         ///   - deadline: The instant to sleep until.
-        ///   - tolerance: Optional tolerance (currently unused).
+        ///   - tolerance: Optional tolerance for the wake-up.
         /// - Throws: `CancellationError` if the task is cancelled.
         nonisolated(nonsending)
             public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError)
         {
-            while Clock.Continuous.now < deadline {
+            while true {
+                let remaining = deadline - Clock.Continuous.now
+                guard remaining > .zero else { return }
                 do {
                     try Task.checkCancellation()
-                    try await Task.sleep(for: .nanoseconds(1_000_000))  // 1ms granularity
+                    try await Task.sleep(for: remaining, tolerance: tolerance)
                 } catch is CancellationError {
                     throw CancellationError()
                 } catch {
@@ -57,17 +64,24 @@
 
         /// Suspends until the given deadline, checking for cancellation.
         ///
+        /// Sleeps once for the remaining duration (re-checking after wake to
+        /// handle early return) rather than polling — a one-second sleep
+        /// consumes approximately no CPU. `tolerance` is forwarded to the
+        /// underlying suspension.
+        ///
         /// - Parameters:
         ///   - deadline: The instant to sleep until.
-        ///   - tolerance: Optional tolerance (currently unused).
+        ///   - tolerance: Optional tolerance for the wake-up.
         /// - Throws: `CancellationError` if the task is cancelled.
         nonisolated(nonsending)
             public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError)
         {
-            while Clock.Suspending.now < deadline {
+            while true {
+                let remaining = deadline - Clock.Suspending.now
+                guard remaining > .zero else { return }
                 do {
                     try Task.checkCancellation()
-                    try await Task.sleep(for: .nanoseconds(1_000_000))  // 1ms granularity
+                    try await Task.sleep(for: remaining, tolerance: tolerance)
                 } catch is CancellationError {
                     throw CancellationError()
                 } catch {
