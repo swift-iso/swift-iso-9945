@@ -90,13 +90,18 @@ extension ISO_9945.Kernel.Socket.Send {
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
-            guard let base = buffer.baseAddress else { return 0 }
-            let result = unsafe Darwin_or_Glibc_send(
-                fd,
-                base,
-                buffer.count,
-                options.rawValue
-            )
+            // An empty span still performs the syscall: send(fd, ptr, 0, …)
+            // is valid POSIX and transmits a zero-length datagram, which is
+            // a meaningful protocol event.
+            var zero: UInt8 = 0
+            let result = unsafe withUnsafePointer(to: &zero) { fallback in
+                unsafe Darwin_or_Glibc_send(
+                    fd,
+                    buffer.baseAddress ?? UnsafeRawPointer(fallback),
+                    buffer.count,
+                    options.rawValue
+                )
+            }
             guard result >= 0 else {
                 throw ISO_9945.Kernel.Socket.Error.current()
             }
@@ -122,17 +127,21 @@ extension ISO_9945.Kernel.Socket.Send {
         addressLength: ISO_9945.Kernel.Socket.Address.Length
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
-            guard let base = buffer.baseAddress else { return 0 }
-            let result = address.withUnsafeBytes { ptr, _ in
-                let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-                return unsafe sendto(
-                    fd,
-                    base,
-                    buffer.count,
-                    options.rawValue,
-                    sockaddrPtr,
-                    socklen_t(addressLength.underlying.rawValue)
-                )
+            // An empty span still performs the syscall so a zero-length
+            // datagram is actually transmitted.
+            var zero: UInt8 = 0
+            let result = unsafe withUnsafePointer(to: &zero) { fallback in
+                address.withUnsafeBytes { ptr, _ in
+                    let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+                    return unsafe sendto(
+                        fd,
+                        buffer.baseAddress ?? UnsafeRawPointer(fallback),
+                        buffer.count,
+                        options.rawValue,
+                        sockaddrPtr,
+                        socklen_t(addressLength.underlying.rawValue)
+                    )
+                }
             }
             guard result >= 0 else {
                 throw ISO_9945.Kernel.Socket.Error.current()

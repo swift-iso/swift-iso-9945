@@ -81,13 +81,17 @@ extension ISO_9945.Kernel.Socket.Receive {
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
-            guard let base = buffer.baseAddress else { return 0 }
-            let result = unsafe Darwin_or_Glibc_recv(
-                fd,
-                base,
-                buffer.count,
-                options.rawValue
-            )
+            // An empty buffer still performs the syscall; recv with a
+            // zero length is well-defined.
+            var zero: UInt8 = 0
+            let result = unsafe withUnsafeMutablePointer(to: &zero) { fallback in
+                unsafe Darwin_or_Glibc_recv(
+                    fd,
+                    buffer.baseAddress ?? UnsafeMutableRawPointer(fallback),
+                    buffer.count,
+                    options.rawValue
+                )
+            }
             guard result >= 0 else {
                 throw ISO_9945.Kernel.Socket.Error.current()
             }
@@ -112,22 +116,24 @@ extension ISO_9945.Kernel.Socket.Receive {
             (
                 buffer: UnsafeMutableRawBufferPointer
             ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) in
-            guard let base = buffer.baseAddress else {
-                return (count: 0, address: ISO_9945.Kernel.Socket.Address.Storage(), addressLength: ISO_9945.Kernel.Socket.Address.Length(UInt(0)))
-            }
+            // An empty buffer still performs the syscall: recvfrom with a
+            // zero length reports the sender's address.
             var storage = ISO_9945.Kernel.Socket.Address.Storage()
             var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
-            let count = storage.withUnsafeMutableBytes { ptr, _ in
-                let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-                return unsafe recvfrom(
-                    fd,
-                    base,
-                    buffer.count,
-                    options.rawValue,
-                    sockaddrPtr,
-                    &addrLen
-                )
+            var zero: UInt8 = 0
+            let count = unsafe withUnsafeMutablePointer(to: &zero) { fallback in
+                storage.withUnsafeMutableBytes { ptr, _ in
+                    let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
+                    return unsafe recvfrom(
+                        fd,
+                        buffer.baseAddress ?? UnsafeMutableRawPointer(fallback),
+                        buffer.count,
+                        options.rawValue,
+                        sockaddrPtr,
+                        &addrLen
+                    )
+                }
             }
 
             guard count >= 0 else {
