@@ -13,6 +13,20 @@ extension ISO_9945.Kernel.IO {
     public enum Vector {}
 }
 
+extension ISO_9945.Kernel.IO.Vector {
+    /// The platform's `iovcnt` limit for `readv(2)`/`writev(2)`.
+    ///
+    /// `IOV_MAX` is not a compile-time constant Swift's C importer exposes
+    /// on every supported platform, so it is queried via
+    /// `sysconf(_SC_IOV_MAX)` instead — the portable way to read it per
+    /// POSIX. Falls back to `_XOPEN_IOV_MAX` (16), the minimum POSIX
+    /// guarantees, if the query fails.
+    fileprivate static var iovMax: Int {
+        let value = unsafe sysconf(Int32(_SC_IOV_MAX))
+        return value > 0 ? Int(value) : 16
+    }
+}
+
 // MARK: - Scatter Read (raw @_spi(Syscall))
 
 extension ISO_9945.Kernel.IO.Vector {
@@ -38,7 +52,7 @@ extension ISO_9945.Kernel.IO.Vector {
         // here rather than force-unwrapping an empty array's nil baseAddress
         // (which traps) or converting an unbounded count to Int32 (which
         // traps for very large arrays).
-        guard !buffers.isEmpty, buffers.count <= IOV_MAX else {
+        guard !buffers.isEmpty, buffers.count <= Self.iovMax else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
         let iovecs = buffers.map { $0.cValue }
@@ -76,7 +90,7 @@ extension ISO_9945.Kernel.IO.Vector {
         buffers: [Segment]
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
         // See the identical iovcnt validation in read(fd:buffers:) above.
-        guard !buffers.isEmpty, buffers.count <= IOV_MAX else {
+        guard !buffers.isEmpty, buffers.count <= Self.iovMax else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
         let iovecs = buffers.map { $0.cValue }
