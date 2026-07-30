@@ -52,12 +52,19 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ) throws(Error) -> Int {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
+        // An empty destination buffer is trivially too small to hold any
+        // target; report that instead of force-unwrapping the buffer's
+        // nil baseAddress.
+        guard let base = buffer.baseAddress, buffer.count > 0 else {
+            throw .bufferTooSmall
+        }
+
         #if canImport(Darwin)
-            let count = unsafe Darwin.readlink(cPath, buffer.baseAddress!, buffer.count)
+            let count = unsafe Darwin.readlink(cPath, base, buffer.count)
         #elseif canImport(Musl)
-            let count = Musl.readlink(cPath, buffer.baseAddress!, buffer.count)
+            let count = Musl.readlink(cPath, base, buffer.count)
         #elseif canImport(Glibc)
-            let count = Glibc.readlink(cPath, buffer.baseAddress!, buffer.count)
+            let count = Glibc.readlink(cPath, base, buffer.count)
         #endif
 
         guard count >= 0 else {
