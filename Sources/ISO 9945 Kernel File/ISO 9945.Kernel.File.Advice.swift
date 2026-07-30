@@ -17,6 +17,8 @@
         internal import Glibc
     #elseif canImport(Musl)
         internal import Musl
+    #elseif canImport(Android)
+        internal import Android
     #endif
 
     extension ISO_9945.Kernel.File {
@@ -43,7 +45,7 @@
     // may extend ISO_9945.Kernel.File.Advice with its own subset separately when a
     // need arises.
 
-    #if os(Linux) || os(Android) || os(OpenBSD)
+    #if os(Linux) || os(Android) || os(OpenBSD) || os(FreeBSD)
 
         extension ISO_9945.Kernel.File.Advice {
             /// No special treatment (default).
