@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Socket.Message.Header {
     /// Ancillary data (control message) component of a message header.
-    public struct Control: @unchecked Sendable {
+    public struct Control {
         /// Borrowed buffer covering the ancillary data region.
         ///
         /// The buffer's `baseAddress` maps to `msghdr.msg_control` and its

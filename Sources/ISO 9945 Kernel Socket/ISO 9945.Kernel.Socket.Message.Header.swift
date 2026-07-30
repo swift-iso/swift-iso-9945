@@ -14,7 +14,7 @@ extension ISO_9945.Kernel.Socket.Message {
     /// Wraps the platform `msghdr` struct. Layout-compatible — an
     /// `UnsafePointer<Header>` may be passed directly to kernel interfaces
     /// that expect `struct msghdr *`.
-    public struct Header: @unchecked Sendable {
+    public struct Header {
         /// The underlying C struct.
         internal var cValue: msghdr
 

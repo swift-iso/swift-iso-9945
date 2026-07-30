@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Socket.Message.Header {
     /// Socket address component of a message header.
-    public struct Name: @unchecked Sendable {
+    public struct Name {
         /// Pointer to the socket address structure.
         public var pointer: UnsafeMutableRawPointer?
 

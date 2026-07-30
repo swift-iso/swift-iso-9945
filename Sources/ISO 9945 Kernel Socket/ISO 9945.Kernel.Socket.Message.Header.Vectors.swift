@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.Socket.Message.Header {
     /// Wraps a borrowed pointer to an array of ``Kernel/IO/Vector/Segment``
     /// (layout-compatible with POSIX `struct iovec`) and the element count.
     /// Pointer-equivalent to `msghdr.msg_iov` + `msghdr.msg_iovlen`.
-    public struct Vectors: @unchecked Sendable {
+    public struct Vectors {
         /// Pointer to the I/O vector array.
         public var pointer: UnsafeMutablePointer<ISO_9945.Kernel.IO.Vector.Segment>?
 
