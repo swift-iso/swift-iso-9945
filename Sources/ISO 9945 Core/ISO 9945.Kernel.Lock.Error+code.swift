@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Error Code Mapping
 
 extension ISO_9945.Kernel.Lock.Error {
@@ -33,3 +35,5 @@ extension ISO_9945.Kernel.Lock.Error {
         }
     }
 }
+
+#endif

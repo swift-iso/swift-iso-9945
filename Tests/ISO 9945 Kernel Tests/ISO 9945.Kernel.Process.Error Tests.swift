@@ -16,6 +16,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
+#if !os(Windows)
+
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
@@ -125,3 +127,5 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
         #expect(invalidArg.semantic == .invalidArgument)
     }
 }
+
+#endif

@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - EINTR Detection
 
 extension Error_Primitives.Error.Code {
@@ -37,3 +39,5 @@ extension Error_Primitives.Error.Code {
         self == .POSIX.EINTR
     }
 }
+
+#endif

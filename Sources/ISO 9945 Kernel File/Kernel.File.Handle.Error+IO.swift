@@ -18,6 +18,8 @@
 // boundary: L1 Handle.Error knows nothing about L2 IO; L2 callers route
 // through this conversion.
 
+#if !os(Windows)
+
 extension ISO_9945.Kernel.File.Handle.Error {
     public init(from error: ISO_9945.Kernel.IO.Read.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
         switch error {
@@ -59,3 +61,5 @@ extension ISO_9945.Kernel.File.Handle.Error {
         }
     }
 }
+
+#endif

@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Error Code Access
 
 extension ISO_9945.Kernel.Descriptor.Validity.Error {
@@ -65,3 +67,5 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error {
         }
     }
 }
+
+#endif

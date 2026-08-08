@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Error Code Mapping
 
 extension Memory.Allocation.Error {
@@ -28,3 +30,5 @@ extension Memory.Allocation.Error {
         }
     }
 }
+
+#endif

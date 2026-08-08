@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 public import Path_Primitives
 
 // MARK: - POSIX Error Code Mapping
@@ -50,3 +52,5 @@ extension Path.Resolution.Error {
         }
     }
 }
+
+#endif

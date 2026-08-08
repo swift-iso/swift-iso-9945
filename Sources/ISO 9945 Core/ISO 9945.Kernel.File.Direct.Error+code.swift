@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Translation from Syscall
 
 extension ISO_9945.Kernel.File.Direct.Error {
@@ -47,3 +49,5 @@ extension ISO_9945.Kernel.File.Direct.Error {
         }
     }
 }
+
+#endif

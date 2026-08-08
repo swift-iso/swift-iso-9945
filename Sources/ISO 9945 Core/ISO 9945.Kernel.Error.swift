@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -42,3 +44,5 @@ extension Error_Primitives.Error {
         .capturing(.posix(errno), operation: operation, function: function, file: .init(id: fileID), line: line)
     }
 }
+
+#endif

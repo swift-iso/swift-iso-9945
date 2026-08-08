@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - Platform-Neutral Semantic Predicates
 //
 // These accessors let consumers describe a failure condition in domain terms
@@ -98,3 +100,5 @@ extension Error_Primitives.Error.Code {
         false
     }
 }
+
+#endif

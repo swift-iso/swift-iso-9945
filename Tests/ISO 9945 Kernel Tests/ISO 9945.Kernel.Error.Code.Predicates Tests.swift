@@ -14,6 +14,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
+#if !os(Windows)
+
 extension Error_Primitives.Error.Code {
     @Suite
     struct Test {
@@ -74,3 +76,5 @@ extension Error_Primitives.Error.Code.Test.Unit {
         #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isNetworkNotFound)
     }
 }
+
+#endif

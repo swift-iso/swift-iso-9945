@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Error Code Access
 
 extension ISO_9945.Kernel.IO.Blocking.Error {
@@ -40,3 +42,5 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
         }
     }
 }
+
+#endif

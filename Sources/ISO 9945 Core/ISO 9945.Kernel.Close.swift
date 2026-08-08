@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -61,3 +63,5 @@ extension ISO_9945.Kernel.Close {
         }
     }
 }
+
+#endif

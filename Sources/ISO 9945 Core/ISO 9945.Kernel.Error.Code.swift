@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -149,4 +151,6 @@ extension Error_Primitives.Error.Code {
         public static let EDEADLK = Self.posix(Musl.EDEADLK)
         public static let ENOTSUP = Self.posix(Musl.ENOTSUP)
     }
+#endif
+
 #endif

@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -89,3 +91,5 @@ extension Error_Primitives.Error.Number {
     /// Out of memory (ENOMEM).
     public static var noMemory: Self { Self(_unchecked: ENOMEM) }
 }
+
+#endif

@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -43,3 +45,5 @@ extension Error_Primitives.Error.Code {
         }
     }
 }
+
+#endif

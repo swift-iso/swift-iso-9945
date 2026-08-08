@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// ISO/IEC 9945 specifies this errno surface only for POSIX platforms.
+#if !os(Windows)
+
 extension Error_Primitives.Error.Code {
     /// POSIX errno constants.
     ///
@@ -364,3 +367,5 @@ extension Error_Primitives.Error.Code.POSIX {
         code == Self.ENOTSUP
     }
 }
+
+#endif

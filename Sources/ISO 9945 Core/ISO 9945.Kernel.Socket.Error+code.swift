@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Error Code Access
 
 extension ISO_9945.Kernel.Socket.Error {
@@ -31,3 +33,5 @@ extension ISO_9945.Kernel.Socket.Error {
         self = .platform(Error_Primitives.Error(code: code))
     }
 }
+
+#endif

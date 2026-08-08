@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !os(Windows)
+
 // MARK: - POSIX Error Conversion
 
 extension ISO_9945.Kernel.File.Clone.Error {
@@ -53,3 +55,5 @@ extension ISO_9945.Kernel.File.Clone.Error {
         }
     }
 }
+
+#endif

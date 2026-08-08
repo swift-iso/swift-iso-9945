@@ -18,6 +18,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
+#if !os(Windows)
+
 extension Error_Primitives.Error.Number {
     @Suite
     struct Test {
@@ -34,8 +36,6 @@ extension Error_Primitives.Error.Number {
     import Glibc
 #elseif canImport(Musl)
     import Musl
-#endif
-
 extension Error_Primitives.Error.Number.Test.Unit {
     @Test
     func `noEntry equals ENOENT`() {
@@ -120,6 +120,10 @@ extension Error_Primitives.Error.Number.Test.Unit {
         #expect(Error_Primitives.Error.Number.badDescriptor == Error_Primitives.Error.Number(_unchecked: EBADF))
     }
 }
+
+#endif
+
+#endif
 
 extension Error_Primitives.Error.Number.Test.Unit {
     @Test
