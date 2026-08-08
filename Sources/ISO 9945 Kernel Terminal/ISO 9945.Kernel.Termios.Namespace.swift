@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.Termios {
     /// let original = try ISO_9945.Kernel.Termios.Attributes.get(fd: 0)
     /// let raw = original.withRaw()
     /// try ISO_9945.Kernel.Termios.Attributes.set(raw, fd: 0)
-    /// defer { try? ISO_9945.Kernel.Termios.Attributes.set(original, fd: 0) }
+    /// defer { do throws(Error_Primitives.Error) { try ISO_9945.Kernel.Termios.Attributes.set(original, fd: 0) } catch {} }
     /// ```
     public struct Attributes: Sendable {
         /// Opaque storage for the underlying termios structure.

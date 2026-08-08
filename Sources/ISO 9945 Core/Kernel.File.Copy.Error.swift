@@ -65,24 +65,34 @@ extension ISO_9945.Kernel.File.Copy.Error: CustomStringConvertible {
         switch self {
         case .sourceNotFound:
             return "source not found"
+
         case .destinationExists:
             return "destination already exists"
+
         case .isDirectory:
             return "is a directory"
+
         case .permissionDenied:
             return "permission denied"
+
         case .clone(let e):
             return "clone error: \(e)"
+
         case .unlink(let e):
             return "unlink error: \(e)"
+
         case .attributes(let e):
             return "attributes error: \(e)"
+
         case .times(let e):
             return "times error: \(e)"
+
         case .mkdir(let e):
             return "mkdir error: \(e)"
+
         case .rmdir(let e):
             return "rmdir error: \(e)"
+
         case .operation(let message):
             return "operation failed: \(message)"
         }

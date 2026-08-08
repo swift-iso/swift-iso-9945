@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Signal {
     ///
     /// // Block these signals
     /// let previous = try ISO_9945.Kernel.Signal.Mask.change(.block, signals: signals)
-    /// defer { _ = try? ISO_9945.Kernel.Signal.Mask.change(.set, signals: previous) }
+    /// defer { do throws(ISO_9945.Kernel.Signal.Error) { _ = try ISO_9945.Kernel.Signal.Mask.change(.set, signals: previous) } catch {} }
     /// ```
     public struct Set: Sendable {
         internal var storage: sigset_t

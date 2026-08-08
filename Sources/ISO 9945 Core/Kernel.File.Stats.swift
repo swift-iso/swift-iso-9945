@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.File {
     ///
     /// // Get stats by descriptor
     /// let fd = try ISO_9945.Kernel.File.Open.open(path: path, mode: [.read], options: [])
-    /// defer { try? ISO_9945.Kernel.Close.close(fd) }
+    /// defer { do throws(ISO_9945.Kernel.Close.Error) { try ISO_9945.Kernel.Close.close(fd) } catch {} }
     /// let fdStats = try ISO_9945.Kernel.File.Stats.get(descriptor: fd)
     /// ```
     ///

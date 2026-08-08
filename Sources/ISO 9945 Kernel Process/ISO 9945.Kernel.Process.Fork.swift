@@ -68,8 +68,10 @@ extension ISO_9945.Kernel.Process.Fork {
         switch pid {
         case -1:
             throw .fork(Error_Primitives.Error.captureErrno())
+
         case 0:
             return .child
+
         default:
             return .parent(child: ISO_9945.Kernel.Process.ID(pid))
         }

@@ -75,8 +75,10 @@ extension ISO_9945.Kernel.Process.Wait {
         switch selector {
         case .any:
             pid = -1
+
         case .process(let id):
             pid = id.rawValue
+
         case .group(let pgid):
             // Negating pid_t.min traps; no process group can have that
             // magnitude as its ID (getpgid/setpgid never produce it), so
@@ -86,6 +88,7 @@ extension ISO_9945.Kernel.Process.Wait {
                 throw .wait(.posix(EINVAL))
             }
             pid = -pgid.underlying
+
         case .current:
             pid = 0
         }

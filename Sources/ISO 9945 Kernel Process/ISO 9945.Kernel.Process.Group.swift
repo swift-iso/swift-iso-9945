@@ -63,6 +63,7 @@ extension ISO_9945.Kernel.Process.Group {
             switch process {
             case .current:
                 0
+
             case .id(let id):
                 id.rawValue
             }
@@ -71,6 +72,7 @@ extension ISO_9945.Kernel.Process.Group {
             switch target {
             case .same:
                 0
+
             case .id(let id):
                 id.underlying
             }

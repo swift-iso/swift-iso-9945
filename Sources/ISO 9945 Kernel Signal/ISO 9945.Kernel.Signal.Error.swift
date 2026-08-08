@@ -53,6 +53,7 @@ extension ISO_9945.Kernel.Signal.Error {
         switch errno {
         case EINTR:
             self = .interrupted
+
         default:
             return nil
         }
@@ -67,6 +68,7 @@ extension ISO_9945.Kernel.Signal.Error {
         switch self {
         case .interrupted:
             return nil
+
         case .set(let c), .mask(let c), .action(let c), .send(let c):
             return c
         }
@@ -105,12 +107,16 @@ extension ISO_9945.Kernel.Signal.Error: CustomStringConvertible {
         switch self {
         case .interrupted:
             return "interrupted by signal"
+
         case .set(let code):
             return "signal set operation failed: \(code)"
+
         case .mask(let code):
             return "signal mask operation failed: \(code)"
+
         case .action(let code):
             return "signal action operation failed: \(code)"
+
         case .send(let code):
             return "signal send operation failed: \(code)"
         }

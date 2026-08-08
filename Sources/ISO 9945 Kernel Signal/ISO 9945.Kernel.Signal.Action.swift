@@ -48,7 +48,7 @@ extension ISO_9945.Kernel.Signal.Action {
     /// let previous = try ISO_9945.Kernel.Signal.Action.set(signal: .user1, config)
     ///
     /// // Always restore on cleanup
-    /// defer { _ = try? ISO_9945.Kernel.Signal.Action.set(signal: .user1, previous) }
+    /// defer { do throws(ISO_9945.Kernel.Signal.Error) { _ = try ISO_9945.Kernel.Signal.Action.set(signal: .user1, previous) } catch {} }
     /// ```
     @discardableResult
 
@@ -118,10 +118,13 @@ extension sigaction {
             switch unsafe configuration.handler {
             case .default:
                 unsafe (self.__sigaction_u.__sa_handler = SIG_DFL)
+
             case .ignore:
                 unsafe (self.__sigaction_u.__sa_handler = SIG_IGN)
+
             case .custom(let handler):
                 unsafe (self.__sigaction_u.__sa_handler = handler)
+
             case .customInfo(let handler):
                 unsafe (self.__sigaction_u.__sa_sigaction = handler)
             }
@@ -129,10 +132,13 @@ extension sigaction {
             switch unsafe configuration.handler {
             case .default:
                 unsafe (self.__sigaction_handler.sa_handler = SIG_DFL)
+
             case .ignore:
                 unsafe (self.__sigaction_handler.sa_handler = SIG_IGN)
+
             case .custom(let handler):
                 unsafe (self.__sigaction_handler.sa_handler = handler)
+
             case .customInfo(let handler):
                 unsafe (self.__sigaction_handler.sa_sigaction = handler)
             }
@@ -140,10 +146,13 @@ extension sigaction {
             switch unsafe configuration.handler {
             case .default:
                 unsafe (self.sa_handler = SIG_DFL)
+
             case .ignore:
                 unsafe (self.sa_handler = SIG_IGN)
+
             case .custom(let handler):
                 unsafe (self.sa_handler = handler)
+
             case .customInfo(let handler):
                 unsafe (self.sa_sigaction = handler)
             }

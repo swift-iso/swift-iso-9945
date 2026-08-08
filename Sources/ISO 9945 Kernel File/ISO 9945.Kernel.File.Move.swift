@@ -152,26 +152,37 @@ extension ISO_9945.Kernel.File.Move.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES, .EPERM:
             return .permission
+
         case .EXDEV:
             return .crossDevice
+
         case .ENOTEMPTY:
             return .notEmpty
+
         case .ENOTDIR:
             return .notDirectory
+
         case .EINVAL:
             return .invalidArgument
+
         case .EISDIR:
             return .isDirectory
+
         case .EROFS:
             return .readOnly
+
         case .ELOOP:
             return .loop
+
         case .ENAMETOOLONG:
             return .nameTooLong
+
         case .ENOSPC:
             return .noSpace
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

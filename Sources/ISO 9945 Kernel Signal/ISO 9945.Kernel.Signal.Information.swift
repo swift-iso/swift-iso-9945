@@ -125,6 +125,7 @@ extension ISO_9945.Kernel.Signal.Information {
             switch code {
             case Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
                 isChildCode = true
+
             default:
                 isChildCode = false
             }
@@ -193,21 +194,25 @@ extension ISO_9945.Kernel.Signal.Information {
             case Int32(SEGV_MAPERR), Int32(SEGV_ACCERR): matches = true
             default: matches = false
             }
+
         case Int32(SIGBUS):
             switch code {
             case Int32(BUS_ADRALN), Int32(BUS_ADRERR), Int32(BUS_OBJERR): matches = true
             default: matches = false
             }
+
         case Int32(SIGILL):
             switch code {
             case Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK): matches = true
             default: matches = false
             }
+
         case Int32(SIGFPE):
             switch code {
             case Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB): matches = true
             default: matches = false
             }
+
         default:
             matches = false
         }

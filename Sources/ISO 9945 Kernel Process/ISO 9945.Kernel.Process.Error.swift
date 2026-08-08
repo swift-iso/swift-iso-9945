@@ -73,14 +73,19 @@ extension ISO_9945.Kernel.Process.Error {
         switch posix {
         case EAGAIN, ENOMEM:
             return .resourceLimit
+
         case EPERM:
             return .noPermission
+
         case ESRCH, ECHILD:
             return .noSuchProcess
+
         case EINTR:
             return .interrupted
+
         case EINVAL:
             return .invalidArgument
+
         default:
             return nil
         }
@@ -94,16 +99,22 @@ extension ISO_9945.Kernel.Process.Error: CustomStringConvertible {
         switch self {
         case .fork(let code):
             return "fork failed: \(code)"
+
         case .execute(let code):
             return "execute failed: \(code)"
+
         case .wait(let code):
             return "wait failed: \(code)"
+
         case .kill(let code):
             return "kill failed: \(code)"
+
         case .session(let code):
             return "session operation failed: \(code)"
+
         case .group(let code):
             return "process group operation failed: \(code)"
+
         case .spawn(let code):
             return "spawn failed: \(code)"
         }
