@@ -12,6 +12,10 @@
 #ifndef CISO9945_SHIM_H
 #define CISO9945_SHIM_H
 
+#if defined(__ANDROID__)
+#include "android.h"
+#endif
+
 // POSIX C interop shims for functions Swift cannot call directly:
 // - Variadic C functions
 // - C macros that Swift cannot import
