@@ -28,8 +28,10 @@ extension ISO_9945.Kernel.File.Access.Error: CustomStringConvertible {
         switch self {
         case .path(let error):
             return "path: \(error)"
+
         case .unsupported:
             return "effective file access checks are unsupported"
+
         case .platform(let error):
             return "\(error)"
         }
