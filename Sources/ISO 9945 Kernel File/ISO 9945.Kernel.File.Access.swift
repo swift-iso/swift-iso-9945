@@ -19,18 +19,22 @@
     internal import Musl
 #elseif canImport(Android)
     internal import Android
+    internal import CISO9945Shim
 #endif
 
 extension ISO_9945.Kernel.File.Access {
     /// Checks whether the calling process can access a path using its effective
     /// user and group identities.
     ///
-    /// This binds POSIX `faccessat` with `AT_EACCESS`. The kernel and C library
-    /// therefore apply ownership, supplementary-group, privilege, mount, and
-    /// access-control-list rules available on the platform. A denied request
-    /// returns `false`; path-resolution and other failures remain typed errors.
-    /// The result is advisory because the file-system state can change before
-    /// a subsequent operation uses the path.
+    /// This binds POSIX `faccessat` with `AT_EACCESS`. On Android, where Bionic
+    /// rejects that flag, it invokes the kernel's `faccessat2` operation
+    /// directly. The kernel and C library therefore apply ownership,
+    /// supplementary-group, privilege, mount, and access-control-list rules
+    /// available on the platform. A denied request returns `false`;
+    /// path-resolution and other failures remain typed errors. An Android
+    /// kernel without `faccessat2` support reports ``Error/unsupported``. The
+    /// result is advisory because the file-system state can change before a
+    /// subsequent operation uses the path.
     ///
     /// - Parameters:
     ///   - mode: The access requirements to check.
@@ -73,7 +77,7 @@ extension ISO_9945.Kernel.File.Access {
             #elseif canImport(Musl)
                 let result = Musl.faccessat(AT_FDCWD, cPath, requested, AT_EACCESS)
             #elseif canImport(Android)
-                let result = Android.faccessat(AT_FDCWD, cPath, requested, AT_EACCESS)
+                let result = iso9945_android_faccessat2(cPath, requested)
             #endif
 
             if result == 0 {
@@ -81,6 +85,11 @@ extension ISO_9945.Kernel.File.Access {
             }
 
             let code = Error_Primitives.Error.Code.current()
+            #if canImport(Android)
+                if code == .posix(Android.ENOSYS) {
+                    throw .unsupported
+                }
+            #endif
             if code == .POSIX.EACCES {
                 return false
             }

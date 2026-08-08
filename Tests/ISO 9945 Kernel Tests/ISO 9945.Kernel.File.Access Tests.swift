@@ -34,7 +34,45 @@ extension ISO_9945.Kernel.File.Access.Test.Unit {
     }
 }
 
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android)
+#if os(Android)
+    extension ISO_9945.Kernel.File.Access.Test.Integration {
+        @Test
+        func `Android allows executable access or reports kernel unavailability`() throws {
+            let path = KernelIOTest.makeTempPath(prefix: "effective-access-allowed")
+            defer { KernelIOTest.cleanup(path: path) }
+            let descriptor = try KernelIOTest.open(at: path)
+
+            _ = try Path.scope(path) { path in
+                try ISO_9945.Kernel.File.Attributes.set(.privateExecutable, at: path)
+                do throws(ISO_9945.Kernel.File.Access.Error) {
+                    let allowed = try ISO_9945.Kernel.File.Access.check(.execute, at: path)
+                    #expect(allowed)
+                } catch {
+                    #expect(error == .unsupported)
+                }
+            }
+            _ = descriptor
+        }
+
+        @Test
+        func `Android denies nonexecutable access or reports kernel unavailability`() throws {
+            let path = KernelIOTest.makeTempPath(prefix: "effective-access-denied")
+            defer { KernelIOTest.cleanup(path: path) }
+            let descriptor = try KernelIOTest.open(at: path)
+
+            _ = try Path.scope(path) { path in
+                try ISO_9945.Kernel.File.Attributes.set(.privateFile, at: path)
+                do throws(ISO_9945.Kernel.File.Access.Error) {
+                    let allowed = try ISO_9945.Kernel.File.Access.check(.execute, at: path)
+                    #expect(!allowed)
+                } catch {
+                    #expect(error == .unsupported)
+                }
+            }
+            _ = descriptor
+        }
+    }
+#elseif os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux)
     extension ISO_9945.Kernel.File.Access.Test.Integration {
         @Test
         func `effective execute access allows an executable file`() throws {
