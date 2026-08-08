@@ -36,6 +36,8 @@ extension Error_Primitives.Error.Number {
     import Glibc
 #elseif canImport(Musl)
     import Musl
+#endif
+
 extension Error_Primitives.Error.Number.Test.Unit {
     @Test
     func `noEntry equals ENOENT`() {
@@ -121,10 +123,6 @@ extension Error_Primitives.Error.Number.Test.Unit {
     }
 }
 
-#endif
-
-#endif
-
 extension Error_Primitives.Error.Number.Test.Unit {
     @Test
     func `all error number values are distinct`() {
@@ -159,3 +157,5 @@ extension Error_Primitives.Error.Number.Test.Unit {
         #expect(Error_Primitives.Error.Number.badDescriptor > 0)
     }
 }
+
+#endif
