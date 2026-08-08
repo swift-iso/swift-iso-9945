@@ -141,7 +141,7 @@ extension Memory.Map.Test.Unit {
 
         // Write to first and last page (see `mapped memory is readable and
         // writable` for why a bare `Region` uses an unsafe pointer access).
-        let lastOffset = Int(region.length.subtract.saturating(.one))
+        let lastOffset = try Int(region.length.subtract.saturating(.one))
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(1), toByteOffset: 0, as: UInt8.self)
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(255), toByteOffset: lastOffset, as: UInt8.self)
 
