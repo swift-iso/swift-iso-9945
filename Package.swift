@@ -2,6 +2,18 @@
 
 import PackageDescription
 
+#if os(Windows)
+let posixTestHelperTargets: [Target] = []
+#else
+let posixTestHelperTargets: [Target] = [
+    .executableTarget(
+        name: "iso-9945-test-helper",
+        dependencies: [],
+        path: "Sources/CPOSIXTestHelper"
+    ),
+]
+#endif
+
 let package = Package(
     name: "swift-iso-9945",
     platforms: [
@@ -400,11 +412,7 @@ let package = Package(
 
         // MARK: - Test Helpers
 
-        .executableTarget(
-            name: "iso-9945-test-helper",
-            dependencies: [],
-            path: "Sources/CPOSIXTestHelper"
-        ),
+    ] + posixTestHelperTargets + [
         .executableTarget(
             name: "iso-9945-lock-helper",
             dependencies: [
