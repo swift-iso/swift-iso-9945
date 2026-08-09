@@ -18,8 +18,6 @@
         }
     }
 
-#endif
-
 extension ISO_9945.Kernel.Close.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
@@ -38,3 +36,5 @@ extension ISO_9945.Kernel.Close.Error: CustomStringConvertible {
         }
     }
 }
+
+#endif

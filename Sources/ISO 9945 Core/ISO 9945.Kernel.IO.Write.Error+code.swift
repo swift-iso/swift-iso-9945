@@ -25,8 +25,6 @@
         }
     }
 
-#endif
-
 // MARK: - POSIX Error Code Mapping
 
 extension ISO_9945.Kernel.IO.Write.Error {
@@ -44,3 +42,5 @@ extension ISO_9945.Kernel.IO.Write.Error {
         self = .platform(Error_Primitives.Error(code: code))
     }
 }
+
+#endif
