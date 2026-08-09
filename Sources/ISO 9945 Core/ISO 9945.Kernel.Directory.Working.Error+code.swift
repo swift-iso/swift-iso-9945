@@ -9,16 +9,20 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - POSIX Error Code Mapping
+#if !os(Windows)
 
-extension ISO_9945.Kernel.Directory.Working.Error {
-    /// Creates an error from a POSIX error code.
-    @usableFromInline
-    internal init(code: Error_Primitives.Error.Code) {
-        if let e = Path.Resolution.Error(code: code) {
-            self = .path(e)
-            return
+    // MARK: - POSIX Error Code Mapping
+
+    extension ISO_9945.Kernel.Directory.Working.Error {
+        /// Creates an error from a POSIX error code.
+        @usableFromInline
+        internal init(code: Error_Primitives.Error.Code) {
+            if let e = Path.Resolution.Error(code: code) {
+                self = .path(e)
+                return
+            }
+            self = .platform(Error_Primitives.Error(code: code))
         }
-        self = .platform(Error_Primitives.Error(code: code))
     }
-}
+
+#endif

@@ -20,46 +20,46 @@
 
 #if !os(Windows)
 
-extension ISO_9945.Kernel.File.Handle.Error {
-    public init(from error: ISO_9945.Kernel.IO.Read.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
-        switch error {
-        case .handle(let handleError):
-            switch handleError {
-            case .invalid, .limit:
-                self = .invalidHandle
+    extension ISO_9945.Kernel.File.Handle.Error {
+        public init(from error: ISO_9945.Kernel.IO.Read.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
+            switch error {
+            case .handle(let handleError):
+                switch handleError {
+                case .invalid, .limit:
+                    self = .invalidHandle
+                }
+
+            case .blocking:
+                // A would-block condition is EAGAIN by definition; preserve the
+                // platform-correct code rather than fabricating one.
+                self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+
+            case .platform(let platformError):
+                // Preserve the real errno so ENOSPC, EIO, EFBIG, … stay
+                // distinguishable at the Handle surface.
+                self = .platform(code: platformError.code, operation: operation)
             }
+        }
 
-        case .blocking:
-            // A would-block condition is EAGAIN by definition; preserve the
-            // platform-correct code rather than fabricating one.
-            self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+        public init(from error: ISO_9945.Kernel.IO.Write.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
+            switch error {
+            case .handle(let handleError):
+                switch handleError {
+                case .invalid, .limit:
+                    self = .invalidHandle
+                }
 
-        case .platform(let platformError):
-            // Preserve the real errno so ENOSPC, EIO, EFBIG, … stay
-            // distinguishable at the Handle surface.
-            self = .platform(code: platformError.code, operation: operation)
+            case .blocking:
+                // A would-block condition is EAGAIN by definition; preserve the
+                // platform-correct code rather than fabricating one.
+                self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+
+            case .platform(let platformError):
+                // Preserve the real errno so ENOSPC, EIO, EFBIG, … stay
+                // distinguishable at the Handle surface.
+                self = .platform(code: platformError.code, operation: operation)
+            }
         }
     }
-
-    public init(from error: ISO_9945.Kernel.IO.Write.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
-        switch error {
-        case .handle(let handleError):
-            switch handleError {
-            case .invalid, .limit:
-                self = .invalidHandle
-            }
-
-        case .blocking:
-            // A would-block condition is EAGAIN by definition; preserve the
-            // platform-correct code rather than fabricating one.
-            self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
-
-        case .platform(let platformError):
-            // Preserve the real errno so ENOSPC, EIO, EFBIG, … stay
-            // distinguishable at the Handle surface.
-            self = .platform(code: platformError.code, operation: operation)
-        }
-    }
-}
 
 #endif

@@ -11,38 +11,38 @@
 
 #if !os(Windows)
 
-#if canImport(Darwin)
-    internal import Darwin
-#elseif canImport(Glibc)
-    internal import Glibc
-#elseif canImport(Musl)
-    internal import Musl
-#endif
+    #if canImport(Darwin)
+        internal import Darwin
+    #elseif canImport(Glibc)
+        internal import Glibc
+    #elseif canImport(Musl)
+        internal import Musl
+    #endif
 
-extension Error_Primitives.Error {
-    /// Captures current errno as a `Error_Primitives.Error.Code`.
-    ///
-    /// Must be called immediately after a failing syscall, before any other libc call.
-    public static func captureErrno() -> Error_Primitives.Error.Code {
-        .posix(errno)
+    extension Error_Primitives.Error {
+        /// Captures current errno as a `Error_Primitives.Error.Code`.
+        ///
+        /// Must be called immediately after a failing syscall, before any other libc call.
+        public static func captureErrno() -> Error_Primitives.Error.Code {
+            .posix(errno)
+        }
     }
-}
 
-extension Error_Primitives.Error {
-    /// Captures current errno and creates a Error_Primitives.Error with operation context.
-    ///
-    /// Must be called immediately after a failing syscall, before any other libc call.
-    ///
-    /// - Parameter operation: Description of the failing operation.
-    /// - Returns: A throwable Error_Primitives.Error with errno captured.
-    public static func current(
-        operation: StaticString,
-        function: StaticString = #function,
-        fileID: StaticString = #fileID,
-        line: UInt32 = #line
-    ) -> Self {
-        .capturing(.posix(errno), operation: operation, function: function, file: .init(id: fileID), line: line)
+    extension Error_Primitives.Error {
+        /// Captures current errno and creates a Error_Primitives.Error with operation context.
+        ///
+        /// Must be called immediately after a failing syscall, before any other libc call.
+        ///
+        /// - Parameter operation: Description of the failing operation.
+        /// - Returns: A throwable Error_Primitives.Error with errno captured.
+        public static func current(
+            operation: StaticString,
+            function: StaticString = #function,
+            fileID: StaticString = #fileID,
+            line: UInt32 = #line
+        ) -> Self {
+            .capturing(.posix(errno), operation: operation, function: function, file: .init(id: fileID), line: line)
+        }
     }
-}
 
 #endif

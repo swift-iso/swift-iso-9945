@@ -16,65 +16,65 @@ import Testing
 
 #if !os(Windows)
 
-extension Error_Primitives.Error.Code {
-    @Suite
-    struct Test {
-        @Suite struct Unit {}
-    }
-}
-
-// MARK: - Predicate Unit Tests (POSIX)
-
-extension Error_Primitives.Error.Code.Test.Unit {
-    @Test
-    func `isNotFound matches ENOENT`() {
-        #expect(Error_Primitives.Error.Code.POSIX.ENOENT.isNotFound)
-        #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isNotFound)
+    extension Error_Primitives.Error.Code {
+        @Suite
+        struct Test {
+            @Suite struct Unit {}
+        }
     }
 
-    @Test
-    func `isPermissionDenied matches EACCES and EPERM`() {
-        #expect(Error_Primitives.Error.Code.POSIX.EACCES.isPermissionDenied)
-        #expect(Error_Primitives.Error.Code.POSIX.EPERM.isPermissionDenied)
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isPermissionDenied)
-    }
+    // MARK: - Predicate Unit Tests (POSIX)
 
-    @Test
-    func `isAccessDenied trampolines to isPermissionDenied`() {
-        #expect(Error_Primitives.Error.Code.POSIX.EACCES.isAccessDenied)
-        #expect(Error_Primitives.Error.Code.POSIX.EPERM.isAccessDenied)
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isAccessDenied)
-    }
+    extension Error_Primitives.Error.Code.Test.Unit {
+        @Test
+        func `isNotFound matches ENOENT`() {
+            #expect(Error_Primitives.Error.Code.POSIX.ENOENT.isNotFound)
+            #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isNotFound)
+        }
 
-    @Test
-    func `isReadOnly matches EROFS`() {
-        #expect(Error_Primitives.Error.Code.POSIX.EROFS.isReadOnly)
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isReadOnly)
-    }
+        @Test
+        func `isPermissionDenied matches EACCES and EPERM`() {
+            #expect(Error_Primitives.Error.Code.POSIX.EACCES.isPermissionDenied)
+            #expect(Error_Primitives.Error.Code.POSIX.EPERM.isPermissionDenied)
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isPermissionDenied)
+        }
 
-    @Test
-    func `isNoSpace matches ENOSPC`() {
-        #expect(Error_Primitives.Error.Code.POSIX.ENOSPC.isNoSpace)
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isNoSpace)
-    }
+        @Test
+        func `isAccessDenied trampolines to isPermissionDenied`() {
+            #expect(Error_Primitives.Error.Code.POSIX.EACCES.isAccessDenied)
+            #expect(Error_Primitives.Error.Code.POSIX.EPERM.isAccessDenied)
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isAccessDenied)
+        }
 
-    @Test
-    func `isNotDirectory matches ENOTDIR`() {
-        #expect(Error_Primitives.Error.Code.POSIX.ENOTDIR.isNotDirectory)
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isNotDirectory)
-    }
+        @Test
+        func `isReadOnly matches EROFS`() {
+            #expect(Error_Primitives.Error.Code.POSIX.EROFS.isReadOnly)
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isReadOnly)
+        }
 
-    @Test
-    func `isInvalidPath returns false on POSIX (no distinct errno)`() {
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isInvalidPath)
-        #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isInvalidPath)
-    }
+        @Test
+        func `isNoSpace matches ENOSPC`() {
+            #expect(Error_Primitives.Error.Code.POSIX.ENOSPC.isNoSpace)
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isNoSpace)
+        }
 
-    @Test
-    func `isNetworkNotFound returns false on POSIX (no distinct errno)`() {
-        #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isNetworkNotFound)
-        #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isNetworkNotFound)
+        @Test
+        func `isNotDirectory matches ENOTDIR`() {
+            #expect(Error_Primitives.Error.Code.POSIX.ENOTDIR.isNotDirectory)
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isNotDirectory)
+        }
+
+        @Test
+        func `isInvalidPath returns false on POSIX (no distinct errno)`() {
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isInvalidPath)
+            #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isInvalidPath)
+        }
+
+        @Test
+        func `isNetworkNotFound returns false on POSIX (no distinct errno)`() {
+            #expect(!Error_Primitives.Error.Code.POSIX.ENOENT.isNetworkNotFound)
+            #expect(!Error_Primitives.Error.Code.POSIX.EACCES.isNetworkNotFound)
+        }
     }
-}
 
 #endif

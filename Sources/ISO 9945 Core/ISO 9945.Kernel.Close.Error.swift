@@ -9,12 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension ISO_9945.Kernel.Close {
-    public enum Error: Swift.Error, Sendable {
-        case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
-        case platform(Error_Primitives.Error)
+#if !os(Windows)
+
+    extension ISO_9945.Kernel.Close {
+        public enum Error: Swift.Error, Sendable {
+            case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
+            case platform(Error_Primitives.Error)
+        }
     }
-}
+
+#endif
 
 extension ISO_9945.Kernel.Close.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {

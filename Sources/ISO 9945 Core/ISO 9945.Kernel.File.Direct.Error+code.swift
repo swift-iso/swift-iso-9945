@@ -11,43 +11,43 @@
 
 #if !os(Windows)
 
-// MARK: - POSIX Translation from Syscall
+    // MARK: - POSIX Translation from Syscall
 
-extension ISO_9945.Kernel.File.Direct.Error {
-    /// Creates a semantic error from a raw syscall error.
-    public init(from syscall: Syscall) {
-        switch syscall {
-        case .invalidDescriptor:
-            self = .invalidHandle
+    extension ISO_9945.Kernel.File.Direct.Error {
+        /// Creates a semantic error from a raw syscall error.
+        public init(from syscall: Syscall) {
+            switch syscall {
+            case .invalidDescriptor:
+                self = .invalidHandle
 
-        case .alignmentViolation(let operation):
-            self = .platform(code: .posix(-1), operation: operation)
+            case .alignmentViolation(let operation):
+                self = .platform(code: .posix(-1), operation: operation)
 
-        case .notSupported:
-            self = .notSupported
+            case .notSupported:
+                self = .notSupported
 
-        case .platform(let code, let operation):
-            self.init(code: code, operation: operation)
+            case .platform(let code, let operation):
+                self.init(code: code, operation: operation)
+            }
+        }
+
+        /// Maps a POSIX error code to a semantic error.
+        @usableFromInline
+        internal init(code: Error_Primitives.Error.Code, operation: Operation) {
+            switch code {
+            case _ where code == .POSIX.EINVAL:
+                self = .platform(code: code, operation: operation)
+
+            case _ where code == .POSIX.EBADF:
+                self = .invalidHandle
+
+            case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
+                self = .notSupported
+
+            default:
+                self = .platform(code: code, operation: operation)
+            }
         }
     }
-
-    /// Maps a POSIX error code to a semantic error.
-    @usableFromInline
-    internal init(code: Error_Primitives.Error.Code, operation: Operation) {
-        switch code {
-        case _ where code == .POSIX.EINVAL:
-            self = .platform(code: code, operation: operation)
-
-        case _ where code == .POSIX.EBADF:
-            self = .invalidHandle
-
-        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
-            self = .notSupported
-
-        default:
-            self = .platform(code: code, operation: operation)
-        }
-    }
-}
 
 #endif
