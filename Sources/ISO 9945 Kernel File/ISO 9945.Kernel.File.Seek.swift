@@ -132,12 +132,16 @@ extension ISO_9945.Kernel.File.Seek.Error {
         switch code {
         case .EBADF:
             return .invalidDescriptor
+
         case .EINVAL:
             return .invalidSeek
+
         case .ESPIPE:
             return .notSeekable
+
         case .EOVERFLOW:
             return .overflow
+
         default:
             return .platform(code: code)
         }

@@ -145,26 +145,37 @@ extension ISO_9945.Kernel.Link.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES, .EPERM:
             return .permission
+
         case .EEXIST:
             return .exists
+
         case .EXDEV:
             return .crossDevice
+
         case .EISDIR:
             return .isDirectory
+
         case .ENOTDIR:
             return .notDirectory
+
         case .EROFS:
             return .readOnly
+
         case .EMLINK:
             return .tooManyLinks
+
         case .ENOSPC:
             return .noSpace
+
         case .ELOOP:
             return .loop
+
         case .ENAMETOOLONG:
             return .nameTooLong
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

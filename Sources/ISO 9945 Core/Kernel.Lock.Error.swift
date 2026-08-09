@@ -16,11 +16,12 @@ extension ISO_9945.Kernel.Lock {
         /// - POSIX: `EAGAIN` on `F_SETLK` (non-blocking)
         /// - Windows: `ERROR_LOCK_VIOLATION`
         ///
-        /// This is only thrown when `wait: false`. Use `try?` pattern:
+        /// This is only thrown when `wait: false`. Handle the typed error explicitly:
         /// ```swift
-        /// if (try? ISO_9945.Kernel.Lock.lock(fd, range: .file, exclusive: true, wait: false)) != nil {
+        /// do throws(ISO_9945.Kernel.Lock.Error) {
+        ///     try ISO_9945.Kernel.Lock.lock(fd, range: .file, exclusive: true, wait: false)
         ///     // Lock acquired
-        /// }
+        /// } catch .contention {}
         /// ```
         case contention
 

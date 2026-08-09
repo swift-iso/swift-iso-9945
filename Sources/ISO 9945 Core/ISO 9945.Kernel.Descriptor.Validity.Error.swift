@@ -25,6 +25,7 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error: CustomStringConvertible {
         switch self {
         case .invalid:
             return "invalid descriptor"
+
         case .limit(let limit):
             return limit.description
         }

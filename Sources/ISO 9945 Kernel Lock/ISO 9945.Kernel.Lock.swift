@@ -109,6 +109,7 @@ extension ISO_9945.Kernel.Lock {
         case .file:
             fl.l_start = 0
             fl.l_len = 0  // 0 means lock to EOF
+
         case .bytes(let start, let end):
             fl.l_start = off_t(start.underlying)
             fl.l_len = off_t((end - start).underlying)
@@ -133,6 +134,7 @@ extension ISO_9945.Kernel.Lock {
             // l_start = 0, l_len = 0 means "lock entire file to EOF"
             fl.l_start = 0
             fl.l_len = 0
+
         case .bytes(let start, let end):
             fl.l_start = off_t(start.underlying)
             fl.l_len = off_t((end - start).underlying)
@@ -234,18 +236,23 @@ extension ISO_9945.Kernel.Lock.Error {
             switch errno {
             case EDEADLK:
                 self = .deadlock
+
             case ENOLCK:
                 self = .unavailable
+
             case EINTR:
                 self = .interrupted
+
             case EAGAIN, EACCES:
                 // POSIX.1-2017 fcntl: "[EACCES] or [EAGAIN]" for a held lock.
                 self = .contention
+
             default:
                 // Misuse errnos (EBADF, EINVAL, EOVERFLOW, …) stay
                 // distinguishable from contention.
                 self = .platform(code: code)
             }
+
         case .win32:
             self = .platform(code: code)
         }

@@ -119,20 +119,28 @@ extension ISO_9945.Kernel.File.Delete.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES, .EPERM:
             return .permission
+
         case .EISDIR:
             return .isDirectory
+
         case .ENOTDIR:
             return .notDirectory
+
         case .EROFS:
             return .readOnly
+
         case .EBUSY:
             return .busy
+
         case .ELOOP:
             return .loop
+
         case .ENAMETOOLONG:
             return .nameTooLong
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

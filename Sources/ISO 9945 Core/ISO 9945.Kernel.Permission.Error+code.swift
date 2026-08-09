@@ -21,10 +21,13 @@ extension ISO_9945.Kernel.Permission.Error {
         switch code {
         case .POSIX.EACCES:
             self = .denied
+
         case .POSIX.EPERM:
             self = .notPermitted
+
         case .POSIX.EROFS:
             self = .readOnlyFilesystem
+
         default:
             return nil
         }

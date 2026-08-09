@@ -22,6 +22,7 @@ extension Memory.Allocation.Error {
         switch code {
         case .POSIX.ENOMEM:
             self = .exhausted
+
         default:
             return nil
         }

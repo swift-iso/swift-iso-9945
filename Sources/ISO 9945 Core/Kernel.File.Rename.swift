@@ -47,10 +47,13 @@ extension ISO_9945.Kernel.File {
             switch self {
             case .exists:
                 return "rename failed: destination exists"
+
             case .notSupported:
                 return "rename operation not supported"
+
             case .permission(let code):
                 return "rename permission denied (\(code))"
+
             case .platform(let code):
                 return "rename failed (\(code))"
             }

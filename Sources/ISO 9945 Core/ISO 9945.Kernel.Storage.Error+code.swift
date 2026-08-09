@@ -23,6 +23,7 @@
             switch self {
             case .exhausted:
                 return .POSIX.ENOSPC
+
             case .quota:
                 return .POSIX.EDQUOT
             }
@@ -43,8 +44,10 @@
             switch code {
             case .POSIX.ENOSPC:
                 self = .exhausted
+
             case _ where Error_Primitives.Error.Code.POSIX.isEDQUOT(code):
                 self = .quota
+
             default:
                 return nil
             }

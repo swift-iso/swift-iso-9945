@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Throws: ``Error`` on failure.
     public static func current(
         into buffer: UnsafeMutableBufferPointer<CChar>
-    ) throws(Error) -> Int {
+    ) throws(ISO_9945.Kernel.Directory.Working.Error) -> Int {
         guard let base = buffer.baseAddress, buffer.count > 0 else {
             throw .invalidBuffer
         }
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Throws: ``Error`` on syscall failure.
     public static func withCurrentBytes<R: ~Copyable>(
         _ body: (Swift.Span<Path.Char>) -> R
-    ) throws(Error) -> R {
+    ) throws(ISO_9945.Kernel.Directory.Working.Error) -> R {
         // getcwd(3) reports ERANGE when the buffer is too small for the
         // actual path — reachable on Linux via nested chdir past 4095
         // bytes. Retry with a larger buffer instead of surfacing an opaque
@@ -82,7 +82,7 @@ extension ISO_9945.Kernel.Directory.Working {
 
         while true {
             var result: R? = nil
-            var thrown: Error? = nil
+            var thrown: ISO_9945.Kernel.Directory.Working.Error? = nil
             var rangeExceeded = false
 
             unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: capacity) { buffer in
@@ -140,14 +140,14 @@ extension ISO_9945.Kernel.Directory.Working {
     /// - Throws: ``Error`` on syscall failure.
     public static func withCurrent<R: ~Copyable>(
         _ body: (borrowing String.Borrowed) -> R
-    ) throws(Error) -> R {
+    ) throws(ISO_9945.Kernel.Directory.Working.Error) -> R {
         // See the identical retry rationale in withCurrentBytes above.
         var capacity = 4096
         let maxCapacity = 1 << 20  // 1 MiB: a bound on retries, not a spec limit.
 
         while true {
             var result: R? = nil
-            var thrown: Error? = nil
+            var thrown: ISO_9945.Kernel.Directory.Working.Error? = nil
             var rangeExceeded = false
 
             unsafe Swift.withUnsafeTemporaryAllocation(of: CChar.self, capacity: capacity) { buffer in

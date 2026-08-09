@@ -85,9 +85,11 @@ extension ISO_9945.Kernel.Signal.Action {
             case .customInfo:
                 // SA_SIGINFO required for sa_sigaction handler
                 self.flags = flags.union(.sigInfo)
+
             case .custom:
                 // SA_SIGINFO must NOT be set for sa_handler
                 self.flags = flags.subtracting(.sigInfo)
+
             case .default, .ignore:
                 self.flags = flags
             }

@@ -106,7 +106,9 @@ extension ISO_9945.Kernel.Lock {
             // release(), unlock via the owned descriptor. The descriptor's
             // own deinit runs immediately after and closes the fd.
             guard !isReleased else { return }
-            try? ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
+            do throws(ISO_9945.Kernel.Lock.Error) {
+                try ISO_9945.Kernel.Lock.unlock(descriptor, range: range)
+            } catch {}
         }
     }
 }
@@ -193,6 +195,7 @@ extension ISO_9945.Kernel.Lock.Token {
                 switch error {
                 case .contention:
                     break  // Lock held, continue polling
+
                 default:
                     throw error
                 }
@@ -257,7 +260,11 @@ extension ISO_9945.Kernel.Lock {
         }
         // Token owns the descriptor. On scope exit, the token is destroyed
         // and the descriptor's deinit closes the fd exactly once.
-        defer { try? token.release() }
+        defer {
+            do throws(ISO_9945.Kernel.Lock.Error) {
+                try token.release()
+            } catch {}
+        }
         do throws(E) {
             return try body()
         } catch {
@@ -293,7 +300,11 @@ extension ISO_9945.Kernel.Lock {
         } catch {
             throw .lock(error)
         }
-        defer { try? token.release() }
+        defer {
+            do throws(ISO_9945.Kernel.Lock.Error) {
+                try token.release()
+            } catch {}
+        }
         do throws(E) {
             return try body()
         } catch {

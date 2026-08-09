@@ -68,10 +68,13 @@ extension ISO_9945.Kernel.File.Attributes.Error: CustomStringConvertible {
         switch self {
         case .path(let pathError):
             return "file attributes path error: \(pathError)"
+
         case .permission(let permError):
             return "file attributes permission error: \(permError)"
+
         case .io(let ioError):
             return "file attributes I/O error: \(ioError)"
+
         case .platform(let e):
             return "file attributes error: \(e)"
         }

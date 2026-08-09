@@ -65,20 +65,28 @@ extension ISO_9945.Kernel.Directory.Remove.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES, .EPERM:
             return .permission
+
         case .ENOTEMPTY:
             return .notEmpty
+
         case .ENOTDIR:
             return .notDirectory
+
         case .EBUSY:
             return .busy
+
         case .EROFS:
             return .readOnly
+
         case .ELOOP:
             return .loop
+
         case .ENAMETOOLONG:
             return .nameTooLong
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

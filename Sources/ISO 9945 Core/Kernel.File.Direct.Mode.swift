@@ -159,6 +159,7 @@ extension ISO_9945.Kernel.File.Direct.Mode {
                 switch policy {
                 case .fallbackToBuffered:
                     return .buffered
+
                 case .errorOnViolation:
                     throw .notSupported
                 }
