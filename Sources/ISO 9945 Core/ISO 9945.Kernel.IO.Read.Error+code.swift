@@ -25,22 +25,22 @@
         }
     }
 
-// MARK: - POSIX Error Code Mapping
+    // MARK: - POSIX Error Code Mapping
 
-extension ISO_9945.Kernel.IO.Read.Error {
-    /// Creates an error from a POSIX error code.
-    @inlinable
-    public init(code: Error_Primitives.Error.Code) {
-        if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
-            self = .handle(e)
-            return
+    extension ISO_9945.Kernel.IO.Read.Error {
+        /// Creates an error from a POSIX error code.
+        @inlinable
+        public init(code: Error_Primitives.Error.Code) {
+            if let e = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
+                self = .handle(e)
+                return
+            }
+            if let e = ISO_9945.Kernel.IO.Blocking.Error(code: code) {
+                self = .blocking(e)
+                return
+            }
+            self = .platform(Error_Primitives.Error(code: code))
         }
-        if let e = ISO_9945.Kernel.IO.Blocking.Error(code: code) {
-            self = .blocking(e)
-            return
-        }
-        self = .platform(Error_Primitives.Error(code: code))
     }
-}
 
 #endif
