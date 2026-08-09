@@ -9,10 +9,14 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Error_Primitives.Error.Code {
-    /// Whether this code reports an asynchronous non-blocking connect in progress.
-    @inlinable
-    public var isInProgress: Bool {
-        self == .posix(Error_Primitives.Error.Number.inProgress.underlying)
+#if !os(Windows)
+
+    extension Error_Primitives.Error.Code {
+        /// Whether this code reports an asynchronous non-blocking connect in progress.
+        @inlinable
+        public var isInProgress: Bool {
+            self == .posix(Error_Primitives.Error.Number.inProgress.underlying)
+        }
     }
-}
+
+#endif

@@ -286,20 +286,28 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES, .EPERM:
             return .permission
+
         case .EEXIST:
             return .exists
+
         case .ENOTDIR:
             return .notDirectory
+
         case .EROFS:
             return .readOnly
+
         case .ENOSPC:
             return .noSpace
+
         case .ELOOP:
             return .loop
+
         case .ENAMETOOLONG:
             return .nameTooLong
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }
@@ -311,16 +319,22 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES:
             return .permission
+
         case .EINVAL:
             return .notSymbolicLink
+
         case .ENOTDIR:
             return .notDirectory
+
         case .ELOOP:
             return .loop
+
         case .ENAMETOOLONG:
             return .nameTooLong
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

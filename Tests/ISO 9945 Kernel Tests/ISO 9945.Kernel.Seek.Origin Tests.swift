@@ -83,6 +83,7 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
         switch start {
         case .start:
             break  // expected
+
         case .current, .end:
             Issue.record("start should not match current or end")
         }
@@ -90,6 +91,7 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
         switch current {
         case .current:
             break  // expected
+
         case .start, .end:
             Issue.record("current should not match start or end")
         }
@@ -97,6 +99,7 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
         switch end {
         case .end:
             break  // expected
+
         case .start, .current:
             Issue.record("end should not match start or current")
         }

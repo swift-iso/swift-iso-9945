@@ -40,6 +40,7 @@ extension Interrupt: CustomStringConvertible {
         switch self {
         case .occurred:
             return "interrupted"
+
         case .cancelled:
             return "cancelled"
         }

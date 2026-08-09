@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Socket.Pair {
     }
 
     /// Creates the current error from errno.
-    static func currentError() -> Error {
+    static func currentError() -> ISO_9945.Kernel.Socket.Pair.Error {
         .platform(.posix(errno))
     }
 }

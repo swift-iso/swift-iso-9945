@@ -9,54 +9,63 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - POSIX Error Code Access
+#if !os(Windows)
 
-extension ISO_9945.Kernel.Descriptor.Validity.Error {
-    /// The underlying POSIX error code.
-    @inlinable
-    public var code: Error_Primitives.Error.Code {
-        switch self {
-        case .invalid:
-            return .POSIX.EBADF
-        case .limit(let limit):
-            return limit.code
+    // MARK: - POSIX Error Code Access
+
+    extension ISO_9945.Kernel.Descriptor.Validity.Error {
+        /// The underlying POSIX error code.
+        @inlinable
+        public var code: Error_Primitives.Error.Code {
+            switch self {
+            case .invalid:
+                return .POSIX.EBADF
+
+            case .limit(let limit):
+                return limit.code
+            }
         }
     }
-}
 
-extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit {
-    /// The underlying POSIX error code.
-    @inlinable
-    public var code: Error_Primitives.Error.Code {
-        switch self {
-        case .process:
-            return .POSIX.EMFILE
-        case .system:
-            return .POSIX.ENFILE
+    extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit {
+        /// The underlying POSIX error code.
+        @inlinable
+        public var code: Error_Primitives.Error.Code {
+            switch self {
+            case .process:
+                return .POSIX.EMFILE
+
+            case .system:
+                return .POSIX.ENFILE
+            }
         }
     }
-}
 
-// MARK: - POSIX Error Code Mapping
+    // MARK: - POSIX Error Code Mapping
 
-extension ISO_9945.Kernel.Descriptor.Validity.Error {
-    /// Creates an error from a POSIX error code, if applicable.
-    ///
-    /// Returns `nil` if the error code doesn't map to a handle error.
-    ///
-    /// - Parameter code: The platform error code.
-    /// - Returns: A handle error, or `nil` if not applicable.
-    @inlinable
-    public init?(code: Error_Primitives.Error.Code) {
-        switch code {
-        case .POSIX.EBADF:
-            self = .invalid
-        case .POSIX.EMFILE:
-            self = .limit(.process)
-        case .POSIX.ENFILE:
-            self = .limit(.system)
-        default:
-            return nil
+    extension ISO_9945.Kernel.Descriptor.Validity.Error {
+        /// Creates an error from a POSIX error code, if applicable.
+        ///
+        /// Returns `nil` if the error code doesn't map to a handle error.
+        ///
+        /// - Parameter code: The platform error code.
+        /// - Returns: A handle error, or `nil` if not applicable.
+        @inlinable
+        public init?(code: Error_Primitives.Error.Code) {
+            switch code {
+            case .POSIX.EBADF:
+                self = .invalid
+
+            case .POSIX.EMFILE:
+                self = .limit(.process)
+
+            case .POSIX.ENFILE:
+                self = .limit(.system)
+
+            default:
+                return nil
+            }
         }
     }
-}
+
+#endif

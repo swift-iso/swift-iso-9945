@@ -41,7 +41,7 @@
         /// ```swift
         /// // Create a private anonymous mapping
         /// let region = try Memory.Map.Anonymous.map(length: 4096)
-        /// defer { try? Memory.Map.unmap(region) }
+        /// defer { do throws(Memory.Map.Error) { try Memory.Map.unmap(region) } catch {} }
         ///
         /// // Write to the memory
         /// region.base.mutablePointer.storeBytes(of: 42, as: Int.self)

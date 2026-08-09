@@ -181,18 +181,25 @@ extension ISO_9945.Kernel.File.Times.Error {
         switch code {
         case .ENOENT:
             return .path(.notFound)
+
         case .ENAMETOOLONG:
             return .path(.tooLong)
+
         case .ELOOP:
             return .path(.loop)
+
         case .EACCES:
             return .permission(.denied)
+
         case .EPERM:
             return .permission(.notPermitted)
+
         case .EROFS:
             return .permission(.readOnlyFilesystem)
+
         case .EIO:
             return .io(.hardware)
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

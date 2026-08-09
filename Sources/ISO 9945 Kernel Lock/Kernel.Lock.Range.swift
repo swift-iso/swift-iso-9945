@@ -21,7 +21,7 @@ extension ISO_9945.Kernel.Lock {
     /// ```swift
     /// // Lock entire file (most common)
     /// try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-    /// defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
+    /// defer { do throws(ISO_9945.Kernel.Lock.Error) { try ISO_9945.Kernel.Lock.unlock(fd, range: .file) } catch {} }
     ///
     /// // Lock specific byte range (database pages, etc.)
     /// let pageRange = Lock.Range.bytes(start: 4096, length: 4096)

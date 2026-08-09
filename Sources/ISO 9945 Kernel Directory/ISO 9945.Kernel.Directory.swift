@@ -158,12 +158,16 @@ extension ISO_9945.Kernel.Directory.Error {
         switch code {
         case .ENOENT:
             return .notFound
+
         case .EACCES:
             return .permission
+
         case .ENOTDIR:
             return .notDirectory
+
         case .EMFILE, .ENFILE:
             return .tooManyOpenFiles
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }
@@ -175,6 +179,7 @@ extension ISO_9945.Kernel.Directory.Error {
         switch code {
         case .EIO:
             return .io
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }

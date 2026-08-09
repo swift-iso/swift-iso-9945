@@ -20,12 +20,12 @@ extension ISO_9945.Kernel.Lock {
     /// ```swift
     /// // Acquire a shared lock for reading
     /// try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .shared)
-    /// defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
+    /// defer { do throws(ISO_9945.Kernel.Lock.Error) { try ISO_9945.Kernel.Lock.unlock(fd, range: .file) } catch {} }
     /// // Multiple processes can read concurrently
     ///
     /// // Acquire an exclusive lock for writing
     /// try ISO_9945.Kernel.Lock.lock(fd, range: .file, kind: .exclusive)
-    /// defer { try? ISO_9945.Kernel.Lock.unlock(fd, range: .file) }
+    /// defer { do throws(ISO_9945.Kernel.Lock.Error) { try ISO_9945.Kernel.Lock.unlock(fd, range: .file) } catch {} }
     /// // Only this process can access the file
     /// ```
     ///

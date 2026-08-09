@@ -30,6 +30,7 @@ extension ISO_9945.Kernel.Storage.Error: CustomStringConvertible {
         switch self {
         case .exhausted:
             return "no space left on device"
+
         case .quota:
             return "disk quota exceeded"
         }

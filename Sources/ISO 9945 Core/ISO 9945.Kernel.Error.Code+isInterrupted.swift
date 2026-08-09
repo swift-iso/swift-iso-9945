@@ -9,31 +9,35 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - EINTR Detection
+#if !os(Windows)
 
-extension Error_Primitives.Error.Code {
-    /// Returns `true` if this error code represents EINTR (interrupted by signal).
-    ///
-    /// EINTR indicates a blocking syscall was interrupted by a signal before
-    /// completing. The operation did not fail — it was merely interrupted.
-    /// Callers should typically retry the operation.
-    ///
-    /// This is the single source of truth for EINTR detection across all
-    /// error types. Individual error types expose this via `error.code.isInterrupted`.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// while true {
-    ///     do {
-    ///         return try ISO_9945.Kernel.IO.Write.write(descriptor, from: buffer)
-    ///     } catch where error.code.isInterrupted {
-    ///         continue
-    ///     }
-    /// }
-    /// ```
-    @inlinable
-    public var isInterrupted: Bool {
-        self == .POSIX.EINTR
+    // MARK: - EINTR Detection
+
+    extension Error_Primitives.Error.Code {
+        /// Returns `true` if this error code represents EINTR (interrupted by signal).
+        ///
+        /// EINTR indicates a blocking syscall was interrupted by a signal before
+        /// completing. The operation did not fail — it was merely interrupted.
+        /// Callers should typically retry the operation.
+        ///
+        /// This is the single source of truth for EINTR detection across all
+        /// error types. Individual error types expose this via `error.code.isInterrupted`.
+        ///
+        /// ## Usage
+        ///
+        /// ```swift
+        /// while true {
+        ///     do {
+        ///         return try ISO_9945.Kernel.IO.Write.write(descriptor, from: buffer)
+        ///     } catch where error.code.isInterrupted {
+        ///         continue
+        ///     }
+        /// }
+        /// ```
+        @inlinable
+        public var isInterrupted: Bool {
+            self == .POSIX.EINTR
+        }
     }
-}
+
+#endif

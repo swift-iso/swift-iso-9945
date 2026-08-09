@@ -66,11 +66,11 @@ extension ISO_9945.Kernel.Process.Execute {
     ///         let envp: [UnsafePointer<CChar>?] = [nil]
     ///         argv.withUnsafeBufferPointer { argvBuf in
     ///             envp.withUnsafeBufferPointer { envpBuf in
-    ///                 try? ISO_9945.Kernel.Process.Execute.execve(
+    ///                 do throws(ISO_9945.Kernel.Process.Error) { try ISO_9945.Kernel.Process.Execute.execve(
     ///                     path: path,
     ///                     argv: argvBuf.baseAddress!,
     ///                     envp: envpBuf.baseAddress!
-    ///                 )
+    ///                 ) } catch {}
     ///             }
     ///         }
     ///     }

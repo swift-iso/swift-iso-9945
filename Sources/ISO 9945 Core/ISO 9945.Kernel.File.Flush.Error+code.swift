@@ -9,15 +9,19 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - POSIX Error Code Access
+#if !os(Windows)
 
-extension ISO_9945.Kernel.File.Flush.Error {
-    /// The underlying POSIX error code.
-    @inlinable
-    public var code: Error_Primitives.Error.Code {
-        switch self {
-        case .handle(let e): return e.code
-        case .platform(let e): return e.code
+    // MARK: - POSIX Error Code Access
+
+    extension ISO_9945.Kernel.File.Flush.Error {
+        /// The underlying POSIX error code.
+        @inlinable
+        public var code: Error_Primitives.Error.Code {
+            switch self {
+            case .handle(let e): return e.code
+            case .platform(let e): return e.code
+            }
         }
     }
-}
+
+#endif

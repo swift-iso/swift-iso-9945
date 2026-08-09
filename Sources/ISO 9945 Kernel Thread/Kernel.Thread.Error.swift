@@ -39,12 +39,16 @@ extension ISO_9945.Kernel.Thread.Error: CustomStringConvertible {
         switch self {
         case .create(let code):
             return "Thread creation failed: \(code)"
+
         case .join(let code):
             return "Thread join failed: \(code)"
+
         case .detach(let code):
             return "Thread detach failed: \(code)"
+
         case .keyCreate(let code):
             return "Thread-local storage key creation failed: \(code)"
+
         case .keySet(let code):
             return "Thread-local storage slot write failed: \(code)"
         }

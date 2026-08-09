@@ -153,8 +153,10 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
         switch code {
         case .EBADF:
             return .handle(.invalid)
+
         case .EMFILE:
             return .tooManyOpen
+
         default:
             return .platform(Error_Primitives.Error(code: code))
         }
@@ -166,8 +168,10 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
         switch self {
         case .handle(let e):
             return "handle: \(e)"
+
         case .tooManyOpen:
             return "Too many file descriptors open"
+
         case .platform(let e):
             return "\(e)"
         }

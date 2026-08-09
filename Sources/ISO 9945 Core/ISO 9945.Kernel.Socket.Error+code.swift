@@ -9,25 +9,29 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - POSIX Error Code Access
+#if !os(Windows)
 
-extension ISO_9945.Kernel.Socket.Error {
-    /// The underlying POSIX error code.
-    @inlinable
-    public var code: Error_Primitives.Error.Code {
-        switch self {
-        case .platform(let e): return e.code
-        case .interrupted: return Error_Primitives.Error.Code.POSIX.EINTR
+    // MARK: - POSIX Error Code Access
+
+    extension ISO_9945.Kernel.Socket.Error {
+        /// The underlying POSIX error code.
+        @inlinable
+        public var code: Error_Primitives.Error.Code {
+            switch self {
+            case .platform(let e): return e.code
+            case .interrupted: return Error_Primitives.Error.Code.POSIX.EINTR
+            }
         }
     }
-}
 
-// MARK: - POSIX Error Code Mapping
+    // MARK: - POSIX Error Code Mapping
 
-extension ISO_9945.Kernel.Socket.Error {
-    /// Creates an error from a POSIX error code.
-    @inlinable
-    public init(code: Error_Primitives.Error.Code) {
-        self = .platform(Error_Primitives.Error(code: code))
+    extension ISO_9945.Kernel.Socket.Error {
+        /// Creates an error from a POSIX error code.
+        @inlinable
+        public init(code: Error_Primitives.Error.Code) {
+            self = .platform(Error_Primitives.Error(code: code))
+        }
     }
-}
+
+#endif
