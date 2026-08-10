@@ -165,11 +165,11 @@ let package = Package(
         // MARK: - C Shims
 
         .target(
-            name: "CPOSIXProcessShim",
+            name: "POSIX Process Shims",
             dependencies: []
         ),
         .target(
-            name: "CISO9945Shim",
+            name: "ISO 9945 Shims",
             dependencies: []
         ),
 
@@ -179,7 +179,7 @@ let package = Package(
             name: "ISO 9945 Kernel File",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "ISO 9945 Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "Either Primitives", package: "swift-either-primitives"),
                 .product(name: "Pair Primitives", package: "swift-pair-primitives"),
@@ -240,7 +240,7 @@ let package = Package(
             name: "ISO 9945 Kernel Memory",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "ISO 9945 Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Memory Primitives", package: "swift-memory-primitives"),
                 .product(name: "Memory Allocation Primitives", package: "swift-memory-allocation-primitives"),
                 .product(name: "Memory Lock Primitives", package: "swift-memory-lock-primitives"),
@@ -264,7 +264,7 @@ let package = Package(
             name: "ISO 9945 Kernel Process",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CPOSIXProcessShim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "POSIX Process Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
             ]
         ),
@@ -284,7 +284,7 @@ let package = Package(
             name: "ISO 9945 Kernel Terminal",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "ISO 9945 Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
             ]
         ),
@@ -305,7 +305,7 @@ let package = Package(
             name: "ISO 9945 Kernel Clock",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "ISO 9945 Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Clock Primitives", package: "swift-clock-primitives"),
             ]
         ),
@@ -356,7 +356,7 @@ let package = Package(
             name: "ISO 9945 Glob",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "ISO 9945 Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Path Primitives", package: "swift-path-primitives"),
                 .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
             ]
@@ -393,7 +393,7 @@ let package = Package(
             name: "ISO 9945 Loader",
             dependencies: [
                 "ISO 9945 Core",
-                .target(name: "CISO9945Shim", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
+                .target(name: "ISO 9945 Shims", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])),
                 .product(name: "Loader Primitives", package: "swift-loader-primitives")
             ]
         ),

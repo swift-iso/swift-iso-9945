@@ -21,8 +21,8 @@
         internal import Musl
     #endif
 
-    #if canImport(CISO9945Shim)
-        internal import CISO9945Shim
+    #if canImport(ISO_9945_Shims)
+        internal import ISO_9945_Shims
     #endif
 
     // MARK: - TTY Check

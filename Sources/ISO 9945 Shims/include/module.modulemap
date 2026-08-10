@@ -1,4 +1,4 @@
-module CISO9945Shim {
+module ISO_9945_Shims {
     header "shim.h"
     export *
 }

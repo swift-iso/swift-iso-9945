@@ -1,4 +1,4 @@
-module CPOSIXProcessShim {
+module POSIX_Process_Shims {
     header "shim.h"
     export *
 }

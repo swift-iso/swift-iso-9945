@@ -11,7 +11,7 @@
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import CPOSIXProcessShim
+    internal import POSIX_Process_Shims
 #elseif canImport(Glibc)
     internal import Glibc
 #elseif canImport(Musl)
