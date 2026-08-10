@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-internal import CISO9945Shim
+internal import ISO_9945_Shims
 
 extension ISO_9945.Glob.Fnmatch {
     /// Options for `fnmatch(3)` — wraps `FNM_*` flags.

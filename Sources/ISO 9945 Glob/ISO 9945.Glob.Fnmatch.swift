@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-internal import CISO9945Shim
+internal import ISO_9945_Shims
 
 // MARK: - Fnmatch Namespace
 

@@ -14,7 +14,7 @@ import Memory_Primitives
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import CISO9945Shim
+    internal import ISO_9945_Shims
 #elseif canImport(Glibc)
     internal import Glibc
 #elseif canImport(Musl)

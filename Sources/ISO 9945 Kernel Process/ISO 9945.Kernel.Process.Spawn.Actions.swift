@@ -11,13 +11,13 @@
 
 #if canImport(Darwin)
     internal import Darwin
-    internal import CPOSIXProcessShim
+    internal import POSIX_Process_Shims
 #elseif canImport(Glibc)
     internal import Glibc
-    internal import CPOSIXProcessShim
+    internal import POSIX_Process_Shims
 #elseif canImport(Musl)
     internal import Musl
-    internal import CPOSIXProcessShim
+    internal import POSIX_Process_Shims
 #endif
 
 extension ISO_9945.Kernel.Process.Spawn {
