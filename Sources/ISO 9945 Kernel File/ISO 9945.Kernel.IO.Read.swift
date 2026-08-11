@@ -11,12 +11,16 @@
 
 @_spi(Syscall) import ISO_9945_Core
 
-#if canImport(Darwin)
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
     internal import Darwin
-#elseif canImport(Glibc)
-    internal import Glibc
-#elseif canImport(Musl)
-    internal import Musl
+#elseif os(Linux)
+    #if canImport(Musl)
+        internal import Musl
+    #else
+        internal import Glibc
+    #endif
+#else
+    #error("ISO_9945.Kernel.IO.Read: unsupported platform")
 #endif
 
 // MARK: - POSIX read() syscall (raw @_spi(Syscall))
@@ -40,24 +44,28 @@ extension ISO_9945.Kernel.IO.Read {
         guard let baseAddress = buffer.baseAddress else {
             return 0
         }
-        #if canImport(Darwin)
+        #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
             return try Syscall.require(
                 unsafe Darwin.read(fd, baseAddress, buffer.count),
                 .nonNegative,
                 orThrow: Error.current()
             )
-        #elseif canImport(Musl)
-            return try Syscall.require(
-                unsafe Musl.read(fd, baseAddress, buffer.count),
-                .nonNegative,
-                orThrow: Error.current()
-            )
-        #elseif canImport(Glibc)
-            return try Syscall.require(
-                unsafe Glibc.read(fd, baseAddress, buffer.count),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+        #elseif os(Linux)
+            #if canImport(Musl)
+                return try Syscall.require(
+                    unsafe Musl.read(fd, baseAddress, buffer.count),
+                    .nonNegative,
+                    orThrow: Error.current()
+                )
+            #else
+                return try Syscall.require(
+                    unsafe Glibc.read(fd, baseAddress, buffer.count),
+                    .nonNegative,
+                    orThrow: Error.current()
+                )
+            #endif
+        #else
+            #error("ISO_9945.Kernel.IO.Read.read: unsupported platform")
         #endif
     }
 
@@ -81,24 +89,28 @@ extension ISO_9945.Kernel.IO.Read {
         guard let baseAddress = buffer.baseAddress else {
             return 0
         }
-        #if canImport(Darwin)
+        #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
             return try Syscall.require(
                 unsafe Darwin.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
                 .nonNegative,
                 orThrow: Error.current()
             )
-        #elseif canImport(Musl)
-            return try Syscall.require(
-                unsafe Musl.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
-        #elseif canImport(Glibc)
-            return try Syscall.require(
-                unsafe Glibc.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
-                .nonNegative,
-                orThrow: Error.current()
-            )
+        #elseif os(Linux)
+            #if canImport(Musl)
+                return try Syscall.require(
+                    unsafe Musl.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
+                    .nonNegative,
+                    orThrow: Error.current()
+                )
+            #else
+                return try Syscall.require(
+                    unsafe Glibc.pread(fd, baseAddress, buffer.count, off_t(offset.underlying)),
+                    .nonNegative,
+                    orThrow: Error.current()
+                )
+            #endif
+        #else
+            #error("ISO_9945.Kernel.IO.Read.pread: unsupported platform")
         #endif
     }
 }
@@ -171,6 +183,7 @@ extension ISO_9945.Kernel.IO.Read {
     ///   - output: The output span whose uninitialized tail receives the bytes.
     /// - Returns: Number of bytes read. Returns 0 on EOF.
     /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+    @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         into output: inout Swift.OutputSpan<Byte>
