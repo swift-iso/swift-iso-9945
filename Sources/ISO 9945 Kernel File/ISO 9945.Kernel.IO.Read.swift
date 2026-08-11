@@ -160,6 +160,32 @@ extension ISO_9945.Kernel.IO.Read {
 // MARK: - Span Adapters
 
 extension ISO_9945.Kernel.IO.Read {
+    /// Reads bytes from a file descriptor into an output span.
+    ///
+    /// The initialized prefix is preserved. On success, the returned kernel
+    /// count is committed to the output span's initialized count. EOF returns
+    /// zero without advancing it; a thrown error likewise leaves it unchanged.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to read from.
+    ///   - output: The output span whose uninitialized tail receives the bytes.
+    /// - Returns: Number of bytes read. Returns 0 on EOF.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+    public static func read(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        into output: inout Swift.OutputSpan<Byte>
+    ) throws(Error) -> Int {
+        try unsafe output.withUnsafeMutableBufferPointer {
+            (buffer: UnsafeMutableBufferPointer<Byte>, initializedCount: inout Int) throws(Error) -> Int in
+            let count = try unsafe read(
+                descriptor,
+                into: UnsafeMutableRawBufferPointer(rebasing: buffer[initializedCount...])
+            )
+            initializedCount += count
+            return count
+        }
+    }
+
     /// Reads bytes from a file descriptor into a mutable span.
     ///
     /// - Parameters:
