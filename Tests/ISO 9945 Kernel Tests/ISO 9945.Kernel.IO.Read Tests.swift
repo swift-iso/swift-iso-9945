@@ -30,6 +30,12 @@ extension ISO_9945.Kernel.IO.Read {
 
 extension ISO_9945.Kernel.IO.Read.Test.Unit {
     @Test
+    func `OutputSpan overload has the synchronous typed signature`() {
+        let read: (borrowing ISO_9945.Kernel.Descriptor, inout Swift.OutputSpan<Byte>) throws(ISO_9945.Kernel.IO.Read.Error) -> Int = ISO_9945.Kernel.IO.Read.read
+        _ = read
+    }
+
+    @Test
     func `read returns bytes from file`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "read-test")
         let fd = try KernelIOTest.open(at: path)
