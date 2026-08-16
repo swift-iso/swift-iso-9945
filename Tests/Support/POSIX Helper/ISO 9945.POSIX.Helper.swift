@@ -60,13 +60,13 @@
             print(
                 "\(status) pid=\(getpid()) ppid=\(getppid()) pgid=\(getpgid(0)) sid=\(getsid(0)) exit=\(exitCode)"
             )
-            unsafe fflush(stdout)
+            unsafe fflush(nil)
         }
 
         /// Prints an error line carrying `errno` and a stable message token.
         private static func printError(_ code: Int32, _ message: String) {
             print("ERR errno=\(code) msg=\(message)")
-            unsafe fflush(stdout)
+            unsafe fflush(nil)
         }
 
         private static func printUsage() {
@@ -84,15 +84,20 @@
             FileHandleWriter.standardError(usage)
         }
 
-        /// Minimal stderr writer; the helper deliberately avoids Foundation.
+        /// Minimal standard-error writer; the helper deliberately avoids Foundation.
+        ///
+        /// Writes to descriptor 2 directly rather than through the `stderr` stream
+        /// pointer, which is a mutable global on some platforms and therefore not
+        /// available from concurrency-checked code.
         private enum FileHandleWriter {
             static func standardError(_ text: String) {
                 var line = text
                 line.append("\n")
-                line.withCString { pointer in
-                    _ = unsafe fputs(pointer, stderr)
+                let bytes = Array(line.utf8)
+                unsafe bytes.withUnsafeBytes { buffer in
+                    guard let base = unsafe buffer.baseAddress else { return }
+                    _ = unsafe write(2, base, buffer.count)
                 }
-                unsafe fflush(stderr)
             }
         }
 
@@ -120,7 +125,7 @@
             let actual = getppid()
             guard actual == expected else {
                 print("ERR errno=0 msg=ppid_mismatch expected=\(expected) actual=\(actual)")
-                unsafe fflush(stdout)
+                unsafe fflush(nil)
                 return 1
             }
             printStatus("OK", exitCode: 0)
@@ -160,7 +165,7 @@
             let pgid = getpgid(0)
             guard pgid == pid else {
                 print("ERR errno=0 msg=not_group_leader pid=\(pid) pgid=\(pgid)")
-                unsafe fflush(stdout)
+                unsafe fflush(nil)
                 return 1
             }
             printStatus("OK", exitCode: 0)
@@ -176,7 +181,7 @@
             let pgid = getpgid(pid)
             guard pgid == pid else {
                 print("ERR errno=0 msg=pgid_not_set pid=\(pid) pgid=\(pgid)")
-                unsafe fflush(stdout)
+                unsafe fflush(nil)
                 return 1
             }
             printStatus("OK", exitCode: 0)
@@ -198,18 +203,25 @@
             switch arguments[1] {
             case "exit":
                 code = exitCommand(arguments)
+
             case "stop-exit":
                 code = stopExitCommand(arguments)
+
             case "verify-parent":
                 code = verifyParentCommand(arguments)
+
             case "create-session":
                 code = createSessionCommand()
+
             case "double-setsid":
                 code = doubleSetsidCommand()
+
             case "become-group-leader":
                 code = becomeGroupLeaderCommand()
+
             case "setpgid-explicit":
                 code = setpgidExplicitCommand()
+
             case let command:
                 FileHandleWriter.standardError("Unknown command: \(command)")
                 code = 1
