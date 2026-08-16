@@ -99,7 +99,7 @@ extension ISO_9945.Kernel.Socket.Send {
             // a meaningful protocol event.
             var zero: UInt8 = 0
             let result = unsafe withUnsafePointer(to: &zero) { fallback in
-                unsafe Darwin_or_Glibc_send(
+                unsafe platformSend(
                     fd,
                     buffer.baseAddress ?? UnsafeRawPointer(fallback),
                     buffer.count,
@@ -183,7 +183,12 @@ extension ISO_9945.Kernel.Socket.Send {
 
 // MARK: - Platform disambiguation
 
-private func Darwin_or_Glibc_send(_ fd: Int32, _ buf: UnsafeRawPointer, _ len: Int, _ flags: Int32) -> Int {
+private func platformSend(
+    _ fd: Int32,
+    _ buf: UnsafeRawPointer,
+    _ len: Int,
+    _ flags: Int32
+) -> Int {
     #if canImport(Darwin)
         unsafe Darwin.send(fd, buf, len, flags)
     #elseif canImport(Glibc)
@@ -193,6 +198,8 @@ private func Darwin_or_Glibc_send(_ fd: Int32, _ buf: UnsafeRawPointer, _ len: I
     #elseif canImport(Android)
         unsafe Android.send(fd, buf, len, flags)
     #else
-        #error("ISO_9945.Kernel.Socket.Send: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+        #error(
+            "ISO_9945.Kernel.Socket.Send: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+        )
     #endif
 }

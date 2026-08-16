@@ -101,7 +101,9 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
 
     @Test
     func `Error is CustomStringConvertible`() {
-        let error: any CustomStringConvertible = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
+        let error: any CustomStringConvertible = ISO_9945.Kernel.File.System.Stats.Error.handle(
+            .invalid
+        )
         #expect(!error.description.isEmpty)
     }
 }

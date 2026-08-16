@@ -91,7 +91,9 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
     @Test
     func `Alignment is Sendable`() {
-        let alignment: any Sendable = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
+        let alignment: any Sendable = ISO_9945.Kernel.File.Direct.Requirements.Alignment(
+            uniform: .`4096`
+        )
         #expect(alignment is ISO_9945.Kernel.File.Direct.Requirements.Alignment)
     }
 

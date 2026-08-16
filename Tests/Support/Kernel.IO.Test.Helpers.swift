@@ -46,7 +46,10 @@
         }
 
         /// Writes string content to a descriptor.
-        public static func write(_ content: Swift.String, to fd: borrowing ISO_9945.Kernel.Descriptor) {
+        public static func write(
+            _ content: Swift.String,
+            to fd: borrowing ISO_9945.Kernel.Descriptor
+        ) {
             var bytes = Array(content.utf8)
             _ = try? bytes.withUnsafeMutableBytes { ptr in
                 try ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))

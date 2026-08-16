@@ -34,7 +34,9 @@
         @Test
         func `Result.child is distinct from Result.parent`() {
             let child = ISO_9945.Kernel.Process.Fork.Result.child
-            let parent = ISO_9945.Kernel.Process.Fork.Result.parent(child: ISO_9945.Kernel.Process.ID(123))
+            let parent = ISO_9945.Kernel.Process.Fork.Result.parent(
+                child: ISO_9945.Kernel.Process.ID(123)
+            )
 
             #expect(child != parent)
         }
@@ -48,14 +50,19 @@
         @Test
         func `Result is Equatable`() {
             let pid = ISO_9945.Kernel.Process.ID(42)
-            #expect(ISO_9945.Kernel.Process.Fork.Result.child == ISO_9945.Kernel.Process.Fork.Result.child)
+            #expect(
+                ISO_9945.Kernel.Process.Fork.Result.child
+                    == ISO_9945.Kernel.Process.Fork.Result.child
+            )
             #expect(
                 ISO_9945.Kernel.Process.Fork.Result.parent(child: pid)
                     == ISO_9945.Kernel.Process.Fork.Result.parent(child: pid)
             )
             #expect(
                 ISO_9945.Kernel.Process.Fork.Result.parent(child: pid)
-                    != ISO_9945.Kernel.Process.Fork.Result.parent(child: ISO_9945.Kernel.Process.ID(99))
+                    != ISO_9945.Kernel.Process.Fork.Result.parent(
+                        child: ISO_9945.Kernel.Process.ID(99)
+                    )
             )
         }
     }

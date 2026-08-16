@@ -60,8 +60,12 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
 
     @Test
     func `How is Equatable`() {
-        #expect(ISO_9945.Kernel.Socket.Shutdown.How.read == ISO_9945.Kernel.Socket.Shutdown.How.read)
-        #expect(ISO_9945.Kernel.Socket.Shutdown.How.read != ISO_9945.Kernel.Socket.Shutdown.How.write)
+        #expect(
+            ISO_9945.Kernel.Socket.Shutdown.How.read == ISO_9945.Kernel.Socket.Shutdown.How.read
+        )
+        #expect(
+            ISO_9945.Kernel.Socket.Shutdown.How.read != ISO_9945.Kernel.Socket.Shutdown.How.write
+        )
     }
 
     @Test

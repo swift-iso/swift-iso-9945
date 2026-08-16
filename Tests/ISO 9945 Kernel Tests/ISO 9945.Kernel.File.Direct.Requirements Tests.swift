@@ -38,7 +38,9 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
 
     @Test
     func `unknown case exists`() {
-        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
+        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(
+            reason: .platformUnsupported
+        )
         if case .unknown = requirements {
             // Expected
         } else {
@@ -106,12 +108,14 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     @Test
     func `Alignment type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Alignment.Type = ISO_9945.Kernel.File.Direct.Requirements.Alignment.self
+        let _: ISO_9945.Kernel.File.Direct.Requirements.Alignment.Type = ISO_9945.Kernel.File.Direct
+            .Requirements.Alignment.self
     }
 
     @Test
     func `Reason type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Reason.Type = ISO_9945.Kernel.File.Direct.Requirements.Reason.self
+        let _: ISO_9945.Kernel.File.Direct.Requirements.Reason.Type = ISO_9945.Kernel.File.Direct
+            .Requirements.Reason.self
     }
 }
 

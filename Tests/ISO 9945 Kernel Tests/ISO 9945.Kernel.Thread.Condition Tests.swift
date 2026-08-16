@@ -80,7 +80,10 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
         }
         mutex.unlock()
 
-        #expect(sawTimeout == true, "Should observe at least one timeout within \(attempts) attempts")
+        #expect(
+            sawTimeout == true,
+            "Should observe at least one timeout within \(attempts) attempts"
+        )
     }
 
     @Test
@@ -161,7 +164,11 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(
+                    mutex: ISO_9945.Kernel.Thread.Mutex,
+                    condition: ISO_9945.Kernel.Thread.Condition,
+                    harness: KernelThreadTest.Harness<State>
+                ) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -243,7 +250,11 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(
+                    mutex: ISO_9945.Kernel.Thread.Mutex,
+                    condition: ISO_9945.Kernel.Thread.Condition,
+                    harness: KernelThreadTest.Harness<State>
+                ) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -332,7 +343,11 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(
+                    mutex: ISO_9945.Kernel.Thread.Mutex,
+                    condition: ISO_9945.Kernel.Thread.Condition,
+                    harness: KernelThreadTest.Harness<State>
+                ) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -387,7 +402,10 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             }
             harness.update { $0.mainAcquiredMutex = acquired }
 
-            #expect(acquired == true, "Mutex should be released while thread is waiting on condition")
+            #expect(
+                acquired == true,
+                "Mutex should be released while thread is waiting on condition"
+            )
 
             if acquired {
                 // Signal to let waiter proceed, then unlock
@@ -427,7 +445,11 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 let condition: ISO_9945.Kernel.Thread.Condition
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>) {
+                init(
+                    mutex: ISO_9945.Kernel.Thread.Mutex,
+                    condition: ISO_9945.Kernel.Thread.Condition,
+                    harness: KernelThreadTest.Harness<State>
+                ) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
@@ -532,14 +554,24 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 let harness: KernelThreadTest.Harness<State>
                 let itemCount: Int
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, condition: ISO_9945.Kernel.Thread.Condition, harness: KernelThreadTest.Harness<State>, itemCount: Int) {
+                init(
+                    mutex: ISO_9945.Kernel.Thread.Mutex,
+                    condition: ISO_9945.Kernel.Thread.Condition,
+                    harness: KernelThreadTest.Harness<State>,
+                    itemCount: Int
+                ) {
                     self.mutex = mutex
                     self.condition = condition
                     self.harness = harness
                     self.itemCount = itemCount
                 }
             }
-            let context = Context(mutex: mutex, condition: condition, harness: harness, itemCount: itemCount)
+            let context = Context(
+                mutex: mutex,
+                condition: condition,
+                harness: harness,
+                itemCount: itemCount
+            )
 
             var producerThread: pthread_t? = nil
             var consumerThread: pthread_t? = nil

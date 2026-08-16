@@ -99,7 +99,8 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
 extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     @Test
     func `Reason is Sendable`() {
-        let reason: any Sendable = ISO_9945.Kernel.File.Direct.Requirements.Reason.platformUnsupported
+        let reason: any Sendable = ISO_9945.Kernel.File.Direct.Requirements.Reason
+            .platformUnsupported
         #expect(reason is ISO_9945.Kernel.File.Direct.Requirements.Reason)
     }
 
@@ -114,7 +115,8 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
 
     @Test
     func `Reason is CustomStringConvertible`() {
-        let reason: any CustomStringConvertible = ISO_9945.Kernel.File.Direct.Requirements.Reason.platformUnsupported
+        let reason: any CustomStringConvertible = ISO_9945.Kernel.File.Direct.Requirements.Reason
+            .platformUnsupported
         #expect(!reason.description.isEmpty)
     }
 }

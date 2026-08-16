@@ -58,7 +58,13 @@ extension ISO_9945.Kernel.Group.Database {
     ///   the ID simply having no entry).
     public static func find(gid: ISO_9945.Kernel.Group.ID) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, gr, result in
-            unsafe getgrgid_r(gid.underlying, gr, buffer.baseAddress, numericCast(buffer.count), result)
+            unsafe getgrgid_r(
+                gid.underlying,
+                gr,
+                buffer.baseAddress,
+                numericCast(buffer.count),
+                result
+            )
         }
     }
 

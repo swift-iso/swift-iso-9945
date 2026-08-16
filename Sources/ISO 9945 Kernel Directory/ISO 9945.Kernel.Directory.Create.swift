@@ -32,7 +32,9 @@ extension ISO_9945.Kernel.Directory.Create {
     /// - Throws: `ISO_9945.Kernel.Directory.Create.Error` on failure.
     public static func create(
         _ path: borrowing Path.Borrowed,
-        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(
+            rawValue: 0o755
+        )
     ) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe _create(ptr, permissions: permissions)
@@ -43,7 +45,9 @@ extension ISO_9945.Kernel.Directory.Create {
     @usableFromInline
     internal static func _create(
         _ path: UnsafePointer<Path.Char>,
-        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(
+            rawValue: 0o755
+        )
     ) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
@@ -81,7 +85,9 @@ extension ISO_9945.Kernel.Directory.Create {
     public static func mkdirat(
         descriptor: Int32,
         path: UnsafePointer<Path.Char>,
-        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(
+            rawValue: 0o755
+        )
     ) -> Int32 {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
@@ -92,7 +98,9 @@ extension ISO_9945.Kernel.Directory.Create {
         #elseif canImport(Glibc)
             return Glibc.mkdirat(descriptor, cPath, mode_t(permissions.rawValue))
         #else
-            #error("ISO_9945.Kernel.Directory.Create.mkdirat: unsupported platform (no Darwin, Glibc, or Musl)")
+            #error(
+                "ISO_9945.Kernel.Directory.Create.mkdirat: unsupported platform (no Darwin, Glibc, or Musl)"
+            )
         #endif
     }
 
@@ -111,7 +119,9 @@ extension ISO_9945.Kernel.Directory.Create {
     public static func create(
         _ path: borrowing Path.Borrowed,
         relativeTo descriptor: borrowing ISO_9945.Kernel.Descriptor,
-        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(
+            rawValue: 0o755
+        )
     ) throws(Error) {
         let raw = descriptor._rawValue
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in

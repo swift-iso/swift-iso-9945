@@ -81,7 +81,10 @@ extension ISO_9945.Kernel.File.Size {
     ///   A size is a magnitude; no conversion may produce a negative value.
     @inlinable
     public init(_ value: UInt64) {
-        precondition(value <= UInt64(Int64.max), "File.Size cannot represent \(value); it exceeds Int64.max")
+        precondition(
+            value <= UInt64(Int64.max),
+            "File.Size cannot represent \(value); it exceeds Int64.max"
+        )
         self.init(Int64(value))
     }
 

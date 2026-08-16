@@ -24,33 +24,7 @@ import Memory_Primitives
 // MARK: - POSIX Shared Memory
 
 extension Memory.Shared {
-    /// Opens or creates a POSIX shared memory object.
-    ///
-    /// ## Threading
-    /// This call may block briefly during kernel object creation/lookup.
-    /// The returned descriptor can be used from any thread but requires
-    /// explicit synchronization for the mapped memory region.
-    ///
-    /// ## Descriptor Lifecycle
-    /// 1. Call `open()` to get a descriptor
-    /// 2. Set size with `ftruncate()` if creating
-    /// 3. Map with ``Kernel/Memory/Map/map(_:length:protection:flags:offset:)``
-    /// 4. Use the mapped region (with synchronization)
-    /// 5. Unmap with ``Kernel/Memory/Map/unmap(_:length:)``
-    /// 6. Close with ``Kernel/Close/close(_:)``
-    /// 7. Optionally unlink with ``unlink(name:)``
-    ///
-    /// ## Errors
-    /// - ``Error/open(_:)``: shm_open failed (permission denied, name invalid, etc.)
-    ///
-    /// - Parameters:
-    ///   - name: The name of the shared memory object (must start with '/').
-    ///   - access: Read/write access mode.
-    ///   - options: Creation options (create, exclusive, truncate).
-    ///   - permissions: Permission mode for creation.
-    /// - Returns: A file descriptor for the shared memory object.
-    /// - Throws: ``Kernel/Memory/Shared/Error`` on failure.
-
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     /// Raw POSIX `shm_open(3)` syscall.
     ///
     /// Spec-literal name (`shm_open`) matching the C function. Returns the

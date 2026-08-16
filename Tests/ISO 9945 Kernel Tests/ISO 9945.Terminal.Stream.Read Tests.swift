@@ -46,7 +46,11 @@ extension Terminal.Stream.Read {
 // mechanism for testing Terminal.Stream.Read.read exists.
 
 extension Terminal.Stream.Read.Test.Integration {
-    @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
+    @Test(
+        .disabled(
+            "pending: stdin redirection needs non-owning descriptor API or child-process harness"
+        )
+    )
     func `Read bytes from pipe via stdin redirect`() throws {
         // Placeholder — re-enable when a non-destructive stdin redirection
         // mechanism exists.
@@ -69,12 +73,20 @@ extension Terminal.Stream.Read.Test.Integration {
         // readEnd deinit closes the read fd at scope exit.
     }
 
-    @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
+    @Test(
+        .disabled(
+            "pending: stdin redirection needs non-owning descriptor API or child-process harness"
+        )
+    )
     func `Read escape sequence bytes from pipe`() throws {
         // Placeholder.
     }
 
-    @Test(.disabled("pending: stdin redirection needs non-owning descriptor API or child-process harness"))
+    @Test(
+        .disabled(
+            "pending: stdin redirection needs non-owning descriptor API or child-process harness"
+        )
+    )
     func `Read multiple bytes preserves order`() throws {
         // Placeholder.
     }

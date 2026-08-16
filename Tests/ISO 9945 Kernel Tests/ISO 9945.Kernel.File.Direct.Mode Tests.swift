@@ -90,12 +90,14 @@ extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
 extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
     @Test
     func `Mode.Policy type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Mode.Policy.Type = ISO_9945.Kernel.File.Direct.Mode.Policy.self
+        let _: ISO_9945.Kernel.File.Direct.Mode.Policy.Type = ISO_9945.Kernel.File.Direct.Mode
+            .Policy.self
     }
 
     @Test
     func `Mode.Resolved type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Mode.Resolved.Type = ISO_9945.Kernel.File.Direct.Mode.Resolved.self
+        let _: ISO_9945.Kernel.File.Direct.Mode.Resolved.Type = ISO_9945.Kernel.File.Direct.Mode
+            .Resolved.self
     }
 }
 

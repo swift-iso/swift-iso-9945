@@ -101,7 +101,9 @@ extension ISO_9945.Kernel.File.Seek {
     /// - Parameter descriptor: The file descriptor.
     /// - Returns: The current offset from the beginning of the file.
     /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
-    public static func tell(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) -> Int64 {
+    public static func tell(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+    ) throws(Error) -> Int64 {
         try unsafe tell(fd: descriptor._rawValue)
     }
 }

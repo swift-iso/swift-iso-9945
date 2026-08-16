@@ -171,7 +171,8 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
                 let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>)
+                {
                     self.mutex = mutex
                     self.harness = harness
                 }
@@ -218,7 +219,10 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
             try harness.wait(until: { $0.workerDone })
 
             let result = harness.withLocked { $0.lockImmediateThrew }
-            #expect(result == true, "lock.immediate must throw when mutex is held by another thread")
+            #expect(
+                result == true,
+                "lock.immediate must throw when mutex is held by another thread"
+            )
 
             if let t = thread {
                 pthread_join(t, nil)
@@ -239,7 +243,8 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
                 let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>)
+                {
                     self.mutex = mutex
                     self.harness = harness
                 }
@@ -307,7 +312,11 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
                 let harness: KernelThreadTest.Harness<State>
                 let iterations: Int
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>, iterations: Int) {
+                init(
+                    mutex: ISO_9945.Kernel.Thread.Mutex,
+                    harness: KernelThreadTest.Harness<State>,
+                    iterations: Int
+                ) {
                     self.mutex = mutex
                     self.harness = harness
                     self.iterations = iterations

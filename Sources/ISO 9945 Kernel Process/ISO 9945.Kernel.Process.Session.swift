@@ -102,7 +102,9 @@ extension ISO_9945.Kernel.Process.Session {
     /// let sid = try ISO_9945.Kernel.Process.Session.id(of: somePid)
     /// ```
 
-    public static func id(of pid: ISO_9945.Kernel.Process.ID) throws(ISO_9945.Kernel.Process.Error) -> ID {
+    public static func id(
+        of pid: ISO_9945.Kernel.Process.ID
+    ) throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = getsid(pid.rawValue)
         guard result != -1 else {
             throw .session(Error_Primitives.Error.captureErrno())

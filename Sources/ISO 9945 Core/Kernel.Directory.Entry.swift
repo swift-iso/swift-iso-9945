@@ -38,8 +38,15 @@ extension ISO_9945.Kernel.Directory {
 
         #if os(Windows)
             /// - Precondition: `rawName` is non-empty and null-terminated.
-            public init(rawName: [UInt16], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
-                precondition(rawName.last == 0, "Directory.Entry rawName must be a non-empty, null-terminated sequence")
+            public init(
+                rawName: [UInt16],
+                inode: ISO_9945.Kernel.Inode? = nil,
+                type: ISO_9945.Kernel.File.Stats.Kind? = nil
+            ) {
+                precondition(
+                    rawName.last == 0,
+                    "Directory.Entry rawName must be a non-empty, null-terminated sequence"
+                )
                 self.rawName = rawName
                 self.inode = inode
                 self.type = type
@@ -47,8 +54,15 @@ extension ISO_9945.Kernel.Directory {
         #else
             /// - Precondition: `rawName` is non-empty and null-terminated.
             @_spi(Syscall)
-            public init(rawName: [UInt8], inode: ISO_9945.Kernel.Inode? = nil, type: ISO_9945.Kernel.File.Stats.Kind? = nil) {
-                precondition(rawName.last == 0, "Directory.Entry rawName must be a non-empty, null-terminated sequence")
+            public init(
+                rawName: [UInt8],
+                inode: ISO_9945.Kernel.Inode? = nil,
+                type: ISO_9945.Kernel.File.Stats.Kind? = nil
+            ) {
+                precondition(
+                    rawName.last == 0,
+                    "Directory.Entry rawName must be a non-empty, null-terminated sequence"
+                )
                 self.rawName = rawName
                 self.inode = inode
                 self.type = type

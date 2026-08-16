@@ -71,7 +71,10 @@ extension ISO_9945.Kernel.Environment.Entry {
     @inlinable
     public var value: Swift.Span<String.Char> {
         @_lifetime(copy self) borrowing get {
-            let s = unsafe Span(_unsafeStart: _base + _separator + 1, count: _length - _separator - 1)
+            let s = unsafe Span(
+                _unsafeStart: _base + _separator + 1,
+                count: _length - _separator - 1
+            )
             return unsafe _overrideLifetime(s, copying: self)
         }
     }

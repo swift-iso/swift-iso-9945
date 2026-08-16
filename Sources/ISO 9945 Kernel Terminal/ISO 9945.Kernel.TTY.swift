@@ -83,7 +83,9 @@
         ///
         /// Phase 1.5 typed L2 form. Delegates to the raw `query(fd:)` SPI form
         /// via `descriptor._rawValue`.
-        public static func query(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
+        public static func query(
+            _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+        ) throws(Error_Primitives.Error) -> Self {
             try query(fd: descriptor._rawValue)
         }
     }

@@ -20,7 +20,9 @@
 #elseif canImport(Android)
     internal import Android
 #else
-    #error("ISO_9945.Kernel.Socket.Connect: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+    #error(
+        "ISO_9945.Kernel.Socket.Connect: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+    )
 #endif
 
 extension ISO_9945.Kernel.Socket {
@@ -103,7 +105,11 @@ extension ISO_9945.Kernel.Socket.Connect {
     ) throws(ISO_9945.Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_connect(fd, sockaddrPtr, socklen_t(length.underlying.rawValue))
+            return unsafe platformConnect(
+                fd,
+                sockaddrPtr,
+                socklen_t(length.underlying.rawValue)
+            )
         }
 
         guard rc == 0 else {
@@ -119,7 +125,11 @@ extension ISO_9945.Kernel.Socket.Connect {
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv4
     ) throws(ISO_9945.Kernel.Socket.Error) {
-        try connect(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.IPv4.size)
+        try connect(
+            fd: fd,
+            address: address.storage,
+            length: ISO_9945.Kernel.Socket.Address.IPv4.size
+        )
     }
 
     /// Connects a raw socket fd to an IPv6 address.
@@ -127,7 +137,11 @@ extension ISO_9945.Kernel.Socket.Connect {
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv6
     ) throws(ISO_9945.Kernel.Socket.Error) {
-        try connect(fd: fd, address: address.storage, length: ISO_9945.Kernel.Socket.Address.IPv6.size)
+        try connect(
+            fd: fd,
+            address: address.storage,
+            length: ISO_9945.Kernel.Socket.Address.IPv6.size
+        )
     }
 
     /// Connects a raw socket fd to a Unix domain address.
@@ -144,7 +158,11 @@ extension ISO_9945.Kernel.Socket.Connect {
 
 // MARK: - Platform disambiguation
 
-private func Darwin_or_Glibc_connect(_ fd: Int32, _ addr: UnsafePointer<sockaddr>, _ len: socklen_t) -> Int32 {
+private func platformConnect(
+    _ fd: Int32,
+    _ addr: UnsafePointer<sockaddr>,
+    _ len: socklen_t
+) -> Int32 {
     #if canImport(Darwin)
         unsafe Darwin.connect(fd, addr, len)
     #elseif canImport(Glibc)
@@ -154,6 +172,8 @@ private func Darwin_or_Glibc_connect(_ fd: Int32, _ addr: UnsafePointer<sockaddr
     #elseif canImport(Android)
         unsafe Android.connect(fd, addr, len)
     #else
-        #error("ISO_9945.Kernel.Socket.Connect: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+        #error(
+            "ISO_9945.Kernel.Socket.Connect: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+        )
     #endif
 }

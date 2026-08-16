@@ -30,14 +30,20 @@ extension ISO_9945.Kernel.Socket.Name {
     /// Gets the local address of a typed socket descriptor.
     public static func local(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
-    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) {
         try local(fd: descriptor._rawValue)
     }
 
     /// Gets the remote address of a connected typed socket descriptor.
     public static func peer(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
-    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) {
         try peer(fd: descriptor._rawValue)
     }
 }
@@ -52,7 +58,10 @@ extension ISO_9945.Kernel.Socket.Name {
     /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     internal static func local(
         fd: Int32
-    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
@@ -79,7 +88,10 @@ extension ISO_9945.Kernel.Socket.Name {
     /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
     internal static func peer(
         fd: Int32
-    ) throws(ISO_9945.Kernel.Socket.Error) -> (address: ISO_9945.Kernel.Socket.Address.Storage, length: ISO_9945.Kernel.Socket.Address.Length) {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 

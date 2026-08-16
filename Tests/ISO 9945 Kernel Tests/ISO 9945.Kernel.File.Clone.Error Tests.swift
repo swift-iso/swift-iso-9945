@@ -87,7 +87,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `platform case exists`() {
-        let error = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
+        let error = ISO_9945.Kernel.File.Clone.Error.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
         if case .platform = error {
             // Expected
         } else {
@@ -137,7 +140,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
 
     @Test
     func `platform description includes operation`() {
-        let error = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
+        let error = ISO_9945.Kernel.File.Clone.Error.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
         #expect(error.description.contains("clonefile"))
     }
 }
@@ -178,12 +184,14 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
 extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `Operation type exists`() {
-        let _: ISO_9945.Kernel.File.Clone.Error.Operation.Type = ISO_9945.Kernel.File.Clone.Error.Operation.self
+        let _: ISO_9945.Kernel.File.Clone.Error.Operation.Type = ISO_9945.Kernel.File.Clone.Error
+            .Operation.self
     }
 
     @Test
     func `Syscall type exists`() {
-        let _: ISO_9945.Kernel.File.Clone.Error.Syscall.Type = ISO_9945.Kernel.File.Clone.Error.Syscall.self
+        let _: ISO_9945.Kernel.File.Clone.Error.Syscall.Type = ISO_9945.Kernel.File.Clone.Error
+            .Syscall.self
     }
 }
 
@@ -210,15 +218,27 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.EdgeCase {
 
     @Test
     func `platform errors with different codes are distinct`() {
-        let error1 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
-        let error2 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(2), operation: .clonefile)
+        let error1 = ISO_9945.Kernel.File.Clone.Error.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
+        let error2 = ISO_9945.Kernel.File.Clone.Error.platform(
+            code: .posix(2),
+            operation: .clonefile
+        )
         #expect(error1 != error2)
     }
 
     @Test
     func `platform errors with different operations are distinct`() {
-        let error1 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .clonefile)
-        let error2 = ISO_9945.Kernel.File.Clone.Error.platform(code: .posix(1), operation: .copyfile)
+        let error1 = ISO_9945.Kernel.File.Clone.Error.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
+        let error2 = ISO_9945.Kernel.File.Clone.Error.platform(
+            code: .posix(1),
+            operation: .copyfile
+        )
         #expect(error1 != error2)
     }
 

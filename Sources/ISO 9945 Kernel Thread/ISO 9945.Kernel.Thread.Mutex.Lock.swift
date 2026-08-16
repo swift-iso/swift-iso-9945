@@ -23,10 +23,6 @@ extension ISO_9945.Kernel.Thread.Mutex {
     /// Lock operation accessor with variants.
     public struct Lock: Sendable {
         let mutex: ISO_9945.Kernel.Thread.Mutex
-
-        init(mutex: ISO_9945.Kernel.Thread.Mutex) {
-            self.mutex = mutex
-        }
     }
 }
 

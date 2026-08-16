@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// These public spellings mirror the POSIX errno specification.
+// swift-format-ignore-file: AlwaysUseLowerCamelCase
+
 extension Error_Primitives.Error.Code {
     /// POSIX errno constants.
     ///

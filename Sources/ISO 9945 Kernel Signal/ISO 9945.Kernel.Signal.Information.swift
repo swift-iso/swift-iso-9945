@@ -123,7 +123,8 @@ extension ISO_9945.Kernel.Signal.Information {
         var isChildCode = false
         if signo == Int32(SIGCHLD) {
             switch code {
-            case Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED), Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
+            case Int32(CLD_EXITED), Int32(CLD_KILLED), Int32(CLD_DUMPED), Int32(CLD_TRAPPED),
+                Int32(CLD_STOPPED), Int32(CLD_CONTINUED):
                 isChildCode = true
 
             default:
@@ -150,7 +151,9 @@ extension ISO_9945.Kernel.Signal.Information {
         #elseif canImport(Musl)
             // musl siginfo_t lays out pid/uid under __si_fields.__si_common.__first.__piduid
             // for both SI_USER/SI_QUEUE and CLD_* (single sibling struct).
-            return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid)
+            return ISO_9945.Kernel.Process.ID(
+                rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid
+            )
         #endif
     }
 
@@ -203,13 +206,19 @@ extension ISO_9945.Kernel.Signal.Information {
 
         case Int32(SIGILL):
             switch code {
-            case Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG), Int32(ILL_COPROC), Int32(ILL_BADSTK): matches = true
+            case Int32(ILL_ILLOPC), Int32(ILL_ILLTRP), Int32(ILL_PRVOPC), Int32(ILL_PRVREG),
+                Int32(ILL_COPROC), Int32(ILL_BADSTK):
+                matches = true
+
             default: matches = false
             }
 
         case Int32(SIGFPE):
             switch code {
-            case Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF), Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB): matches = true
+            case Int32(FPE_INTDIV), Int32(FPE_INTOVF), Int32(FPE_FLTDIV), Int32(FPE_FLTOVF),
+                Int32(FPE_FLTUND), Int32(FPE_FLTRES), Int32(FPE_FLTINV), Int32(FPE_FLTSUB):
+                matches = true
+
             default: matches = false
             }
 

@@ -101,7 +101,8 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
     func `Device type exists`() {
-        let _: ISO_9945.Kernel.File.Stats.Kind.Device.Type = ISO_9945.Kernel.File.Stats.Kind.Device.self
+        let _: ISO_9945.Kernel.File.Stats.Kind.Device.Type = ISO_9945.Kernel.File.Stats.Kind.Device
+            .self
     }
 
     @Test

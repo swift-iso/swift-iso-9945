@@ -93,8 +93,12 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
 
     @Test
     func `deadlines with different instants are distinct`() {
-        let a = ISO_9945.Kernel.Lock.Acquire.deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 1_000_000_000))
-        let b = ISO_9945.Kernel.Lock.Acquire.deadline(Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 2_000_000_000))
+        let a = ISO_9945.Kernel.Lock.Acquire.deadline(
+            Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 1_000_000_000)
+        )
+        let b = ISO_9945.Kernel.Lock.Acquire.deadline(
+            Clock_Primitives.Clock.Continuous.Instant(nanoseconds: 2_000_000_000)
+        )
         #expect(a != b)
     }
 }

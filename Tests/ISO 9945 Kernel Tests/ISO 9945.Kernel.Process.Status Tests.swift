@@ -43,8 +43,14 @@ extension ISO_9945.Kernel.Process.Status.Test.Unit {
 
     @Test
     func `status is Equatable`() {
-        #expect(ISO_9945.Kernel.Process.Status(rawValue: 0) == ISO_9945.Kernel.Process.Status(rawValue: 0))
-        #expect(ISO_9945.Kernel.Process.Status(rawValue: 0) != ISO_9945.Kernel.Process.Status(rawValue: 1))
+        #expect(
+            ISO_9945.Kernel.Process.Status(rawValue: 0)
+                == ISO_9945.Kernel.Process.Status(rawValue: 0)
+        )
+        #expect(
+            ISO_9945.Kernel.Process.Status(rawValue: 0)
+                != ISO_9945.Kernel.Process.Status(rawValue: 1)
+        )
     }
 
     @Test

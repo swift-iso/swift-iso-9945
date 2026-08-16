@@ -104,7 +104,9 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// - Parameter descriptor: The file descriptor to duplicate.
     /// - Returns: The new file descriptor.
     /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure.
-    public static func duplicate(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) -> ISO_9945.Kernel.Descriptor {
+    public static func duplicate(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+    ) throws(Error) -> ISO_9945.Kernel.Descriptor {
         let rawNew = try unsafe duplicate(fd: descriptor._rawValue)
         return ISO_9945.Kernel.Descriptor(_rawValue: rawNew)
     }

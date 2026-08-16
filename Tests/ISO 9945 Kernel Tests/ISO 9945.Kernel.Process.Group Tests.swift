@@ -41,13 +41,19 @@
         @Test
         func `Group.Process cases are distinct`() {
             let pid = ISO_9945.Kernel.Process.ID(42)
-            #expect(ISO_9945.Kernel.Process.Group.Process.current != ISO_9945.Kernel.Process.Group.Process.id(pid))
+            #expect(
+                ISO_9945.Kernel.Process.Group.Process.current
+                    != ISO_9945.Kernel.Process.Group.Process.id(pid)
+            )
         }
 
         @Test
         func `Group.Target cases are distinct`() {
             let pgid = ISO_9945.Kernel.Process.Group.ID(_unchecked: 42)
-            #expect(ISO_9945.Kernel.Process.Group.Target.same != ISO_9945.Kernel.Process.Group.Target.id(pgid))
+            #expect(
+                ISO_9945.Kernel.Process.Group.Target.same
+                    != ISO_9945.Kernel.Process.Group.Target.id(pgid)
+            )
         }
     }
 

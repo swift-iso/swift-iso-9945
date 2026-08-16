@@ -89,7 +89,7 @@ extension ISO_9945.Kernel.File.Truncate {
         path: UnsafePointer<CChar>,
         to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
-        let rc = unsafe Darwin_or_Glibc_truncate(path, off_t(length.underlying))
+        let rc = unsafe platformTruncate(path, off_t(length.underlying))
 
         guard rc == 0 else {
             throw Error_Primitives.Error.current(operation: "truncate")
@@ -97,7 +97,7 @@ extension ISO_9945.Kernel.File.Truncate {
     }
 }
 
-private func Darwin_or_Glibc_truncate(_ path: UnsafePointer<CChar>, _ length: off_t) -> Int32 {
+private func platformTruncate(_ path: UnsafePointer<CChar>, _ length: off_t) -> Int32 {
     #if canImport(Darwin)
         unsafe Darwin.truncate(path, length)
     #elseif canImport(Glibc)

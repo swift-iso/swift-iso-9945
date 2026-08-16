@@ -1,3 +1,4 @@
+// swift-format-ignore-file: AlwaysUseLowerCamelCase
 // ===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-iso-9945 open source project

@@ -92,7 +92,10 @@ extension ISO_9945.Kernel.Lock.Range {
     ///   - start: The starting byte offset (inclusive).
     ///   - length: The number of bytes to lock.
     @inlinable
-    public static func bytes(start: ISO_9945.Kernel.File.Offset, length: ISO_9945.Kernel.File.Size) -> Self {
+    public static func bytes(
+        start: ISO_9945.Kernel.File.Offset,
+        length: ISO_9945.Kernel.File.Size
+    ) -> Self {
         // Saturate rather than trap: a sum beyond Int64.max clamps to the
         // maximum representable offset ("to end of file" in effect).
         let (sum, overflow) = start.underlying.addingReportingOverflow(length.underlying)

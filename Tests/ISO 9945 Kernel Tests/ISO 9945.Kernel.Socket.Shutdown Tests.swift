@@ -46,6 +46,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
 
     @Test
     func `Shutdown.Error type exists`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error.self
+        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error
+            .self
     }
 }

@@ -44,7 +44,8 @@ extension ISO_9945.Kernel.File.Direct.Test.Unit {
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
     func `Direct.Capability type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Capability.Type = ISO_9945.Kernel.File.Direct.Capability.self
+        let _: ISO_9945.Kernel.File.Direct.Capability.Type = ISO_9945.Kernel.File.Direct.Capability
+            .self
     }
 
     @Test
@@ -54,7 +55,8 @@ extension ISO_9945.Kernel.File.Direct.Test.Unit {
 
     @Test
     func `Direct.Requirements type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Type = ISO_9945.Kernel.File.Direct.Requirements.self
+        let _: ISO_9945.Kernel.File.Direct.Requirements.Type = ISO_9945.Kernel.File.Direct
+            .Requirements.self
     }
 
     @Test
@@ -88,7 +90,9 @@ extension ISO_9945.Kernel.File.Direct.Test.Unit {
 
     @Test
     func `requirements unknown case`() {
-        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
+        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(
+            reason: .platformUnsupported
+        )
 
         if case .unknown(let reason) = requirements {
             #expect(reason == .platformUnsupported)

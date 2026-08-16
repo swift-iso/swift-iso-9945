@@ -41,7 +41,12 @@ extension ISO_9945.Kernel.Socket.Message {
 extension ISO_9945.Kernel.Socket.Message.Header {
     /// Socket address for the message destination (sendmsg) or source (recvmsg).
     public var name: Name {
-        get { unsafe Name(pointer: cValue.msg_name, length: ISO_9945.Kernel.Socket.Address.Length(cValue.msg_namelen)) }
+        get {
+            unsafe Name(
+                pointer: cValue.msg_name,
+                length: ISO_9945.Kernel.Socket.Address.Length(cValue.msg_namelen)
+            )
+        }
         set {
             unsafe cValue.msg_name = newValue.pointer
             unsafe cValue.msg_namelen = socklen_t(newValue.length.underlying.rawValue)
@@ -52,12 +57,16 @@ extension ISO_9945.Kernel.Socket.Message.Header {
     public var vectors: Vectors {
         get {
             unsafe Vectors(
-                pointer: UnsafeMutableRawPointer(cValue.msg_iov)?.assumingMemoryBound(to: ISO_9945.Kernel.IO.Vector.Segment.self),
+                pointer: UnsafeMutableRawPointer(cValue.msg_iov)?.assumingMemoryBound(
+                    to: ISO_9945.Kernel.IO.Vector.Segment.self
+                ),
                 count: Int(cValue.msg_iovlen)
             )
         }
         set {
-            unsafe cValue.msg_iov = UnsafeMutableRawPointer(newValue.pointer)?.assumingMemoryBound(to: iovec.self)
+            unsafe cValue.msg_iov = UnsafeMutableRawPointer(newValue.pointer)?.assumingMemoryBound(
+                to: iovec.self
+            )
             cValue.msg_iovlen = numericCast(newValue.count)
         }
     }

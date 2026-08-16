@@ -71,7 +71,8 @@ extension ISO_9945.Kernel.File.Seek.Error: CustomStringConvertible {
             return "Invalid file descriptor"
 
         case .invalidSeek:
-            return "Invalid seek request (unrecognized whence, negative resulting offset, or offset beyond the device's maximum)"
+            return
+                "Invalid seek request (unrecognized whence, negative resulting offset, or offset beyond the device's maximum)"
 
         case .notSeekable:
             return "File descriptor is not seekable (pipe, socket, or FIFO)"

@@ -61,7 +61,9 @@ extension ISO_9945.Kernel.File.Control {
                 throw Error.current()
             }
         #else
-            #error("ISO_9945.Kernel.File.Control.setNonBlocking: unsupported platform (no Darwin, Glibc, or Musl)")
+            #error(
+                "ISO_9945.Kernel.File.Control.setNonBlocking: unsupported platform (no Darwin, Glibc, or Musl)"
+            )
         #endif
     }
 
@@ -104,7 +106,9 @@ extension ISO_9945.Kernel.File.Control {
                 throw Error.current()
             }
         #else
-            #error("ISO_9945.Kernel.File.Control.setBlocking: unsupported platform (no Darwin, Glibc, or Musl)")
+            #error(
+                "ISO_9945.Kernel.File.Control.setBlocking: unsupported platform (no Darwin, Glibc, or Musl)"
+            )
         #endif
     }
 }
@@ -119,7 +123,9 @@ extension ISO_9945.Kernel.File.Control {
     ///
     /// - Parameter descriptor: The file descriptor to modify.
     /// - Throws: `Error` if fcntl fails.
-    public static func setNonBlocking(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.File.Control.Error) {
+    public static func setNonBlocking(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+    ) throws(ISO_9945.Kernel.File.Control.Error) {
         try unsafe setNonBlocking(fd: descriptor._rawValue)
     }
 
@@ -130,7 +136,9 @@ extension ISO_9945.Kernel.File.Control {
     ///
     /// - Parameter descriptor: The file descriptor to modify.
     /// - Throws: `Error` if fcntl fails.
-    public static func setBlocking(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.File.Control.Error) {
+    public static func setBlocking(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+    ) throws(ISO_9945.Kernel.File.Control.Error) {
         try unsafe setBlocking(fd: descriptor._rawValue)
     }
 }

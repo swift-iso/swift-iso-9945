@@ -27,7 +27,8 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error {
 extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     @Test
     func `Error type exists`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error.self
+        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error
+            .self
     }
 
     @Test
@@ -63,9 +64,15 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
 
     @Test
     func `Error is Equatable`() {
-        let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(Error_Primitives.Error(code: .posix(1)))
-        let b = ISO_9945.Kernel.Socket.Shutdown.Error.platform(Error_Primitives.Error(code: .posix(1)))
-        let c = ISO_9945.Kernel.Socket.Shutdown.Error.platform(Error_Primitives.Error(code: .posix(2)))
+        let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
+            Error_Primitives.Error(code: .posix(1))
+        )
+        let b = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
+            Error_Primitives.Error(code: .posix(1))
+        )
+        let c = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
+            Error_Primitives.Error(code: .posix(2))
+        )
         #expect(a == b)
         #expect(a != c)
     }
@@ -92,8 +99,12 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
 extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.EdgeCase {
     @Test
     func `Same case with different values are not equal`() {
-        let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(Error_Primitives.Error(code: .posix(1)))
-        let b = ISO_9945.Kernel.Socket.Shutdown.Error.platform(Error_Primitives.Error(code: .posix(2)))
+        let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
+            Error_Primitives.Error(code: .posix(1))
+        )
+        let b = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
+            Error_Primitives.Error(code: .posix(2))
+        )
         #expect(a != b)
     }
 }

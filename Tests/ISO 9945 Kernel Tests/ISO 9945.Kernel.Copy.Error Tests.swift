@@ -95,12 +95,16 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
 extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     @Test
     func `invalidDescriptor description`() {
-        #expect(ISO_9945.Kernel.Copy.Error.invalidDescriptor.description == "invalid file descriptor")
+        #expect(
+            ISO_9945.Kernel.Copy.Error.invalidDescriptor.description == "invalid file descriptor"
+        )
     }
 
     @Test
     func `crossDevice description`() {
-        #expect(ISO_9945.Kernel.Copy.Error.crossDevice.description == "cross-device copy not supported")
+        #expect(
+            ISO_9945.Kernel.Copy.Error.crossDevice.description == "cross-device copy not supported"
+        )
     }
 
     @Test

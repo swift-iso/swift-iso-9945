@@ -142,7 +142,11 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
 
         let emptyBuffer = UnsafeRawBufferPointer(start: nil, count: 0)
-        let bytesWritten = try ISO_9945.Kernel.IO.Write.pwrite(fd, from: emptyBuffer, at: ISO_9945.Kernel.File.Offset(0))
+        let bytesWritten = try ISO_9945.Kernel.IO.Write.pwrite(
+            fd,
+            from: emptyBuffer,
+            at: ISO_9945.Kernel.File.Offset(0)
+        )
 
         #expect(bytesWritten == 0)
     }
@@ -187,7 +191,11 @@ extension ISO_9945.Kernel.IO.Write.Test.EdgeCase {
 
         #expect(throws: ISO_9945.Kernel.IO.Write.Error.self) {
             try content.withUnsafeBytes { ptr in
-                try ISO_9945.Kernel.IO.Write.pwrite(ISO_9945.Kernel.Descriptor(_raw: -1), from: ptr, at: ISO_9945.Kernel.File.Offset(0))
+                try ISO_9945.Kernel.IO.Write.pwrite(
+                    ISO_9945.Kernel.Descriptor(_raw: -1),
+                    from: ptr,
+                    at: ISO_9945.Kernel.File.Offset(0)
+                )
             }
         }
     }

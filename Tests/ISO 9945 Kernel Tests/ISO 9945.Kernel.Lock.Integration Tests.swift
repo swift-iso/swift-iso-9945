@@ -47,7 +47,10 @@ private enum LockTestHelper {
     ///   - filePath: Path to the file to lock.
     ///   - milliseconds: How long to hold the lock.
     /// - Returns: The process ID of the spawned helper.
-    static func spawn(lockingFile filePath: Swift.String, forMilliseconds milliseconds: Int) throws -> ISO_9945.Kernel.Process.ID {
+    static func spawn(
+        lockingFile filePath: Swift.String,
+        forMilliseconds milliseconds: Int
+    ) throws -> ISO_9945.Kernel.Process.ID {
         guard let helperPath = executablePath() else {
             throw TestExecutable.NotFound(name: "iso-9945-lock-helper")
         }
@@ -77,7 +80,11 @@ private enum LockTestHelper {
         while Clock.Continuous.now < deadline {
             do {
                 // Try to acquire lock - if it fails with contention, the helper has it
-                try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: .file, kind: .exclusive)
+                try ISO_9945.Kernel.Lock.Immediate.lock(
+                    fd: fd._rawValue,
+                    range: .file,
+                    kind: .exclusive
+                )
                 // We got the lock - release it and try again
                 try? ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
                 // Small delay before retry
@@ -197,7 +204,10 @@ extension POSIXLockIntegration {
         // Lock bytes 100-200
         var token = try ISO_9945.Kernel.Lock.Token(
             descriptor: try openLockTestFile(path),
-            range: .bytes(start: ISO_9945.Kernel.File.Offset(100), end: ISO_9945.Kernel.File.Offset(200)),
+            range: .bytes(
+                start: ISO_9945.Kernel.File.Offset(100),
+                end: ISO_9945.Kernel.File.Offset(200)
+            ),
             kind: .exclusive,
             acquire: .wait
         )

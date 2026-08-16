@@ -26,13 +26,5 @@ extension ISO_9945.Kernel.User.Database {
 
         /// The user's login shell.
         public let shell: String
-
-        internal init(name: String, uid: ISO_9945.Kernel.User.ID, gid: ISO_9945.Kernel.Group.ID, home: String, shell: String) {
-            self.name = name
-            self.uid = uid
-            self.gid = gid
-            self.home = home
-            self.shell = shell
-        }
     }
 }
