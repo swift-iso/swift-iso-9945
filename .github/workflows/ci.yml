@@ -25,3 +25,12 @@ jobs:
     if: ${{ !github.event.repository.private }}
     name: ci / matrix
     uses: swift-institute/.github/.github/workflows/swift-ci.yml@main
+    with:
+      # ISO/IEC 9945 IS the POSIX standard; Windows is not a POSIX system.
+      # The platform seam lives at L3 per [PLAT-ARCH-001] — never inside an
+      # L2 spec package — so a Windows CI leg is illegitimate here: the only
+      # way to green it is to emulate POSIX inside the POSIX specification.
+      # This declaration was carried by the pre-convergence caller and was
+      # dropped in ff43d8e; restoring it makes CI agree with the manifest,
+      # which already conditions the package's C shim to Apple + Linux.
+      platform-support: apple,linux
