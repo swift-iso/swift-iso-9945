@@ -60,7 +60,9 @@ extension ISO_9945.Kernel.File.Clone.Capability {
     /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Clone.Capability.probe`)
     ///
     /// Returns `.none` by default. Use platform packages for actual probing.
-    public static func probeDefault(at path: borrowing Path) -> ISO_9945.Kernel.File.Clone.Capability {
+    public static func probeDefault(
+        at path: borrowing Path
+    ) -> ISO_9945.Kernel.File.Clone.Capability {
         _ = path
         return .none
     }

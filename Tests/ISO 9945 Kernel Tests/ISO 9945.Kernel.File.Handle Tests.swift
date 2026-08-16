@@ -215,7 +215,9 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
 
     @Test
     func `requirements unknown case`() {
-        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(reason: .platformUnsupported)
+        let requirements = ISO_9945.Kernel.File.Direct.Requirements.unknown(
+            reason: .platformUnsupported
+        )
 
         if case .unknown(let reason) = requirements {
             #expect(reason == .platformUnsupported)

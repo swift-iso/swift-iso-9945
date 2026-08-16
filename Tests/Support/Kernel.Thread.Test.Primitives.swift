@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Path_Primitives
 import Error_Primitives
 import ISO_9945_Kernel
+import Path_Primitives
 
 // MARK: - LockedBox
 

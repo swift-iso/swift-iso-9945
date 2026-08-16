@@ -20,7 +20,9 @@
 #elseif canImport(Android)
     internal import Android
 #else
-    #error("ISO_9945.Kernel.Socket.Receive: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+    #error(
+        "ISO_9945.Kernel.Socket.Receive: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+    )
 #endif
 
 extension ISO_9945.Kernel.Socket {
@@ -48,7 +50,10 @@ extension ISO_9945.Kernel.Socket.Receive {
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
-    ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (
+        count: Int, address: ISO_9945.Kernel.Socket.Address.Storage,
+        addressLength: ISO_9945.Kernel.Socket.Address.Length
+    ) {
         try from(fd: descriptor._rawValue, into: &span, options: options)
     }
 
@@ -84,12 +89,13 @@ extension ISO_9945.Kernel.Socket.Receive {
         into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
+        try unsafe span.withUnsafeMutableBytes {
+            (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
             // An empty buffer still performs the syscall; recv with a
             // zero length is well-defined.
             var zero: UInt8 = 0
             let result = unsafe withUnsafeMutablePointer(to: &zero) { fallback in
-                unsafe Darwin_or_Glibc_recv(
+                unsafe platformReceive(
                     fd,
                     buffer.baseAddress ?? UnsafeMutableRawPointer(fallback),
                     buffer.count,
@@ -115,11 +121,17 @@ extension ISO_9945.Kernel.Socket.Receive {
         fd: Int32,
         into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
-    ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> (
+        count: Int, address: ISO_9945.Kernel.Socket.Address.Storage,
+        addressLength: ISO_9945.Kernel.Socket.Address.Length
+    ) {
         try unsafe span.withUnsafeMutableBytes {
             (
                 buffer: UnsafeMutableRawBufferPointer
-            ) throws(ISO_9945.Kernel.Socket.Error) -> (count: Int, address: ISO_9945.Kernel.Socket.Address.Storage, addressLength: ISO_9945.Kernel.Socket.Address.Length) in
+            ) throws(ISO_9945.Kernel.Socket.Error) -> (
+                count: Int, address: ISO_9945.Kernel.Socket.Address.Storage,
+                addressLength: ISO_9945.Kernel.Socket.Address.Length
+            ) in
             // An empty buffer still performs the syscall: recvfrom with a
             // zero length reports the sender's address.
             var storage = ISO_9945.Kernel.Socket.Address.Storage()
@@ -144,7 +156,10 @@ extension ISO_9945.Kernel.Socket.Receive {
                 throw ISO_9945.Kernel.Socket.Error.current()
             }
 
-            return (count: count, address: storage, addressLength: ISO_9945.Kernel.Socket.Address.Length(addrLen))
+            return (
+                count: count, address: storage,
+                addressLength: ISO_9945.Kernel.Socket.Address.Length(addrLen)
+            )
         }
     }
 
@@ -177,7 +192,12 @@ extension ISO_9945.Kernel.Socket.Receive {
 
 // MARK: - Platform disambiguation
 
-private func Darwin_or_Glibc_recv(_ fd: Int32, _ buf: UnsafeMutableRawPointer, _ len: Int, _ flags: Int32) -> Int {
+private func platformReceive(
+    _ fd: Int32,
+    _ buf: UnsafeMutableRawPointer,
+    _ len: Int,
+    _ flags: Int32
+) -> Int {
     #if canImport(Darwin)
         unsafe Darwin.recv(fd, buf, len, flags)
     #elseif canImport(Glibc)
@@ -187,6 +207,8 @@ private func Darwin_or_Glibc_recv(_ fd: Int32, _ buf: UnsafeMutableRawPointer, _
     #elseif canImport(Android)
         unsafe Android.recv(fd, buf, len, flags)
     #else
-        #error("ISO_9945.Kernel.Socket.Receive: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+        #error(
+            "ISO_9945.Kernel.Socket.Receive: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+        )
     #endif
 }

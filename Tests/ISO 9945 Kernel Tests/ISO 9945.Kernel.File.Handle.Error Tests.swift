@@ -58,7 +58,10 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `misalignedBuffer case stores address and alignment`() {
-        let error = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 0x1234, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(
+            address: 0x1234,
+            required: .`512`
+        )
         if case .misalignedBuffer(let addr, let req) = error {
             #expect(addr == 0x1234)
             #expect(req == .`512`)
@@ -69,7 +72,10 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `misalignedOffset case stores offset and alignment`() {
-        let error = ISO_9945.Kernel.File.Handle.Error.misalignedOffset(offset: 1000, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedOffset(
+            offset: 1000,
+            required: .`512`
+        )
         if case .misalignedOffset(let off, let req) = error {
             #expect(off == 1000)
             #expect(req == .`512`)
@@ -80,7 +86,10 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `invalidLength case stores length and required multiple`() {
-        let error = ISO_9945.Kernel.File.Handle.Error.invalidLength(length: 100, requiredMultiple: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.invalidLength(
+            length: 100,
+            requiredMultiple: .`512`
+        )
         if case .invalidLength(let len, let req) = error {
             #expect(len == 100)
             #expect(req == .`512`)
@@ -127,7 +136,9 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `invalidHandle description`() {
-        #expect(ISO_9945.Kernel.File.Handle.Error.invalidHandle.description == "Invalid file handle")
+        #expect(
+            ISO_9945.Kernel.File.Handle.Error.invalidHandle.description == "Invalid file handle"
+        )
     }
 
     @Test
@@ -142,28 +153,40 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `misalignedBuffer description contains address`() {
-        let error = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(address: 0x1234, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedBuffer(
+            address: 0x1234,
+            required: .`512`
+        )
         #expect(error.description.contains("Buffer address"))
         #expect(error.description.contains("not aligned"))
     }
 
     @Test
     func `misalignedOffset description contains offset`() {
-        let error = ISO_9945.Kernel.File.Handle.Error.misalignedOffset(offset: 1000, required: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.misalignedOffset(
+            offset: 1000,
+            required: .`512`
+        )
         #expect(error.description.contains("File offset"))
         #expect(error.description.contains("1000"))
     }
 
     @Test
     func `invalidLength description contains length`() {
-        let error = ISO_9945.Kernel.File.Handle.Error.invalidLength(length: 100, requiredMultiple: .`512`)
+        let error = ISO_9945.Kernel.File.Handle.Error.invalidLength(
+            length: 100,
+            requiredMultiple: .`512`
+        )
         #expect(error.description.contains("Length"))
         #expect(error.description.contains("100"))
     }
 
     @Test
     func `requirementsUnknown description`() {
-        #expect(ISO_9945.Kernel.File.Handle.Error.requirementsUnknown.description == "Direct I/O requirements unknown")
+        #expect(
+            ISO_9945.Kernel.File.Handle.Error.requirementsUnknown.description
+                == "Direct I/O requirements unknown"
+        )
     }
 
     @Test

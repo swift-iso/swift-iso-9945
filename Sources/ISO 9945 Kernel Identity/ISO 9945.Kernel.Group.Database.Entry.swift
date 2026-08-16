@@ -20,11 +20,5 @@ extension ISO_9945.Kernel.Group.Database {
 
         /// The group member names.
         public let members: [String]
-
-        internal init(name: String, gid: ISO_9945.Kernel.Group.ID, members: [String]) {
-            self.name = name
-            self.gid = gid
-            self.members = members
-        }
     }
 }

@@ -63,7 +63,8 @@ extension ISO_9945.Kernel.File.Move {
         to newPath: borrowing Path.Borrowed
     ) throws(Error) {
         try unsafe oldPath.withUnsafePointer { (oldPtr: UnsafePointer<Path.Char>) throws(Error) in
-            try unsafe newPath.withUnsafePointer { (newPtr: UnsafePointer<Path.Char>) throws(Error) in
+            try unsafe newPath.withUnsafePointer {
+                (newPtr: UnsafePointer<Path.Char>) throws(Error) in
                 try unsafe move(from: oldPtr, to: newPtr)
             }
         }

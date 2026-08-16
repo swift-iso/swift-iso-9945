@@ -44,7 +44,9 @@ extension `Socket Address Info Tests`.`Edge Case` {
     }
 
     @Test
-    func `storage typed downcast returns nil for the wrong family`() throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
+    func `storage typed downcast returns nil for the wrong family`() throws(ISO_9945.Kernel.Socket
+        .Address.Info.Error)
+    {
         let list = try ISO_9945.Kernel.Socket.Address.Info.List.get(
             host: "127.0.0.1",
             hints: .init(options: .numericHost, family: .inet, kind: .stream)
@@ -60,7 +62,9 @@ extension `Socket Address Info Tests`.`Edge Case` {
 
 extension `Socket Address Info Tests`.Integration {
     @Test
-    func `numeric IPv4 host resolves to one owned inet entry`() throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
+    func `numeric IPv4 host resolves to one owned inet entry`() throws(ISO_9945.Kernel.Socket
+        .Address.Info.Error)
+    {
         let list = try ISO_9945.Kernel.Socket.Address.Info.List.get(
             host: "127.0.0.1",
             hints: .init(
@@ -85,7 +89,9 @@ extension `Socket Address Info Tests`.Integration {
     }
 
     @Test
-    func `numeric IPv6 loopback resolves to one owned inet6 entry`() throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
+    func `numeric IPv6 loopback resolves to one owned inet6 entry`() throws(ISO_9945.Kernel.Socket
+        .Address.Info.Error)
+    {
         let list = try ISO_9945.Kernel.Socket.Address.Info.List.get(
             host: "::1",
             hints: .init(
@@ -117,7 +123,9 @@ extension `Socket Address Info Tests`.Integration {
     }
 
     @Test
-    func `family hint filters entries to the requested family`() throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
+    func `family hint filters entries to the requested family`() throws(ISO_9945.Kernel.Socket
+        .Address.Info.Error)
+    {
         let list = try ISO_9945.Kernel.Socket.Address.Info.List.get(
             host: "127.0.0.1",
             hints: .init(options: .numericHost, family: .inet, kind: .stream)
@@ -128,7 +136,9 @@ extension `Socket Address Info Tests`.Integration {
     }
 
     @Test
-    func `entries preserve chain order across repeated resolution`() throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
+    func `entries preserve chain order across repeated resolution`() throws(ISO_9945.Kernel.Socket
+        .Address.Info.Error)
+    {
         let first = try ISO_9945.Kernel.Socket.Address.Info.List.get(
             host: "127.0.0.1",
             hints: .init(options: .numericHost, family: .inet, kind: .stream)
@@ -141,7 +151,9 @@ extension `Socket Address Info Tests`.Integration {
     }
 
     @Test
-    func `repeated list creation and destruction frees every chain`() throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
+    func `repeated list creation and destruction frees every chain`() throws(ISO_9945.Kernel.Socket
+        .Address.Info.Error)
+    {
         for _ in 0..<128 {
             let list = try ISO_9945.Kernel.Socket.Address.Info.List.get(
                 host: "127.0.0.1",

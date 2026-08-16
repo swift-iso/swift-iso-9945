@@ -178,7 +178,8 @@ extension ISO_9945.Glob.Expand.Test.Unit {
     @Testing.Test
     func `non-existent pattern throws noMatch`() throws {
         do throws(Path.String.Error<ISO_9945.Glob.Expand.Error>) {
-            _ = try Path.scope("/tmp/iso9945-glob-test-nonexistent-dir-*") { pattern throws(ISO_9945.Glob.Expand.Error) in
+            _ = try Path.scope("/tmp/iso9945-glob-test-nonexistent-dir-*") {
+                pattern throws(ISO_9945.Glob.Expand.Error) in
                 try ISO_9945.Glob.expand(pattern: pattern)
             }
             Issue.record("Expected noMatch error")

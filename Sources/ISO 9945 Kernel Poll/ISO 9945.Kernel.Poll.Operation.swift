@@ -64,8 +64,9 @@ extension ISO_9945.Kernel.Poll {
     ) throws(Error_Primitives.Error) -> Int {
         let count = unsafe entries.withUnsafeMutableBufferPointer { buffer in
             guard let base = buffer.baseAddress else { return Int32(0) }
-            return unsafe base.withMemoryRebound(to: pollfd.self, capacity: buffer.count) { pollfdPtr in
-                unsafe Darwin_or_Glibc_poll(pollfdPtr, nfds_t(buffer.count), timeout)
+            return unsafe base.withMemoryRebound(to: pollfd.self, capacity: buffer.count) {
+                pollfdPtr in
+                unsafe platformPoll(pollfdPtr, nfds_t(buffer.count), timeout)
             }
         }
 
@@ -77,7 +78,11 @@ extension ISO_9945.Kernel.Poll {
     }
 }
 
-private func Darwin_or_Glibc_poll(_ fds: UnsafeMutablePointer<pollfd>, _ nfds: nfds_t, _ timeout: Int32) -> Int32 {
+private func platformPoll(
+    _ fds: UnsafeMutablePointer<pollfd>,
+    _ nfds: nfds_t,
+    _ timeout: Int32
+) -> Int32 {
     #if canImport(Darwin)
         unsafe Darwin.poll(fds, nfds, timeout)
     #elseif canImport(Glibc)
@@ -87,6 +92,8 @@ private func Darwin_or_Glibc_poll(_ fds: UnsafeMutablePointer<pollfd>, _ nfds: n
     #elseif canImport(Android)
         unsafe Android.poll(fds, nfds, timeout)
     #else
-        #error("ISO_9945.Kernel.Poll.poll: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+        #error(
+            "ISO_9945.Kernel.Poll.poll: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+        )
     #endif
 }

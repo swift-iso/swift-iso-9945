@@ -24,7 +24,12 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         ///   - pointer: Pointer to the socket address structure.
         ///   - length: Length of the socket address in bytes.
         @unsafe
-        public init(pointer: UnsafeMutableRawPointer? = nil, length: ISO_9945.Kernel.Socket.Address.Length = ISO_9945.Kernel.Socket.Address.Length(UInt(0))) {
+        public init(
+            pointer: UnsafeMutableRawPointer? = nil,
+            length: ISO_9945.Kernel.Socket.Address.Length = ISO_9945.Kernel.Socket.Address.Length(
+                UInt(0)
+            )
+        ) {
             unsafe self.pointer = pointer
             self.length = length
         }

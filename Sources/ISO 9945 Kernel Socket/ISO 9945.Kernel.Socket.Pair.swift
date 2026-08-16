@@ -63,7 +63,9 @@ extension ISO_9945.Kernel.Socket.Pair {
         #elseif canImport(Android)
             let result = unsafe Android.socketpair(AF_UNIX, Int32(SOCK_STREAM.rawValue), 0, &fds)
         #else
-            #error("ISO_9945.Kernel.Socket.Pair.create: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+            #error(
+                "ISO_9945.Kernel.Socket.Pair.create: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+            )
         #endif
         guard result == 0 else {
             throw currentError()

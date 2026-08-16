@@ -56,7 +56,11 @@
             length: Memory.Address.Count,
             advice: Memory.Map.Advice
         ) {
-            _ = unsafe madvise(UnsafeMutableRawPointer(mutating: addr), Int(bitPattern: length.underlying.rawValue), advice.rawValue)
+            _ = unsafe madvise(
+                UnsafeMutableRawPointer(mutating: addr),
+                Int(bitPattern: length.underlying.rawValue),
+                advice.rawValue
+            )
         }
     }
 

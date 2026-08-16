@@ -131,7 +131,9 @@ extension ISO_9945.Kernel.Environment {
     ///
     /// - Note: Does not fail if the variable does not exist.
 
-    public static func unset(_ name: UnsafePointer<String.Char>) throws(ISO_9945.Kernel.Environment.Error) {
+    public static func unset(
+        _ name: UnsafePointer<String.Char>
+    ) throws(ISO_9945.Kernel.Environment.Error) {
         try validate(name: name)
         let cName = unsafe UnsafePointer<CChar>(name)
         let result = unsafe unsetenv(cName)
@@ -142,7 +144,9 @@ extension ISO_9945.Kernel.Environment {
 
     /// Validates a variable name against the conditions POSIX folds into
     /// one `EINVAL`: an empty name, or a name containing `=`.
-    internal static func validate(name: UnsafePointer<String.Char>) throws(ISO_9945.Kernel.Environment.Error) {
+    internal static func validate(
+        name: UnsafePointer<String.Char>
+    ) throws(ISO_9945.Kernel.Environment.Error) {
         guard unsafe (name[0] != 0) else {
             throw .invalid(.emptyName)
         }

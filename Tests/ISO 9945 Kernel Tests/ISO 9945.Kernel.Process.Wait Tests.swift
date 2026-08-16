@@ -62,7 +62,10 @@
         @Test
         func `Selector is Equatable`() {
             let pid = ISO_9945.Kernel.Process.ID(42)
-            #expect(ISO_9945.Kernel.Process.Wait.Selector.any == ISO_9945.Kernel.Process.Wait.Selector.any)
+            #expect(
+                ISO_9945.Kernel.Process.Wait.Selector.any
+                    == ISO_9945.Kernel.Process.Wait.Selector.any
+            )
             #expect(
                 ISO_9945.Kernel.Process.Wait.Selector.process(pid)
                     == ISO_9945.Kernel.Process.Wait.Selector.process(pid)

@@ -69,7 +69,9 @@ extension ISO_9945.Kernel.Lock {
     /// - Returns: `false` for an empty range (which locks nothing — POSIX
     ///   would read `l_len == 0` as "to end of file"), `true` otherwise.
     /// - Throws: `Error.invalidRange` when the end precedes the start.
-    static func validate(_ range: ISO_9945.Kernel.Lock.Range) throws(ISO_9945.Kernel.Lock.Error) -> Bool {
+    static func validate(
+        _ range: ISO_9945.Kernel.Lock.Range
+    ) throws(ISO_9945.Kernel.Lock.Error) -> Bool {
         guard case .bytes(let start, let end) = range else { return true }
         if end.underlying < start.underlying {
             throw .invalidRange(start: start.underlying, end: end.underlying)
@@ -123,7 +125,10 @@ extension ISO_9945.Kernel.Lock {
 
     /// Creates a flock structure for fcntl.
 
-    static func makeFlock(range: ISO_9945.Kernel.Lock.Range, kind: ISO_9945.Kernel.Lock.Kind) -> flock {
+    static func makeFlock(
+        range: ISO_9945.Kernel.Lock.Range,
+        kind: ISO_9945.Kernel.Lock.Kind
+    ) -> flock {
         var fl = flock()
 
         fl.l_type = kind == .shared ? Int16(F_RDLCK) : Int16(F_WRLCK)

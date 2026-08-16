@@ -43,7 +43,13 @@ extension ISO_9945.Kernel.User.Database {
     public static func find(name: String) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, pwd, result in
             unsafe name.withCString { cName in
-                unsafe getpwnam_r(cName, pwd, buffer.baseAddress!, numericCast(buffer.count), result)
+                unsafe getpwnam_r(
+                    cName,
+                    pwd,
+                    buffer.baseAddress!,
+                    numericCast(buffer.count),
+                    result
+                )
             }
         }
     }
@@ -58,7 +64,13 @@ extension ISO_9945.Kernel.User.Database {
     ///   the ID simply having no entry).
     public static func find(uid: ISO_9945.Kernel.User.ID) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, pwd, result in
-            unsafe getpwuid_r(uid.underlying, pwd, buffer.baseAddress!, numericCast(buffer.count), result)
+            unsafe getpwuid_r(
+                uid.underlying,
+                pwd,
+                buffer.baseAddress!,
+                numericCast(buffer.count),
+                result
+            )
         }
     }
 

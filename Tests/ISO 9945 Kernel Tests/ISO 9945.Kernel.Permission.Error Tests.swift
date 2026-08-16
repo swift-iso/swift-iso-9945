@@ -128,7 +128,9 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
 extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     @Test
     func `CustomStringConvertible works for all cases`() {
-        let cases: [ISO_9945.Kernel.Permission.Error] = [.denied, .notPermitted, .readOnlyFilesystem]
+        let cases: [ISO_9945.Kernel.Permission.Error] = [
+            .denied, .notPermitted, .readOnlyFilesystem,
+        ]
 
         for error in cases {
             let description = Swift.String(describing: error)

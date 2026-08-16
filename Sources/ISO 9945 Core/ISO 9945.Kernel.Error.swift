@@ -39,6 +39,12 @@ extension Error_Primitives.Error {
         fileID: StaticString = #fileID,
         line: UInt32 = #line
     ) -> Self {
-        .capturing(.posix(errno), operation: operation, function: function, file: .init(id: fileID), line: line)
+        .capturing(
+            .posix(errno),
+            operation: operation,
+            function: function,
+            file: .init(id: fileID),
+            line: line
+        )
     }
 }

@@ -39,9 +39,18 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
 
     @Test
     func `Range.bytes is equatable`() {
-        let r1 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(110))
-        let r2 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(110))
-        let r3 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(20), end: ISO_9945.Kernel.File.Offset(120))
+        let r1 = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(10),
+            end: ISO_9945.Kernel.File.Offset(110)
+        )
+        let r2 = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(10),
+            end: ISO_9945.Kernel.File.Offset(110)
+        )
+        let r3 = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(20),
+            end: ISO_9945.Kernel.File.Offset(120)
+        )
 
         #expect(r1 == r2)
         #expect(r1 != r3)
@@ -57,8 +66,17 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
 
     @Test
     func `Range.bytes with length convenience`() {
-        let range = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(100), length: ISO_9945.Kernel.File.Size(100))
-        #expect(range == .bytes(start: ISO_9945.Kernel.File.Offset(100), end: ISO_9945.Kernel.File.Offset(200)))
+        let range = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(100),
+            length: ISO_9945.Kernel.File.Size(100)
+        )
+        #expect(
+            range
+                == .bytes(
+                    start: ISO_9945.Kernel.File.Offset(100),
+                    end: ISO_9945.Kernel.File.Offset(200)
+                )
+        )
     }
 }
 
@@ -118,8 +136,12 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     func `Range is hashable`() {
         var set = Set<ISO_9945.Kernel.Lock.Range>()
         set.insert(.file)
-        set.insert(.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30)))
-        set.insert(.bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30)))  // Duplicate
+        set.insert(
+            .bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30))
+        )
+        set.insert(
+            .bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30))
+        )  // Duplicate
 
         #expect(set.count == 2)
     }
@@ -173,7 +195,12 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
 
         let fd2 = try Path.scope(path) { p in
-            try ISO_9945.Kernel.File.Open.open(path: p, mode: .readWrite, options: [], permissions: .privateFile)
+            try ISO_9945.Kernel.File.Open.open(
+                path: p,
+                mode: .readWrite,
+                options: [],
+                permissions: .privateFile
+            )
         }
 
         try ISO_9945.Kernel.Lock.lock(fd: fd1._rawValue, range: .file, kind: .shared)
@@ -189,8 +216,14 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        let range1 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(0), end: ISO_9945.Kernel.File.Offset(100))
-        let range2 = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(200), end: ISO_9945.Kernel.File.Offset(300))
+        let range1 = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(0),
+            end: ISO_9945.Kernel.File.Offset(100)
+        )
+        let range2 = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(200),
+            end: ISO_9945.Kernel.File.Offset(300)
+        )
 
         try ISO_9945.Kernel.Lock.lock(fd: fd._rawValue, range: range1, kind: .exclusive)
         try ISO_9945.Kernel.Lock.Immediate.lock(fd: fd._rawValue, range: range2, kind: .exclusive)
@@ -268,7 +301,10 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        let range = ISO_9945.Kernel.Lock.Range.bytes(start: ISO_9945.Kernel.File.Offset(0), end: ISO_9945.Kernel.File.Offset(512))
+        let range = ISO_9945.Kernel.Lock.Range.bytes(
+            start: ISO_9945.Kernel.File.Offset(0),
+            end: ISO_9945.Kernel.File.Offset(512)
+        )
 
         var token = try ISO_9945.Kernel.Lock.Token(
             descriptor: fd,
@@ -333,7 +369,8 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         struct TestError: Swift.Error {}
 
         do {
-            try ISO_9945.Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) { () throws(TestError) in
+            try ISO_9945.Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {
+                () throws(TestError) in
                 throw TestError()
             }
             Issue.record("Expected TestError")

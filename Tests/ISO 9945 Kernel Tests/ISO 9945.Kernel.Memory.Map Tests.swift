@@ -74,7 +74,11 @@ extension Memory.Map.Test.Unit {
         // unsafe pointer access — the pattern `Anonymous.map(_:)`'s own doc
         // comment prescribes.
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(42), toByteOffset: 0, as: UInt8.self)
-        unsafe region.base.mutablePointer.storeBytes(of: UInt8(123), toByteOffset: 1, as: UInt8.self)
+        unsafe region.base.mutablePointer.storeBytes(
+            of: UInt8(123),
+            toByteOffset: 1,
+            as: UInt8.self
+        )
 
         // Read back through the read-only pointer.
         #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 42)
@@ -143,7 +147,11 @@ extension Memory.Map.Test.Unit {
         // writable` for why a bare `Region` uses an unsafe pointer access).
         let lastOffset = try Int(region.length.subtract.saturating(.one))
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(1), toByteOffset: 0, as: UInt8.self)
-        unsafe region.base.mutablePointer.storeBytes(of: UInt8(255), toByteOffset: lastOffset, as: UInt8.self)
+        unsafe region.base.mutablePointer.storeBytes(
+            of: UInt8(255),
+            toByteOffset: lastOffset,
+            as: UInt8.self
+        )
 
         #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 1)
         #expect(unsafe region.base.pointer.load(fromByteOffset: lastOffset, as: UInt8.self) == 255)

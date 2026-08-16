@@ -98,7 +98,11 @@ extension ISO_9945.Kernel.Socket.Bind {
     ) throws(ISO_9945.Kernel.Socket.Error) {
         let rc = address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_bind(fd, sockaddrPtr, socklen_t(length.underlying.rawValue))
+            return unsafe platformBind(
+                fd,
+                sockaddrPtr,
+                socklen_t(length.underlying.rawValue)
+            )
         }
 
         guard rc == 0 else {
@@ -137,7 +141,11 @@ extension ISO_9945.Kernel.Socket.Bind {
 // MARK: - Platform bind disambiguation
 
 /// `bind` is shadowed by Swift's `Sequence.bind`. Use a disambiguating name internally.
-private func Darwin_or_Glibc_bind(_ fd: Int32, _ addr: UnsafePointer<sockaddr>, _ len: socklen_t) -> Int32 {
+private func platformBind(
+    _ fd: Int32,
+    _ addr: UnsafePointer<sockaddr>,
+    _ len: socklen_t
+) -> Int32 {
     #if canImport(Darwin)
         unsafe Darwin.bind(fd, addr, len)
     #elseif canImport(Glibc)
@@ -147,6 +155,8 @@ private func Darwin_or_Glibc_bind(_ fd: Int32, _ addr: UnsafePointer<sockaddr>, 
     #elseif canImport(Android)
         unsafe Android.bind(fd, addr, len)
     #else
-        #error("ISO_9945.Kernel.Socket.Bind: unsupported platform (no Darwin, Glibc, Musl, or Android)")
+        #error(
+            "ISO_9945.Kernel.Socket.Bind: unsupported platform (no Darwin, Glibc, Musl, or Android)"
+        )
     #endif
 }

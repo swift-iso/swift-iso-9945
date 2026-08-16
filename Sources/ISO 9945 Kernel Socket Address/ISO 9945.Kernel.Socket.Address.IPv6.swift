@@ -96,14 +96,22 @@ extension ISO_9945.Kernel.Socket.Address {
         ) {
             self.init(
                 address: (
-                    UInt8(truncatingIfNeeded: segments.0 >> 8), UInt8(truncatingIfNeeded: segments.0),
-                    UInt8(truncatingIfNeeded: segments.1 >> 8), UInt8(truncatingIfNeeded: segments.1),
-                    UInt8(truncatingIfNeeded: segments.2 >> 8), UInt8(truncatingIfNeeded: segments.2),
-                    UInt8(truncatingIfNeeded: segments.3 >> 8), UInt8(truncatingIfNeeded: segments.3),
-                    UInt8(truncatingIfNeeded: segments.4 >> 8), UInt8(truncatingIfNeeded: segments.4),
-                    UInt8(truncatingIfNeeded: segments.5 >> 8), UInt8(truncatingIfNeeded: segments.5),
-                    UInt8(truncatingIfNeeded: segments.6 >> 8), UInt8(truncatingIfNeeded: segments.6),
-                    UInt8(truncatingIfNeeded: segments.7 >> 8), UInt8(truncatingIfNeeded: segments.7)
+                    UInt8(truncatingIfNeeded: segments.0 >> 8),
+                    UInt8(truncatingIfNeeded: segments.0),
+                    UInt8(truncatingIfNeeded: segments.1 >> 8),
+                    UInt8(truncatingIfNeeded: segments.1),
+                    UInt8(truncatingIfNeeded: segments.2 >> 8),
+                    UInt8(truncatingIfNeeded: segments.2),
+                    UInt8(truncatingIfNeeded: segments.3 >> 8),
+                    UInt8(truncatingIfNeeded: segments.3),
+                    UInt8(truncatingIfNeeded: segments.4 >> 8),
+                    UInt8(truncatingIfNeeded: segments.4),
+                    UInt8(truncatingIfNeeded: segments.5 >> 8),
+                    UInt8(truncatingIfNeeded: segments.5),
+                    UInt8(truncatingIfNeeded: segments.6 >> 8),
+                    UInt8(truncatingIfNeeded: segments.6),
+                    UInt8(truncatingIfNeeded: segments.7 >> 8),
+                    UInt8(truncatingIfNeeded: segments.7)
                 ),
                 port: port,
                 flowInfo: flowInfo,

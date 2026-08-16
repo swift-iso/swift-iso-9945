@@ -41,7 +41,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter fd: The raw file descriptor to stat.
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    internal static func get(fd: Int32) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
+    internal static func get(
+        fd: Int32
+    ) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (Darwin.fstat(fd, &sb) == 0) else {
@@ -73,7 +75,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter descriptor: The file descriptor to stat.
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    public static func get(descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
+    public static func get(
+        descriptor: borrowing ISO_9945.Kernel.Descriptor
+    ) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe get(fd: descriptor._rawValue)
     }
 
@@ -89,7 +93,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func get(path: borrowing Path.Borrowed) throws(Error) -> ISO_9945.Kernel.File.Stats {
+    public static func get(
+        path: borrowing Path.Borrowed
+    ) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe get(unsafePath: UnsafePointer<CChar>(cString))
         }
@@ -105,7 +111,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @unsafe
-    public static func get(at path: UnsafePointer<Path.Char>) throws(Error) -> ISO_9945.Kernel.File.Stats {
+    public static func get(
+        at path: UnsafePointer<Path.Char>
+    ) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe get(unsafePath: UnsafePointer<CChar>(path))
     }
 
@@ -114,7 +122,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter unsafePath: Null-terminated path string.
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    internal static func get(unsafePath path: UnsafePointer<CChar>) throws(Error) -> ISO_9945.Kernel.File.Stats {
+    internal static func get(
+        unsafePath path: UnsafePointer<CChar>
+    ) throws(Error) -> ISO_9945.Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (stat(path, &sb) == 0) else {
@@ -143,7 +153,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata including size, type, permissions, and timestamps.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
-    public static func lget(path: borrowing Path.Borrowed) throws(Error) -> ISO_9945.Kernel.File.Stats {
+    public static func lget(
+        path: borrowing Path.Borrowed
+    ) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe lget(unsafePath: UnsafePointer<CChar>(cString))
         }
@@ -158,7 +170,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @unsafe
-    public static func lget(at path: UnsafePointer<Path.Char>) throws(Error) -> ISO_9945.Kernel.File.Stats {
+    public static func lget(
+        at path: UnsafePointer<Path.Char>
+    ) throws(Error) -> ISO_9945.Kernel.File.Stats {
         try unsafe lget(unsafePath: UnsafePointer<CChar>(path))
     }
 
@@ -167,7 +181,9 @@ extension ISO_9945.Kernel.File.Stats {
     /// - Parameter unsafePath: Null-terminated path string.
     /// - Returns: File metadata.
     /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-    internal static func lget(unsafePath path: UnsafePointer<CChar>) throws(Error) -> ISO_9945.Kernel.File.Stats {
+    internal static func lget(
+        unsafePath path: UnsafePointer<CChar>
+    ) throws(Error) -> ISO_9945.Kernel.File.Stats {
         #if canImport(Darwin)
             var sb = Darwin.stat()
             guard unsafe (Darwin.lstat(path, &sb) == 0) else {
@@ -207,14 +223,28 @@ extension ISO_9945.Kernel.File.Stats.Error {
     extension ISO_9945.Kernel.File.Stats {
         /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
         internal init(from sb: Darwin.stat) {
-            let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec), nanosecondFraction: Int32(sb.st_atimespec.tv_nsec))
-            let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtimespec.tv_sec), nanosecondFraction: Int32(sb.st_mtimespec.tv_nsec))
-            let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctimespec.tv_sec), nanosecondFraction: Int32(sb.st_ctimespec.tv_nsec))
+            let atime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_atimespec.tv_sec),
+                nanosecondFraction: Int32(sb.st_atimespec.tv_nsec)
+            )
+            let mtime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_mtimespec.tv_sec),
+                nanosecondFraction: Int32(sb.st_mtimespec.tv_nsec)
+            )
+            let ctime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_ctimespec.tv_sec),
+                nanosecondFraction: Int32(sb.st_ctimespec.tv_nsec)
+            )
 
             self.init(
                 size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
                 type: Kind(mode: sb.st_mode),
-                permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+                permissions: ISO_9945.Kernel.File.Permissions(
+                    rawValue: UInt16(sb.st_mode & 0o7777)
+                ),
                 uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
                 gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
                 inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
@@ -230,14 +260,28 @@ extension ISO_9945.Kernel.File.Stats.Error {
     extension ISO_9945.Kernel.File.Stats {
         /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
         internal init(from sb: Glibc.stat) {
-            let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
-            let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
-            let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
+            let atime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec),
+                nanosecondFraction: Int32(sb.st_atim.tv_nsec)
+            )
+            let mtime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec),
+                nanosecondFraction: Int32(sb.st_mtim.tv_nsec)
+            )
+            let ctime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec),
+                nanosecondFraction: Int32(sb.st_ctim.tv_nsec)
+            )
 
             self.init(
                 size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
                 type: Kind(mode: sb.st_mode),
-                permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+                permissions: ISO_9945.Kernel.File.Permissions(
+                    rawValue: UInt16(sb.st_mode & 0o7777)
+                ),
                 uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
                 gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
                 inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),
@@ -253,14 +297,28 @@ extension ISO_9945.Kernel.File.Stats.Error {
     extension ISO_9945.Kernel.File.Stats {
         /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
         internal init(from sb: Musl.stat) {
-            let atime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec), nanosecondFraction: Int32(sb.st_atim.tv_nsec))
-            let mtime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec), nanosecondFraction: Int32(sb.st_mtim.tv_nsec))
-            let ctime = ISO_9945.Kernel.Time(_unchecked: (), secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec), nanosecondFraction: Int32(sb.st_ctim.tv_nsec))
+            let atime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_atim.tv_sec),
+                nanosecondFraction: Int32(sb.st_atim.tv_nsec)
+            )
+            let mtime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_mtim.tv_sec),
+                nanosecondFraction: Int32(sb.st_mtim.tv_nsec)
+            )
+            let ctime = ISO_9945.Kernel.Time(
+                _unchecked: (),
+                secondsSinceUnixEpoch: Int64(sb.st_ctim.tv_sec),
+                nanosecondFraction: Int32(sb.st_ctim.tv_nsec)
+            )
 
             self.init(
                 size: ISO_9945.Kernel.File.Size(Int64(sb.st_size)),
                 type: Kind(mode: sb.st_mode),
-                permissions: ISO_9945.Kernel.File.Permissions(rawValue: UInt16(sb.st_mode & 0o7777)),
+                permissions: ISO_9945.Kernel.File.Permissions(
+                    rawValue: UInt16(sb.st_mode & 0o7777)
+                ),
                 uid: ISO_9945.Kernel.User.ID(_unchecked: UInt32(sb.st_uid)),
                 gid: ISO_9945.Kernel.Group.ID(_unchecked: UInt32(sb.st_gid)),
                 inode: ISO_9945.Kernel.Inode(UInt64(sb.st_ino)),

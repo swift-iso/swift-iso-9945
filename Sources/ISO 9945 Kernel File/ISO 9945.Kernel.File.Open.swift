@@ -57,7 +57,12 @@ extension ISO_9945.Kernel.File.Open {
         permissions: ISO_9945.Kernel.File.Permissions
     ) throws(ISO_9945.Kernel.File.Open.Error) -> ISO_9945.Kernel.Descriptor {
         try unsafe path.withUnsafePointer { cString throws(ISO_9945.Kernel.File.Open.Error) in
-            try unsafe _open(unsafePath: cString, mode: mode, options: options, permissions: permissions)
+            try unsafe _open(
+                unsafePath: cString,
+                mode: mode,
+                options: options,
+                permissions: permissions
+            )
         }
     }
 

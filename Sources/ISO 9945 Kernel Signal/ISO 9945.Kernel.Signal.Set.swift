@@ -83,7 +83,9 @@ extension ISO_9945.Kernel.Signal.Set {
     /// - Parameter signals: The signals to include.
     /// - Throws: `Error.set` on first invalid signal (deterministic failure point).
 
-    public init(_ signals: some Swift.Sequence<ISO_9945.Kernel.Signal.Number>) throws(ISO_9945.Kernel.Signal.Error) {
+    public init(
+        _ signals: some Swift.Sequence<ISO_9945.Kernel.Signal.Number>
+    ) throws(ISO_9945.Kernel.Signal.Error) {
         self.init()
         for signal in signals {
             guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
@@ -111,7 +113,9 @@ extension ISO_9945.Kernel.Signal.Set {
     /// - Parameter signal: The signal to add.
     /// - Throws: `Error.set` if the signal number is invalid.
 
-    public mutating func insert(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
+    public mutating func insert(
+        _ signal: ISO_9945.Kernel.Signal.Number
+    ) throws(ISO_9945.Kernel.Signal.Error) {
         guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
             throw .set(Error_Primitives.Error.captureErrno())
         }
@@ -122,7 +126,9 @@ extension ISO_9945.Kernel.Signal.Set {
     /// - Parameter signal: The signal to remove.
     /// - Throws: `Error.set` if the signal number is invalid.
 
-    public mutating func remove(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
+    public mutating func remove(
+        _ signal: ISO_9945.Kernel.Signal.Number
+    ) throws(ISO_9945.Kernel.Signal.Error) {
         guard unsafe sigdelset(&self.storage, signal.rawValue) == 0 else {
             throw .set(Error_Primitives.Error.captureErrno())
         }
@@ -137,7 +143,9 @@ extension ISO_9945.Kernel.Signal.Set {
     /// **Design note:** Throwing on error rather than returning `false` prevents
     /// silent failures when checking invalid signal numbers.
 
-    public func contains(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) -> Bool {
+    public func contains(
+        _ signal: ISO_9945.Kernel.Signal.Number
+    ) throws(ISO_9945.Kernel.Signal.Error) -> Bool {
         var mutableStorage = storage
         let result = unsafe sigismember(&mutableStorage, signal.rawValue)
         guard result >= 0 else {
@@ -152,7 +160,9 @@ extension ISO_9945.Kernel.Signal.Set {
 extension ISO_9945.Kernel.Signal.Set {
     /// Provides read access to the underlying `sigset_t` for syscall interop.
     @unsafe
-    internal func withUnsafePointer<R, E: Swift.Error>(_ body: (UnsafePointer<sigset_t>) throws(E) -> R) throws(E) -> R {
+    internal func withUnsafePointer<R, E: Swift.Error>(
+        _ body: (UnsafePointer<sigset_t>) throws(E) -> R
+    ) throws(E) -> R {
         try unsafe Swift.withUnsafePointer(to: storage, body)
     }
 
@@ -177,7 +187,9 @@ extension ISO_9945.Kernel.Signal.Set {
 
     /// Provides mutable access to the underlying `sigset_t` for syscall interop.
     @unsafe
-    internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(_ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R) throws(E) -> R {
+    internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(
+        _ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R
+    ) throws(E) -> R {
         try unsafe Swift.withUnsafeMutablePointer(to: &storage, body)
     }
 

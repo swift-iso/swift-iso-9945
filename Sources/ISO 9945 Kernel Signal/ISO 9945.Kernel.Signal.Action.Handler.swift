@@ -79,7 +79,10 @@ extension ISO_9945.Kernel.Signal.Action {
         ///
         /// - Note: The `Configuration` initializer automatically adds the `.sigInfo`
         ///   flag when using this handler type.
-        case customInfo(@convention(c) (Int32, UnsafeMutablePointer<siginfo_t>?, UnsafeMutableRawPointer?) -> Void)
+        case customInfo(
+            @convention(c) (Int32, UnsafeMutablePointer<siginfo_t>?, UnsafeMutableRawPointer?) ->
+                Void
+        )
     }
 }
 

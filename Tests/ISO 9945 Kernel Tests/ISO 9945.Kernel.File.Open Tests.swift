@@ -66,7 +66,10 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
         for (i, a) in options.enumerated() {
             for (j, b) in options.enumerated() {
                 if i != j {
-                    #expect(!a.intersection(b).contains(a), "Options at index \(i) and \(j) should be distinct")
+                    #expect(
+                        !a.intersection(b).contains(a),
+                        "Options at index \(i) and \(j) should be distinct"
+                    )
                 }
             }
         }
@@ -190,7 +193,12 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
 
         // Verify total content by re-reading
         let readFd = try Path.scope(path) { p in
-            try ISO_9945.Kernel.File.Open.open(path: p, mode: .read, options: [], permissions: .privateFile)
+            try ISO_9945.Kernel.File.Open.open(
+                path: p,
+                mode: .read,
+                options: [],
+                permissions: .privateFile
+            )
         }
         var buffer = [UInt8](repeating: 0, count: 20)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in

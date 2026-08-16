@@ -77,7 +77,10 @@ extension ISO_9945.Kernel.Poll.Entry {
     /// - Parameters:
     ///   - descriptor: The descriptor to monitor.
     ///   - requested: Events to monitor for.
-    public init(_ descriptor: borrowing ISO_9945.Kernel.Descriptor, requested: ISO_9945.Kernel.Poll.Events) {
+    public init(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        requested: ISO_9945.Kernel.Poll.Events
+    ) {
         self.init(descriptor: descriptor._rawValue, requested: requested)
     }
 }

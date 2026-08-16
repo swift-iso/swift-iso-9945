@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.Socket.Accept {
 
         let acceptedFd = storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
-            return unsafe Darwin_or_Glibc_accept(fd, sockaddrPtr, &addrLen)
+            return unsafe platformAccept(fd, sockaddrPtr, &addrLen)
         }
 
         guard acceptedFd >= 0 else {
@@ -74,7 +74,11 @@ extension ISO_9945.Kernel.Socket.Accept {
     }
 }
 
-private func Darwin_or_Glibc_accept(_ fd: Int32, _ addr: UnsafeMutablePointer<sockaddr>, _ len: UnsafeMutablePointer<socklen_t>) -> Int32 {
+private func platformAccept(
+    _ fd: Int32,
+    _ addr: UnsafeMutablePointer<sockaddr>,
+    _ len: UnsafeMutablePointer<socklen_t>
+) -> Int32 {
     #if canImport(Darwin)
         unsafe Darwin.accept(fd, addr, len)
     #elseif canImport(Glibc)

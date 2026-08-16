@@ -160,7 +160,9 @@ extension ISO_9945.Kernel.File.Flush {
         ///
         /// - Parameter descriptor: The file descriptor.
         /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-        public static func fdatasync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
+        public static func fdatasync(
+            _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+        ) throws(Error) {
             try unsafe fdatasync(fd: descriptor._rawValue)
         }
     #endif
@@ -173,7 +175,9 @@ extension ISO_9945.Kernel.File.Flush {
         ///
         /// - Parameter descriptor: The file descriptor.
         /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-        public static func fullFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
+        public static func fullFsync(
+            _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+        ) throws(Error) {
             try unsafe fullFsync(fd: descriptor._rawValue)
         }
 
@@ -184,7 +188,9 @@ extension ISO_9945.Kernel.File.Flush {
         ///
         /// - Parameter descriptor: The file descriptor.
         /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
-        public static func barrierFsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
+        public static func barrierFsync(
+            _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+        ) throws(Error) {
             try unsafe barrierFsync(fd: descriptor._rawValue)
         }
     #endif

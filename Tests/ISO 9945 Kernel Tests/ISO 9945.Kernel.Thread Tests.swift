@@ -66,7 +66,8 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
     func `create function signature exists`() {
         // Verify the create function signature exists
         // create(_:) -> Handle throws(Error)
-        typealias CreateType = (@escaping @Sendable () -> Void) throws -> ISO_9945.Kernel.Thread.Handle
+        typealias CreateType = (@escaping @Sendable () -> Void) throws ->
+            ISO_9945.Kernel.Thread.Handle
         // The function is verified at compile time
     }
 }

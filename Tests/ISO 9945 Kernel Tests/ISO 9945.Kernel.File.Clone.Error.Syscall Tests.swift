@@ -27,7 +27,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall {
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     @Test
     func `platform case exists`() {
-        let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .clonefile)
+        let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
         if case .platform = syscall {
             // Expected
         } else {
@@ -51,13 +54,19 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     @Test
     func `Syscall conforms to Swift.Error`() {
-        let syscall: any Swift.Error = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .clonefile)
+        let syscall: any Swift.Error = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
         #expect(syscall is ISO_9945.Kernel.File.Clone.Error.Syscall)
     }
 
     @Test
     func `Syscall is Sendable`() {
-        let syscall: any Sendable = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .clonefile)
+        let syscall: any Sendable = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
         #expect(syscall is ISO_9945.Kernel.File.Clone.Error.Syscall)
     }
 }
@@ -67,7 +76,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     @Test
     func `platform stores error code`() {
-        let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(42), operation: .clonefile)
+        let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(42),
+            operation: .clonefile
+        )
         if case .platform(let code, _) = syscall {
             if case .posix(let errno) = code {
                 #expect(errno == 42)
@@ -81,7 +93,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
 
     @Test
     func `platform stores operation`() {
-        let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .copyfile)
+        let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .copyfile
+        )
         if case .platform(_, let operation) = syscall {
             #expect(operation == .copyfile)
         } else {
@@ -105,8 +120,14 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
     @Test
     func `platform with different codes are distinct`() {
-        let syscall1 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .clonefile)
-        let syscall2 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(2), operation: .clonefile)
+        let syscall1 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
+        let syscall2 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(2),
+            operation: .clonefile
+        )
         // They should be different error instances
         _ = syscall1
         _ = syscall2
@@ -114,8 +135,14 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
 
     @Test
     func `platform with different operations are distinct`() {
-        let syscall1 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .clonefile)
-        let syscall2 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: .copyfile)
+        let syscall1 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .clonefile
+        )
+        let syscall2 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+            code: .posix(1),
+            operation: .copyfile
+        )
         _ = syscall1
         _ = syscall2
     }
@@ -134,7 +161,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
         ]
 
         for operation in operations {
-            let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(code: .posix(1), operation: operation)
+            let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(
+                code: .posix(1),
+                operation: operation
+            )
             if case .platform(_, let op) = syscall {
                 #expect(op == operation)
             } else {
@@ -157,7 +187,9 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
         ]
 
         for operation in operations {
-            let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.notSupported(operation: operation)
+            let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.notSupported(
+                operation: operation
+            )
             if case .notSupported(let op) = syscall {
                 #expect(op == operation)
             } else {

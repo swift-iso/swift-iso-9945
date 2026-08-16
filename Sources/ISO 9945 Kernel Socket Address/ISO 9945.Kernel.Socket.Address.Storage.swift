@@ -57,7 +57,8 @@ extension ISO_9945.Kernel.Socket.Address.Storage {
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawPointer, UInt32) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe Swift.withUnsafeBytes(of: cValue) { (buffer: UnsafeRawBufferPointer) throws(E) -> R in
+        try unsafe Swift.withUnsafeBytes(of: cValue) {
+            (buffer: UnsafeRawBufferPointer) throws(E) -> R in
             try unsafe body(buffer.baseAddress!, UInt32(buffer.count))
         }
     }
@@ -70,7 +71,8 @@ extension ISO_9945.Kernel.Socket.Address.Storage {
     public mutating func withUnsafeMutableBytes<R, E: Swift.Error>(
         _ body: (UnsafeMutableRawPointer, UInt32) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe Swift.withUnsafeMutableBytes(of: &cValue) { (buffer: UnsafeMutableRawBufferPointer) throws(E) -> R in
+        try unsafe Swift.withUnsafeMutableBytes(of: &cValue) {
+            (buffer: UnsafeMutableRawBufferPointer) throws(E) -> R in
             try unsafe body(buffer.baseAddress!, UInt32(buffer.count))
         }
     }

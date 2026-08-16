@@ -38,7 +38,10 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
 
     @Test
     func `misalignedBuffer case exists`() {
-        let error = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(address: 123, required: .`4096`)
+        let error = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(
+            address: 123,
+            required: .`4096`
+        )
         if case .misalignedBuffer = error {
             // Expected
         } else {
@@ -48,7 +51,10 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
 
     @Test
     func `misalignedOffset case exists`() {
-        let error = ISO_9945.Kernel.File.Direct.Error.misalignedOffset(offset: 100, required: .`4096`)
+        let error = ISO_9945.Kernel.File.Direct.Error.misalignedOffset(
+            offset: 100,
+            required: .`4096`
+        )
         if case .misalignedOffset = error {
             // Expected
         } else {
@@ -58,7 +64,10 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
 
     @Test
     func `invalidLength case exists`() {
-        let error = ISO_9945.Kernel.File.Direct.Error.invalidLength(length: 1000, requiredMultiple: .`4096`)
+        let error = ISO_9945.Kernel.File.Direct.Error.invalidLength(
+            length: 1000,
+            requiredMultiple: .`4096`
+        )
         if case .invalidLength = error {
             // Expected
         } else {
@@ -120,21 +129,30 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
 
     @Test
     func `misalignedBuffer description includes address`() {
-        let error = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(address: 123, required: .`4096`)
+        let error = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(
+            address: 123,
+            required: .`4096`
+        )
         #expect(error.description.contains("Buffer address"))
         #expect(error.description.contains("4096"))
     }
 
     @Test
     func `misalignedOffset description includes offset`() {
-        let error = ISO_9945.Kernel.File.Direct.Error.misalignedOffset(offset: 100, required: .`4096`)
+        let error = ISO_9945.Kernel.File.Direct.Error.misalignedOffset(
+            offset: 100,
+            required: .`4096`
+        )
         #expect(error.description.contains("File offset"))
         #expect(error.description.contains("100"))
     }
 
     @Test
     func `invalidLength description includes length`() {
-        let error = ISO_9945.Kernel.File.Direct.Error.invalidLength(length: 1000, requiredMultiple: .`4096`)
+        let error = ISO_9945.Kernel.File.Direct.Error.invalidLength(
+            length: 1000,
+            requiredMultiple: .`4096`
+        )
         #expect(error.description.contains("Length"))
         #expect(error.description.contains("1000"))
     }
@@ -170,12 +188,14 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
 extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     @Test
     func `Operation type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Error.Operation.Type = ISO_9945.Kernel.File.Direct.Error.Operation.self
+        let _: ISO_9945.Kernel.File.Direct.Error.Operation.Type = ISO_9945.Kernel.File.Direct.Error
+            .Operation.self
     }
 
     @Test
     func `Syscall type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Error.Syscall.Type = ISO_9945.Kernel.File.Direct.Error.Syscall.self
+        let _: ISO_9945.Kernel.File.Direct.Error.Syscall.Type = ISO_9945.Kernel.File.Direct.Error
+            .Syscall.self
     }
 }
 
@@ -199,8 +219,14 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.EdgeCase {
 
     @Test
     func `misalignedBuffer errors with different addresses are distinct`() {
-        let error1 = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(address: 100, required: .`4096`)
-        let error2 = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(address: 200, required: .`4096`)
+        let error1 = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(
+            address: 100,
+            required: .`4096`
+        )
+        let error2 = ISO_9945.Kernel.File.Direct.Error.misalignedBuffer(
+            address: 200,
+            required: .`4096`
+        )
         #expect(error1 != error2)
     }
 

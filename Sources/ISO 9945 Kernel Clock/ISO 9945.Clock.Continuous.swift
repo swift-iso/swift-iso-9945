@@ -35,7 +35,10 @@
         ///   - tolerance: Optional tolerance for the wake-up.
         /// - Throws: `CancellationError` if the task is cancelled.
         nonisolated(nonsending)
-            public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError)
+            public func sleep(
+                until deadline: Instant,
+                tolerance: Duration? = nil
+            ) async throws(CancellationError)
         {
             while true {
                 let remaining = deadline - Clock.Continuous.now
@@ -46,7 +49,9 @@
                 } catch is CancellationError {
                     throw CancellationError()
                 } catch {
-                    preconditionFailure("Task.sleep/checkCancellation contract violation: \(type(of: error))")
+                    preconditionFailure(
+                        "Task.sleep/checkCancellation contract violation: \(type(of: error))"
+                    )
                 }
             }
         }
@@ -74,7 +79,10 @@
         ///   - tolerance: Optional tolerance for the wake-up.
         /// - Throws: `CancellationError` if the task is cancelled.
         nonisolated(nonsending)
-            public func sleep(until deadline: Instant, tolerance: Duration? = nil) async throws(CancellationError)
+            public func sleep(
+                until deadline: Instant,
+                tolerance: Duration? = nil
+            ) async throws(CancellationError)
         {
             while true {
                 let remaining = deadline - Clock.Suspending.now
@@ -85,7 +93,9 @@
                 } catch is CancellationError {
                     throw CancellationError()
                 } catch {
-                    preconditionFailure("Task.sleep/checkCancellation contract violation: \(type(of: error))")
+                    preconditionFailure(
+                        "Task.sleep/checkCancellation contract violation: \(type(of: error))"
+                    )
                 }
             }
         }

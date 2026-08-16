@@ -35,7 +35,8 @@ extension ISO_9945.Kernel.Link {
         to existingPath: borrowing Path.Borrowed
     ) throws(Error) {
         try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
-            try unsafe existingPath.withUnsafePointer { (existingPtr: UnsafePointer<Path.Char>) throws(Error) in
+            try unsafe existingPath.withUnsafePointer {
+                (existingPtr: UnsafePointer<Path.Char>) throws(Error) in
                 try unsafe _create(at: linkPtr, to: existingPtr)
             }
         }

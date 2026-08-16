@@ -34,7 +34,10 @@ extension Memory.Map.Sync {
 extension Memory.Map.Sync.Options {
     /// Combines multiple flags.
     @inlinable
-    public static func | (lhs: Memory.Map.Sync.Options, rhs: Memory.Map.Sync.Options) -> Memory.Map.Sync.Options {
+    public static func | (
+        lhs: Memory.Map.Sync.Options,
+        rhs: Memory.Map.Sync.Options
+    ) -> Memory.Map.Sync.Options {
         Memory.Map.Sync.Options(rawValue: lhs.rawValue | rhs.rawValue)
     }
 }

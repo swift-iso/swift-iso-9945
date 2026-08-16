@@ -99,7 +99,8 @@ extension ISO_9945.Kernel.Signal.Mask {
     /// }
     /// ```
 
-    public static func pending() throws(ISO_9945.Kernel.Signal.Error) -> ISO_9945.Kernel.Signal.Set {
+    public static func pending() throws(ISO_9945.Kernel.Signal.Error) -> ISO_9945.Kernel.Signal.Set
+    {
         var set = sigset_t()
         unsafe sigemptyset(&set)
 

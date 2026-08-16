@@ -79,7 +79,10 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.Test.EdgeCas
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let length1 = alignment.length
         let length2 = alignment.length
-        #expect(length1.isValid(ISO_9945.Kernel.File.Size(4096)) == length2.isValid(ISO_9945.Kernel.File.Size(4096)))
+        #expect(
+            length1.isValid(ISO_9945.Kernel.File.Size(4096))
+                == length2.isValid(ISO_9945.Kernel.File.Size(4096))
+        )
     }
 
     @Test

@@ -30,7 +30,10 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         ///   - pointer: Pointer to the I/O vector array.
         ///   - count: Number of I/O vectors.
         @unsafe
-        public init(pointer: UnsafeMutablePointer<ISO_9945.Kernel.IO.Vector.Segment>? = nil, count: Int = 0) {
+        public init(
+            pointer: UnsafeMutablePointer<ISO_9945.Kernel.IO.Vector.Segment>? = nil,
+            count: Int = 0
+        ) {
             unsafe self.pointer = pointer
             self.count = count
         }

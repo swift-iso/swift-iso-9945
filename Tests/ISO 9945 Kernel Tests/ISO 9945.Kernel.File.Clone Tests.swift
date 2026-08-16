@@ -41,7 +41,8 @@ extension ISO_9945.Kernel.File.Clone.Test.Unit {
 extension ISO_9945.Kernel.File.Clone.Test.Unit {
     @Test
     func `Clone.Capability type exists`() {
-        let _: ISO_9945.Kernel.File.Clone.Capability.Type = ISO_9945.Kernel.File.Clone.Capability.self
+        let _: ISO_9945.Kernel.File.Clone.Capability.Type = ISO_9945.Kernel.File.Clone.Capability
+            .self
     }
 
     @Test

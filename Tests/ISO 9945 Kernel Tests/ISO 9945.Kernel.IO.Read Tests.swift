@@ -149,7 +149,11 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         KernelIOTest.write("content", to: fd)
 
         let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
-        let bytesRead = try ISO_9945.Kernel.IO.Read.pread(fd, into: emptyBuffer, at: ISO_9945.Kernel.File.Offset(0))
+        let bytesRead = try ISO_9945.Kernel.IO.Read.pread(
+            fd,
+            into: emptyBuffer,
+            at: ISO_9945.Kernel.File.Offset(0)
+        )
 
         #expect(bytesRead == 0)
     }
@@ -175,7 +179,11 @@ extension ISO_9945.Kernel.IO.Read.Test.EdgeCase {
 
         #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
             try buffer.withUnsafeMutableBytes { ptr in
-                try ISO_9945.Kernel.IO.Read.pread(ISO_9945.Kernel.Descriptor(_raw: -1), into: ptr, at: ISO_9945.Kernel.File.Offset(0))
+                try ISO_9945.Kernel.IO.Read.pread(
+                    ISO_9945.Kernel.Descriptor(_raw: -1),
+                    into: ptr,
+                    at: ISO_9945.Kernel.File.Offset(0)
+                )
             }
         }
     }

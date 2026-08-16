@@ -170,7 +170,10 @@ extension ISO_9945.Kernel.Lock.Range.Test.EdgeCase {
 
     @Test
     func `bytes factory with max length`() {
-        let range = ISO_9945.Kernel.Lock.Range.bytes(start: 0, length: ISO_9945.Kernel.File.Size(ISO_9945.Kernel.File.Offset.max.underlying))
+        let range = ISO_9945.Kernel.Lock.Range.bytes(
+            start: 0,
+            length: ISO_9945.Kernel.File.Size(ISO_9945.Kernel.File.Offset.max.underlying)
+        )
         if case .bytes(let start, let end) = range {
             #expect(start == ISO_9945.Kernel.File.Offset(0))
             #expect(end == .max)

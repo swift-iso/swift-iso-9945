@@ -70,7 +70,9 @@
             let argv = [path]
             let envp: [Swift.String] = []
 
-            func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>) -> ISO_9945.Kernel.Process.ID {
+            func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>)
+                -> ISO_9945.Kernel.Process.ID
+            {
                 try Path.scope.array(argv, envp) {
                     (
                         argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,

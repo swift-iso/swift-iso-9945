@@ -48,7 +48,9 @@ import Testing
             @Test
             func `perform function exists on Linux`() {
                 // Verify the function signature compiles
-                typealias PerformType = (borrowing ISO_9945.Kernel.Descriptor, borrowing ISO_9945.Kernel.Descriptor) throws -> Void
+                typealias PerformType = (
+                    borrowing ISO_9945.Kernel.Descriptor, borrowing ISO_9945.Kernel.Descriptor
+                ) throws -> Void
             }
         }
     #endif

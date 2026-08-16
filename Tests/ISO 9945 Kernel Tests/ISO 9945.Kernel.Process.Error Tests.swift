@@ -50,8 +50,12 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
     @Test
     func `error is Equatable`() {
         let code = Error_Primitives.Error.Code.posix(1)
-        #expect(ISO_9945.Kernel.Process.Error.fork(code) == ISO_9945.Kernel.Process.Error.fork(code))
-        #expect(ISO_9945.Kernel.Process.Error.fork(code) != ISO_9945.Kernel.Process.Error.wait(code))
+        #expect(
+            ISO_9945.Kernel.Process.Error.fork(code) == ISO_9945.Kernel.Process.Error.fork(code)
+        )
+        #expect(
+            ISO_9945.Kernel.Process.Error.fork(code) != ISO_9945.Kernel.Process.Error.wait(code)
+        )
     }
 
     @Test

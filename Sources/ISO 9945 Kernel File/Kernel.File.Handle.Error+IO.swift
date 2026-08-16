@@ -19,7 +19,10 @@
 // through this conversion.
 
 extension ISO_9945.Kernel.File.Handle.Error {
-    public init(from error: ISO_9945.Kernel.IO.Read.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
+    public init(
+        from error: ISO_9945.Kernel.IO.Read.Error,
+        operation: ISO_9945.Kernel.File.Handle.Operation
+    ) {
         switch error {
         case .handle(let handleError):
             switch handleError {
@@ -39,7 +42,10 @@ extension ISO_9945.Kernel.File.Handle.Error {
         }
     }
 
-    public init(from error: ISO_9945.Kernel.IO.Write.Error, operation: ISO_9945.Kernel.File.Handle.Operation) {
+    public init(
+        from error: ISO_9945.Kernel.IO.Write.Error,
+        operation: ISO_9945.Kernel.File.Handle.Operation
+    ) {
         switch error {
         case .handle(let handleError):
             switch handleError {

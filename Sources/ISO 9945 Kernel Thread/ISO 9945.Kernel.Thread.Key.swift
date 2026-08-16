@@ -148,7 +148,8 @@ extension ISO_9945.Kernel.Thread.Key {
     /// ``value`` setter does — a property setter cannot throw.
     ///
     /// - Throws: ``Kernel/Thread/Error/keySet(_:)`` on failure.
-    public func setValue(_ newValue: UnsafeMutableRawPointer?) throws(ISO_9945.Kernel.Thread.Error) {
+    public func setValue(_ newValue: UnsafeMutableRawPointer?) throws(ISO_9945.Kernel.Thread.Error)
+    {
         // pthread_setspecific returns the error number directly; it does
         // not set errno.
         let result = unsafe pthread_setspecific(key, newValue)

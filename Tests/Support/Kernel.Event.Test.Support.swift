@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Path_Primitives
 public import Error_Primitives
 public import ISO_9945_Kernel
+public import Path_Primitives
 
 extension ISO_9945.Kernel.Event {
     /// Test utilities for eventing operations (kqueue, epoll, io_uring).

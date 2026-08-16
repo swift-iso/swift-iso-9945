@@ -100,7 +100,9 @@
             var chunk = [UInt8](repeating: 0, count: 256)
             while true {
                 let n = try unsafe chunk.withUnsafeMutableBufferPointer {
-                    (raw: inout UnsafeMutableBufferPointer<UInt8>) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
+                    (
+                        raw: inout UnsafeMutableBufferPointer<UInt8>
+                    ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
                     let buf = UnsafeMutableRawBufferPointer(raw)
                     return try unsafe ISO_9945.Kernel.IO.Read.read(readEnd, into: buf)
                 }
@@ -147,7 +149,9 @@
             var chunk = [UInt8](repeating: 0, count: 256)
             while true {
                 let n = try unsafe chunk.withUnsafeMutableBufferPointer {
-                    (raw: inout UnsafeMutableBufferPointer<UInt8>) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
+                    (
+                        raw: inout UnsafeMutableBufferPointer<UInt8>
+                    ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
                     let buf = UnsafeMutableRawBufferPointer(raw)
                     return try unsafe ISO_9945.Kernel.IO.Read.read(readEnd, into: buf)
                 }

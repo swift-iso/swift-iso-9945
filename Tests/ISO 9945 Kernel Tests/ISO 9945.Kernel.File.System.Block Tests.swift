@@ -42,12 +42,14 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     @Test
     func `Block.Size type exists`() {
-        let _: ISO_9945.Kernel.File.System.Block.Size.Type = ISO_9945.Kernel.File.System.Block.Size.self
+        let _: ISO_9945.Kernel.File.System.Block.Size.Type = ISO_9945.Kernel.File.System.Block.Size
+            .self
     }
 
     @Test
     func `Block.Count type exists`() {
-        let _: ISO_9945.Kernel.File.System.Block.Count.Type = ISO_9945.Kernel.File.System.Block.Count.self
+        let _: ISO_9945.Kernel.File.System.Block.Count.Type = ISO_9945.Kernel.File.System.Block
+            .Count.self
     }
 }
 

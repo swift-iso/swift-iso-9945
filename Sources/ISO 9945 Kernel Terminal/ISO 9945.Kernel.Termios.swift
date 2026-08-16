@@ -98,7 +98,9 @@
         ///
         /// Phase 1.5 typed L2 form. Delegates to the raw `get(fd:)` SPI form
         /// via `descriptor._rawValue`.
-        public static func get(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error_Primitives.Error) -> Self {
+        public static func get(
+            _ descriptor: borrowing ISO_9945.Kernel.Descriptor
+        ) throws(Error_Primitives.Error) -> Self {
             try get(fd: descriptor._rawValue)
         }
 

@@ -151,7 +151,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
         at linkPath: borrowing Path.Borrowed
     ) throws(Error) {
         try unsafe target.withUnsafePointer { (targetPtr: UnsafePointer<Path.Char>) throws(Error) in
-            try unsafe linkPath.withUnsafePointer { (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
+            try unsafe linkPath.withUnsafePointer {
+                (linkPtr: UnsafePointer<Path.Char>) throws(Error) in
                 try unsafe _create(target: targetPtr, at: linkPtr)
             }
         }

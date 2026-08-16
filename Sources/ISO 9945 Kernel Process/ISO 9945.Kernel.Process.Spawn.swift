@@ -121,8 +121,12 @@ extension ISO_9945.Kernel.Process.Spawn {
     ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         // Bridge UInt8 pointers to CChar pointers
         let pathCChar = unsafe UnsafePointer<CChar>(path)
-        let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
-        let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
+        let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(
+            to: UnsafePointer<CChar>?.self
+        )
+        let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(
+            to: UnsafePointer<CChar>?.self
+        )
 
         return try unsafe spawn(path: pathCChar, argv: argvCChar, envp: envpCChar)
     }
@@ -183,8 +187,12 @@ extension ISO_9945.Kernel.Process.Spawn {
         actions: borrowing Actions
     ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         let pathCChar = unsafe UnsafePointer<CChar>(path)
-        let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
-        let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(to: UnsafePointer<CChar>?.self)
+        let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(
+            to: UnsafePointer<CChar>?.self
+        )
+        let envpCChar = unsafe UnsafeRawPointer(envp).assumingMemoryBound(
+            to: UnsafePointer<CChar>?.self
+        )
 
         return try unsafe spawn(
             path: pathCChar,
