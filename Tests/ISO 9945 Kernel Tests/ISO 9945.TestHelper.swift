@@ -9,11 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-/// Test helper utilities for spawning the posix-test-helper executable.
+/// Test helper utilities for spawning the POSIX test helper executable.
 ///
-/// The posix-test-helper is a pure C executable that performs process operations
-/// (fork, setsid, setpgid, etc.) without Swift runtime involvement, making it
-/// safe to use from multithreaded Swift Testing environments.
+/// The helper is a separate executable that performs process operations (setsid,
+/// setpgid, and friends) in its own process image, so that they never run inside
+/// the multithreaded Swift Testing process.
 ///
 /// ## Usage
 ///
@@ -38,7 +38,7 @@
     // MARK: - POSIXTestHelper
 
     enum POSIXTestHelper {
-        /// Path to the posix-test-helper executable.
+        /// Path to the POSIX test helper executable.
         ///
         /// Derived from the running test binary's own directory — see
         /// ``TestExecutable``. Previously this hardcoded `.build/debug/`, which

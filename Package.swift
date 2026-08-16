@@ -2,6 +2,28 @@
 
 import PackageDescription
 
+// The spawned test helpers exercise POSIX process, session, and locking semantics.
+// They have no Windows implementation, so the manifest omits them there rather than
+// offering a target that cannot build.
+#if os(Windows)
+    let testHelperTargets: [Target] = []
+#else
+    let testHelperTargets: [Target] = [
+        .executableTarget(
+            name: "iso-9945-test-helper",
+            dependencies: [],
+            path: "Tests/Support/POSIX Helper"
+        ),
+        .executableTarget(
+            name: "iso-9945-lock-helper",
+            dependencies: [
+                "ISO 9945 Kernel"
+            ],
+            path: "Tests/Support/Lock Helper"
+        ),
+    ]
+#endif
+
 let package = Package(
     name: "swift-iso-9945",
     platforms: [
@@ -503,21 +525,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Test Helpers
-
-        .executableTarget(
-            name: "iso-9945-test-helper",
-            dependencies: [],
-            path: "Sources/CPOSIXTestHelper"
-        ),
-        .executableTarget(
-            name: "iso-9945-lock-helper",
-            dependencies: [
-                "ISO 9945 Kernel"
-            ],
-            path: "Tests/Support/Lock Helper"
-        ),
-
         // MARK: - Test Support
 
         .target(
@@ -533,7 +540,7 @@ let package = Package(
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ],
             path: "Tests/Support",
-            exclude: ["Lock Helper"]
+            exclude: ["Lock Helper", "POSIX Helper"]
         ),
 
         // MARK: - Tests
@@ -546,7 +553,7 @@ let package = Package(
                 "ISO 9945 Kernel Test Support",
             ]
         ),
-    ],
+    ] + testHelperTargets,
     swiftLanguageModes: [.v6]
 )
 
