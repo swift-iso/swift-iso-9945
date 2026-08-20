@@ -193,9 +193,10 @@ extension ISO_9945.Kernel.IO.Read {
                 buffer: UnsafeMutableBufferPointer<Byte>,
                 initializedCount: inout Int
             ) throws(Error) -> Int in
+            let rawBuffer = UnsafeMutableRawBufferPointer(buffer)
             let count = try unsafe read(
                 descriptor,
-                into: UnsafeMutableRawBufferPointer(rebasing: buffer[initializedCount...])
+                into: UnsafeMutableRawBufferPointer(rebasing: rawBuffer[initializedCount...])
             )
             initializedCount += count
             return count

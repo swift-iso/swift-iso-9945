@@ -35,6 +35,7 @@ extension ISO_9945.Kernel.IO.Vector {
     ///     try ISO_9945.Kernel.IO.Vector.read(descriptor, buffers: vecs)
     /// }
     /// ```
+    @unsafe
     public struct Segment: @unchecked Sendable {
         /// Base address of the buffer.
         public var base: UnsafeMutableRawPointer?

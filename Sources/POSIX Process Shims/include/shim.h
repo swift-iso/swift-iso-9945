@@ -98,9 +98,9 @@ extern int execve(const char *__path, char *const __argv[], char *const __envp[]
 #endif
 
 static inline int swift_execve(
-    const char *path,
-    const char *const argv[],
-    const char *const envp[]
+    const char * _Nonnull path,
+    const char * _Nullable const * _Nonnull argv,
+    const char * _Nullable const * _Nonnull envp
 ) {
 #if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
     (void)path;
@@ -123,12 +123,12 @@ static inline int swift_execve(
 #include <errno.h>
 
 static inline int swift_posix_spawn(
-    pid_t *pid,
-    const char *path,
-    const void *file_actions,
-    const posix_spawnattr_t *attrp,
-    const char *const argv[],
-    const char *const envp[]
+    pid_t * _Nonnull pid,
+    const char * _Nonnull path,
+    const void * _Nullable file_actions,
+    const void * _Nullable attrp,
+    const char * _Nullable const * _Nonnull argv,
+    const char * _Nullable const * _Nonnull envp
 ) {
 #if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
     (void)pid;
@@ -143,7 +143,7 @@ static inline int swift_posix_spawn(
         pid,
         path,
         (const posix_spawn_file_actions_t *)file_actions,
-        attrp,
+        (const posix_spawnattr_t *)attrp,
         (char *const *)argv,
         (char *const *)envp
     );
