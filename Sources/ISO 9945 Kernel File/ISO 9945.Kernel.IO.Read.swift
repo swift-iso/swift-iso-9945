@@ -189,7 +189,10 @@ extension ISO_9945.Kernel.IO.Read {
         into output: inout Swift.OutputSpan<Byte>
     ) throws(Error) -> Int {
         try unsafe output.withUnsafeMutableBufferPointer {
-            (buffer: UnsafeMutableBufferPointer<Byte>, initializedCount: inout Int) throws(Error) -> Int in
+            (
+                buffer: UnsafeMutableBufferPointer<Byte>,
+                initializedCount: inout Int
+            ) throws(Error) -> Int in
             let count = try unsafe read(
                 descriptor,
                 into: UnsafeMutableRawBufferPointer(rebasing: buffer[initializedCount...])
