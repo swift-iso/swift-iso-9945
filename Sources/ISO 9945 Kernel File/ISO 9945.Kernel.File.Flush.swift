@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.File.Flush {
     @_spi(Syscall)
     public static func fsync(fd: Int32) throws(Error) {
         #if canImport(Darwin)
-            let result = unsafe Darwin.fsync(fd)
+            let result = Darwin.fsync(fd)
         #elseif canImport(Musl)
             let result = unsafe Musl.fsync(fd)
         #elseif canImport(Glibc)
@@ -101,7 +101,7 @@ extension ISO_9945.Kernel.File.Flush {
         /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
         @_spi(Syscall)
         public static func fullFsync(fd: Int32) throws(Error) {
-            let result = unsafe Darwin.fcntl(fd, F_FULLFSYNC)
+            let result = Darwin.fcntl(fd, F_FULLFSYNC)
 
             if result != -1 {
                 return
@@ -127,7 +127,7 @@ extension ISO_9945.Kernel.File.Flush {
         /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
         @_spi(Syscall)
         public static func barrierFsync(fd: Int32) throws(Error) {
-            let result = unsafe Darwin.fcntl(fd, F_BARRIERFSYNC)
+            let result = Darwin.fcntl(fd, F_BARRIERFSYNC)
 
             if result != -1 {
                 return
@@ -149,7 +149,7 @@ extension ISO_9945.Kernel.File.Flush {
     /// - Parameter descriptor: The file descriptor.
     /// - Throws: `ISO_9945.Kernel.File.Flush.Error` on failure (including EINTR).
     public static func fsync(_ descriptor: borrowing ISO_9945.Kernel.Descriptor) throws(Error) {
-        try unsafe fsync(fd: descriptor._rawValue)
+        try fsync(fd: descriptor._rawValue)
     }
 
     #if canImport(Glibc) || canImport(Musl)
@@ -178,7 +178,7 @@ extension ISO_9945.Kernel.File.Flush {
         public static func fullFsync(
             _ descriptor: borrowing ISO_9945.Kernel.Descriptor
         ) throws(Error) {
-            try unsafe fullFsync(fd: descriptor._rawValue)
+            try fullFsync(fd: descriptor._rawValue)
         }
 
         /// Flushes data with barrier sync (Darwin).
@@ -191,7 +191,7 @@ extension ISO_9945.Kernel.File.Flush {
         public static func barrierFsync(
             _ descriptor: borrowing ISO_9945.Kernel.Descriptor
         ) throws(Error) {
-            try unsafe barrierFsync(fd: descriptor._rawValue)
+            try barrierFsync(fd: descriptor._rawValue)
         }
     #endif
 }

@@ -61,12 +61,12 @@ extension ISO_9945.Kernel.User.Login {
         var bufferSize = initialBufferSize()
         while true {
             var buffer = [CChar](repeating: 0, count: bufferSize)
-            let rc = unsafe buffer.withUnsafeMutableBufferPointer { bufferPtr in
+            let rc = buffer.withUnsafeMutableBufferPointer { bufferPtr in
                 unsafe getlogin_r(bufferPtr.baseAddress!, numericCast(bufferPtr.count))
             }
 
             if rc == 0 {
-                return unsafe buffer.withUnsafeBufferPointer { bufferPtr in
+                return buffer.withUnsafeBufferPointer { bufferPtr in
                     unsafe String(cString: bufferPtr.baseAddress!)
                 }
             }

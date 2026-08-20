@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.User.Database {
     ///   the name simply having no entry).
     public static func find(name: String) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, pwd, result in
-            unsafe name.withCString { cName in
+            name.withCString { cName in
                 unsafe getpwnam_r(
                     cName,
                     pwd,
@@ -91,13 +91,13 @@ extension ISO_9945.Kernel.User.Database {
     ) throws(Error) -> Entry? {
         var bufferSize = initialBufferSize()
         while true {
-            var pwd = passwd()
+            var pwd = unsafe passwd()
             var resultPtr: UnsafeMutablePointer<passwd>?
             var buffer = [CChar](repeating: 0, count: bufferSize)
 
-            let rc = unsafe buffer.withUnsafeMutableBufferPointer { bufferPtr in
-                unsafe withUnsafeMutablePointer(to: &pwd) { pwdPtr in
-                    unsafe withUnsafeMutablePointer(to: &resultPtr) { resultPtrPtr in
+            let rc = buffer.withUnsafeMutableBufferPointer { bufferPtr in
+                withUnsafeMutablePointer(to: &pwd) { pwdPtr in
+                    withUnsafeMutablePointer(to: &resultPtr) { resultPtrPtr in
                         unsafe lookup(bufferPtr, pwdPtr, resultPtrPtr)
                     }
                 }
@@ -118,7 +118,7 @@ extension ISO_9945.Kernel.User.Database {
     }
 
     private static func initialBufferSize() -> Int {
-        let suggested = unsafe sysconf(Int32(_SC_GETPW_R_SIZE_MAX))
+        let suggested = sysconf(Int32(_SC_GETPW_R_SIZE_MAX))
         return suggested > 0 ? Int(suggested) : 1024
     }
 

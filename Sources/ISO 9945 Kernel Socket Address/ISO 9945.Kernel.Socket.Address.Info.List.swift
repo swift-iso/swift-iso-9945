@@ -81,9 +81,9 @@ extension ISO_9945.Kernel.Socket.Address.Info.List {
         unsafe constraints.ai_socktype = hints.kind?.rawValue ?? 0
         unsafe constraints.ai_protocol = hints.protocol
 
-        let code = unsafe host.withCString { hostPointer in
+        let code = host.withCString { hostPointer in
             unsafe withService(service) { servicePointer in
-                unsafe withUnsafePointer(to: constraints) { hintsPointer in
+                withUnsafePointer(to: constraints) { hintsPointer in
                     unsafe getaddrinfo(hostPointer, servicePointer, hintsPointer, &head)
                 }
             }
@@ -105,7 +105,7 @@ extension ISO_9945.Kernel.Socket.Address.Info.List {
         _ body: (UnsafePointer<CChar>?) -> R
     ) -> R {
         guard let service else { return body(nil) }
-        return unsafe service.withCString { pointer in unsafe body(pointer) }
+        return service.withCString { pointer in unsafe body(pointer) }
     }
 }
 

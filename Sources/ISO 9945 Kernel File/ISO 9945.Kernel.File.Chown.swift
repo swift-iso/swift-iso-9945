@@ -134,7 +134,7 @@ extension ISO_9945.Kernel.File.Chown {
         gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
         #if canImport(Darwin)
-            let result = unsafe Darwin.fchown(fd, uid.underlying, gid.underlying)
+            let result = Darwin.fchown(fd, uid.underlying, gid.underlying)
         #elseif canImport(Musl)
             let result = unsafe Musl.fchown(fd, uid.underlying, gid.underlying)
         #elseif canImport(Glibc)
@@ -165,7 +165,7 @@ extension ISO_9945.Kernel.File.Chown {
         uid: ISO_9945.Kernel.User.ID,
         gid: ISO_9945.Kernel.Group.ID
     ) throws(Error) {
-        try unsafe fchown(fd: descriptor._rawValue, uid: uid, gid: gid)
+        try fchown(fd: descriptor._rawValue, uid: uid, gid: gid)
     }
 }
 

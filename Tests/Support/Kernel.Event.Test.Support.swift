@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Error_Primitives
+import Error_Primitives
 public import ISO_9945_Kernel
-public import Path_Primitives
+import Path_Primitives
 
 extension ISO_9945.Kernel.Event {
     /// Test utilities for eventing operations (kqueue, epoll, io_uring).
@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Event {
         public static func writeByte(_ fd: borrowing ISO_9945.Kernel.Descriptor, value: UInt8 = 1) {
             var byte = value
             _ = withUnsafeBytes(of: &byte) { buffer in
-                try? ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
+                try? unsafe ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
             }
         }
 
@@ -45,7 +45,7 @@ extension ISO_9945.Kernel.Event {
         public static func readDrain(_ fd: borrowing ISO_9945.Kernel.Descriptor) {
             var byte: UInt8 = 0
             _ = withUnsafeMutableBytes(of: &byte) { buffer in
-                try? ISO_9945.Kernel.IO.Read.read(fd, into: buffer)
+                try? unsafe ISO_9945.Kernel.IO.Read.read(fd, into: buffer)
             }
         }
     }

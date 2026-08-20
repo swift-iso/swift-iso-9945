@@ -163,7 +163,7 @@ extension ISO_9945.Kernel.File.Times {
         modification modificationTime: ISO_9945.Kernel.Time,
         on descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(Error) {
-        try unsafe set(
+        try set(
             access: accessTime,
             modification: modificationTime,
             fd: descriptor._rawValue

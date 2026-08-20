@@ -60,13 +60,13 @@
             print(
                 "\(status) pid=\(getpid()) ppid=\(getppid()) pgid=\(getpgid(0)) sid=\(getsid(0)) exit=\(exitCode)"
             )
-            unsafe fflush(nil)
+            fflush(nil)
         }
 
         /// Prints an error line carrying `errno` and a stable message token.
         private static func printError(_ code: Int32, _ message: String) {
             print("ERR errno=\(code) msg=\(message)")
-            unsafe fflush(nil)
+            fflush(nil)
         }
 
         private static func printUsage() {
@@ -94,8 +94,8 @@
                 var line = text
                 line.append("\n")
                 let bytes = Array(line.utf8)
-                unsafe bytes.withUnsafeBytes { buffer in
-                    guard let base = unsafe buffer.baseAddress else { return }
+                bytes.withUnsafeBytes { buffer in
+                    guard let base = buffer.baseAddress else { return }
                     _ = unsafe write(2, base, buffer.count)
                 }
             }
@@ -125,7 +125,7 @@
             let actual = getppid()
             guard actual == expected else {
                 print("ERR errno=0 msg=ppid_mismatch expected=\(expected) actual=\(actual)")
-                unsafe fflush(nil)
+                fflush(nil)
                 return 1
             }
             printStatus("OK", exitCode: 0)
@@ -165,7 +165,7 @@
             let pgid = getpgid(0)
             guard pgid == pid else {
                 print("ERR errno=0 msg=not_group_leader pid=\(pid) pgid=\(pgid)")
-                unsafe fflush(nil)
+                fflush(nil)
                 return 1
             }
             printStatus("OK", exitCode: 0)
@@ -181,7 +181,7 @@
             let pgid = getpgid(pid)
             guard pgid == pid else {
                 print("ERR errno=0 msg=pgid_not_set pid=\(pid) pgid=\(pgid)")
-                unsafe fflush(nil)
+                fflush(nil)
                 return 1
             }
             printStatus("OK", exitCode: 0)

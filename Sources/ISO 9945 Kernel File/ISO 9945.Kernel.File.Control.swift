@@ -34,11 +34,11 @@ extension ISO_9945.Kernel.File.Control {
     @_spi(Syscall)
     public static func setNonBlocking(fd: Int32) throws(ISO_9945.Kernel.File.Control.Error) {
         #if canImport(Darwin)
-            let flags = unsafe Darwin.fcntl(fd, F_GETFL)
+            let flags = Darwin.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = unsafe Darwin.fcntl(fd, F_SETFL, flags | O_NONBLOCK)
+            let result = Darwin.fcntl(fd, F_SETFL, flags | O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
@@ -79,11 +79,11 @@ extension ISO_9945.Kernel.File.Control {
     @_spi(Syscall)
     public static func setBlocking(fd: Int32) throws(ISO_9945.Kernel.File.Control.Error) {
         #if canImport(Darwin)
-            let flags = unsafe Darwin.fcntl(fd, F_GETFL)
+            let flags = Darwin.fcntl(fd, F_GETFL)
             guard flags >= 0 else {
                 throw Error.current()
             }
-            let result = unsafe Darwin.fcntl(fd, F_SETFL, flags & ~O_NONBLOCK)
+            let result = Darwin.fcntl(fd, F_SETFL, flags & ~O_NONBLOCK)
             guard result >= 0 else {
                 throw Error.current()
             }
@@ -126,7 +126,7 @@ extension ISO_9945.Kernel.File.Control {
     public static func setNonBlocking(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(ISO_9945.Kernel.File.Control.Error) {
-        try unsafe setNonBlocking(fd: descriptor._rawValue)
+        try setNonBlocking(fd: descriptor._rawValue)
     }
 
     /// Clears non-blocking mode on a file descriptor.
@@ -139,7 +139,7 @@ extension ISO_9945.Kernel.File.Control {
     public static func setBlocking(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(ISO_9945.Kernel.File.Control.Error) {
-        try unsafe setBlocking(fd: descriptor._rawValue)
+        try setBlocking(fd: descriptor._rawValue)
     }
 }
 

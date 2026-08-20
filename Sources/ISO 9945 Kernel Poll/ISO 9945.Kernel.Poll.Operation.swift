@@ -62,7 +62,7 @@ extension ISO_9945.Kernel.Poll {
         _ entries: inout [Entry],
         timeout: Int32
     ) throws(Error_Primitives.Error) -> Int {
-        let count = unsafe entries.withUnsafeMutableBufferPointer { buffer in
+        let count = entries.withUnsafeMutableBufferPointer { buffer in
             guard let base = buffer.baseAddress else { return Int32(0) }
             return unsafe base.withMemoryRebound(to: pollfd.self, capacity: buffer.count) {
                 pollfdPtr in

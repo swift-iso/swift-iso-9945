@@ -11,10 +11,10 @@
 
 /// Test support for cross-platform temporary file paths.
 
-public import Error_Primitives
+import Error_Primitives
 public import ISO_9945_Kernel
-public import Path_Primitives
-public import String_Primitives
+import Path_Primitives
+import String_Primitives
 
 extension ISO_9945.Kernel {
     /// Namespace for temporary path operations in tests.
@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Temporary {
             return "C:\\Temp"
         #else
             if let tmpdir = unsafe ISO_9945.Kernel.Environment.get("TMPDIR") {
-                return unsafe tmpdir.withUnsafePointer { Swift.String(cString: $0) }
+                return unsafe tmpdir.withUnsafePointer { unsafe Swift.String(cString: $0) }
             }
             return "/tmp"
         #endif

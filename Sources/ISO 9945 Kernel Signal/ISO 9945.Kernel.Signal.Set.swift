@@ -163,7 +163,7 @@ extension ISO_9945.Kernel.Signal.Set {
     internal func withUnsafePointer<R, E: Swift.Error>(
         _ body: (UnsafePointer<sigset_t>) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe Swift.withUnsafePointer(to: storage, body)
+        try Swift.withUnsafePointer(to: storage, body)
     }
 
     /// Yields the set's platform-native bytes to `body` as an opaque
@@ -181,7 +181,7 @@ extension ISO_9945.Kernel.Signal.Set {
         _ body: (UnsafeRawPointer) throws(E) -> R
     ) throws(E) -> R {
         try unsafe withUnsafePointer { (pointer: UnsafePointer<sigset_t>) throws(E) -> R in
-            try body(unsafe UnsafeRawPointer(pointer))
+            try unsafe body(unsafe UnsafeRawPointer(pointer))
         }
     }
 
@@ -190,7 +190,7 @@ extension ISO_9945.Kernel.Signal.Set {
     internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(
         _ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R
     ) throws(E) -> R {
-        try unsafe Swift.withUnsafeMutablePointer(to: &storage, body)
+        try Swift.withUnsafeMutablePointer(to: &storage, body)
     }
 
     /// Creates a set from a raw `sigset_t`.

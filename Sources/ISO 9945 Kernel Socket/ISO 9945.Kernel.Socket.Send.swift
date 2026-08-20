@@ -93,12 +93,12 @@ extension ISO_9945.Kernel.Socket.Send {
         from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
+        try span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
             // An empty span still performs the syscall: send(fd, ptr, 0, …)
             // is valid POSIX and transmits a zero-length datagram, which is
             // a meaningful protocol event.
             var zero: UInt8 = 0
-            let result = unsafe withUnsafePointer(to: &zero) { fallback in
+            let result = withUnsafePointer(to: &zero) { fallback in
                 unsafe platformSend(
                     fd,
                     buffer.baseAddress ?? UnsafeRawPointer(fallback),
@@ -130,12 +130,12 @@ extension ISO_9945.Kernel.Socket.Send {
         address: ISO_9945.Kernel.Socket.Address.Storage,
         addressLength: ISO_9945.Kernel.Socket.Address.Length
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
+        try span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
             // An empty span still performs the syscall so a zero-length
             // datagram is actually transmitted.
             var zero: UInt8 = 0
-            let result = unsafe withUnsafePointer(to: &zero) { fallback in
-                address.withUnsafeBytes { ptr, _ in
+            let result = withUnsafePointer(to: &zero) { fallback in
+                unsafe address.withUnsafeBytes { ptr, _ in
                     let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
                     return unsafe sendto(
                         fd,

@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.File.Truncate {
         fd: Int32,
         to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
-        let rc = unsafe ftruncate(fd, off_t(length.underlying))
+        let rc = ftruncate(fd, off_t(length.underlying))
 
         guard rc == 0 else {
             throw Error_Primitives.Error.current(operation: "ftruncate")
@@ -76,7 +76,7 @@ extension ISO_9945.Kernel.File.Truncate {
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         to length: ISO_9945.Kernel.File.Size
     ) throws(Error_Primitives.Error) {
-        try unsafe truncate(fd: descriptor._rawValue, to: length)
+        try truncate(fd: descriptor._rawValue, to: length)
     }
 
     /// Truncates a file to a specified length via path.

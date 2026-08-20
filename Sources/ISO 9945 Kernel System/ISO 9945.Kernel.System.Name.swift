@@ -35,17 +35,17 @@ extension System {
         // 256 on Darwin) — claiming a larger capacity than the field is
         // an out-of-bounds capacity claim.
         let capacity = MemoryLayout.size(ofValue: buf.sysname)
-        let system = unsafe withUnsafePointer(to: &buf.sysname) {
+        let system = withUnsafePointer(to: &buf.sysname) {
             unsafe $0.withMemoryRebound(to: CChar.self, capacity: capacity) {
                 unsafe Swift.String(cString: $0)
             }
         }
-        let release = unsafe withUnsafePointer(to: &buf.release) {
+        let release = withUnsafePointer(to: &buf.release) {
             unsafe $0.withMemoryRebound(to: CChar.self, capacity: capacity) {
                 unsafe Swift.String(cString: $0)
             }
         }
-        let machine = unsafe withUnsafePointer(to: &buf.machine) {
+        let machine = withUnsafePointer(to: &buf.machine) {
             unsafe $0.withMemoryRebound(to: CChar.self, capacity: capacity) {
                 unsafe Swift.String(cString: $0)
             }

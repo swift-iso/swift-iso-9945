@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.File.Seek {
         whence: Whence
     ) throws(Error) -> Int64 {
         #if canImport(Darwin)
-            let result = unsafe Darwin.lseek(fd, offset, whence.rawValue)
+            let result = Darwin.lseek(fd, offset, whence.rawValue)
         #elseif canImport(Musl)
             let result = unsafe Musl.lseek(fd, offset, whence.rawValue)
         #elseif canImport(Glibc)
@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.File.Seek {
     /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
     @_spi(Syscall)
     public static func tell(fd: Int32) throws(Error) -> Int64 {
-        try unsafe seek(fd: fd, offset: 0, whence: .current)
+        try seek(fd: fd, offset: 0, whence: .current)
     }
 }
 
@@ -90,7 +90,7 @@ extension ISO_9945.Kernel.File.Seek {
         offset: Int64,
         whence: Whence
     ) throws(Error) -> Int64 {
-        try unsafe seek(fd: descriptor._rawValue, offset: offset, whence: whence)
+        try seek(fd: descriptor._rawValue, offset: offset, whence: whence)
     }
 
     /// Gets the current file offset.
@@ -104,7 +104,7 @@ extension ISO_9945.Kernel.File.Seek {
     public static func tell(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(Error) -> Int64 {
-        try unsafe tell(fd: descriptor._rawValue)
+        try tell(fd: descriptor._rawValue)
     }
 }
 

@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
             throw .pathTooLong(length: bytes.count, capacity: Self.pathCapacity)
         }
         self.init()
-        unsafe withUnsafeMutableBytes(of: &cValue.sun_path) { dst in
+        withUnsafeMutableBytes(of: &cValue.sun_path) { dst in
             for (index, byte) in bytes.enumerated() {
                 unsafe (dst[index] = byte)
             }
@@ -79,7 +79,7 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
 
     /// The socket path, decoded as UTF-8.
     public var path: Swift.String {
-        unsafe withUnsafeBytes(of: cValue.sun_path) { bytes in
+        withUnsafeBytes(of: cValue.sun_path) { bytes in
             var length = 0
             while length < bytes.count && (unsafe bytes[length]) != 0 {
                 length += 1
@@ -111,7 +111,7 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
     /// (`offsetof(sockaddr_un, sun_path) + strlen(path) + 1`), as POSIX
     /// expects for a pathname address.
     public var length: ISO_9945.Kernel.Socket.Address.Length {
-        let pathLength = unsafe withUnsafeBytes(of: cValue.sun_path) { bytes in
+        let pathLength = withUnsafeBytes(of: cValue.sun_path) { bytes in
             var length = 0
             while length < bytes.count && (unsafe bytes[length]) != 0 {
                 length += 1
@@ -128,8 +128,8 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
     /// Converts to the generic `Storage` container.
     public var storage: ISO_9945.Kernel.Socket.Address.Storage {
         var result = ISO_9945.Kernel.Socket.Address.Storage()
-        unsafe withUnsafePointer(to: cValue) { src in
-            unsafe withUnsafeMutablePointer(to: &result.cValue) { dst in
+        withUnsafePointer(to: cValue) { src in
+            withUnsafeMutablePointer(to: &result.cValue) { dst in
                 unsafe UnsafeMutableRawPointer(dst)
                     .copyMemory(from: src, byteCount: MemoryLayout<sockaddr_un>.size)
             }

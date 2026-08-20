@@ -37,7 +37,7 @@
             _ bytes: some Swift.Sequence<Byte>
         ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
             let array = ContiguousArray<Byte>(bytes)
-            return try unsafe array.withUnsafeBufferPointer {
+            return try array.withUnsafeBufferPointer {
                 (buffer: UnsafeBufferPointer<Byte>) throws(ISO_9945.Kernel.IO.Write.Error) -> Int in
                 let raw = UnsafeRawBufferPointer(buffer)
                 return try unsafe write(raw)

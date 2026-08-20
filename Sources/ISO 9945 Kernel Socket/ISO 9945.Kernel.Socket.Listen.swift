@@ -63,7 +63,7 @@ extension ISO_9945.Kernel.Socket.Listen {
         fd: Int32,
         backlog: ISO_9945.Kernel.Socket.Backlog = .max
     ) throws(ISO_9945.Kernel.Socket.Error) {
-        let rc = unsafe platformListen(fd, backlog.rawValue)
+        let rc = platformListen(fd, backlog.rawValue)
 
         guard rc == 0 else {
             throw ISO_9945.Kernel.Socket.Error.current()
@@ -73,7 +73,7 @@ extension ISO_9945.Kernel.Socket.Listen {
 
 private func platformListen(_ fd: Int32, _ backlog: Int32) -> Int32 {
     #if canImport(Darwin)
-        unsafe Darwin.listen(fd, backlog)
+        Darwin.listen(fd, backlog)
     #elseif canImport(Glibc)
         unsafe Glibc.listen(fd, backlog)
     #elseif canImport(Musl)

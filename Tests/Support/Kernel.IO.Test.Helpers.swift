@@ -11,8 +11,8 @@
 
 #if !os(Windows)
 
-    public import Path_Primitives
-    public import Error_Primitives
+    import Path_Primitives
+    import Error_Primitives
     public import ISO_9945_Kernel
     @_spi(Syscall) import ISO_9945_Kernel_File  // Wave 3.5-Corrective-2 tail: File.Open.open is @_spi(Syscall) public
 
@@ -52,7 +52,7 @@
         ) {
             var bytes = Array(content.utf8)
             _ = try? bytes.withUnsafeMutableBytes { ptr in
-                try ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))
+                try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: UnsafeRawBufferPointer(ptr))
             }
         }
 

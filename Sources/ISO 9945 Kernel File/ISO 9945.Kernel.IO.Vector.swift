@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.IO.Vector {
     /// POSIX. Falls back to `_XOPEN_IOV_MAX` (16), the minimum POSIX
     /// guarantees, if the query fails.
     fileprivate static var iovMax: Int {
-        let value = unsafe sysconf(Int32(_SC_IOV_MAX))
+        let value = sysconf(Int32(_SC_IOV_MAX))
         return value > 0 ? Int(value) : 16
     }
 }
@@ -63,11 +63,11 @@ extension ISO_9945.Kernel.IO.Vector {
         // here rather than force-unwrapping an empty array's nil baseAddress
         // (which traps) or converting an unbounded count to Int32 (which
         // traps for very large arrays).
-        guard !buffers.isEmpty, buffers.count <= Self.iovMax else {
+        guard unsafe !buffers.isEmpty, unsafe buffers.count <= Self.iovMax else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
-        let iovecs = buffers.map { $0.cValue }
-        let result = unsafe iovecs.withUnsafeBufferPointer { buf in
+        let iovecs = unsafe buffers.map { unsafe $0.cValue }
+        let result = iovecs.withUnsafeBufferPointer { buf in
             unsafe readv(fd, buf.baseAddress!, Int32(buf.count))
         }
 
@@ -101,11 +101,11 @@ extension ISO_9945.Kernel.IO.Vector {
         buffers: [Segment]
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
         // See the identical iovcnt validation in read(fd:buffers:) above.
-        guard !buffers.isEmpty, buffers.count <= Self.iovMax else {
+        guard unsafe !buffers.isEmpty, unsafe buffers.count <= Self.iovMax else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
-        let iovecs = buffers.map { $0.cValue }
-        let result = unsafe iovecs.withUnsafeBufferPointer { buf in
+        let iovecs = unsafe buffers.map { unsafe $0.cValue }
+        let result = iovecs.withUnsafeBufferPointer { buf in
             unsafe writev(fd, buf.baseAddress!, Int32(buf.count))
         }
 

@@ -45,7 +45,7 @@
             // Copy termios to opaque storage
             var attrs = ISO_9945.Kernel.Termios.Attributes(_storage: .init())
             unsafe attrs.withUnsafeMutableStorageBytes { buffer in
-                unsafe withUnsafeBytes(of: t) { src in
+                withUnsafeBytes(of: t) { src in
                     unsafe buffer.copyMemory(from: src)
                 }
             }
@@ -72,7 +72,7 @@
         ) throws(Error_Primitives.Error) {
             var t = termios()
             unsafe attributes.withUnsafeStorageBytes { buffer in
-                unsafe withUnsafeMutableBytes(of: &t) { dest in
+                withUnsafeMutableBytes(of: &t) { dest in
                     // Storage is a fixed 96-byte tuple, sized to fit the
                     // largest platform's termios; the local termios here is
                     // the current platform's true (smaller-or-equal) size.
@@ -156,7 +156,7 @@
         public func withRaw() -> Self {
             var t = termios()
             unsafe self.withUnsafeStorageBytes { buffer in
-                unsafe withUnsafeMutableBytes(of: &t) { dest in
+                withUnsafeMutableBytes(of: &t) { dest in
                     // See the identical comment in `set(_:fd:action:)`.
                     let source = unsafe UnsafeRawBufferPointer(rebasing: buffer[0..<dest.count])
                     unsafe dest.copyMemory(from: source)
@@ -178,7 +178,7 @@
 
             // Control characters: read returns immediately with 1+ bytes
             // c_cc is a tuple on Darwin, need to use withUnsafeMutablePointer
-            unsafe withUnsafeMutablePointer(to: &t.c_cc) { ptr in
+            withUnsafeMutablePointer(to: &t.c_cc) { ptr in
                 unsafe ptr.withMemoryRebound(to: cc_t.self, capacity: Int(NCCS)) { cc in
                     unsafe (cc[Int(VMIN)] = 1)
                     unsafe (cc[Int(VTIME)] = 0)
@@ -187,7 +187,7 @@
 
             var result = ISO_9945.Kernel.Termios.Attributes(_storage: .init())
             unsafe result.withUnsafeMutableStorageBytes { buffer in
-                unsafe withUnsafeBytes(of: t) { src in
+                withUnsafeBytes(of: t) { src in
                     unsafe buffer.copyMemory(from: src)
                 }
             }

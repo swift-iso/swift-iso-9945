@@ -36,7 +36,7 @@ extension Error_Primitives.Error.Code {
             // the prototype the Glibc module surfaces.
             let result = unsafe strerror_r(rawValue, &buffer, buffer.count)
             guard result == 0 else { return nil }
-            return unsafe buffer.withUnsafeBufferPointer {
+            return buffer.withUnsafeBufferPointer {
                 unsafe Swift.String(cString: $0.baseAddress!)
             }
 

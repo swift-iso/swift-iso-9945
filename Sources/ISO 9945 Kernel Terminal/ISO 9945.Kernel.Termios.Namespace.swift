@@ -84,7 +84,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
     public mutating func withUnsafeMutableStorageBytes<T, E: Swift.Error>(
         _ body: (UnsafeMutableRawBufferPointer) throws(E) -> T
     ) throws(E) -> T {
-        try unsafe withUnsafeMutableBytes(of: &_storage.bytes) {
+        try withUnsafeMutableBytes(of: &_storage.bytes) {
             (buffer: UnsafeMutableRawBufferPointer) throws(E) -> T in
             try unsafe body(buffer)
         }
@@ -96,7 +96,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
     public func withUnsafeStorageBytes<T, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> T
     ) throws(E) -> T {
-        try unsafe withUnsafeBytes(of: _storage.bytes) {
+        try withUnsafeBytes(of: _storage.bytes) {
             (buffer: UnsafeRawBufferPointer) throws(E) -> T in
             try unsafe body(buffer)
         }

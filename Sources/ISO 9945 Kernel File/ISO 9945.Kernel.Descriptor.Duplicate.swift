@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     /// - Throws: `ISO_9945.Kernel.Descriptor.Duplicate.Error` on failure.
     package static func duplicate(fd: Int32) throws(Error) -> Int32 {
         #if canImport(Darwin)
-            let result = unsafe Darwin.dup(fd)
+            let result = Darwin.dup(fd)
         #elseif canImport(Musl)
             let result = unsafe Musl.dup(fd)
         #elseif canImport(Glibc)
@@ -76,7 +76,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         toFd newFd: Int32
     ) throws(Error) {
         #if canImport(Darwin)
-            let result = unsafe Darwin.dup2(fd, newFd)
+            let result = Darwin.dup2(fd, newFd)
         #elseif canImport(Musl)
             let result = unsafe Musl.dup2(fd, newFd)
         #elseif canImport(Glibc)
@@ -107,7 +107,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
     public static func duplicate(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(Error) -> ISO_9945.Kernel.Descriptor {
-        let rawNew = try unsafe duplicate(fd: descriptor._rawValue)
+        let rawNew = try duplicate(fd: descriptor._rawValue)
         return ISO_9945.Kernel.Descriptor(_rawValue: rawNew)
     }
 
@@ -138,7 +138,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         to newDescriptor: inout ISO_9945.Kernel.Descriptor
     ) throws(Error) {
-        try unsafe duplicate(fd: descriptor._rawValue, toFd: newDescriptor._rawValue)
+        try duplicate(fd: descriptor._rawValue, toFd: newDescriptor._rawValue)
         // dup2 returns newDescriptor's slot — the wrapper's _raw is already
         // correct. No state change. The kernel resource at that slot has been
         // replaced atomically by the kernel; from Swift's view, newDescriptor

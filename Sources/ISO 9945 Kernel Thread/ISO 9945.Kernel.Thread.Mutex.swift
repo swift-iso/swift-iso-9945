@@ -176,6 +176,6 @@ extension ISO_9945.Kernel.Thread.Mutex {
     /// - Parameter body: A closure that receives the pointer.
     /// - Returns: The value returned by `body`.
     func withUnsafeMutablePointer<T>(_ body: (UnsafeMutablePointer<pthread_mutex_t>) -> T) -> T {
-        unsafe Swift.withUnsafeMutablePointer(to: &mutex, body)
+        Swift.withUnsafeMutablePointer(to: &mutex, body)
     }
 }

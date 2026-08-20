@@ -96,7 +96,7 @@ extension Memory.Shared {
             options: options,
             permissions: permissions
         )
-        return unsafe ISO_9945.Kernel.Descriptor(_rawValue: fd)
+        return ISO_9945.Kernel.Descriptor(_rawValue: fd)
     }
 
     /// Removes a POSIX shared memory object.

@@ -204,7 +204,7 @@ extension ISO_9945.Kernel.IO.Write {
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from span: Swift.Span<Byte>
     ) throws(Error) -> Int {
-        try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
+        try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
             try unsafe write(descriptor, from: buffer)
         }
     }
@@ -223,7 +223,7 @@ extension ISO_9945.Kernel.IO.Write {
         from span: Swift.Span<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Error) -> Int {
-        try unsafe span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
+        try span.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Error) -> Int in
             try unsafe pwrite(descriptor, from: buffer, at: offset)
         }
     }

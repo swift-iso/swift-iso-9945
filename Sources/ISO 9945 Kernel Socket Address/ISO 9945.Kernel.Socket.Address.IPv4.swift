@@ -91,8 +91,8 @@ extension ISO_9945.Kernel.Socket.Address.IPv4 {
     /// Converts to the generic `Storage` container.
     public var storage: ISO_9945.Kernel.Socket.Address.Storage {
         var result = ISO_9945.Kernel.Socket.Address.Storage()
-        unsafe withUnsafePointer(to: cValue) { src in
-            unsafe withUnsafeMutablePointer(to: &result.cValue) { dst in
+        withUnsafePointer(to: cValue) { src in
+            withUnsafeMutablePointer(to: &result.cValue) { dst in
                 unsafe UnsafeMutableRawPointer(dst)
                     .copyMemory(from: src, byteCount: MemoryLayout<sockaddr_in>.size)
             }

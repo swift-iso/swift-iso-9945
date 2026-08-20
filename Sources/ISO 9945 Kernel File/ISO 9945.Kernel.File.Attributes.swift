@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.File.Attributes {
         fd: Int32
     ) throws(Error) {
         #if canImport(Darwin)
-            let result = unsafe Darwin.fchmod(fd, mode_t(permissions.rawValue))
+            let result = Darwin.fchmod(fd, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
             let result = unsafe Musl.fchmod(fd, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)
@@ -112,7 +112,7 @@ extension ISO_9945.Kernel.File.Attributes {
         _ permissions: ISO_9945.Kernel.File.Permissions,
         on descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(Error) {
-        try unsafe set(permissions, fd: descriptor._rawValue)
+        try set(permissions, fd: descriptor._rawValue)
     }
 }
 

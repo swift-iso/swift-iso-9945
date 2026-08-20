@@ -89,12 +89,12 @@ extension ISO_9945.Kernel.Socket.Receive {
         into span: inout MutableSpan<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
-        try unsafe span.withUnsafeMutableBytes {
+        try span.withUnsafeMutableBytes {
             (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
             // An empty buffer still performs the syscall; recv with a
             // zero length is well-defined.
             var zero: UInt8 = 0
-            let result = unsafe withUnsafeMutablePointer(to: &zero) { fallback in
+            let result = withUnsafeMutablePointer(to: &zero) { fallback in
                 unsafe platformReceive(
                     fd,
                     buffer.baseAddress ?? UnsafeMutableRawPointer(fallback),
@@ -125,7 +125,7 @@ extension ISO_9945.Kernel.Socket.Receive {
         count: Int, address: ISO_9945.Kernel.Socket.Address.Storage,
         addressLength: ISO_9945.Kernel.Socket.Address.Length
     ) {
-        try unsafe span.withUnsafeMutableBytes {
+        try span.withUnsafeMutableBytes {
             (
                 buffer: UnsafeMutableRawBufferPointer
             ) throws(ISO_9945.Kernel.Socket.Error) -> (
@@ -138,8 +138,8 @@ extension ISO_9945.Kernel.Socket.Receive {
             var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
             var zero: UInt8 = 0
-            let count = unsafe withUnsafeMutablePointer(to: &zero) { fallback in
-                storage.withUnsafeMutableBytes { ptr, _ in
+            let count = withUnsafeMutablePointer(to: &zero) { fallback in
+                unsafe storage.withUnsafeMutableBytes { ptr, _ in
                     let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
                     return unsafe recvfrom(
                         fd,

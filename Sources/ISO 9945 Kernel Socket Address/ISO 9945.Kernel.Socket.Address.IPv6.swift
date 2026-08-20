@@ -77,8 +77,8 @@ extension ISO_9945.Kernel.Socket.Address {
                 self.cValue.sin6_len = UInt8(MemoryLayout<sockaddr_in6>.size)
             #endif
 
-            unsafe withUnsafeMutableBytes(of: &self.cValue.sin6_addr) { dst in
-                unsafe withUnsafeBytes(of: address) { src in
+            withUnsafeMutableBytes(of: &self.cValue.sin6_addr) { dst in
+                withUnsafeBytes(of: address) { src in
                     unsafe dst.copyMemory(from: src)
                 }
             }
@@ -154,7 +154,7 @@ extension ISO_9945.Kernel.Socket.Address.IPv6 {
             UInt16, UInt16, UInt16, UInt16
         )
     {
-        unsafe withUnsafeBytes(of: cValue.sin6_addr) { bytes in
+        withUnsafeBytes(of: cValue.sin6_addr) { bytes in
             func segment(_ offset: Int) -> UInt16 {
                 let high = unsafe UInt16(bytes[offset])
                 let low = unsafe UInt16(bytes[offset + 1])
@@ -195,8 +195,8 @@ extension ISO_9945.Kernel.Socket.Address.IPv6 {
     /// Converts to the generic `Storage` container.
     public var storage: ISO_9945.Kernel.Socket.Address.Storage {
         var result = ISO_9945.Kernel.Socket.Address.Storage()
-        unsafe withUnsafePointer(to: cValue) { src in
-            unsafe withUnsafeMutablePointer(to: &result.cValue) { dst in
+        withUnsafePointer(to: cValue) { src in
+            withUnsafeMutablePointer(to: &result.cValue) { dst in
                 unsafe UnsafeMutableRawPointer(dst)
                     .copyMemory(from: src, byteCount: MemoryLayout<sockaddr_in6>.size)
             }

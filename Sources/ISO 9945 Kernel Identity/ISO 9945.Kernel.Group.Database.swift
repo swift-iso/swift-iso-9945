@@ -42,7 +42,7 @@ extension ISO_9945.Kernel.Group.Database {
     ///   the name simply having no entry).
     public static func find(name: String) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, gr, result in
-            unsafe name.withCString { cName in
+            name.withCString { cName in
                 unsafe getgrnam_r(cName, gr, buffer.baseAddress, numericCast(buffer.count), result)
             }
         }
@@ -85,13 +85,13 @@ extension ISO_9945.Kernel.Group.Database {
     ) throws(Error) -> Entry? {
         var bufferSize = initialBufferSize()
         while true {
-            var gr = group()
+            var gr = unsafe group()
             var resultPtr: UnsafeMutablePointer<group>?
             var buffer = [CChar](repeating: 0, count: bufferSize)
 
-            let rc = unsafe buffer.withUnsafeMutableBufferPointer { bufferPtr in
-                unsafe withUnsafeMutablePointer(to: &gr) { grPtr in
-                    unsafe withUnsafeMutablePointer(to: &resultPtr) { resultPtrPtr in
+            let rc = buffer.withUnsafeMutableBufferPointer { bufferPtr in
+                withUnsafeMutablePointer(to: &gr) { grPtr in
+                    withUnsafeMutablePointer(to: &resultPtr) { resultPtrPtr in
                         unsafe lookup(bufferPtr, grPtr, resultPtrPtr)
                     }
                 }
@@ -112,7 +112,7 @@ extension ISO_9945.Kernel.Group.Database {
     }
 
     private static func initialBufferSize() -> Int {
-        let suggested = unsafe sysconf(Int32(_SC_GETGR_R_SIZE_MAX))
+        let suggested = sysconf(Int32(_SC_GETGR_R_SIZE_MAX))
         return suggested > 0 ? Int(suggested) : 1024
     }
 

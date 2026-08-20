@@ -46,8 +46,8 @@ extension ISO_9945.Kernel.IO.Vector {
         /// Creates a segment from a base pointer and length.
         @unsafe
         public init(base: UnsafeMutableRawPointer?, length: Int) {
-            self.base = unsafe base
-            self.length = length
+            unsafe self.base = unsafe base
+            unsafe self.length = length
         }
     }
 }
@@ -58,8 +58,8 @@ extension ISO_9945.Kernel.IO.Vector.Segment {
     /// Creates a segment from a mutable raw buffer pointer.
     @unsafe
     public init(_ buffer: UnsafeMutableRawBufferPointer) {
-        self.base = unsafe buffer.baseAddress
-        self.length = buffer.count
+        unsafe self.base = buffer.baseAddress
+        unsafe self.length = buffer.count
     }
 
     /// Creates a read-only segment from a raw buffer pointer.
@@ -68,8 +68,8 @@ extension ISO_9945.Kernel.IO.Vector.Segment {
     /// the kernel does not write to segments used in write operations.
     @unsafe
     public init(_ buffer: UnsafeRawBufferPointer) {
-        self.base = unsafe UnsafeMutableRawPointer(mutating: buffer.baseAddress)
-        self.length = buffer.count
+        unsafe self.base = unsafe UnsafeMutableRawPointer(mutating: buffer.baseAddress)
+        unsafe self.length = buffer.count
     }
 }
 
@@ -80,13 +80,13 @@ extension ISO_9945.Kernel.IO.Vector.Segment {
     ///
     /// Binary-compatible — same layout as `struct iovec`.
     var cValue: iovec {
-        iovec(iov_base: unsafe base, iov_len: length)
+        unsafe iovec(iov_base: unsafe base, iov_len: length)
     }
 
     /// Creates a Segment from a C iovec.
     @unsafe
     init(_ cValue: iovec) {
-        self.base = unsafe cValue.iov_base
-        self.length = cValue.iov_len
+        unsafe self.base = unsafe cValue.iov_base
+        unsafe self.length = unsafe cValue.iov_len
     }
 }

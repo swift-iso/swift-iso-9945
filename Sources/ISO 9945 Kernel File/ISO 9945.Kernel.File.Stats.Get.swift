@@ -78,7 +78,7 @@ extension ISO_9945.Kernel.File.Stats {
     public static func get(
         descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
-        try unsafe get(fd: descriptor._rawValue)
+        try get(fd: descriptor._rawValue)
     }
 
     /// Gets file metadata for a path (follows symlinks).
