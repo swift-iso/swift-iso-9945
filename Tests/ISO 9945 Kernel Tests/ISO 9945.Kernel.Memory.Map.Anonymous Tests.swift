@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension Memory.Map.Anonymous {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension Memory.Map.Anonymous.Test.Unit {
     @Test
@@ -40,8 +26,6 @@ extension Memory.Map.Anonymous.Test.Unit {
     }
 }
 
-// MARK: - Functional Tests
-
 extension Memory.Map.Anonymous.Test.Unit {
     @Test
     func `map creates a valid region`() throws {
@@ -49,8 +33,6 @@ extension Memory.Map.Anonymous.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
         #expect(region.length == pageSize)
     }
@@ -64,8 +46,6 @@ extension Memory.Map.Anonymous.Test.Unit {
         )
         defer { try? Memory.Map.unmap(region) }
 
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
     }
 
@@ -75,9 +55,6 @@ extension Memory.Map.Anonymous.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Should succeed (private is default)
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
     }
 
@@ -90,13 +67,9 @@ extension Memory.Map.Anonymous.Test.Unit {
         )
         defer { try? Memory.Map.unmap(region) }
 
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
     }
 }
-
-// MARK: - Windows Tests
 
 #if os(Windows)
     extension Memory.Map.Anonymous.Test.Unit {

@@ -1,15 +1,3 @@
-// swift-format-ignore-file: AlwaysUseLowerCamelCase
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,29 +6,16 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX errno capture
-
 extension Error_Primitives.Error.Code {
-    /// Captures current errno (POSIX only).
-    ///
-    /// Must be called immediately after a failing syscall, before any other libc call.
+
     public static func captureErrno() -> Self {
         .posix(errno)
     }
 
-    /// Returns the current errno as an error code.
-    ///
-    /// Convenience alias for `captureErrno()`.
     public static func current() -> Self {
         captureErrno()
     }
 }
-
-// MARK: - POSIX errno constants
-//
-// Property names mirror POSIX specification terminology per [API-NAME-003].
-// Module-qualification is required because property names shadow the global
-// errno constants from the platform module.
 
 #if canImport(Darwin)
     extension Error_Primitives.Error.Code {

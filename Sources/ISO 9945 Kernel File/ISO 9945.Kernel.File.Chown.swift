@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,16 +8,7 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX chown() syscall
-
 extension ISO_9945.Kernel.File.Chown {
-    /// Changes the ownership of a file.
-    ///
-    /// - Parameters:
-    ///   - path: The path to the file.
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
 
     public static func chown(
         path: borrowing Path.Borrowed,
@@ -40,13 +20,6 @@ extension ISO_9945.Kernel.File.Chown {
         }
     }
 
-    /// Changes the ownership of a file using a path character pointer.
-    ///
-    /// - Parameters:
-    ///   - path: The path as a pointer to Path.Char (UInt8).
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
     @usableFromInline
     internal static func _chown(
         path: UnsafePointer<Path.Char>,
@@ -67,14 +40,6 @@ extension ISO_9945.Kernel.File.Chown {
         }
     }
 
-    /// Changes the ownership of a symbolic link (not the target).
-    ///
-    /// - Parameters:
-    ///   - path: The path to the symbolic link.
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
-
     public static func lchown(
         path: borrowing Path.Borrowed,
         uid: ISO_9945.Kernel.User.ID,
@@ -85,13 +50,6 @@ extension ISO_9945.Kernel.File.Chown {
         }
     }
 
-    /// Changes the ownership of a symbolic link using a path character pointer.
-    ///
-    /// - Parameters:
-    ///   - path: The path as a pointer to Path.Char (UInt8).
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
     @usableFromInline
     internal static func _lchown(
         path: UnsafePointer<Path.Char>,
@@ -113,20 +71,8 @@ extension ISO_9945.Kernel.File.Chown {
     }
 }
 
-// MARK: - POSIX fchown() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Chown {
-    /// Changes the ownership of an open raw file descriptor.
-    ///
-    /// Spec-literal raw `fchown(2)`. The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Chown.fchown(_:uid:gid:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor.
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
+
     @_spi(Syscall)
     public static func fchown(
         fd: Int32,
@@ -147,19 +93,8 @@ extension ISO_9945.Kernel.File.Chown {
     }
 }
 
-// MARK: - Typed Convenience
-
 extension ISO_9945.Kernel.File.Chown {
-    /// Changes the ownership of an open file descriptor.
-    ///
-    /// Typed L2 form. Delegates to the raw `fchown(fd:uid:gid:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor.
-    ///   - uid: The new user ID.
-    ///   - gid: The new group ID.
-    /// - Throws: `ISO_9945.Kernel.File.Chown.Error` on failure.
+
     public static func fchown(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         uid: ISO_9945.Kernel.User.ID,
@@ -169,10 +104,8 @@ extension ISO_9945.Kernel.File.Chown {
     }
 }
 
-// MARK: - Error Conversion
-
 extension ISO_9945.Kernel.File.Chown.Error {
-    /// Creates an error from the current errno.
+
     @usableFromInline
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()

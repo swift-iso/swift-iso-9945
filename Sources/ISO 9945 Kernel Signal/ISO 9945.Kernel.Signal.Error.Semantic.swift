@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,18 +7,15 @@
 #endif
 
 extension ISO_9945.Kernel.Signal.Error {
-    /// Semantic classification of signal errors.
+
     public enum Semantic: Sendable {
-        /// Invalid signal number (EINVAL).
+
         case invalidSignal
 
-        /// Operation not permitted (EPERM).
         case noPermission
 
-        /// No such process (ESRCH).
         case noSuchProcess
 
-        /// Interrupted by signal (EINTR).
         case interrupted
     }
 }

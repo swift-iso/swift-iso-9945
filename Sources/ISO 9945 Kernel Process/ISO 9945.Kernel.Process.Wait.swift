@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,54 +7,11 @@
 #endif
 
 extension ISO_9945.Kernel.Process {
-    /// Wait operations namespace.
-    ///
-    /// ## Threading
-    ///
-    /// `waitpid` is thread-safe (kernel provides synchronization).
-    ///
-    /// ## Blocking Behavior
-    ///
-    /// `wait` blocks until a child changes state, unless `Options.no.hang` is set.
-    /// When blocking, the thread is suspended in a kernel wait queue.
+
     public enum Wait {}
 }
 
-// MARK: - Wait Operation
-
 extension ISO_9945.Kernel.Process.Wait {
-    /// Waits for child process(es) to change state.
-    ///
-    /// - Parameters:
-    ///   - selector: Which child(ren) to wait for.
-    ///   - options: Wait options (default: blocking).
-    /// - Returns: Result, or `nil` if `no.hang` and no child changed state.
-    /// - Throws: `ISO_9945.Kernel.Process.Error.wait` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.noSuchProcess` (ECHILD): No child processes exist, or
-    ///   the specified process/group doesn't match any children.
-    /// - `.interrupted` (EINTR): Signal interrupted the wait.
-    /// - `.invalidArgument` (EINVAL): Invalid options.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Wait for any child
-    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.any)
-    /// print("PID \(result.pid) exited with \(result.status.exit.code ?? -1)")
-    ///
-    /// // Non-blocking wait
-    /// if let result = try ISO_9945.Kernel.Process.Wait.wait(.any, options: .no.hang) {
-    ///     print("Child \(result.pid) ready")
-    /// } else {
-    ///     print("No children ready")
-    /// }
-    ///
-    /// // Wait for specific child
-    /// let result = try ISO_9945.Kernel.Process.Wait.wait(.process(childPid))
-    /// ```
 
     public static func wait(
         _ selector: Selector,
@@ -80,10 +26,7 @@ extension ISO_9945.Kernel.Process.Wait {
             pid = id.rawValue
 
         case .group(let pgid):
-            // Negating pid_t.min traps; no process group can have that
-            // magnitude as its ID (getpgid/setpgid never produce it), so
-            // report it the way the kernel would report any other
-            // unrepresentable pgid: EINVAL.
+
             guard pgid.underlying != pid_t.min else {
                 throw .wait(.posix(EINVAL))
             }
@@ -100,7 +43,6 @@ extension ISO_9945.Kernel.Process.Wait {
             throw .wait(Error_Primitives.Error.captureErrno())
         }
 
-        // WNOHANG: returns 0 if no child changed state
         if result == 0 {
             return nil
         }

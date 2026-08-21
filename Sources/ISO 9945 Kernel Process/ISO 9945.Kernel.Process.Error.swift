@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
@@ -18,38 +7,27 @@
 #endif
 
 extension ISO_9945.Kernel.Process {
-    /// Process-related errors.
-    ///
-    /// Uses operation carriers with semantic accessors. No dedicated `.interrupted`
-    /// case — EINTR is represented only via `Error_Primitives.Error.Code`.
+
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
-        /// fork() failed.
+
         case fork(Error_Primitives.Error.Code)
 
-        /// execute*() failed.
         case execute(Error_Primitives.Error.Code)
 
-        /// wait*() failed.
         case wait(Error_Primitives.Error.Code)
 
-        /// kill() failed.
         case kill(Error_Primitives.Error.Code)
 
-        /// Session operation failed (setsid, getsid).
         case session(Error_Primitives.Error.Code)
 
-        /// Process group operation failed (setpgid, getpgid).
         case group(Error_Primitives.Error.Code)
 
-        /// posix_spawn() failed.
         case spawn(Error_Primitives.Error.Code)
     }
 }
 
-// MARK: - Semantic Accessors
-
 extension ISO_9945.Kernel.Process.Error {
-    /// The underlying error code.
+
     public var code: Error_Primitives.Error.Code {
         switch self {
         case .fork(let c), .execute(let c), .wait(let c), .kill(let c),
@@ -58,16 +36,10 @@ extension ISO_9945.Kernel.Process.Error {
         }
     }
 
-    /// Whether this is an interrupted operation (EINTR).
-    ///
-    /// Derived from code, not a separate case.
     public var isInterrupted: Bool {
         code.isInterrupted
     }
 
-    /// Semantic meaning of the error, if mappable.
-    ///
-    /// Returns `nil` for unrecognized POSIX error codes.
     public var semantic: Semantic? {
         guard let posix = code.posix else { return nil }
         switch posix {
@@ -91,8 +63,6 @@ extension ISO_9945.Kernel.Process.Error {
         }
     }
 }
-
-// MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Process.Error: CustomStringConvertible {
     public var description: Swift.String {

@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
@@ -24,8 +13,6 @@ extension ISO_9945.Kernel.Link {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Link.Test.Unit {
     @Test
@@ -49,8 +36,6 @@ extension ISO_9945.Kernel.Link.Test.Unit {
     }
 }
 
-// MARK: - Link.Count Tests
-
 extension ISO_9945.Kernel.Link.Test.Unit {
     @Test
     func `Link.Count zero constant`() {
@@ -58,8 +43,6 @@ extension ISO_9945.Kernel.Link.Test.Unit {
         #expect(zero == 0)
     }
 }
-
-// MARK: - Link.Count Conformance Tests
 
 extension ISO_9945.Kernel.Link.Test.Unit {
     @Test
@@ -84,12 +67,10 @@ extension ISO_9945.Kernel.Link.Test.Unit {
         var set = Set<ISO_9945.Kernel.Link.Count>()
         set.insert(c0)
         set.insert(c1)
-        set.insert(c0)  // duplicate
+        set.insert(c0)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Link.Error Tests
 
 extension ISO_9945.Kernel.Link.Test.Unit {
     @Test
@@ -112,8 +93,6 @@ extension ISO_9945.Kernel.Link.Test.Unit {
         }
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Link.Test.EdgeCase {
     @Test

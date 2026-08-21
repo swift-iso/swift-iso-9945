@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,7 +7,7 @@
 #endif
 
 extension ISO_9945.Glob.Expand {
-    /// Options for `glob(3)` — wraps `GLOB_*` flags.
+
     public struct Options: OptionSet, Sendable {
         public let rawValue: Int32
 
@@ -30,18 +19,14 @@ extension ISO_9945.Glob.Expand {
 }
 
 extension ISO_9945.Glob.Expand.Options {
-    /// Return on error (`GLOB_ERR`).
+
     public static let err = Self(rawValue: GLOB_ERR)
 
-    /// Append `/` to names that are directories (`GLOB_MARK`).
     public static let mark = Self(rawValue: GLOB_MARK)
 
-    /// Do not sort the results (`GLOB_NOSORT`).
     public static let nosort = Self(rawValue: GLOB_NOSORT)
 
-    /// If no matches, return the pattern itself (`GLOB_NOCHECK`).
     public static let nocheck = Self(rawValue: GLOB_NOCHECK)
 
-    /// Disable backslash escaping (`GLOB_NOESCAPE`).
     public static let noescape = Self(rawValue: GLOB_NOESCAPE)
 }

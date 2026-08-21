@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,17 +8,8 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX link() syscall
-
 extension ISO_9945.Kernel.Link {
-    /// Creates a hard link using `Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameters:
-    ///   - linkPath: The path where the hard link will be created.
-    ///   - existingPath: The path to the existing file.
-    /// - Throws: `ISO_9945.Kernel.Link.Error` on failure.
+
     public static func create(
         at linkPath: borrowing Path.Borrowed,
         to existingPath: borrowing Path.Borrowed
@@ -42,7 +22,6 @@ extension ISO_9945.Kernel.Link {
         }
     }
 
-    /// Internal implementation for creating a hard link using unsafe path pointers.
     @usableFromInline
     internal static func _create(
         at linkPath: UnsafePointer<Path.Char>,
@@ -65,23 +44,8 @@ extension ISO_9945.Kernel.Link {
     }
 }
 
-// MARK: - POSIX linkat() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.Link {
-    /// Creates a hard link relative to raw directory descriptors.
-    ///
-    /// Spec-literal raw `linkat(2)`. The typed L2 internal-only convenience
-    /// (`ISO_9945.Kernel.Link._create(from:existingPath:at:linkPath:flags:)`
-    /// taking `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI
-    /// internally.
-    ///
-    /// - Parameters:
-    ///   - existingFd: Raw directory descriptor for the existing path.
-    ///   - existingPath: The path to the existing file.
-    ///   - linkFd: Raw directory descriptor for the link path.
-    ///   - linkPath: The path where the hard link will be created.
-    ///   - flags: Resolution flags (e.g., AT_SYMLINK_FOLLOW).
-    /// - Throws: `ISO_9945.Kernel.Link.Error` on failure.
+
     @_spi(Syscall)
     public static func create(
         fromFd existingFd: Int32,
@@ -107,14 +71,8 @@ extension ISO_9945.Kernel.Link {
     }
 }
 
-// MARK: - Typed Convenience (internal)
-
 extension ISO_9945.Kernel.Link {
-    /// Internal implementation for creating a hard link relative to directory descriptors.
-    ///
-    /// Internal typed L2 form. Delegates to the raw
-    /// `create(fromFd:existingPath:atFd:linkPath:flags:)` SPI via
-    /// `descriptor._rawValue`.
+
     @usableFromInline
     internal static func _create(
         from existingDescriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -133,14 +91,12 @@ extension ISO_9945.Kernel.Link {
     }
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.Link {
     public typealias Error = ISO_9945.Kernel.Link.Error
 }
 
 extension ISO_9945.Kernel.Link.Error {
-    /// Creates an error from the current errno value.
+
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

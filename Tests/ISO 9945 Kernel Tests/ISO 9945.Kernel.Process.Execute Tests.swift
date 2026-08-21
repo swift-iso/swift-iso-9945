@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if os(macOS)
 
     import Darwin
@@ -28,21 +17,15 @@
         }
     }
 
-    // MARK: - Integration Tests
-    //
-    // NOTE: These tests use posix_spawn instead of fork+exec to avoid Swift runtime
-    // lock corruption in multithreaded test environments. posix_spawn does NOT
-    // duplicate the parent's address space, making it safe for concurrent tests.
-
     extension ISO_9945.Kernel.Process.Execute.Test.Integration {
-        /// Finds an executable "true" command, trying common paths.
+
         private static func findTruePath() -> Swift.String {
             for path in ["/usr/bin/true", "/bin/true"] {
                 if access(path, X_OK) == 0 {
                     return path
                 }
             }
-            return "/usr/bin/true"  // Fallback, may fail
+            return "/usr/bin/true"
         }
 
         @Test
@@ -78,7 +61,7 @@
                         argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
                         envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>
                     ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID in
-                    // argv[0] is already the path, use it directly
+
                     try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                         path: argvPtr[0]!,
                         argv: argvPtr,
@@ -119,8 +102,7 @@
 
         @Test
         func `spawn passes environment to program`() throws {
-            // Use sh -c with direct variable expansion
-            // The shell reads TEST_EXIT_CODE from its environment and uses it as exit code
+
             let path = "/bin/sh"
             let argv = ["/bin/sh", "-c", "exit ${TEST_EXIT_CODE:-99}"]
             let envp = ["TEST_EXIT_CODE=77"]

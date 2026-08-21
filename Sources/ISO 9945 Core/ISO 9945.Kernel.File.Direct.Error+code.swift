@@ -1,18 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-// MARK: - POSIX Translation from Syscall
-
 extension ISO_9945.Kernel.File.Direct.Error {
-    /// Creates a semantic error from a raw syscall error.
+
     public init(from syscall: Syscall) {
         switch syscall {
         case .invalidDescriptor:
@@ -29,7 +16,6 @@ extension ISO_9945.Kernel.File.Direct.Error {
         }
     }
 
-    /// Maps a POSIX error code to a semantic error.
     @usableFromInline
     internal init(code: Error_Primitives.Error.Code, operation: Operation) {
         switch code {

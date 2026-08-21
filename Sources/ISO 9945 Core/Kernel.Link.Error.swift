@@ -1,51 +1,29 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Link {
-    /// Errors that can occur during hard link operations.
+
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Source file not found.
+
         case notFound
 
-        /// Permission denied.
         case permission
 
-        /// Link already exists.
         case exists
 
-        /// Cross-device link not allowed.
         case crossDevice
 
-        /// Cannot link directories.
         case isDirectory
 
-        /// A component of the path is not a directory.
         case notDirectory
 
-        /// The filesystem is read-only.
         case readOnly
 
-        /// Too many links to the file.
         case tooManyLinks
 
-        /// Not enough space.
         case noSpace
 
-        /// Too many symbolic links encountered.
         case loop
 
-        /// Path name is too long.
         case nameTooLong
 
-        /// A platform-specific error.
         case platform(Error_Primitives.Error)
     }
 }

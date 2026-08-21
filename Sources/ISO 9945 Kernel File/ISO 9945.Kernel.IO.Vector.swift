@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -20,49 +9,26 @@
 #endif
 
 extension ISO_9945.Kernel.IO {
-    /// Vector (scatter/gather) I/O namespace.
+
     public enum Vector {}
 }
 
 extension ISO_9945.Kernel.IO.Vector {
-    /// The platform's `iovcnt` limit for `readv(2)`/`writev(2)`.
-    ///
-    /// `IOV_MAX` is not a compile-time constant Swift's C importer exposes
-    /// on every supported platform, so it is queried via
-    /// `sysconf(_SC_IOV_MAX)` instead — the portable way to read it per
-    /// POSIX. Falls back to `_XOPEN_IOV_MAX` (16), the minimum POSIX
-    /// guarantees, if the query fails.
+
     fileprivate static var iovMax: Int {
         let value = sysconf(Int32(_SC_IOV_MAX))
         return value > 0 ? Int(value) : 16
     }
 }
 
-// MARK: - Scatter Read (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.IO.Vector {
-    /// Reads data from a raw file descriptor into multiple buffers (scatter read).
-    ///
-    /// Spec-literal raw `readv(2)`. Atomically reads into a sequence of buffers
-    /// in order; the kernel fills each buffer completely before moving to the
-    /// next, except on EOF. The typed L2 convenience
-    /// (`ISO_9945.Kernel.IO.Vector.read(_:buffers:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor to read from.
-    ///   - buffers: Array of ``Segment`` values describing receive buffers.
-    /// - Returns: Total number of bytes read across all buffers.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+
     @_spi(Syscall)
     public static func read(
         fd: Int32,
         buffers: [Segment]
     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
-        // POSIX rejects iovcnt <= 0 and iovcnt > IOV_MAX with EINVAL; validated
-        // here rather than force-unwrapping an empty array's nil baseAddress
-        // (which traps) or converting an unbounded count to Int32 (which
-        // traps for very large arrays).
+
         guard unsafe !buffers.isEmpty, unsafe buffers.count <= Self.iovMax else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
@@ -79,28 +45,14 @@ extension ISO_9945.Kernel.IO.Vector {
     }
 }
 
-// MARK: - Gather Write (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.IO.Vector {
-    /// Writes data from multiple buffers to a raw file descriptor (gather write).
-    ///
-    /// Spec-literal raw `writev(2)`. Atomically writes from a sequence of
-    /// buffers in order; the kernel writes each buffer completely before moving
-    /// to the next. The typed L2 convenience
-    /// (`ISO_9945.Kernel.IO.Vector.write(_:buffers:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor to write to.
-    ///   - buffers: Array of ``Segment`` values describing send buffers.
-    /// - Returns: Total number of bytes written across all buffers.
-    /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on failure.
+
     @_spi(Syscall)
     public static func write(
         fd: Int32,
         buffers: [Segment]
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
-        // See the identical iovcnt validation in read(fd:buffers:) above.
+
         guard unsafe !buffers.isEmpty, unsafe buffers.count <= Self.iovMax else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
@@ -117,24 +69,8 @@ extension ISO_9945.Kernel.IO.Vector {
     }
 }
 
-// MARK: - Typed Convenience
-
 extension ISO_9945.Kernel.IO.Vector {
-    /// Reads data from a file descriptor into multiple buffers (scatter read).
-    ///
-    /// Typed L2 form. Delegates to the raw `read(fd:buffers:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check.
-    ///
-    /// ## Usage
-    ///
-    /// Scatter read is useful for protocol parsing where header and body
-    /// are separate buffers, or when reading into non-contiguous memory.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
-    ///   - buffers: Array of ``Segment`` values describing receive buffers.
-    /// - Returns: Total number of bytes read across all buffers.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+
     public static func read(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         buffers: [Segment]
@@ -145,21 +81,6 @@ extension ISO_9945.Kernel.IO.Vector {
         return try unsafe read(fd: descriptor._rawValue, buffers: buffers)
     }
 
-    /// Writes data from multiple buffers to a file descriptor (gather write).
-    ///
-    /// Typed L2 form. Delegates to the raw `write(fd:buffers:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check.
-    ///
-    /// ## Usage
-    ///
-    /// Gather write avoids copying header + body into a contiguous buffer
-    /// before writing. Critical for high-throughput network protocols.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to write to.
-    ///   - buffers: Array of ``Segment`` values describing send buffers.
-    /// - Returns: Total number of bytes written across all buffers.
-    /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on failure.
     public static func write(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         buffers: [Segment]

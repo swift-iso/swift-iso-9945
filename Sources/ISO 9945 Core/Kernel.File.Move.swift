@@ -1,68 +1,34 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.File {
-    /// File and directory move operations.
-    ///
-    /// Moves (renames) files and directories atomically within the same
-    /// filesystem. Cross-filesystem moves require copy-and-delete.
-    ///
-    /// Wraps POSIX `rename()` / Windows `MoveFileExW()`.
-    ///
-    /// ## Platform Implementation
-    ///
-    /// Syscall implementations are in platform-specific packages:
-    /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.File.Move`)
+
     public enum Move: Sendable {}
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.File.Move {
-    /// Errors that can occur during file move operations.
+
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// The source path does not exist.
+
         case notFound
 
-        /// Permission denied.
         case permission
 
-        /// Source and destination are on different filesystems.
         case crossDevice
 
-        /// The destination is a non-empty directory.
         case notEmpty
 
-        /// A path component is not a directory.
         case notDirectory
 
-        /// Attempting to move a directory to a subdirectory of itself.
         case invalidArgument
 
-        /// The source is a directory but destination is a file.
         case isDirectory
 
-        /// The filesystem is read-only.
         case readOnly
 
-        /// Too many symbolic links encountered.
         case loop
 
-        /// Path name is too long.
         case nameTooLong
 
-        /// Not enough space.
         case noSpace
 
-        /// A platform-specific error.
         case platform(Error_Primitives.Error)
     }
 }

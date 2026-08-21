@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension Memory.Map.Options {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Options Tests
 
 extension Memory.Map.Options.Test.Unit {
     @Test
@@ -74,7 +60,7 @@ extension Memory.Map.Options.Test.Unit {
         var set = Set<Memory.Map.Options>()
         set.insert(.shared)
         set.insert(.private)
-        set.insert(.shared)  // duplicate
+        set.insert(.shared)
 
         #expect(set.count == 2)
         #expect(set.contains(.shared))

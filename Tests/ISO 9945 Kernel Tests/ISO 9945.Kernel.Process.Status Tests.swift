@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
@@ -25,8 +14,6 @@ extension ISO_9945.Kernel.Process.Status {
         @Suite(.serialized) struct Performance {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Process.Status.Test.Unit {
     @Test
@@ -62,8 +49,6 @@ extension ISO_9945.Kernel.Process.Status.Test.Unit {
     }
 }
 
-// MARK: - Nest.Name Accessor Tests
-
 extension ISO_9945.Kernel.Process.Status.Test.Unit {
     @Test
     func `exit accessor returns Exit struct`() {
@@ -94,12 +79,10 @@ extension ISO_9945.Kernel.Process.Status.Test.Unit {
     }
 }
 
-// MARK: - Classification Tests
-
 extension ISO_9945.Kernel.Process.Status.Test.Unit {
     @Test
     func `Classification cases are distinct`() {
-        let signal = ISO_9945.Kernel.Signal.Number(rawValue: 9)  // SIGKILL
+        let signal = ISO_9945.Kernel.Signal.Number(rawValue: 9)
         let cases: [ISO_9945.Kernel.Process.Status.Classification] = [
             .exited(code: 0),
             .signaled(signal: signal, false),

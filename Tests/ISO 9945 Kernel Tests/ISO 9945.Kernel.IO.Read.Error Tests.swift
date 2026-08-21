@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.IO.Read.Error {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.IO.Read.Error {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     @Test
@@ -60,8 +46,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     }
 }
 
-// MARK: - Description Tests
-
 extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     @Test
     func `handle description format`() {
@@ -75,8 +59,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
         #expect(error.description.contains("blocking:"))
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     @Test
@@ -113,8 +95,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     }
 }
 
-// MARK: - Edge Cases
-
 extension ISO_9945.Kernel.IO.Read.Error.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
@@ -132,13 +112,6 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.EdgeCase {
     }
 }
 
-// MARK: - POSIX Error Mapping (Fold) Tests
-//
-// Per the ratified 3-case shape (.handle, .blocking, .platform — Path X
-// Cycle 2 dropped the .io(Kernel.IO.Error) mapping; commit a5a5db4),
-// init(code:) cascades handle -> blocking -> .platform only. Codes that
-// used to route to the dedicated .io case now fold into .platform.
-
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
@@ -152,8 +125,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     func `broken-classed code (EPIPE) folds into platform`() {
         let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(EPIPE))
         if case .platform = error {
-            // Expected: EPIPE is not handle- or blocking-mapped, so it
-            // cascades through to .platform under the ratified 3-case shape.
+
         } else {
             Issue.record("Expected .platform case for EPIPE")
         }
@@ -163,8 +135,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     func `reset-classed code (ECONNRESET) folds into platform`() {
         let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(ECONNRESET))
         if case .platform = error {
-            // Expected: ECONNRESET is not handle- or blocking-mapped, so it
-            // cascades through to .platform under the ratified 3-case shape.
+
         } else {
             Issue.record("Expected .platform case for ECONNRESET")
         }
@@ -174,8 +145,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     func `hardware-classed code (EIO) folds into platform`() {
         let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(EIO))
         if case .platform = error {
-            // Expected: EIO is not handle- or blocking-mapped, so it
-            // cascades through to .platform under the ratified 3-case shape.
+
         } else {
             Issue.record("Expected .platform case for EIO")
         }

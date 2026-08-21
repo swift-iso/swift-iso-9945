@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,14 +14,12 @@ extension ISO_9945.Kernel.File.Seek.Origin {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     @Test
     func `start case exists`() {
         let origin = ISO_9945.Kernel.File.Seek.Origin.start
         if case .start = origin {
-            // Expected
+
         } else {
             Issue.record("Expected .start case")
         }
@@ -43,7 +29,7 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     func `current case exists`() {
         let origin = ISO_9945.Kernel.File.Seek.Origin.current
         if case .current = origin {
-            // Expected
+
         } else {
             Issue.record("Expected .current case")
         }
@@ -53,14 +39,12 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     func `end case exists`() {
         let origin = ISO_9945.Kernel.File.Seek.Origin.end
         if case .end = origin {
-            // Expected
+
         } else {
             Issue.record("Expected .end case")
         }
     }
 }
-
-// MARK: - Conformances
 
 extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     @Test
@@ -70,8 +54,6 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     }
 }
 
-// MARK: - Edge Cases
-
 extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
@@ -79,10 +61,9 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
         let current = ISO_9945.Kernel.File.Seek.Origin.current
         let end = ISO_9945.Kernel.File.Seek.Origin.end
 
-        // Pattern matching confirms distinctness
         switch start {
         case .start:
-            break  // expected
+            break
 
         case .current, .end:
             Issue.record("start should not match current or end")
@@ -90,7 +71,7 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
 
         switch current {
         case .current:
-            break  // expected
+            break
 
         case .start, .end:
             Issue.record("current should not match start or end")
@@ -98,15 +79,13 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
 
         switch end {
         case .end:
-            break  // expected
+            break
 
         case .start, .current:
             Issue.record("end should not match start or current")
         }
     }
 }
-
-// MARK: - Usage Patterns
 
 extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     @Test

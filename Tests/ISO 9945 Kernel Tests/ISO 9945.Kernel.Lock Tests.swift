@@ -1,20 +1,8 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 @_spi(Syscall) import ISO_9945_Kernel_Lock
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension ISO_9945.Kernel.Lock {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Range Unit Tests
 
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
@@ -80,8 +66,6 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-// MARK: - Kind Unit Tests
-
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `Kind.shared and Kind.exclusive`() {
@@ -93,8 +77,6 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         #expect(exclusive == .exclusive)
     }
 }
-
-// MARK: - Acquire Unit Tests
 
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
@@ -129,8 +111,6 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-// MARK: - Hashable Tests
-
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `Range is hashable`() {
@@ -141,7 +121,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         )
         set.insert(
             .bytes(start: ISO_9945.Kernel.File.Offset(10), end: ISO_9945.Kernel.File.Offset(30))
-        )  // Duplicate
+        )
 
         #expect(set.count == 2)
     }
@@ -151,18 +131,11 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         var set = Set<ISO_9945.Kernel.Lock.Kind>()
         set.insert(.shared)
         set.insert(.exclusive)
-        set.insert(.shared)  // Duplicate
+        set.insert(.shared)
 
         #expect(set.count == 2)
     }
 }
-
-// MARK: - File Locking API Tests
-//
-// NOTE: These tests verify API correctness (no crashes, correct return values).
-// POSIX fcntl locks are per-process, not per-thread, so same-process tests
-// cannot verify contention semantics. Cross-process contention is tested in
-// Kernel Tests/ISO_9945.Kernel.Lock.Integration Tests.swift using the _Lock Test Process helper.
 
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
@@ -187,9 +160,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
 
     @Test
     func `multiple descriptors can lock same file within process`() throws {
-        // NOTE: This demonstrates POSIX behavior where same-process locks don't contend.
-        // It is NOT testing that "shared allows multiple" in a meaningful way.
-        // Cross-process contention is tested in the Integration Tests.
+
         let path = KernelIOTest.makeTempPath(prefix: "lock-test")
         let fd1 = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
@@ -234,17 +205,14 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
 
     @Test
     func `unlock on non-locked region is no-op on POSIX`() throws {
-        // POSIX: unlocking a region not locked by the process is a no-op, not an error
+
         let path = KernelIOTest.makeTempPath(prefix: "lock-test")
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        // Should not throw
         try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
     }
 }
-
-// MARK: - Token Tests
 
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
@@ -252,8 +220,6 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         let path = KernelIOTest.makeTempPath(prefix: "lock-token")
         defer { KernelIOTest.cleanup(path: path) }
 
-        // Token consumes the descriptor; `release()` unlocks the lock
-        // and the descriptor's deinit closes the fd at token destruction.
         var token = try ISO_9945.Kernel.Lock.Token(
             descriptor: try KernelIOTest.open(at: path),
             range: .file,
@@ -292,7 +258,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         )
 
         try token.release()
-        try token.release()  // Should be no-op
+        try token.release()
     }
 
     @Test
@@ -316,8 +282,6 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-// MARK: - withExclusive/withShared Tests
-
 extension ISO_9945.Kernel.Lock.Test.Unit {
     @Test
     func `withExclusive executes body and releases lock`() throws {
@@ -330,10 +294,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         }
 
         #expect(executed == true)
-        // withExclusive consumed the fd. The lock was released via
-        // Token.release() in the defer, and the descriptor's deinit
-        // closed the fd — which also releases any POSIX advisory
-        // locks the process held on the inode.
+
     }
 
     @Test
@@ -375,9 +336,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
             }
             Issue.record("Expected TestError")
         } catch {
-            // Expected — body threw TestError, wrapped in Scope.Error.body.
-            // The defer in withExclusive still runs, releasing the lock,
-            // and the fd is closed as the consumed descriptor is destroyed.
+
         }
     }
 }

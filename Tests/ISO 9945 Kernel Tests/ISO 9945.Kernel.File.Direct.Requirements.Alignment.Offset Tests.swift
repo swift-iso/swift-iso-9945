@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset {
@@ -22,8 +10,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.Unit {
     @Test
@@ -58,8 +44,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.Unit {
     @Test
     func `Offset is Sendable`() {
@@ -68,8 +52,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.Unit {
         #expect(offset is ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.EdgeCase {
     @Test

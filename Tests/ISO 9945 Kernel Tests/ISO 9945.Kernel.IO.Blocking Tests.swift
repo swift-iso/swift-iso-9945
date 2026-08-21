@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.IO.Blocking {
@@ -22,12 +10,10 @@ extension ISO_9945.Kernel.IO.Blocking {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
     @Test
     func `Blocking namespace exists`() {
-        // ISO_9945.Kernel.IO.Blocking is a public enum namespace
+
         _ = ISO_9945.Kernel.IO.Blocking.self
     }
 
@@ -41,8 +27,6 @@ extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
         let _: any Sendable.Type = ISO_9945.Kernel.IO.Blocking.self
     }
 }
-
-// MARK: - Nested Types
 
 extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
     @Test

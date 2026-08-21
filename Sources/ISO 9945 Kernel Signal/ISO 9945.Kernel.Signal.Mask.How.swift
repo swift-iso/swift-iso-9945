@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
@@ -18,10 +7,7 @@
 #endif
 
 extension ISO_9945.Kernel.Signal.Mask {
-    /// Specifies how to modify the signal mask.
-    ///
-    /// Used with `Mask.change(_:signals:)` to specify whether signals
-    /// should be blocked, unblocked, or the mask replaced entirely.
+
     public struct How: RawRepresentable, Sendable, Equatable, Hashable {
         public let rawValue: Int32
 
@@ -32,20 +18,13 @@ extension ISO_9945.Kernel.Signal.Mask {
 }
 
 extension ISO_9945.Kernel.Signal.Mask.How {
-    /// Block the specified signals (add to current mask).
-    /// - POSIX: `SIG_BLOCK`
+
     public static let block = Self(rawValue: SIG_BLOCK)
 
-    /// Unblock the specified signals (remove from current mask).
-    /// - POSIX: `SIG_UNBLOCK`
     public static let unblock = Self(rawValue: SIG_UNBLOCK)
 
-    /// Replace the current mask with the specified signals.
-    /// - POSIX: `SIG_SETMASK`
     public static let set = Self(rawValue: SIG_SETMASK)
 }
-
-// MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Signal.Mask.How: CustomStringConvertible {
     public var description: Swift.String {

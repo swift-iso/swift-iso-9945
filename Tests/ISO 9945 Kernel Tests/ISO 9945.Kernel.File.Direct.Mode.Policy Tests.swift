@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Mode.Policy {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Direct.Mode.Policy {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
     @Test
     func `fallbackToBuffered case exists`() {
         let policy = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered
         if case .fallbackToBuffered = policy {
-            // Expected
+
         } else {
             Issue.record("Expected .fallbackToBuffered case")
         }
@@ -39,14 +25,12 @@ extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
     func `errorOnViolation case exists`() {
         let policy = ISO_9945.Kernel.File.Direct.Mode.Policy.errorOnViolation
         if case .errorOnViolation = policy {
-            // Expected
+
         } else {
             Issue.record("Expected .errorOnViolation case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
     @Test
@@ -64,8 +48,6 @@ extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.EdgeCase {
     @Test

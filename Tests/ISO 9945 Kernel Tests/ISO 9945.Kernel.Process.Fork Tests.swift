@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if os(macOS)
 
     import Testing
@@ -27,8 +16,6 @@
             @Suite(.serialized) struct Performance {}
         }
     }
-
-    // MARK: - Unit Tests
 
     extension ISO_9945.Kernel.Process.Fork.Test.Unit {
         @Test
@@ -67,18 +54,12 @@
         }
     }
 
-    // MARK: - Integration Tests
-    //
-    // NOTE: These tests use posix_spawn via POSIXTestHelper instead of fork() directly
-    // to avoid Swift runtime lock corruption in multithreaded test environments.
-
     extension ISO_9945.Kernel.Process.Fork.Test.Integration {
         @Test
         func `spawned child process can exit with code`() throws {
-            // Spawn helper that exits with code 42
+
             let child = try POSIXTestHelper.spawn("exit", "42")
 
-            // Wait for child and verify exit code
             let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
             #expect(result != nil)
             #expect(result?.pid == child)
@@ -88,19 +69,17 @@
 
         @Test
         func `spawned child PID is positive`() throws {
-            // Spawn helper that exits with code 0
+
             let child = try POSIXTestHelper.spawn("exit", "0")
 
-            // Child PID must be positive
             #expect(child.rawValue > 0)
 
-            // Clean up
             _ = try? ISO_9945.Kernel.Process.Wait.wait(.process(child))
         }
 
         @Test
         func `child PID matches wait result PID`() throws {
-            // Spawn helper that exits with code 0
+
             let child = try POSIXTestHelper.spawn("exit", "0")
 
             let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))

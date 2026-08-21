@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension ISO_9945.Kernel.Socket.Backlog {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
@@ -46,8 +32,6 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
         #expect(backlog.rawValue == 256)
     }
 }
-
-// MARK: - Constants Tests
 
 extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
@@ -72,8 +56,6 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-// MARK: - ExpressibleByIntegerLiteral Tests
-
 extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
     func `Backlog from integer literal`() {
@@ -81,8 +63,6 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
         #expect(backlog.rawValue == 512)
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
@@ -105,12 +85,10 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
         var set = Set<ISO_9945.Kernel.Socket.Backlog>()
         set.insert(.default)
         set.insert(.small)
-        set.insert(.default)  // duplicate
+        set.insert(.default)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - CustomStringConvertible Tests
 
 extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     @Test
@@ -119,8 +97,6 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
         #expect(backlog.description == "100")
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Socket.Backlog.Test.EdgeCase {
     @Test

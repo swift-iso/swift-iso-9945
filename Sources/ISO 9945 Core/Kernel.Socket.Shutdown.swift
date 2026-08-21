@@ -1,20 +1,4 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Socket {
-    /// Socket shutdown operations.
-    ///
-    /// ## Platform Implementation
-    ///
-    /// Syscall implementations are in platform-specific packages:
-    /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Socket.Shutdown`)
+
     public enum Shutdown: Sendable {}
 }

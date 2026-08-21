@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.System.Kind {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.File.System.Kind {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
     @Test
@@ -45,8 +31,6 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
     @Test
     func `Kind is Sendable`() {
@@ -68,7 +52,7 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.System.Kind>()
         set.insert(ISO_9945.Kernel.File.System.Kind(0x1234))
         set.insert(ISO_9945.Kernel.File.System.Kind(0x5678))
-        set.insert(ISO_9945.Kernel.File.System.Kind(0x1234))  // duplicate
+        set.insert(ISO_9945.Kernel.File.System.Kind(0x1234))
         #expect(set.count == 2)
     }
 
@@ -85,8 +69,6 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
         #expect(!kind.description.isEmpty)
     }
 }
-
-// MARK: - Linux-specific Tests
 
 #if os(Linux)
     extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
@@ -146,8 +128,6 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
             #expect(ISO_9945.Kernel.File.System.Kind.tmpfs.description == "tmpfs")
         }
     }
-
-    // MARK: - Edge Cases
 
     extension ISO_9945.Kernel.File.System.Kind.Test.EdgeCase {
         @Test

@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Lock.Kind {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.Lock.Kind {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
     @Test
     func `shared case exists`() {
         let kind = ISO_9945.Kernel.Lock.Kind.shared
         if case .shared = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .shared case")
         }
@@ -39,14 +25,12 @@ extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
     func `exclusive case exists`() {
         let kind = ISO_9945.Kernel.Lock.Kind.exclusive
         if case .exclusive = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .exclusive case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
     @Test
@@ -69,12 +53,10 @@ extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
         var set = Set<ISO_9945.Kernel.Lock.Kind>()
         set.insert(.shared)
         set.insert(.exclusive)
-        set.insert(.shared)  // duplicate
+        set.insert(.shared)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Lock.Kind.Test.EdgeCase {
     @Test

@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Device {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.Device {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Device.Test.Unit {
     @Test
@@ -43,8 +29,6 @@ extension ISO_9945.Kernel.Device.Test.Unit {
     }
 }
 
-// MARK: - ExpressibleByIntegerLiteral Tests
-
 extension ISO_9945.Kernel.Device.Test.Unit {
     @Test
     func `Device from integer literal`() {
@@ -52,8 +36,6 @@ extension ISO_9945.Kernel.Device.Test.Unit {
         #expect(device.rawValue == 256)
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Device.Test.Unit {
     @Test
@@ -76,12 +58,10 @@ extension ISO_9945.Kernel.Device.Test.Unit {
         var set = Set<ISO_9945.Kernel.Device>()
         set.insert(ISO_9945.Kernel.Device(1))
         set.insert(ISO_9945.Kernel.Device(2))
-        set.insert(ISO_9945.Kernel.Device(1))  // duplicate
+        set.insert(ISO_9945.Kernel.Device(1))
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Device.Test.EdgeCase {
     @Test
@@ -106,9 +86,7 @@ extension ISO_9945.Kernel.Device.Test.EdgeCase {
 
     @Test
     func `major and minor roundtrip through the platform encoding`() {
-        // Includes a minor above 2^20, which the old hand-rolled Linux
-        // masks truncated. Values stay within every supported platform's
-        // encodable field widths (Darwin: 8-bit major, 24-bit minor).
+
         let pairs: [(UInt32, UInt32)] = [(0, 0), (1, 3), (8, 0), (254, 255), (200, 0x123456)]
         for (major, minor) in pairs {
             let device = ISO_9945.Kernel.Device(

@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,14 +14,12 @@ extension ISO_9945.Kernel.Permission.Error {
     }
 }
 
-// MARK: - Permission.Error Tests
-
 extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     @Test
     func `denied case exists`() {
         let error = ISO_9945.Kernel.Permission.Error.denied
         if case .denied = error {
-            // Expected
+
         } else {
             Issue.record("Expected .denied case")
         }
@@ -43,7 +29,7 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     func `notPermitted case exists`() {
         let error = ISO_9945.Kernel.Permission.Error.notPermitted
         if case .notPermitted = error {
-            // Expected
+
         } else {
             Issue.record("Expected .notPermitted case")
         }
@@ -53,7 +39,7 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     func `readOnlyFilesystem case exists`() {
         let error = ISO_9945.Kernel.Permission.Error.readOnlyFilesystem
         if case .readOnlyFilesystem = error {
-            // Expected
+
         } else {
             Issue.record("Expected .readOnlyFilesystem case")
         }
@@ -98,7 +84,7 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
         set.insert(.denied)
         set.insert(.notPermitted)
         set.insert(.readOnlyFilesystem)
-        set.insert(.denied)  // duplicate
+        set.insert(.denied)
 
         #expect(set.count == 3)
         #expect(set.contains(.denied))

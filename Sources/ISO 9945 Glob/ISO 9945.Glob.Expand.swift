@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -17,28 +6,13 @@
     internal import Musl
 #endif
 
-// MARK: - Expand Namespace
-
 extension ISO_9945.Glob {
-    /// Namespace for `glob(3)` types.
+
     public enum Expand: Sendable {}
 }
 
-// MARK: - glob(3) Wrapper
-
 extension ISO_9945.Glob {
-    /// Wraps `glob(3)`. Expands a pattern into matching paths.
-    ///
-    /// Allocates internally via `glob_t`. Prefer the L3-policy `Glob.match`
-    /// at swift-posix (`POSIX Kernel Glob`) for streaming results and `**`
-    /// support — that path uses the cross-platform `Glob.Pattern` vocabulary
-    /// from L1 swift-glob-primitives.
-    ///
-    /// - Parameters:
-    ///   - pattern: Glob pattern to expand.
-    ///   - options: `GLOB_*` flags controlling expansion behavior.
-    /// - Returns: Array of matching paths as strings.
-    /// - Throws: `Expand.Error` on failure.
+
     public static func expand(
         pattern: borrowing Path.Borrowed,
         options: Expand.Options = []

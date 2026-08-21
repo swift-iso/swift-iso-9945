@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -17,22 +6,17 @@
     internal import Musl
 #endif
 
-// MARK: - Real Group ID
-
 extension ISO_9945.Kernel.Group {
-    /// Real group ID operations namespace.
+
     public enum Real {}
 }
 
 extension ISO_9945.Kernel.Group.Real {
-    /// Gets the real group ID of the calling process.
+
     public static func id() -> ISO_9945.Kernel.Group.ID {
         ISO_9945.Kernel.Group.ID(_unchecked: getgid())
     }
 
-    /// Sets the real group ID of the calling process.
-    ///
-    /// - Throws: `Error_Primitives.Error` on failure (EPERM if not privileged).
     public static func set(
         _ gid: ISO_9945.Kernel.Group.ID
     ) throws(Error_Primitives.Error) {

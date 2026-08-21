@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Lock.Range {
@@ -23,14 +11,12 @@ extension ISO_9945.Kernel.Lock.Range {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     @Test
     func `file case exists`() {
         let range = ISO_9945.Kernel.Lock.Range.file
         if case .file = range {
-            // Expected
+
         } else {
             Issue.record("Expected .file case")
         }
@@ -63,8 +49,6 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     @Test
     func `Range is Sendable`() {
@@ -87,12 +71,10 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
         set.insert(.file)
         set.insert(.bytes(start: 0, end: 100))
         set.insert(.bytes(start: 100, end: 200))
-        set.insert(.file)  // duplicate
+        set.insert(.file)
         #expect(set.count == 3)
     }
 }
-
-// MARK: - Bytes Range Tests
 
 extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     @Test
@@ -126,8 +108,6 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
         }
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Lock.Range.Test.EdgeCase {
     @Test

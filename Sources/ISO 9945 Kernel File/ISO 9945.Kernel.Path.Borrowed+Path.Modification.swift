@@ -1,20 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-// MARK: - POSIX Modification Conformance
-
-// Appending inserts a single POSIX separator `/` between `view` and `other`
-// unless `view` already ends with one. See `+Path.Decomposition.swift` for
-// the decomposition half of the split.
-
 extension Path.Borrowed: @retroactive Path.Modification {
     @inlinable
     public static func appending(

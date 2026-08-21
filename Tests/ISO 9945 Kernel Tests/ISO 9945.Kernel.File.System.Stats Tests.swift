@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.System.Stats {
@@ -22,8 +10,6 @@ extension ISO_9945.Kernel.File.System.Stats {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
     @Test
@@ -49,7 +35,7 @@ extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
         #expect(fs.freeFiles == 50000)
         #expect(fs.fsid == 0xABCD)
         #expect(fs.nameMax == 255)
-        #expect(fs.fsTypeName == nil)  // Default is nil
+        #expect(fs.fsTypeName == nil)
     }
 
     @Test
@@ -97,7 +83,7 @@ extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
         )
 
         let fs3 = ISO_9945.Kernel.File.System.Stats(
-            type: ISO_9945.Kernel.File.System.Kind(2),  // Different type
+            type: ISO_9945.Kernel.File.System.Kind(2),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
@@ -140,26 +126,23 @@ extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
 
         var set = Set<ISO_9945.Kernel.File.System.Stats>()
         set.insert(fs1)
-        set.insert(fs1)  // Duplicate
+        set.insert(fs1)
         set.insert(fs2)
 
         #expect(set.count == 2)
     }
 }
 
-// MARK: - Computed Property Tests
-
 extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
     @Test
     func `availableBlocks <= freeBlocks (typical)`() {
-        // In real filesystems, availableBlocks is typically <= freeBlocks
-        // (root-reserved blocks)
+
         let fs = ISO_9945.Kernel.File.System.Stats(
             type: ISO_9945.Kernel.File.System.Kind(1),
             blockSize: 4096,
             blocks: 1000,
             freeBlocks: 500,
-            availableBlocks: 400,  // Less than freeBlocks
+            availableBlocks: 400,
             files: 100,
             freeFiles: 50,
             fsid: 1,

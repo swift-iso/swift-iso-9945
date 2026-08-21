@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,28 +8,8 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX fstat() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Stats {
-    /// Gets file metadata for a raw file descriptor.
-    ///
-    /// Spec-literal raw `fstat(2)`. Retrieves file size, type, permissions,
-    /// timestamps, and other metadata. The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Stats.get(descriptor:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// ## Threading
-    /// This call may briefly block while reading file metadata. Safe to call
-    /// concurrently from multiple threads on the same descriptor.
-    ///
-    /// ## Errors
-    /// - ``Error/handle(_:)``: Invalid descriptor
-    /// - ``Error/io(_:)``: I/O error reading metadata
-    /// - ``Error/platform(_:)``: Platform-specific error
-    ///
-    /// - Parameter fd: The raw file descriptor to stat.
-    /// - Returns: File metadata including size, type, permissions, and timestamps.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
+
     internal static func get(
         fd: Int32
     ) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
@@ -64,34 +33,13 @@ extension ISO_9945.Kernel.File.Stats {
     }
 }
 
-// MARK: - Typed Convenience + path overloads
-
 extension ISO_9945.Kernel.File.Stats {
-    /// Gets file metadata for an open file descriptor.
-    ///
-    /// Typed L2 form. Delegates to the raw `get(fd:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameter descriptor: The file descriptor to stat.
-    /// - Returns: File metadata including size, type, permissions, and timestamps.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
+
     public static func get(
         descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(ISO_9945.Kernel.File.Stats.Error) -> ISO_9945.Kernel.File.Stats {
         try get(fd: descriptor._rawValue)
     }
-
-    /// Gets file metadata for a path (follows symlinks).
-    ///
-    /// Retrieves file size, type, permissions, timestamps, and other metadata
-    /// using stat.
-    ///
-    /// For symlinks, returns info about the target, not the link itself.
-    /// Use ``lget(path:)`` to get info about the symlink itself.
-    ///
-    /// - Parameter path: The path to stat.
-    /// - Returns: File metadata including size, type, permissions, and timestamps.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
 
     public static func get(
         path: borrowing Path.Borrowed
@@ -101,15 +49,6 @@ extension ISO_9945.Kernel.File.Stats {
         }
     }
 
-    /// Gets file metadata for a path using a raw pointer.
-    ///
-    /// This overload mirrors ``Directory/open(at:)-swift.type.method``'s
-    /// `UnsafePointer<Path.Char>` signature for consistency. The ``Path.Borrowed``
-    /// overload is preferred; use this when you already have a raw pointer.
-    ///
-    /// - Parameter path: Null-terminated path pointer.
-    /// - Returns: File metadata.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @unsafe
     public static func get(
         at path: UnsafePointer<Path.Char>
@@ -117,11 +56,6 @@ extension ISO_9945.Kernel.File.Stats {
         try unsafe get(unsafePath: UnsafePointer<CChar>(path))
     }
 
-    /// Gets file metadata for a path using an unsafe C string pointer.
-    ///
-    /// - Parameter unsafePath: Null-terminated path string.
-    /// - Returns: File metadata.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     internal static func get(
         unsafePath path: UnsafePointer<CChar>
     ) throws(Error) -> ISO_9945.Kernel.File.Stats {
@@ -144,15 +78,6 @@ extension ISO_9945.Kernel.File.Stats {
         return ISO_9945.Kernel.File.Stats(from: sb)
     }
 
-    /// Gets file metadata for a path without following symlinks.
-    ///
-    /// For symlinks, returns info about the link itself rather than its target.
-    /// Useful for cycle detection when walking directories.
-    ///
-    /// - Parameter path: The path to stat.
-    /// - Returns: File metadata including size, type, permissions, and timestamps.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
-
     public static func lget(
         path: borrowing Path.Borrowed
     ) throws(Error) -> ISO_9945.Kernel.File.Stats {
@@ -161,14 +86,6 @@ extension ISO_9945.Kernel.File.Stats {
         }
     }
 
-    /// Gets file metadata for a path without following symlinks using a raw pointer.
-    ///
-    /// This overload mirrors ``Directory/open(at:)-swift.type.method``'s
-    /// `UnsafePointer<Path.Char>` signature for consistency.
-    ///
-    /// - Parameter path: Null-terminated path pointer.
-    /// - Returns: File metadata.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     @unsafe
     public static func lget(
         at path: UnsafePointer<Path.Char>
@@ -176,11 +93,6 @@ extension ISO_9945.Kernel.File.Stats {
         try unsafe lget(unsafePath: UnsafePointer<CChar>(path))
     }
 
-    /// Gets file metadata for a path without following symlinks using an unsafe C string pointer.
-    ///
-    /// - Parameter unsafePath: Null-terminated path string.
-    /// - Returns: File metadata.
-    /// - Throws: ``Kernel/File/Stats/Error`` if the syscall fails.
     internal static func lget(
         unsafePath path: UnsafePointer<CChar>
     ) throws(Error) -> ISO_9945.Kernel.File.Stats {
@@ -204,8 +116,6 @@ extension ISO_9945.Kernel.File.Stats {
     }
 }
 
-// MARK: - Error Conversion
-
 extension ISO_9945.Kernel.File.Stats.Error {
     internal init(posixErrno code: Int32) {
         let errorCode = Error_Primitives.Error.Code.posix(code)
@@ -217,11 +127,9 @@ extension ISO_9945.Kernel.File.Stats.Error {
     }
 }
 
-// MARK: - Stats Construction from POSIX stat
-
 #if canImport(Darwin)
     extension ISO_9945.Kernel.File.Stats {
-        /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
+
         internal init(from sb: Darwin.stat) {
             let atime = ISO_9945.Kernel.Time(
                 _unchecked: (),
@@ -258,7 +166,7 @@ extension ISO_9945.Kernel.File.Stats.Error {
     }
 #elseif canImport(Glibc)
     extension ISO_9945.Kernel.File.Stats {
-        /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
+
         internal init(from sb: Glibc.stat) {
             let atime = ISO_9945.Kernel.Time(
                 _unchecked: (),
@@ -295,7 +203,7 @@ extension ISO_9945.Kernel.File.Stats.Error {
     }
 #elseif canImport(Musl)
     extension ISO_9945.Kernel.File.Stats {
-        /// Creates a ISO_9945.Kernel.File.Stats from a POSIX stat structure.
+
         internal init(from sb: Musl.stat) {
             let atime = ISO_9945.Kernel.Time(
                 _unchecked: (),
@@ -332,10 +240,8 @@ extension ISO_9945.Kernel.File.Stats.Error {
     }
 #endif
 
-// MARK: - File Kind from POSIX mode
-
 extension ISO_9945.Kernel.File.Stats.Kind {
-    /// Creates a file type from POSIX st_mode.
+
     internal init(mode: mode_t) {
         let fileType = mode & S_IFMT
         switch fileType {

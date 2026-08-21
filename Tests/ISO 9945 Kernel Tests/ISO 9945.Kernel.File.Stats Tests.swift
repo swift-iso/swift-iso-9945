@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Stats {
@@ -22,8 +10,6 @@ extension ISO_9945.Kernel.File.Stats {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Stats.Test.Unit {
     @Test
@@ -106,8 +92,6 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
     }
 }
 
-// MARK: - Kind Unit Tests
-
 extension ISO_9945.Kernel.File.Stats.Test.Unit {
     @Test
     func `Kind cases are distinct`() {
@@ -158,8 +142,6 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
         #expect(block != character)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Stats.Test.EdgeCase {
     @Test

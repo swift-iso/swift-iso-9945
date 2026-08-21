@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,17 +8,10 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX directory operations
-
 extension ISO_9945.Kernel.Directory {
     public typealias Entry = ISO_9945.Kernel.Directory.Entry
     public typealias Error = ISO_9945.Kernel.Directory.Error
 
-    /// A directory stream for iterating over directory entries.
-    ///
-    /// Not `Sendable`: a directory stream is an inherently non-shared
-    /// resource. `readdir` on one `DIR *` must not be interleaved across
-    /// threads, and the type performs no internal synchronization.
     @safe
     public final class Stream {
         #if canImport(Darwin)
@@ -53,11 +35,6 @@ extension ISO_9945.Kernel.Directory {
         }
     }
 
-    /// Opens a directory for iteration.
-    ///
-    /// - Parameter path: The path to the directory.
-    /// - Returns: A directory stream for iteration.
-    /// - Throws: `ISO_9945.Kernel.Directory.Error` on failure.
     @unsafe
     public static func open(at path: UnsafePointer<Path.Char>) throws(Error) -> Stream {
         let cPath = unsafe UnsafePointer<CChar>(path)
@@ -68,14 +45,6 @@ extension ISO_9945.Kernel.Directory {
         return unsafe Stream(dir: dir)
     }
 
-    /// Opens a directory for iteration using a `Path`.
-    ///
-    /// This is the preferred entry point. The pointer-based overload exists
-    /// for cases where you already have a raw pointer.
-    ///
-    /// - Parameter path: The path to the directory.
-    /// - Returns: A directory stream for iteration.
-    /// - Throws: `ISO_9945.Kernel.Directory.Error` on failure.
     public static func open(at path: borrowing Path.Borrowed) throws(Error) -> Stream {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe open(at: ptr)
@@ -84,7 +53,7 @@ extension ISO_9945.Kernel.Directory {
 }
 
 extension ISO_9945.Kernel.Directory.Stream {
-    /// Closes the directory stream.
+
     public func close() {
         if let d = unsafe dir {
             unsafe closedir(d)
@@ -92,28 +61,20 @@ extension ISO_9945.Kernel.Directory.Stream {
         }
     }
 
-    /// Returns the next entry, or nil if at end of directory.
-    ///
-    /// - Throws: `.closed` if the stream was closed, so use after `close()`
-    ///   is distinguishable from exhaustion.
     public func next() throws(ISO_9945.Kernel.Directory.Error) -> ISO_9945.Kernel.Directory.Entry? {
         guard let d = unsafe dir else {
             throw ISO_9945.Kernel.Directory.Error.closed
         }
 
-        // Reset errno before calling readdir
         errno = 0
         guard let entry = unsafe readdir(d) else {
-            // Check if this was an error or end of directory
+
             if errno != 0 {
                 throw ISO_9945.Kernel.Directory.Error.currentRead()
             }
             return nil
         }
 
-        // Extract raw bytes from d_name tuple. The scan never reads past
-        // the field, and the copied name is always NUL-terminated — the
-        // invariant `Entry.init(rawName:)` enforces.
         let rawName: [UInt8] = unsafe withUnsafePointer(to: entry.pointee.d_name) { ptr in
             let bufferSize = MemoryLayout.size(ofValue: unsafe entry.pointee.d_name)
             return unsafe ptr.withMemoryRebound(to: UInt8.self, capacity: bufferSize) { bytes in
@@ -127,7 +88,6 @@ extension ISO_9945.Kernel.Directory.Stream {
             }
         }
 
-        // Map d_type to file type
         let type: ISO_9945.Kernel.File.Stats.Kind? = {
             switch Int(unsafe entry.pointee.d_type) {
             case Int(DT_REG): return .regular
@@ -137,7 +97,7 @@ extension ISO_9945.Kernel.Directory.Stream {
             case Int(DT_BLK): return .device(.block)
             case Int(DT_FIFO): return .fifo
             case Int(DT_SOCK): return .socket
-            default: return nil  // DT_UNKNOWN
+            default: return nil
             }
         }()
 
@@ -149,10 +109,8 @@ extension ISO_9945.Kernel.Directory.Stream {
     }
 }
 
-// MARK: - Error helpers
-
 extension ISO_9945.Kernel.Directory.Error {
-    /// Creates an error from the current errno for open operations.
+
     internal static func currentOpen() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {
@@ -173,7 +131,6 @@ extension ISO_9945.Kernel.Directory.Error {
         }
     }
 
-    /// Creates an error from the current errno for read operations.
     internal static func currentRead() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

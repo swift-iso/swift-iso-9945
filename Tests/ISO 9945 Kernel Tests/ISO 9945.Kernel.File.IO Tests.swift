@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
@@ -24,7 +13,7 @@ struct FileIOIntegrationTests {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test")
 
         try Path.scope(pathString) { path in
-            // Create and open
+
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
                 mode: .readWrite,
@@ -35,10 +24,8 @@ struct FileIOIntegrationTests {
             let fdIsValid = fd.isValid
             #expect(fdIsValid)
 
-            // Close
             try ISO_9945.Kernel.Close.close(fd)
 
-            // Cleanup
             try? ISO_9945.Kernel.File.Delete.delete(path)
         }
     }
@@ -66,10 +53,10 @@ struct FileIOIntegrationTests {
     @Test
     func `write and read data`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-rw")
-        let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]  // "Hello"
+        let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
 
         try Path.scope(pathString) { path in
-            // Create file
+
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
                 mode: .readWrite,
@@ -81,13 +68,11 @@ struct FileIOIntegrationTests {
                 try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 
-            // Write
             let written = try testData.withUnsafeBytes { buffer in
                 try ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
             }
             #expect(written == testData.count)
 
-            // Read using pread (positional read from offset 0)
             var readBuffer = [UInt8](repeating: 0, count: testData.count)
             let bytesRead = try readBuffer.withUnsafeMutableBytes { buffer in
                 try ISO_9945.Kernel.IO.Read.pread(fd, into: buffer, at: 0)
@@ -103,7 +88,7 @@ struct FileIOIntegrationTests {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-eof")
 
         try Path.scope(pathString) { path in
-            // Create empty file
+
             let fd = try ISO_9945.Kernel.File.Open.open(
                 path: path,
                 mode: .readWrite,
@@ -115,18 +100,15 @@ struct FileIOIntegrationTests {
                 try? ISO_9945.Kernel.File.Delete.delete(path)
             }
 
-            // Read from empty file using pread at offset 0
             var buffer = [UInt8](repeating: 0, count: 100)
             let bytesRead = try buffer.withUnsafeMutableBytes { buf in
                 try ISO_9945.Kernel.IO.Read.pread(fd, into: buf, at: 0)
             }
 
-            #expect(bytesRead == 0)  // EOF returns 0, not error
+            #expect(bytesRead == 0)
         }
     }
 }
-
-// MARK: - Edge Cases (Integration)
 
 extension FileIOIntegrationTests {
     @Test

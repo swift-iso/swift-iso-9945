@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
@@ -22,13 +11,13 @@ struct KernelThreadYieldTests {
 
     @Test
     func `yield completes without error`() {
-        // Basic smoke test - yield should complete without crashing
+
         ISO_9945.Kernel.Thread.yield()
     }
 
     @Test
     func `yield can be called repeatedly`() {
-        // Verify repeated yields don't cause issues
+
         for _ in 0..<100 {
             ISO_9945.Kernel.Thread.yield()
         }
@@ -36,9 +25,7 @@ struct KernelThreadYieldTests {
 
     @Test
     func `yield from concurrent tasks`() async {
-        // Verify yield works correctly when called from concurrent tasks
-        // Note: This tests concurrent task execution, not necessarily
-        // multiple OS threads (Swift runtime decides thread mapping)
+
         let iterations = 100
         let taskCount = 4
 
@@ -60,7 +47,7 @@ struct KernelThreadYieldTests {
     extension KernelThreadYieldTests {
         @Test
         func `yield from multiple OS threads`() throws {
-            // Test yield from actual OS threads using pthread
+
             let threadCount = 4
             let iterations = 100
             var threads: [pthread_t?] = Array(repeating: nil, count: threadCount)
@@ -90,7 +77,7 @@ struct KernelThreadYieldTests {
                 )
 
                 guard result == 0 else {
-                    // Clean up any threads that were created
+
                     for j in 0..<i {
                         if let thread = threads[j] {
                             pthread_join(thread, nil)
@@ -100,7 +87,6 @@ struct KernelThreadYieldTests {
                 }
             }
 
-            // Join all threads
             for thread in threads {
                 if let thread {
                     pthread_join(thread, nil)

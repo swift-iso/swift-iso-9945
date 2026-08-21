@@ -1,15 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-// Signal.Error only exists on POSIX platforms
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
     import Testing
@@ -29,14 +17,12 @@
         }
     }
 
-    // MARK: - Signal.Error Tests
-
     extension ISO_9945.Kernel.Signal.Error.Test.Unit {
         @Test
         func `interrupted case exists`() {
             let error = ISO_9945.Kernel.Signal.Error.interrupted
             if case .interrupted = error {
-                // Expected
+
             } else {
                 Issue.record("Expected .interrupted case")
             }
@@ -66,7 +52,7 @@
         func `Signal.Error is Hashable`() {
             var set = Set<ISO_9945.Kernel.Signal.Error>()
             set.insert(.interrupted)
-            set.insert(.interrupted)  // duplicate
+            set.insert(.interrupted)
 
             #expect(set.count == 1)
             #expect(set.contains(.interrupted))

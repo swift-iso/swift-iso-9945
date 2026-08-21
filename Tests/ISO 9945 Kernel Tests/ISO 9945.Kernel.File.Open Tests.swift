@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,12 +13,6 @@ extension ISO_9945.Kernel.File.Open {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Mode Unit Tests
-// (Mode is no longer an OptionSet — see File.Open.Mode Tests.swift for
-// current struct-based API tests.)
-
-// MARK: - Options Unit Tests
 
 extension ISO_9945.Kernel.File.Open.Test.Unit {
     @Test
@@ -76,8 +58,6 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
     }
 }
 
-// MARK: - Edge Cases
-
 extension ISO_9945.Kernel.File.Open.Test.EdgeCase {
     @Test
     func `empty options has zero raw value`() {
@@ -87,14 +67,12 @@ extension ISO_9945.Kernel.File.Open.Test.EdgeCase {
 
     @Test
     func `exclusive without create is valid but semantically requires create`() {
-        // exclusive alone is valid at the API level
+
         let options = ISO_9945.Kernel.File.Open.Options.exclusive
         #expect(options.contains(.exclusive))
         #expect(!options.contains(.create))
     }
 }
-
-// MARK: - Actual File Open Tests
 
 extension ISO_9945.Kernel.File.Open.Test.Unit {
     @Test
@@ -133,7 +111,6 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
         let fdIsValid = fd.isValid
         #expect(fdIsValid)
 
-        // Verify file exists by checking stats
         let stats = try ISO_9945.Kernel.File.Stats.get(descriptor: fd)
         #expect(stats.type == .regular, "File should exist after create")
     }
@@ -149,7 +126,6 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
             try ISO_9945.Kernel.Close.close(fd)
         }
 
-        // Re-open with truncate
         let truncFd = try Path.scope(path) { p in
             try ISO_9945.Kernel.File.Open.open(
                 path: p,
@@ -159,7 +135,6 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
             )
         }
 
-        // Check file size is 0 using stats
         let stats = try ISO_9945.Kernel.File.Stats.get(descriptor: truncFd)
         #expect(stats.size == 0, "File should be truncated to 0 bytes")
     }
@@ -175,7 +150,6 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
             try ISO_9945.Kernel.Close.close(fd)
         }
 
-        // Re-open with append
         let appendFd = try Path.scope(path) { p in
             try ISO_9945.Kernel.File.Open.open(
                 path: p,
@@ -185,13 +159,11 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
             )
         }
 
-        // Write more data
         var extra = Array("_extra".utf8)
         _ = try? extra.withUnsafeMutableBytes { ptr in
             try ISO_9945.Kernel.IO.Write.write(appendFd, from: UnsafeRawBufferPointer(ptr))
         }
 
-        // Verify total content by re-reading
         let readFd = try Path.scope(path) { p in
             try ISO_9945.Kernel.File.Open.open(
                 path: p,
@@ -218,11 +190,6 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
             try ISO_9945.Kernel.Close.close(fd)
         }
 
-        // Path.scope wraps inner throws into its own error
-        // type (e.g., .body(inner)), so the caller sees a ScopeError
-        // rather than ISO_9945.Kernel.File.Open.Error directly. Accept any
-        // error — the test's semantic is "open fails", not "open
-        // fails with a specific unwrapped type".
         do {
             _ = try Path.scope(path) { p in
                 try ISO_9945.Kernel.File.Open.open(
@@ -234,7 +201,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
             }
             Issue.record("Expected open to fail with .exclusive on existing file")
         } catch {
-            // Expected — open failed because file exists.
+
         }
     }
 }

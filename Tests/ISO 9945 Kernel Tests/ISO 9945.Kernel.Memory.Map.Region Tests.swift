@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension Memory.Map.Region {
     }
 }
 
-// MARK: - Unit Tests
-
 extension Memory.Map.Region.Test.Unit {
     @Test
     func `Region type exists`() {
@@ -36,12 +22,10 @@ extension Memory.Map.Region.Test.Unit {
 
     @Test
     func `Region is @unchecked Sendable`() {
-        // Region contains a raw pointer but is marked @unchecked Sendable
+
         let _: any Sendable.Type = Memory.Map.Region.self
     }
 }
-
-// MARK: - Property Tests
 
 extension Memory.Map.Region.Test.Unit {
     @Test
@@ -50,8 +34,6 @@ extension Memory.Map.Region.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
     }
 
@@ -70,14 +52,11 @@ extension Memory.Map.Region.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Create a new region with same values
         let copy = Memory.Map.Region(base: region.base, length: region.length)
         #expect(copy.base == region.base)
         #expect(copy.length == region.length)
     }
 }
-
-// MARK: - Windows Tests
 
 #if os(Windows)
     extension Memory.Map.Region.Test.Unit {
@@ -87,7 +66,6 @@ extension Memory.Map.Region.Test.Unit {
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 
-            // The mapping handle should be set
             #expect(region.mappingHandle != nil)
         }
     }

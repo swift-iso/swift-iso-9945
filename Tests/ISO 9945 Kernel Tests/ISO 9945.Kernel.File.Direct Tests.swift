@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
@@ -25,8 +14,6 @@ extension ISO_9945.Kernel.File.Direct {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
     func `Direct namespace exists`() {
@@ -38,8 +25,6 @@ extension ISO_9945.Kernel.File.Direct.Test.Unit {
         let _: ISO_9945.Kernel.File.Direct.Type = ISO_9945.Kernel.File.Direct.self
     }
 }
-
-// MARK: - Nested Types
 
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
@@ -64,8 +49,6 @@ extension ISO_9945.Kernel.File.Direct.Test.Unit {
         let _: ISO_9945.Kernel.File.Direct.Error.Type = ISO_9945.Kernel.File.Direct.Error.self
     }
 }
-
-// MARK: - Resolved Mode Tests
 
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test

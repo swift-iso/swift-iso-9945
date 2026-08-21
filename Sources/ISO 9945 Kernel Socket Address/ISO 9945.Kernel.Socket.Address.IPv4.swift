@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,77 +7,57 @@
 #endif
 
 extension ISO_9945.Kernel.Socket.Address {
-    /// IPv4 socket address.
-    ///
-    /// Wraps `sockaddr_in`. Port and address are stored in network byte order
-    /// internally; accessors present host byte order.
+
     public struct IPv4: Sendable, Equatable {
         internal var cValue: sockaddr_in
 
-        /// Creates an IPv4 address.
-        ///
-        /// - Parameters:
-        ///   - address: IPv4 address in network byte order.
-        ///   - port: Port number in host byte order.
         public init(address: UInt32 = 0, port: UInt16 = 0) {
             self.cValue = sockaddr_in()
             self.cValue.sin_family = sa_family_t(AF_INET)
             self.cValue.sin_port = port.bigEndian
             self.cValue.sin_addr.s_addr = address
             #if canImport(Darwin)
-                // Kernel-returned addresses carry a populated length byte;
-                // constructors set it too so raw-byte comparisons do not
-                // diverge by provenance.
+
                 self.cValue.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
             #endif
         }
     }
 }
 
-// MARK: - Accessors
-
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
-    /// The address family (always `.inet`).
+
     public var family: ISO_9945.Kernel.Socket.Address.Family {
         .inet
     }
 
-    /// Port number in host byte order.
     public var port: UInt16 {
         get { UInt16(bigEndian: cValue.sin_port) }
         set { cValue.sin_port = newValue.bigEndian }
     }
 
-    /// IPv4 address in network byte order.
     public var address: UInt32 {
         get { cValue.sin_addr.s_addr }
         set { cValue.sin_addr.s_addr = newValue }
     }
 
-    /// The size of the underlying sockaddr_in structure.
     public static var size: ISO_9945.Kernel.Socket.Address.Length {
         ISO_9945.Kernel.Socket.Address.Length(UInt(MemoryLayout<sockaddr_in>.size))
     }
 }
 
-// MARK: - Convenience
-
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
-    /// Any address (INADDR_ANY) on the given port.
+
     public static func any(port: UInt16) -> Self {
         Self(address: UInt32(INADDR_ANY).bigEndian, port: port)
     }
 
-    /// Loopback address (127.0.0.1) on the given port.
     public static func loopback(port: UInt16) -> Self {
         Self(address: UInt32(INADDR_LOOPBACK).bigEndian, port: port)
     }
 }
 
-// MARK: - Storage Conversion
-
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
-    /// Converts to the generic `Storage` container.
+
     public var storage: ISO_9945.Kernel.Socket.Address.Storage {
         var result = ISO_9945.Kernel.Socket.Address.Storage()
         withUnsafePointer(to: cValue) { src in
@@ -100,8 +69,6 @@ extension ISO_9945.Kernel.Socket.Address.IPv4 {
         return result
     }
 }
-
-// MARK: - Equatable
 
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
     public static func == (lhs: Self, rhs: Self) -> Bool {

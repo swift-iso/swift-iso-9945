@@ -1,27 +1,10 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
-
-// ISO_9945.Kernel.File.Offset is a typealias to Coordinate.X<Space>.Value<Int64>
-// #Tests cannot be used on typealiases
 
 @Suite("ISO_9945.Kernel.File.Offset Tests")
 struct FileOffsetTests {
-
-    // MARK: - Basic Initialization
 
     @Test
     func `Offset from integer literal`() {
@@ -41,8 +24,6 @@ struct FileOffsetTests {
         #expect(offset == 5000)
     }
 
-    // MARK: - Constants
-
     @Test
     func `zero constant`() {
         #expect(ISO_9945.Kernel.File.Offset.zero == 0)
@@ -52,8 +33,6 @@ struct FileOffsetTests {
     func `max constant`() {
         #expect(ISO_9945.Kernel.File.Offset.max.underlying == Int64.max)
     }
-
-    // MARK: - Arithmetic with Delta
 
     @Test
     func `Offset minus Offset equals Delta`() {
@@ -78,8 +57,6 @@ struct FileOffsetTests {
         let result = offset - delta
         #expect(result == 3000)
     }
-
-    // MARK: - Arithmetic with Size
 
     @Test
     func `Offset plus Size equals Offset`() {
@@ -113,8 +90,6 @@ struct FileOffsetTests {
         #expect(offset == 1000)
     }
 
-    // MARK: - Conformances
-
     @Test
     func `Offset is Equatable`() {
         let a: ISO_9945.Kernel.File.Offset = 1000
@@ -129,7 +104,7 @@ struct FileOffsetTests {
         var set = Set<ISO_9945.Kernel.File.Offset>()
         set.insert(ISO_9945.Kernel.File.Offset(1000))
         set.insert(ISO_9945.Kernel.File.Offset(2000))
-        set.insert(ISO_9945.Kernel.File.Offset(1000))  // duplicate
+        set.insert(ISO_9945.Kernel.File.Offset(1000))
         #expect(set.count == 2)
     }
 
@@ -147,8 +122,6 @@ struct FileOffsetTests {
         #expect(b > a)
     }
 }
-
-// MARK: - Delta Tests
 
 @Suite("ISO_9945.Kernel.File.Delta Tests")
 struct FileDeltaTests {

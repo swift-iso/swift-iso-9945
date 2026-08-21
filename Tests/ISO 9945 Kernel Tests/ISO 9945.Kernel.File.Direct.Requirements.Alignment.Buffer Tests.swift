@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
     @Test
@@ -42,8 +28,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
     @Test
     func `Buffer is Sendable`() {
@@ -53,15 +37,13 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
     }
 }
 
-// MARK: - Edge Cases
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.EdgeCase {
     @Test
     func `buffer accessor returns consistent value`() {
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let buffer1 = alignment.buffer
         let buffer2 = alignment.buffer
-        // Both should work identically
+
         let bytes = [UInt8](repeating: 0, count: 4096)
         bytes.withUnsafeBytes { pointer in
             let addr = Memory.Address(pointer.baseAddress!)

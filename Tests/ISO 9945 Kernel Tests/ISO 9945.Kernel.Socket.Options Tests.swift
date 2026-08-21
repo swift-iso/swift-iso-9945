@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -34,8 +22,6 @@ extension ISO_9945.Kernel.Socket.Options {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     @Test
     func `Options type exists`() {
@@ -48,8 +34,6 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
         #expect(flags.rawValue == O_NONBLOCK)
     }
 }
-
-// MARK: - Flag Constants Tests
 
 extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     @Test
@@ -79,8 +63,6 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-// MARK: - OptionSet Tests
-
 extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     @Test
     func `Options can be combined with array literal`() {
@@ -103,8 +85,6 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     @Test
     func `Options is Sendable`() {
@@ -121,8 +101,6 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Socket.Options.Test.EdgeCase {
     @Test

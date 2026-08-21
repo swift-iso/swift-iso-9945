@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Permissions {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.File.Permissions {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
@@ -37,8 +23,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
         #expect(perms.rawValue == 0o755)
     }
 }
-
-// MARK: - Owner Permissions
 
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
@@ -67,8 +51,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-// MARK: - Group Permissions
-
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
     func `groupRead constant`() {
@@ -96,8 +78,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-// MARK: - Other Permissions
-
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
     func `otherRead constant`() {
@@ -124,8 +104,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
         #expect(ISO_9945.Kernel.File.Permissions.otherAll.rawValue == 0o007)
     }
 }
-
-// MARK: - Presets
 
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
@@ -164,8 +142,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-// MARK: - Operators
-
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
     func `OR operator combines permissions`() {
@@ -193,8 +169,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-// MARK: - Description
-
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
     func `description for standard (rw-r--r--)`() {
@@ -218,8 +192,6 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-// MARK: - Conformances
-
 extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     @Test
     func `Permissions is Sendable`() {
@@ -241,12 +213,10 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Permissions>()
         set.insert(.standard)
         set.insert(.executable)
-        set.insert(.standard)  // duplicate
+        set.insert(.standard)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Permissions.Test.EdgeCase {
     @Test

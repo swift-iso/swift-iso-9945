@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
@@ -76,13 +65,11 @@ extension KeyTests.Lifecycle {
 
     @Test
     func `Key can be allocated and deallocated repeatedly`() throws {
-        // Stress-test the pthread_key_create / pthread_key_delete cycle.
-        // POSIX guarantees PTHREAD_KEYS_MAX (typically 128 or 1024) — the
-        // delete must reliably free the key for reuse.
+
         for _ in 0..<200 {
             let key = try ISO_9945.Kernel.Thread.Key()
             unsafe (key.value = nil)
-            // key goes out of scope — pthread_key_delete fires
+
             _ = key
         }
     }

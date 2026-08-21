@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Clone.Behavior {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Clone.Behavior {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
     @Test
     func `reflinkOrFail case exists`() {
         let behavior = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrFail
         if case .reflinkOrFail = behavior {
-            // Expected
+
         } else {
             Issue.record("Expected .reflinkOrFail case")
         }
@@ -39,7 +25,7 @@ extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
     func `reflinkOrCopy case exists`() {
         let behavior = ISO_9945.Kernel.File.Clone.Behavior.reflinkOrCopy
         if case .reflinkOrCopy = behavior {
-            // Expected
+
         } else {
             Issue.record("Expected .reflinkOrCopy case")
         }
@@ -49,14 +35,12 @@ extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
     func `copyOnly case exists`() {
         let behavior = ISO_9945.Kernel.File.Clone.Behavior.copyOnly
         if case .copyOnly = behavior {
-            // Expected
+
         } else {
             Issue.record("Expected .copyOnly case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
     @Test
@@ -74,8 +58,6 @@ extension ISO_9945.Kernel.File.Clone.Behavior.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Clone.Behavior.Test.EdgeCase {
     @Test

@@ -1,39 +1,19 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Directory {
-    /// Errors that can occur during directory operations.
+
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// The directory does not exist.
+
         case notFound
 
-        /// Permission denied.
         case permission
 
-        /// The path is not a directory.
         case notDirectory
 
-        /// Too many open files.
         case tooManyOpenFiles
 
-        /// An I/O error occurred.
         case io
 
-        /// The stream was used after `close()`.
-        ///
-        /// Distinct from exhaustion: an exhausted stream returns `nil`
-        /// from `next()`, a closed one throws.
         case closed
 
-        /// A platform-specific error.
         case platform(Error_Primitives.Error)
     }
 }

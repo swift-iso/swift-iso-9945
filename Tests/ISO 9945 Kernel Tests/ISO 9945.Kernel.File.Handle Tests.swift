@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -28,23 +16,18 @@ extension ISO_9945.Kernel.File.Handle {
     }
 }
 
-// MARK: - Helpers
-
-/// Deletes the file at path only (Handle owns the descriptor).
 private func cleanup(path: Swift.String) {
     try? Path.scope(path) { p in
         try ISO_9945.Kernel.File.Delete.delete(p)
     }
 }
 
-// MARK: - Handle Tests
-
 extension ISO_9945.Kernel.File.Handle.Test.Unit {
     @Test
     func `init stores descriptor and mode`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "handle-test")
         let fd = try KernelIOTest.open(at: path)
-        // Handle takes ownership of fd; only clean up the file path
+
         defer { cleanup(path: path) }
 
         let handle = ISO_9945.Kernel.File.Handle(
@@ -55,7 +38,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
 
         #expect(handle.direct == .buffered)
 
-        // Handle will close on deinit
         _ = consume handle
     }
 
@@ -102,7 +84,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
 
         #expect(bytesWritten == 13)
 
-        // Verify by seeking back and reading via the handle
         _ = try ISO_9945.Kernel.File.Seek.seek(handle.descriptor, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 13)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
@@ -125,8 +106,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
 
         try handle.close()
 
-        // After explicit close, re-opening confirms the file still exists
-        // (close closed the fd, not the file).
         let fd2 = try Path.scope(path) { p in
             try ISO_9945.Kernel.File.Open.open(
                 path: p,
@@ -151,8 +130,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
             requirements: .unknown(reason: .platformUnsupported)
         )
 
-        // ~Copyable property access is the borrowing mechanism;
-        // no withDescriptor closure needed.
         let isValid = handle.descriptor.isValid
         #expect(isValid)
 
@@ -165,7 +142,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { cleanup(path: path) }
 
-        // Create and immediately drop handle
         do {
             let handle = ISO_9945.Kernel.File.Handle(
                 descriptor: fd,
@@ -175,8 +151,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
             _ = consume handle
         }
 
-        // After deinit, descriptor should be closed.
-        // Re-open to verify the file still exists (handle closed the fd, not the file).
         let fd2 = try Path.scope(path) { p in
             try ISO_9945.Kernel.File.Open.open(
                 path: p,
@@ -189,8 +163,6 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
         #expect(fd2IsValid)
     }
 }
-
-// MARK: - Direct Mode Tests
 
 extension ISO_9945.Kernel.File.Handle.Test.Unit {
     @Test

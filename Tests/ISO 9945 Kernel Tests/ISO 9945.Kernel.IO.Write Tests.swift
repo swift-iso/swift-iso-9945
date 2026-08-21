@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension ISO_9945.Kernel.IO.Write {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Write Tests
 
 extension ISO_9945.Kernel.IO.Write.Test.Unit {
     @Test
@@ -42,7 +28,6 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
 
         #expect(bytesWritten == 13)
 
-        // Verify by reading back
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 13)
         _ = try buffer.withUnsafeMutableBytes { ptr in
@@ -92,7 +77,6 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         _ = try first.withUnsafeBytes { try ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
         _ = try second.withUnsafeBytes { try ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
 
-        // Verify combined content
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 11)
         _ = try buffer.withUnsafeMutableBytes { ptr in
@@ -107,14 +91,11 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        // Write initial content
         let initial = Array("XXXXXXXXXX".utf8)
         _ = try initial.withUnsafeBytes { try ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
 
-        // Record position after write
         let posAfterWrite = try ISO_9945.Kernel.File.Seek.tell(fd)
 
-        // pwrite "ABC" at offset 3
         let patch = Array("ABC".utf8)
         let bytesWritten = try patch.withUnsafeBytes { ptr in
             try ISO_9945.Kernel.IO.Write.pwrite(fd, from: ptr, at: ISO_9945.Kernel.File.Offset(3))
@@ -122,11 +103,9 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
 
         #expect(bytesWritten == 3)
 
-        // Position should be unchanged
         let posAfterPwrite = try ISO_9945.Kernel.File.Seek.tell(fd)
         #expect(posAfterPwrite == posAfterWrite)
 
-        // Verify content
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 10)
         _ = try buffer.withUnsafeMutableBytes { ptr in
@@ -157,7 +136,6 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        // Write at offset 10 in empty file
         let content = Array("End".utf8)
         let bytesWritten = try content.withUnsafeBytes { ptr in
             try ISO_9945.Kernel.IO.Write.pwrite(fd, from: ptr, at: ISO_9945.Kernel.File.Offset(10))
@@ -165,13 +143,10 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
 
         #expect(bytesWritten == 3)
 
-        // File should be 13 bytes (10 zeros + "End")
         let size = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .end)
         #expect(size == 13)
     }
 }
-
-// MARK: - Error Tests
 
 extension ISO_9945.Kernel.IO.Write.Test.EdgeCase {
     @Test

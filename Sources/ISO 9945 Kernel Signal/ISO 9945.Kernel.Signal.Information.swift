@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     public import Darwin
 #elseif canImport(Glibc)
@@ -18,71 +7,15 @@
 #endif
 
 extension ISO_9945.Kernel.Signal {
-    /// Typed signal information accompanying an SA_SIGINFO handler invocation.
-    ///
-    /// Wraps `siginfo_t` layout-compatibly so typed accessors read the
-    /// kernel-populated bytes without a copy. Consumers construct an
-    /// `Information` value inside a `Handler.customInfo` body by dereferencing
-    /// the `UnsafeMutablePointer<siginfo_t>?` passed by the kernel. The
-    /// `init(pointee:)` constructor is gated by `@_spi(Syscall)` per
-    /// [PLAT-ARCH-005a]'s SPI exception (it accepts a `siginfo_t` C struct):
-    ///
-    /// ```swift
-    /// @_spi(Syscall) import ISO_9945_Kernel_Signal
-    ///
-    /// let config = Configuration(handler: .customInfo { sig, infoPtr, _ in
-    ///     guard let ptr = infoPtr else { return }
-    ///     let info = unsafe ISO_9945.Kernel.Signal.Information(pointee: ptr.pointee)
-    ///     // info.number, info.sender, info.fault, …
-    /// })
-    /// ```
-    ///
-    /// ## Async-Signal-Safety
-    ///
-    /// Accessors are designed to be async-signal-safe: they read `cValue`
-    /// fields directly and return stdlib or ecosystem value types without
-    /// allocation, locks, or Swift runtime calls beyond primitive value
-    /// construction. Matches the non-allocating contract of
-    /// `ISO_9945.Kernel.Socket.Address.Storage` and `ISO_9945.Kernel.IO.Vector.Segment`.
-    /// Empirical verification of this contract under a live signal-handler
-    /// context is a recommended follow-up cycle; consumers relying on
-    /// async-signal-safety SHOULD confirm in their own test harnesses
-    /// until that verification lands. See `Handler` for the broader
-    /// async-signal-safety contract.
-    ///
-    /// ## Layout Compatibility
-    ///
-    /// `MemoryLayout<Information>.stride == MemoryLayout<siginfo_t>.stride`
-    /// by construction (single stored `siginfo_t` field).
+
     @safe
     public struct Information: @unchecked Sendable {
         internal var cValue: siginfo_t
 
-        /// Creates a zeroed signal information buffer suitable for passing
-        /// to kernel interfaces that expect a writable `siginfo_t *` output
-        /// parameter (e.g., `sigwaitinfo(2)`, `waitid(2)`, io_uring
-        /// `IORING_OP_WAITID`).
-        ///
-        /// The returned value has all fields zeroed; the caller typically
-        /// hands an `UnsafeMutablePointer<Information>` to the kernel, which
-        /// writes `siginfo_t` bytes into the buffer. Accessors then read
-        /// the kernel-populated fields.
         public init() {
             unsafe (self.cValue = siginfo_t())
         }
 
-        /// Creates a typed signal information value by copying the pointee
-        /// of a kernel-provided `siginfo_t` pointer.
-        ///
-        /// Typically called inside a `Handler.customInfo` handler body:
-        /// `unsafe ISO_9945.Kernel.Signal.Information(pointee: infoPtr.pointee)`.
-        ///
-        /// Gated by `@_spi(Syscall)` per [PLAT-ARCH-005a]'s SPI exception:
-        /// the parameter exposes `siginfo_t` (a Darwin/Glibc/Musl C struct),
-        /// which is permitted only under explicit `@_spi(Syscall)` opt-in
-        /// for kernel-ABI-bridge consumers. Non-syscall consumers should
-        /// use the typed accessors (`.number`, `.sender`, `.fault`) on an
-        /// `Information` value constructed by code with SPI access.
         @_spi(Syscall)
         @unsafe
         public init(pointee: siginfo_t) {
@@ -91,34 +24,16 @@ extension ISO_9945.Kernel.Signal {
     }
 }
 
-// MARK: - Accessors
-
 extension ISO_9945.Kernel.Signal.Information {
-    /// The signal number this information describes.
-    ///
-    /// - POSIX: `si_signo`
+
     public var number: ISO_9945.Kernel.Signal.Number {
         ISO_9945.Kernel.Signal.Number(rawValue: unsafe cValue.si_signo)
     }
 
-    /// The sender process identifier, when the signal carries sender information.
-    ///
-    /// Returns the sending process's `ISO_9945.Kernel.Process.ID` when `si_code` indicates
-    /// a user-sent signal (`SI_USER`, `SI_QUEUE`) or a child-state change
-    /// (`CLD_*` under `SIGCHLD`). Returns `nil` for fault signals and other
-    /// codes that do not populate `si_pid`.
-    ///
-    /// - POSIX: `si_pid`
     public var sender: ISO_9945.Kernel.Process.ID? {
         let signo = unsafe cValue.si_signo
         let code = unsafe cValue.si_code
 
-        // si_code is only meaningful relative to si_signo: CLD_EXITED,
-        // SEGV_MAPERR, BUS_ADRALN, ILL_ILLOPC, and FPE_INTDIV are all
-        // numerically 1 (and further codes collide the same way), so a
-        // SIGSEGV/SIGBUS/SIGILL/SIGFPE fault can present a code that
-        // matches a CLD_* case here. si_signo is checked first so this
-        // accessor only answers for a signal it can legitimately describe.
         let isUserOrQueue = code == Int32(SI_USER) || code == Int32(SI_QUEUE)
         var isChildCode = false
         if signo == Int32(SIGCHLD) {
@@ -135,61 +50,27 @@ extension ISO_9945.Kernel.Signal.Information {
         guard isUserOrQueue || isChildCode else { return nil }
 
         #if canImport(Darwin)
-            // Darwin siginfo_t exposes si_pid as a direct scalar field —
-            // no union arm to misread, but still gated above so this only
-            // answers for SI_USER/SI_QUEUE or SIGCHLD's CLD_* codes.
+
             return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
         #elseif canImport(Glibc)
-            // glibc siginfo_t uses the _sifields union; Swift's C importer
-            // does not expand libc's `#define si_pid …` macro, so we reach
-            // the union branch appropriate to the now-verified si_signo class.
+
             if isUserOrQueue {
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._kill.si_pid)
             } else {
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._sigchld.si_pid)
             }
         #elseif canImport(Musl)
-            // musl siginfo_t lays out pid/uid under __si_fields.__si_common.__first.__piduid
-            // for both SI_USER/SI_QUEUE and CLD_* (single sibling struct).
+
             return ISO_9945.Kernel.Process.ID(
                 rawValue: unsafe cValue.__si_fields.__si_common.__first.__piduid.si_pid
             )
         #endif
     }
 
-    /// The faulting memory address bit-pattern, when the signal represents a memory fault.
-    ///
-    /// Returns the `si_addr` bit-pattern (as `UInt`) when `si_code` indicates
-    /// a fault (`SEGV_*`, `BUS_*`, `ILL_*`, `FPE_*`). Returns `nil` for non-fault
-    /// signals or when the kernel left `si_addr` as null.
-    ///
-    /// To recover a typed address at a consumer site that imports
-    /// `Memory_Primitives`, use:
-    ///
-    /// ```swift
-    /// import Memory_Primitives
-    /// if let bits = info.fault, let ptr = UnsafeMutableRawPointer(bitPattern: bits) {
-    ///     let addr = unsafe Memory.Address(ptr)
-    /// }
-    /// ```
-    ///
-    /// The weaker `UInt?` typing here avoids pulling `Memory_Primitives`
-    /// into the Signal target's public-import closure, which triggers an
-    /// `Optic.Prism` namespace cascade at enum-pattern-match sites. Upgrading
-    /// `.fault` to return `Memory.Address?` is a candidate for a future
-    /// cycle once the ecosystem resolves the cascade.
-    ///
-    /// - POSIX: `si_addr`
     public var fault: UInt? {
         let signo = unsafe cValue.si_signo
         let code = unsafe cValue.si_code
 
-        // As in `sender` above: si_code values collide numerically across
-        // signal classes (SEGV_MAPERR, BUS_ADRALN, ILL_ILLOPC, FPE_INTDIV,
-        // and CLD_EXITED are all 1), so si_signo is checked first and each
-        // code is matched only against the signal whose fault table it
-        // belongs to — a SIGCHLD carrying CLD_EXITED (1) no longer matches
-        // the SIGSEGV table's SEGV_MAPERR (also 1).
         let matches: Bool
         switch signo {
         case Int32(SIGSEGV):

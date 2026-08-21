@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) public import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -26,17 +15,12 @@
 #endif
 
 extension ISO_9945.Kernel.Socket {
-    /// Socket receive namespace.
+
     public enum Receive {}
 }
 
-// MARK: - Receive typed (Phase 1.5)
-//
-// Typed Phase-1.5 forms re-added in Wave 4c-Socket Main (2026-05-01) per
-// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
-
 extension ISO_9945.Kernel.Socket.Receive {
-    /// Receives data from a connected typed socket descriptor into a mutable span.
+
     public static func receive(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         into span: inout MutableSpan<Byte>,
@@ -45,7 +29,6 @@ extension ISO_9945.Kernel.Socket.Receive {
         try receive(fd: descriptor._rawValue, into: &span, options: options)
     }
 
-    /// Receives data and the sender's address into a mutable span.
     public static func from(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         into span: inout MutableSpan<Byte>,
@@ -57,7 +40,6 @@ extension ISO_9945.Kernel.Socket.Receive {
         try from(fd: descriptor._rawValue, into: &span, options: options)
     }
 
-    /// Receives a message with full control over headers and ancillary data.
     public static func message(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         header: inout ISO_9945.Kernel.Socket.Message.Header,
@@ -67,23 +49,8 @@ extension ISO_9945.Kernel.Socket.Receive {
     }
 }
 
-// MARK: - Receive Operations (raw fd SPI)
-
 extension ISO_9945.Kernel.Socket.Receive {
-    /// Receives data from a connected socket into a mutable span.
-    ///
-    /// - Parameters:
-    ///   - fd: The socket raw fd (must be connected).
-    ///   - span: The mutable span to receive into.
-    ///   - options: Message flags (default: none).
-    /// - Returns: The number of bytes received, or 0 for EOF.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.platform(.wouldBlock)` (EAGAIN): Non-blocking and no data available.
-    /// - `.platform(.connectionReset)` (ECONNRESET): Peer reset the connection.
-    /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
+
     internal static func receive(
         fd: Int32,
         into span: inout MutableSpan<Byte>,
@@ -91,8 +58,7 @@ extension ISO_9945.Kernel.Socket.Receive {
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try span.withUnsafeMutableBytes {
             (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.Socket.Error) -> Int in
-            // An empty buffer still performs the syscall; recv with a
-            // zero length is well-defined.
+
             var zero: UInt8 = 0
             let result = withUnsafeMutablePointer(to: &zero) { fallback in
                 unsafe platformReceive(
@@ -109,14 +75,6 @@ extension ISO_9945.Kernel.Socket.Receive {
         }
     }
 
-    /// Receives data and the sender's address into a mutable span.
-    ///
-    /// - Parameters:
-    ///   - fd: The socket raw fd.
-    ///   - span: The mutable span to receive into.
-    ///   - options: Message flags (default: none).
-    /// - Returns: The number of bytes received, the sender's address, and address length.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     internal static func from(
         fd: Int32,
         into span: inout MutableSpan<Byte>,
@@ -132,8 +90,7 @@ extension ISO_9945.Kernel.Socket.Receive {
                 count: Int, address: ISO_9945.Kernel.Socket.Address.Storage,
                 addressLength: ISO_9945.Kernel.Socket.Address.Length
             ) in
-            // An empty buffer still performs the syscall: recvfrom with a
-            // zero length reports the sender's address.
+
             var storage = ISO_9945.Kernel.Socket.Address.Storage()
             var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
@@ -163,14 +120,6 @@ extension ISO_9945.Kernel.Socket.Receive {
         }
     }
 
-    /// Receives a message with full control over headers and ancillary data.
-    ///
-    /// - Parameters:
-    ///   - fd: The socket raw fd.
-    ///   - header: The message header describing receive buffers and control data.
-    ///   - options: Message flags (default: none).
-    /// - Returns: The number of bytes received.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
     internal static func message(
         fd: Int32,
         header: inout ISO_9945.Kernel.Socket.Message.Header,
@@ -189,8 +138,6 @@ extension ISO_9945.Kernel.Socket.Receive {
         return result
     }
 }
-
-// MARK: - Platform disambiguation
 
 private func platformReceive(
     _ fd: Int32,

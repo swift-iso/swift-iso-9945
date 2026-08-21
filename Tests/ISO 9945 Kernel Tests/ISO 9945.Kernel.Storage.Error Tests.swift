@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension ISO_9945.Kernel.Storage.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
     func `Error type exists`() {
@@ -38,7 +24,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     func `exhausted case exists`() {
         let error = ISO_9945.Kernel.Storage.Error.exhausted
         if case .exhausted = error {
-            // Expected
+
         } else {
             Issue.record("Expected .exhausted case")
         }
@@ -48,14 +34,12 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     func `quota case exists`() {
         let error = ISO_9945.Kernel.Storage.Error.quota
         if case .quota = error {
-            // Expected
+
         } else {
             Issue.record("Expected .quota case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
@@ -84,12 +68,10 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
         var set = Set<ISO_9945.Kernel.Storage.Error>()
         set.insert(.exhausted)
         set.insert(.quota)
-        set.insert(.exhausted)  // duplicate
+        set.insert(.exhausted)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
@@ -104,8 +86,6 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
         #expect(error.description == "disk quota exceeded")
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Storage.Error.Test.EdgeCase {
     @Test

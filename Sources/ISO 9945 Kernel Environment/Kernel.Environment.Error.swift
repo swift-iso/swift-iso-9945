@@ -1,16 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Environment {
-    /// Errors that can occur during environment operations.
+
     public enum Error: Swift.Error, Sendable {
         case permission(ISO_9945.Kernel.Permission.Error)
         case invalid(Invalid)
@@ -18,19 +7,15 @@ extension ISO_9945.Kernel.Environment {
     }
 }
 
-// MARK: - Invalid
-
 extension ISO_9945.Kernel.Environment.Error {
-    /// Invalid argument errors specific to environment operations.
+
     public enum Invalid: Swift.Error, Sendable, Equatable, Hashable {
-        /// The variable name is empty.
+
         case emptyName
-        /// The variable name contains an equals sign.
+
         case nameContainsEquals
     }
 }
-
-// MARK: - Equatable
 
 extension ISO_9945.Kernel.Environment.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -42,8 +27,6 @@ extension ISO_9945.Kernel.Environment.Error: Equatable {
         }
     }
 }
-
-// MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Environment.Error: CustomStringConvertible {
     public var description: Swift.String {
@@ -63,8 +46,3 @@ extension ISO_9945.Kernel.Environment.Error.Invalid: CustomStringConvertible {
         }
     }
 }
-
-// MARK: - Platform Implementation
-//
-// Error code mapping and current() helpers are in platform-specific packages:
-// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Environment.Error.current()`)

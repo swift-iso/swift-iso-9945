@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
@@ -24,8 +13,6 @@ extension ISO_9945.Kernel.User {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.User.Test.Unit {
     @Test
@@ -44,8 +31,6 @@ extension ISO_9945.Kernel.User.Test.Unit {
     }
 }
 
-// MARK: - User.ID Tests
-
 extension ISO_9945.Kernel.User.Test.Unit {
     @Test
     func `User.ID from UInt32`() {
@@ -59,8 +44,6 @@ extension ISO_9945.Kernel.User.Test.Unit {
         #expect(root == 0)
     }
 }
-
-// MARK: - User.ID Conformance Tests
 
 extension ISO_9945.Kernel.User.Test.Unit {
     @Test
@@ -85,12 +68,10 @@ extension ISO_9945.Kernel.User.Test.Unit {
         var set = Set<ISO_9945.Kernel.User.ID>()
         set.insert(id501)
         set.insert(id502)
-        set.insert(id501)  // duplicate
+        set.insert(id501)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.User.Test.EdgeCase {
     @Test

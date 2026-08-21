@@ -1,15 +1,4 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-public import ISO_9945_Core  // For ISO_9945.Loader typealias
+public import ISO_9945_Core
 public import Loader_Primitives
 
 #if canImport(Darwin)
@@ -20,14 +9,10 @@ public import Loader_Primitives
     internal import Musl
 #endif
 
-// MARK: - POSIX Options Type
-
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
     extension ISO_9945.Loader.Library {
-        /// Options for loading dynamic libraries (POSIX).
-        ///
-        /// Maps to RTLD_* flags on POSIX systems.
+
         public struct Options: OptionSet, Sendable, Hashable {
             public let rawValue: Int32
 
@@ -38,60 +23,25 @@ public import Loader_Primitives
         }
     }
 
-    // MARK: - Standard Options
-
     extension ISO_9945.Loader.Library.Options {
-        /// Resolve symbols lazily (RTLD_LAZY).
-        ///
-        /// Defers symbol resolution until first use; may hide errors
-        /// until the unresolved symbol is actually called.
+
         public static let lazy = Self(rawValue: RTLD_LAZY)
 
-        /// Resolve all symbols immediately (RTLD_NOW).
-        ///
-        /// Fails at load if any symbol is unresolved.
-        /// **This is the default** — aligns with "fail early" philosophy.
         public static let now = Self(rawValue: RTLD_NOW)
 
-        /// Symbols not available to subsequently loaded libraries (RTLD_LOCAL).
-        ///
-        /// This is the default behavior on most systems.
         public static let local = Self(rawValue: RTLD_LOCAL)
 
-        /// Symbols available globally (RTLD_GLOBAL).
-        ///
-        /// Symbols from this library are available for symbol resolution
-        /// of subsequently loaded libraries.
         public static let global = Self(rawValue: RTLD_GLOBAL)
     }
 
 #endif
 
-// MARK: - Non-POSIX Extension Options (Darwin)
-//
-// RTLD_NOLOAD and RTLD_NODELETE are not POSIX; both are Darwin extensions,
-// and glibc has provided both since 2.2 — this package currently exposes
-// them only where the platform header requires no feature-test-macro
-// workaround to see them (Darwin). Not "Darwin-only": that would claim
-// glibc lacks them, which is false.
-
 #if canImport(Darwin)
 
     extension ISO_9945.Loader.Library.Options {
-        /// Don't load, just check if loadable (RTLD_NOLOAD).
-        ///
-        /// Returns the handle if the library is already loaded,
-        /// or fails without loading. Useful for probing.
-        ///
-        /// Non-POSIX extension. Also available on glibc (since 2.2).
+
         public static let noLoad = Self(rawValue: RTLD_NOLOAD)
 
-        /// Don't delete on close (RTLD_NODELETE).
-        ///
-        /// Keeps the library in memory even after `close`.
-        /// The library's static destructors will not run.
-        ///
-        /// Non-POSIX extension. Also available on glibc (since 2.2).
         public static let noDelete = Self(rawValue: RTLD_NODELETE)
     }
 

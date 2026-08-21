@@ -1,18 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-// MARK: - POSIX Error Conversion
-
 extension ISO_9945.Kernel.File.Clone.Error {
-    /// Creates a semantic error from a raw syscall error.
+
     public init(from syscall: Syscall) {
         switch syscall {
         case .notSupported:
@@ -23,9 +10,6 @@ extension ISO_9945.Kernel.File.Clone.Error {
         }
     }
 
-    /// Maps a POSIX error code to a semantic error.
-    ///
-    /// - Note: This is SPI for platform-specific packages.
     @_spi(Syscall)
     public init(code: Error_Primitives.Error.Code, operation: Operation) {
         switch code {

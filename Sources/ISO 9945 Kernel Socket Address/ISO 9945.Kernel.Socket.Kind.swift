@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,9 +7,7 @@
 #endif
 
 extension ISO_9945.Kernel.Socket {
-    /// Socket type.
-    ///
-    /// Specifies the communication semantics for a socket.
+
     public struct Kind: RawRepresentable, Sendable, Equatable, Hashable {
         public let rawValue: Int32
 
@@ -30,31 +17,26 @@ extension ISO_9945.Kernel.Socket {
     }
 }
 
-// MARK: - Constants
-
 extension ISO_9945.Kernel.Socket.Kind {
-    /// Sequenced, reliable, two-way, connection-based byte streams (SOCK_STREAM).
+
     #if canImport(Glibc)
         public static let stream = Self(rawValue: Int32(SOCK_STREAM.rawValue))
     #else
         public static let stream = Self(rawValue: Int32(SOCK_STREAM))
     #endif
 
-    /// Connectionless, unreliable messages of a fixed maximum length (SOCK_DGRAM).
     #if canImport(Glibc)
         public static let datagram = Self(rawValue: Int32(SOCK_DGRAM.rawValue))
     #else
         public static let datagram = Self(rawValue: Int32(SOCK_DGRAM))
     #endif
 
-    /// Raw network protocol access (SOCK_RAW).
     #if canImport(Glibc)
         public static let raw = Self(rawValue: Int32(SOCK_RAW.rawValue))
     #else
         public static let raw = Self(rawValue: Int32(SOCK_RAW))
     #endif
 
-    /// Sequenced, reliable, two-way, connection-based datagrams (SOCK_SEQPACKET).
     #if canImport(Glibc)
         public static let sequencedPacket = Self(rawValue: Int32(SOCK_SEQPACKET.rawValue))
     #else

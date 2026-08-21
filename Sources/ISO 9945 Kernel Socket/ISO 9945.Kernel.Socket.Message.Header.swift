@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import ISO_9945_Kernel_File
 
 #if canImport(Darwin)
@@ -20,26 +9,19 @@ public import ISO_9945_Kernel_File
 #endif
 
 extension ISO_9945.Kernel.Socket.Message {
-    /// Message header for sendmsg/recvmsg operations.
-    ///
-    /// Wraps the platform `msghdr` struct. Layout-compatible — an
-    /// `UnsafePointer<Header>` may be passed directly to kernel interfaces
-    /// that expect `struct msghdr *`.
+
     public struct Header {
-        /// The underlying C struct.
+
         internal var cValue: msghdr
 
-        /// Creates a zeroed message header.
         public init() {
             unsafe self.cValue = msghdr()
         }
     }
 }
 
-// MARK: - Accessors
-
 extension ISO_9945.Kernel.Socket.Message.Header {
-    /// Socket address for the message destination (sendmsg) or source (recvmsg).
+
     public var name: Name {
         get {
             unsafe Name(
@@ -53,7 +35,6 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         }
     }
 
-    /// Scatter/gather I/O vectors.
     public var vectors: Vectors {
         get {
             unsafe Vectors(
@@ -71,12 +52,14 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         }
     }
 
-    /// Ancillary data (control messages).
     public var control: Control {
         get {
             unsafe Control(
                 pointer: cValue.msg_control.map { start in
-                    unsafe UnsafeMutableRawBufferPointer(start: start, count: Int(cValue.msg_controllen))
+                    unsafe UnsafeMutableRawBufferPointer(
+                        start: start,
+                        count: Int(cValue.msg_controllen)
+                    )
                 }
             )
         }
@@ -86,7 +69,6 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         }
     }
 
-    /// Flags on received message (output only, set by recvmsg).
     public var flags: ISO_9945.Kernel.Socket.Message.Options {
         get { unsafe ISO_9945.Kernel.Socket.Message.Options(rawValue: cValue.msg_flags) }
         set { unsafe cValue.msg_flags = newValue.rawValue }

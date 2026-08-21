@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) public import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -26,17 +15,12 @@
 #endif
 
 extension ISO_9945.Kernel.Socket {
-    /// Socket connect namespace.
+
     public enum Connect {}
 }
 
-// MARK: - Connect typed (Phase 1.5)
-//
-// Typed Phase-1.5 forms re-added in Wave 4c-Socket Main (2026-05-01) per
-// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
-
 extension ISO_9945.Kernel.Socket.Connect {
-    /// Initiates a connection on a typed socket descriptor.
+
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Storage,
@@ -45,7 +29,6 @@ extension ISO_9945.Kernel.Socket.Connect {
         try connect(fd: descriptor._rawValue, address: address, length: length)
     }
 
-    /// Connects a typed socket descriptor to an IPv4 address.
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv4
@@ -53,7 +36,6 @@ extension ISO_9945.Kernel.Socket.Connect {
         try connect(fd: descriptor._rawValue, address: address)
     }
 
-    /// Connects a typed socket descriptor to an IPv6 address.
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv6
@@ -61,7 +43,6 @@ extension ISO_9945.Kernel.Socket.Connect {
         try connect(fd: descriptor._rawValue, address: address)
     }
 
-    /// Connects a typed socket descriptor to a Unix domain address.
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Unix
@@ -70,34 +51,8 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 }
 
-// MARK: - Connect Operation (raw fd SPI)
-//
-// Raw `fd: Int32` companions retained for SPI bridge consumers; will be
-// downgraded in a Wave 4c retire-cycle.
-
 extension ISO_9945.Kernel.Socket.Connect {
-    /// Initiates a connection on a socket.
-    ///
-    /// For stream sockets (SOCK_STREAM), establishes a connection to the peer.
-    /// For datagram sockets (SOCK_DGRAM), sets the default destination address.
-    ///
-    /// - Parameters:
-    ///   - fd: The socket raw fd.
-    ///   - address: The peer address, as a `Storage` container.
-    ///   - length: The size of the actual address within storage.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.platform(.connectionRefused)` (ECONNREFUSED): No one listening on the remote address.
-    /// - `.platform(.timedOut)` (ETIMEDOUT): Connection attempt timed out.
-    /// - `.platform(.networkUnreachable)` (ENETUNREACH): Network is unreachable.
-    /// - `.platform(.inProgress)` (EINPROGRESS): Non-blocking connect initiated.
-    /// - `.platform(.alreadyConnected)` (EISCONN): Socket is already connected.
-    /// - `.interrupted` (EINTR): A signal interrupted the call; the
-    ///   connection attempt **continues asynchronously** (POSIX). Do not
-    ///   retry `connect` (that yields `EALREADY`) and do not treat the
-    ///   socket as failed: wait for writability, then read `SO_ERROR`.
+
     internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Storage,
@@ -120,7 +75,6 @@ extension ISO_9945.Kernel.Socket.Connect {
         }
     }
 
-    /// Connects a raw socket fd to an IPv4 address.
     internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv4
@@ -132,7 +86,6 @@ extension ISO_9945.Kernel.Socket.Connect {
         )
     }
 
-    /// Connects a raw socket fd to an IPv6 address.
     internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.IPv6
@@ -144,19 +97,14 @@ extension ISO_9945.Kernel.Socket.Connect {
         )
     }
 
-    /// Connects a raw socket fd to a Unix domain address.
     internal static func connect(
         fd: Int32,
         address: ISO_9945.Kernel.Socket.Address.Unix
     ) throws(ISO_9945.Kernel.Socket.Error) {
-        // Pass the used portion of sun_path, not the full struct size:
-        // a full-struct length runs past the terminator, which Linux
-        // reads as an abstract-namespace name and Darwin rejects.
+
         try connect(fd: fd, address: address.storage, length: address.length)
     }
 }
-
-// MARK: - Platform disambiguation
 
 private func platformConnect(
     _ fd: Int32,

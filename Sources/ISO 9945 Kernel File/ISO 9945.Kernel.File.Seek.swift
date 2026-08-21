@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,21 +8,8 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX lseek() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Seek {
-    /// Repositions the offset of a raw file descriptor.
-    ///
-    /// Spec-literal raw `lseek(2)`. The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Seek.seek(_:offset:whence:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor.
-    ///   - offset: The offset value.
-    ///   - whence: The reference point for the offset.
-    /// - Returns: The resulting offset from the beginning of the file.
-    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
+
     @discardableResult
     @_spi(Syscall)
     public static func seek(
@@ -55,35 +31,14 @@ extension ISO_9945.Kernel.File.Seek {
         return Int64(result)
     }
 
-    /// Gets the current file offset of a raw file descriptor.
-    ///
-    /// Equivalent to `seek(fd:, offset: 0, whence: .current)`. The typed L2
-    /// convenience (`ISO_9945.Kernel.File.Seek.tell(_:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameter fd: The raw file descriptor.
-    /// - Returns: The current offset from the beginning of the file.
-    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
     @_spi(Syscall)
     public static func tell(fd: Int32) throws(Error) -> Int64 {
         try seek(fd: fd, offset: 0, whence: .current)
     }
 }
 
-// MARK: - Typed Convenience
-
 extension ISO_9945.Kernel.File.Seek {
-    /// Repositions the file offset of a file descriptor.
-    ///
-    /// Typed L2 form. Delegates to the raw `seek(fd:offset:whence:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor.
-    ///   - offset: The offset value.
-    ///   - whence: The reference point for the offset.
-    /// - Returns: The resulting offset from the beginning of the file.
-    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
+
     @discardableResult
     public static func seek(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -93,14 +48,6 @@ extension ISO_9945.Kernel.File.Seek {
         try seek(fd: descriptor._rawValue, offset: offset, whence: whence)
     }
 
-    /// Gets the current file offset.
-    ///
-    /// Typed L2 form. Delegates to the raw `tell(fd:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// - Parameter descriptor: The file descriptor.
-    /// - Returns: The current offset from the beginning of the file.
-    /// - Throws: `ISO_9945.Kernel.File.Seek.Error` on failure.
     public static func tell(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(Error) -> Int64 {
@@ -108,27 +55,21 @@ extension ISO_9945.Kernel.File.Seek {
     }
 }
 
-// MARK: - POSIX Whence Constants
-
 extension ISO_9945.Kernel.File.Seek.Whence {
-    /// Seek from the beginning of the file (SEEK_SET).
+
     public static let start = Self(rawValue: SEEK_SET)
 
-    /// Seek from the current position (SEEK_CUR).
     public static let current = Self(rawValue: SEEK_CUR)
 
-    /// Seek from the end of the file (SEEK_END).
     public static let end = Self(rawValue: SEEK_END)
 }
-
-// MARK: - Error
 
 extension ISO_9945.Kernel.File.Seek {
     public typealias Error = ISO_9945.Kernel.File.Seek.Error
 }
 
 extension ISO_9945.Kernel.File.Seek.Error {
-    /// Creates an error from the current errno value.
+
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

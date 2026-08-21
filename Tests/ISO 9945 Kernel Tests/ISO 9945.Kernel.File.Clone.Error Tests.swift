@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Clone.Error {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Clone.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `notSupported case exists`() {
         let error = ISO_9945.Kernel.File.Clone.Error.notSupported
         if case .notSupported = error {
-            // Expected
+
         } else {
             Issue.record("Expected .notSupported case")
         }
@@ -39,7 +25,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     func `crossDevice case exists`() {
         let error = ISO_9945.Kernel.File.Clone.Error.crossDevice
         if case .crossDevice = error {
-            // Expected
+
         } else {
             Issue.record("Expected .crossDevice case")
         }
@@ -49,7 +35,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     func `sourceNotFound case exists`() {
         let error = ISO_9945.Kernel.File.Clone.Error.sourceNotFound
         if case .sourceNotFound = error {
-            // Expected
+
         } else {
             Issue.record("Expected .sourceNotFound case")
         }
@@ -59,7 +45,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     func `destinationExists case exists`() {
         let error = ISO_9945.Kernel.File.Clone.Error.destinationExists
         if case .destinationExists = error {
-            // Expected
+
         } else {
             Issue.record("Expected .destinationExists case")
         }
@@ -69,7 +55,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     func `permissionDenied case exists`() {
         let error = ISO_9945.Kernel.File.Clone.Error.permissionDenied
         if case .permissionDenied = error {
-            // Expected
+
         } else {
             Issue.record("Expected .permissionDenied case")
         }
@@ -79,7 +65,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     func `isDirectory case exists`() {
         let error = ISO_9945.Kernel.File.Clone.Error.isDirectory
         if case .isDirectory = error {
-            // Expected
+
         } else {
             Issue.record("Expected .isDirectory case")
         }
@@ -92,14 +78,12 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
             operation: .clonefile
         )
         if case .platform = error {
-            // Expected
+
         } else {
             Issue.record("Expected .platform case")
         }
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
@@ -148,8 +132,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
@@ -179,8 +161,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     }
 }
 
-// MARK: - Nested Types
-
 extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     @Test
     func `Operation type exists`() {
@@ -194,8 +174,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
             .Syscall.self
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Clone.Error.Test.EdgeCase {
     @Test

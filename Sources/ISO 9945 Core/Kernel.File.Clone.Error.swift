@@ -1,44 +1,19 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.File.Clone {
-    /// Errors that can occur during clone operations.
+
     public enum Error: Swift.Error, Sendable, Equatable, CustomStringConvertible {
-        /// Reflink is not supported on this filesystem.
-        ///
-        /// Returned by `.reflinkOrFail` when the filesystem doesn't support CoW.
+
         case notSupported
 
-        /// Source and destination are on different filesystems/volumes.
-        ///
-        /// Reflink requires both paths to be on the same volume.
         case crossDevice
 
-        /// The source file does not exist.
         case sourceNotFound
 
-        /// The destination already exists.
-        ///
-        /// Clone operations do not overwrite by default.
         case destinationExists
 
-        /// Permission denied for source or destination.
         case permissionDenied
 
-        /// The source is a directory, not a regular file.
-        ///
-        /// Use a recursive directory clone for directories.
         case isDirectory
 
-        /// A platform-specific error occurred.
         case platform(code: Error_Primitives.Error.Code, operation: Operation)
     }
 }
@@ -69,10 +44,3 @@ extension ISO_9945.Kernel.File.Clone.Error {
         }
     }
 }
-
-// MARK: - Platform Bindings
-//
-// Per [PLAT-ARCH-008c], the platform-specific `init(from syscall:)` and
-// `init(code:operation:)` mapping live in L2:
-// - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.Clone.Error+code.swift`)
-// - Windows: `swift-windows-standard` (`Windows.Kernel.File.Clone.Error+code.swift`)

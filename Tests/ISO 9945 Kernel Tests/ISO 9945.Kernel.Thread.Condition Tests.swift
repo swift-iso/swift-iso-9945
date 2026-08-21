@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -33,8 +21,6 @@ extension ISO_9945.Kernel.Thread.Condition {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - API Unit Tests
 
 extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
     @Test
@@ -57,12 +43,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
     @Test
     func `wait with timeout can return false`() {
-        // NOTE: We cannot assert a single timed wait MUST return false because
-        // both POSIX pthread_cond_timedwait and Windows SleepConditionVariableSRW
-        // allow spurious wakeups (returning success without being signaled).
-        //
-        // This test verifies the timeout path is reachable by attempting multiple
-        // short waits. At least one should time out within a reasonable bound.
+
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
 
@@ -76,7 +57,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 sawTimeout = true
                 break
             }
-            // Spurious wake - try again
+
         }
         mutex.unlock()
 
@@ -88,13 +69,11 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
     @Test
     func `multiple conditions are independent`() {
-        // Same note about spurious wakes - we verify independence structurally
-        // by checking that signaling one condition doesn't affect the other.
+
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition1 = ISO_9945.Kernel.Thread.Condition()
         let condition2 = ISO_9945.Kernel.Thread.Condition()
 
-        // Both should eventually timeout (allowing for spurious wakes)
         var sawTimeout1 = false
         var sawTimeout2 = false
 
@@ -128,14 +107,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
     }
 }
 
-// MARK: - Condition Variable Semantics Tests (require threading)
-//
-// These tests use KernelThreadTest.Harness to coordinate between threads
-// without data races or timing-based assertions.
-
-// NOTE: These tests use Darwin-specific pthread API.
-// Linux pthread API differs (non-optional pthread_t, different closure signature).
-// TODO: Add Linux-compatible threading tests to swift-linux package.
 #if canImport(Darwin)
 
     extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
@@ -158,7 +129,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             var thread: pthread_t? = nil
 
-            // Pack both mutex, condition, and harness into a context
             final class Context: @unchecked Sendable {
                 let mutex: ISO_9945.Kernel.Thread.Mutex
                 let condition: ISO_9945.Kernel.Thread.Condition
@@ -185,12 +155,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
                     ctx.mutex.lock()
 
-                    // Signal that we're about to wait
                     ctx.harness.update { $0.phase = .aboutToWait }
 
-                    // Wait for signal (with timeout as deadlock guard)
-                    // Loop to handle spurious wakeups - we wait until actually signaled
-                    // In a proper condvar usage, we'd check a predicate here
                     let woke = ctx.condition.wait(mutex: ctx.mutex, timeout: .seconds(5))
 
                     ctx.harness.update {
@@ -206,23 +172,18 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             #expect(rc == 0, "pthread_create should succeed")
 
-            // Wait for worker to be in wait state
             try harness.wait(until: { $0.phase == .aboutToWait })
 
-            // Small yield to ensure thread has entered the actual wait syscall
-            // This is still a heuristic but better than nothing
             #if canImport(Darwin)
                 sched_yield()
             #else
                 pthread_yield()
             #endif
 
-            // Signal the condition
             mutex.lock()
             condition.signal()
             mutex.unlock()
 
-            // Wait for worker to finish
             try harness.wait(until: { $0.phase == .doneWaiting })
 
             let result = harness.withLocked { $0.wokeWithoutTimeout }
@@ -276,7 +237,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
                         ctx.harness.update { $0.threadsWaiting += 1 }
 
-                        // Wait with timeout as deadlock guard
                         let woke = ctx.condition.wait(mutex: ctx.mutex, timeout: .seconds(5))
 
                         if woke {
@@ -292,22 +252,18 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 #expect(rc == 0, "pthread_create should succeed for thread \(i)")
             }
 
-            // Wait for all threads to be waiting
             try harness.wait(until: { $0.threadsWaiting >= threadCount })
 
-            // Yield to help ensure threads have entered wait syscall
             #if canImport(Darwin)
                 sched_yield()
             #else
                 pthread_yield()
             #endif
 
-            // Broadcast to wake all
             mutex.lock()
             condition.broadcast()
             mutex.unlock()
 
-            // Wait for all threads to wake
             try harness.wait(until: { $0.threadsWoken >= threadCount })
 
             for i in 0..<threadCount {
@@ -367,7 +323,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     ctx.mutex.lock()
                     ctx.harness.update { $0.phase = .hasLocked }
 
-                    // Signal we're about to wait, then immediately enter wait
                     ctx.harness.update { $0.phase = .isWaiting }
                     _ = ctx.condition.wait(mutex: ctx.mutex, timeout: .seconds(5))
 
@@ -380,11 +335,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             #expect(rc == 0, "pthread_create should succeed")
 
-            // Wait for waiter to be in wait state
             try harness.wait(until: { $0.phase == .isWaiting })
 
-            // Poll lock.immediate with retries - the waiter needs time to actually enter
-            // the wait syscall after setting the phase flag
             var acquired = false
             for _ in 0..<100 {
                 do {
@@ -392,7 +344,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     acquired = true
                     break
                 } catch {
-                    // Small delay between retries (1ms)
+
                     #if canImport(Darwin)
                         usleep(1000)
                     #else
@@ -408,12 +360,11 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             )
 
             if acquired {
-                // Signal to let waiter proceed, then unlock
+
                 condition.signal()
                 mutex.unlock()
             }
 
-            // Wait for waiter to finish
             try harness.wait(until: { $0.phase == .doneWaiting })
 
             if let t = waiterThread {
@@ -471,15 +422,12 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
                     _ = ctx.condition.wait(mutex: ctx.mutex, timeout: .seconds(5))
 
-                    // Immediately after wait returns, we should hold the mutex
                     ctx.harness.update { $0.phase = .returnedAndHoldingMutex }
 
-                    // Wait for main thread to acknowledge it observed this phase
-                    // while we still hold the mutex
                     do {
                         try ctx.harness.wait(until: { $0.phase == .acknowledged })
                     } catch {
-                        // Timeout - proceed anyway
+
                     }
 
                     ctx.mutex.unlock()
@@ -491,10 +439,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             #expect(rc == 0, "pthread_create should succeed")
 
-            // Wait for thread to be waiting
             try harness.wait(until: { $0.phase == .isWaiting })
 
-            // Yield and signal
             #if canImport(Darwin)
                 sched_yield()
             #else
@@ -505,10 +451,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             condition.signal()
             mutex.unlock()
 
-            // Wait for thread to report it's holding mutex after wait returned
             try harness.wait(until: { $0.phase == .returnedAndHoldingMutex })
 
-            // Verify thread is holding mutex by checking lock.immediate throws
             var mainCanAcquire = false
             do {
                 try mutex.lock.immediate()
@@ -523,7 +467,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 $0.phase = .acknowledged
             }
 
-            // Wait for thread to finish
             try harness.wait(until: { $0.phase == .released })
 
             if let t = thread {
@@ -576,7 +519,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             var producerThread: pthread_t? = nil
             var consumerThread: pthread_t? = nil
 
-            // Consumer thread
             let consumerPtr = Unmanaged.passRetained(context).toOpaque()
             let consumerRc = pthread_create(
                 &consumerThread,
@@ -587,7 +529,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     for _ in 0..<ctx.itemCount {
                         ctx.mutex.lock()
 
-                        // Proper condvar pattern: loop on predicate to handle spurious wakes
                         while ctx.harness.withLocked({ $0.buffer.isEmpty && !$0.producerDone }) {
                             _ = ctx.condition.wait(mutex: ctx.mutex, timeout: .milliseconds(100))
                         }
@@ -609,7 +550,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             #expect(consumerRc == 0, "pthread_create should succeed for consumer")
 
-            // Producer thread
             let producerPtr = Unmanaged.passRetained(context).toOpaque()
             let producerRc = pthread_create(
                 &producerThread,
@@ -626,7 +566,6 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                         ctx.condition.signal()
                         ctx.mutex.unlock()
 
-                        // Small yield to allow consumer to run
                         #if canImport(Darwin)
                             sched_yield()
                         #else

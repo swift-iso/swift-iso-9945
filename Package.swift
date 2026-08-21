@@ -2,9 +2,6 @@
 
 import PackageDescription
 
-// The spawned test helpers exercise POSIX process, session, and locking semantics.
-// They have no Windows implementation, so the manifest omits them there rather than
-// offering a target that cannot build.
 #if os(Windows)
     let testHelperTargets: [Target] = []
 #else
@@ -34,19 +31,17 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        // MARK: - Kernel (umbrella)
+
         .library(
             name: "ISO 9945 Kernel",
             targets: ["ISO 9945 Kernel"]
         ),
 
-        // MARK: - Core (consumed directly post Cycle 18 absorption)
         .library(
             name: "ISO 9945 Core",
             targets: ["ISO 9945 Core"]
         ),
 
-        // MARK: - Kernel Variants
         .library(
             name: "ISO 9945 Kernel File",
             targets: ["ISO 9945 Kernel File"]
@@ -104,31 +99,26 @@ let package = Package(
             targets: ["ISO 9945 Kernel System"]
         ),
 
-        // MARK: - Identity
         .library(
             name: "ISO 9945 Kernel Identity",
             targets: ["ISO 9945 Kernel Identity"]
         ),
 
-        // MARK: - Poll
         .library(
             name: "ISO 9945 Kernel Poll",
             targets: ["ISO 9945 Kernel Poll"]
         ),
 
-        // MARK: - Glob
         .library(
             name: "ISO 9945 Glob",
             targets: ["ISO 9945 Glob"]
         ),
 
-        // MARK: - Loader
         .library(
             name: "ISO 9945 Loader",
             targets: ["ISO 9945 Loader"]
         ),
 
-        // MARK: - Test Support
         .library(
             name: "ISO 9945 Kernel Test Support",
             targets: ["ISO 9945 Kernel Test Support"]
@@ -234,7 +224,6 @@ let package = Package(
         .package(url: "https://github.com/swift-iso/swift-iso-9899.git", branch: "main"),
     ],
     targets: [
-        // MARK: - Core (published product; see "ISO 9945 Core" library above)
 
         .target(
             name: "ISO 9945 Core",
@@ -259,8 +248,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - C Shims
-
         .target(
             name: "POSIX Process Shims",
             dependencies: []
@@ -269,8 +256,6 @@ let package = Package(
             name: "ISO 9945 Shims",
             dependencies: []
         ),
-
-        // MARK: - File
 
         .target(
             name: "ISO 9945 Kernel File",
@@ -289,8 +274,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Directory
-
         .target(
             name: "ISO 9945 Kernel Directory",
             dependencies: [
@@ -298,8 +281,6 @@ let package = Package(
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ]
         ),
-
-        // MARK: - Lock
 
         .target(
             name: "ISO 9945 Kernel Lock",
@@ -315,16 +296,12 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Socket Address
-
         .target(
             name: "ISO 9945 Kernel Socket Address",
             dependencies: [
                 "ISO 9945 Core"
             ]
         ),
-
-        // MARK: - Socket
 
         .target(
             name: "ISO 9945 Kernel Socket",
@@ -336,8 +313,6 @@ let package = Package(
                 .product(name: "Pair Primitives", package: "swift-pair-primitives"),
             ]
         ),
-
-        // MARK: - Memory
 
         .target(
             name: "ISO 9945 Kernel Memory",
@@ -361,16 +336,12 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Signal
-
         .target(
             name: "ISO 9945 Kernel Signal",
             dependencies: [
                 "ISO 9945 Core"
             ]
         ),
-
-        // MARK: - Process
 
         .target(
             name: "ISO 9945 Kernel Process",
@@ -384,16 +355,12 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Thread
-
         .target(
             name: "ISO 9945 Kernel Thread",
             dependencies: [
                 "ISO 9945 Core"
             ]
         ),
-
-        // MARK: - Terminal
 
         .target(
             name: "ISO 9945 Kernel Terminal",
@@ -407,8 +374,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Environment
-
         .target(
             name: "ISO 9945 Kernel Environment",
             dependencies: [
@@ -416,8 +381,6 @@ let package = Package(
                 .product(name: "String Primitives", package: "swift-string-primitives"),
             ]
         ),
-
-        // MARK: - Clock
 
         .target(
             name: "ISO 9945 Kernel Clock",
@@ -431,8 +394,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Time
-
         .target(
             name: "ISO 9945 Kernel Time",
             dependencies: [
@@ -440,8 +401,6 @@ let package = Package(
                 .product(name: "Time Primitives", package: "swift-time-primitives"),
             ]
         ),
-
-        // MARK: - System
 
         .target(
             name: "ISO 9945 Kernel System",
@@ -452,8 +411,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Identity
-
         .target(
             name: "ISO 9945 Kernel Identity",
             dependencies: [
@@ -462,16 +419,12 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Poll
-
         .target(
             name: "ISO 9945 Kernel Poll",
             dependencies: [
                 "ISO 9945 Core"
             ]
         ),
-
-        // MARK: - Glob
 
         .target(
             name: "ISO 9945 Glob",
@@ -485,8 +438,6 @@ let package = Package(
                 .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
             ]
         ),
-
-        // MARK: - Umbrella
 
         .target(
             name: "ISO 9945 Kernel",
@@ -511,8 +462,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Loader
-
         .target(
             name: "ISO 9945 Loader",
             dependencies: [
@@ -524,8 +473,6 @@ let package = Package(
                 .product(name: "Loader Primitives", package: "swift-loader-primitives"),
             ]
         ),
-
-        // MARK: - Test Support
 
         .target(
             name: "ISO 9945 Kernel Test Support",
@@ -542,8 +489,6 @@ let package = Package(
             path: "Tests/Support",
             exclude: ["Lock Helper", "POSIX Helper"]
         ),
-
-        // MARK: - Tests
 
         .testTarget(
             name: "ISO 9945 Kernel Tests",

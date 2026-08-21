@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,17 +8,7 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX utimensat() syscall
-
 extension ISO_9945.Kernel.File.Times {
-    /// Sets the access and modification times of a file.
-    ///
-    /// - Parameters:
-    ///   - path: The path to the file.
-    ///   - accessTime: The new access time.
-    ///   - modificationTime: The new modification time.
-    ///   - followSymlinks: If false, operates on the symlink itself (default: true).
-    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
 
     public static func set(
         access accessTime: ISO_9945.Kernel.Time,
@@ -47,14 +26,6 @@ extension ISO_9945.Kernel.File.Times {
         }
     }
 
-    /// Sets the access and modification times of a file using a path character pointer.
-    ///
-    /// - Parameters:
-    ///   - path: The path as a pointer to Path.Char (UInt8).
-    ///   - accessTime: The new access time.
-    ///   - modificationTime: The new modification time.
-    ///   - followSymlinks: If false, operates on the symlink itself (default: true).
-    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
     @usableFromInline
     internal static func _set(
         access accessTime: ISO_9945.Kernel.Time,
@@ -71,11 +42,9 @@ extension ISO_9945.Kernel.File.Times {
         let cPath = unsafe UnsafePointer<CChar>(path)
         var times = [timespec](repeating: timespec(), count: 2)
 
-        // Access time
         times[0].tv_sec = accessSeconds
         times[0].tv_nsec = Int(accessTime.nanosecondFraction)
 
-        // Modification time
         times[1].tv_sec = modificationSeconds
         times[1].tv_nsec = Int(modificationTime.nanosecondFraction)
 
@@ -95,20 +64,8 @@ extension ISO_9945.Kernel.File.Times {
     }
 }
 
-// MARK: - POSIX futimens() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Times {
-    /// Sets the access and modification times of a raw file descriptor.
-    ///
-    /// Spec-literal raw `futimens(2)`. The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Times.set(access:modification:on:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - accessTime: The new access time.
-    ///   - modificationTime: The new modification time.
-    ///   - fd: The raw file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
+
     @_spi(Syscall)
     public static func set(
         access accessTime: ISO_9945.Kernel.Time,
@@ -123,11 +80,9 @@ extension ISO_9945.Kernel.File.Times {
 
         var times = [timespec](repeating: timespec(), count: 2)
 
-        // Access time
         times[0].tv_sec = accessSeconds
         times[0].tv_nsec = Int(accessTime.nanosecondFraction)
 
-        // Modification time
         times[1].tv_sec = modificationSeconds
         times[1].tv_nsec = Int(modificationTime.nanosecondFraction)
 
@@ -145,19 +100,8 @@ extension ISO_9945.Kernel.File.Times {
     }
 }
 
-// MARK: - Typed Convenience
-
 extension ISO_9945.Kernel.File.Times {
-    /// Sets the access and modification times of an open file descriptor.
-    ///
-    /// Typed L2 form. Delegates to the raw `set(access:modification:fd:)`
-    /// SPI via `descriptor._rawValue`.
-    ///
-    /// - Parameters:
-    ///   - accessTime: The new access time.
-    ///   - modificationTime: The new modification time.
-    ///   - descriptor: The file descriptor.
-    /// - Throws: `ISO_9945.Kernel.File.Times.Error` on failure.
+
     public static func set(
         access accessTime: ISO_9945.Kernel.Time,
         modification modificationTime: ISO_9945.Kernel.Time,
@@ -171,10 +115,8 @@ extension ISO_9945.Kernel.File.Times {
     }
 }
 
-// MARK: - Error Conversion
-
 extension ISO_9945.Kernel.File.Times.Error {
-    /// Creates an error from the current errno.
+
     @usableFromInline
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()

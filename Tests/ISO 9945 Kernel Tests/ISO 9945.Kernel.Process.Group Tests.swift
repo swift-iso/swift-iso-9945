@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if os(macOS)
 
     import Testing
@@ -28,8 +17,6 @@
             @Suite(.serialized) struct Performance {}
         }
     }
-
-    // MARK: - Unit Tests
 
     extension ISO_9945.Kernel.Process.Group.Test.Unit {
         @Test
@@ -56,8 +43,6 @@
             )
         }
     }
-
-    // MARK: - Integration Tests
 
     extension ISO_9945.Kernel.Process.Group.Test.Integration {
         @Test

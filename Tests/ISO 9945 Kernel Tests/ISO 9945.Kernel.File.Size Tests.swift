@@ -1,30 +1,13 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
 
-// ISO_9945.Kernel.File.Size is a typealias to Magnitude<Space>.Value<Int64>
-// Test struct pattern cannot be used on typealiases
-
 @Suite("ISO_9945.Kernel.File.Size Tests")
 struct FileSizeTests {
-
-    // MARK: - Basic Initialization
 
     @Test
     func `Size from integer literal`() {
@@ -58,8 +41,6 @@ struct FileSizeTests {
         #expect(size.underlying == Int64(expectedBytes))
     }
 
-    // MARK: - Constants
-
     @Test
     func `zero constant`() {
         #expect(ISO_9945.Kernel.File.Size.zero == 0)
@@ -87,8 +68,6 @@ struct FileSizeTests {
         #expect(pageSize.underlying == Int64(pageSizeBytes))
     }
 
-    // MARK: - Queries
-
     @Test
     func `isZero for zero size`() {
         #expect(ISO_9945.Kernel.File.Size.zero.isZero)
@@ -111,8 +90,6 @@ struct FileSizeTests {
         #expect(!ISO_9945.Kernel.File.Size.zero.isPositive)
     }
 
-    // MARK: - Arithmetic
-
     @Test
     func `Size plus Size`() {
         let a: ISO_9945.Kernel.File.Size = 1000
@@ -129,16 +106,12 @@ struct FileSizeTests {
         #expect(result == 2000)
     }
 
-    // MARK: - Int Conversion
-
     @Test
     func `Int from Size`() {
         let size: ISO_9945.Kernel.File.Size = 4096
         let intValue = Int(size)
         #expect(intValue == 4096)
     }
-
-    // MARK: - Conformances
 
     @Test
     func `Size is Equatable`() {
@@ -154,7 +127,7 @@ struct FileSizeTests {
         var set = Set<ISO_9945.Kernel.File.Size>()
         set.insert(ISO_9945.Kernel.File.Size(1024))
         set.insert(ISO_9945.Kernel.File.Size(2048))
-        set.insert(ISO_9945.Kernel.File.Size(1024))  // duplicate
+        set.insert(ISO_9945.Kernel.File.Size(1024))
         #expect(set.count == 2)
     }
 

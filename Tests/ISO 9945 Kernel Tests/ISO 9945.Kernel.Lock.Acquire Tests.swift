@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Clock_Primitives
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Lock.Acquire {
@@ -23,14 +11,12 @@ extension ISO_9945.Kernel.Lock.Acquire {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     @Test
     func `try case exists`() {
         let acquire = ISO_9945.Kernel.Lock.Acquire.try
         if case .try = acquire {
-            // Expected
+
         } else {
             Issue.record("Expected .try case")
         }
@@ -40,7 +26,7 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     func `wait case exists`() {
         let acquire = ISO_9945.Kernel.Lock.Acquire.wait
         if case .wait = acquire {
-            // Expected
+
         } else {
             Issue.record("Expected .wait case")
         }
@@ -57,8 +43,6 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     @Test
@@ -102,8 +86,6 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
         #expect(a != b)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Lock.Acquire.Test.EdgeCase {
     @Test

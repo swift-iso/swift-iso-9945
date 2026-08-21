@@ -1,28 +1,11 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Socket.Message.Header {
-    /// Socket address component of a message header.
+
     public struct Name {
-        /// Pointer to the socket address structure.
+
         public var pointer: UnsafeMutableRawPointer?
 
-        /// Length of the socket address in bytes.
         public var length: ISO_9945.Kernel.Socket.Address.Length
 
-        /// Creates a socket address descriptor.
-        ///
-        /// - Parameters:
-        ///   - pointer: Pointer to the socket address structure.
-        ///   - length: Length of the socket address in bytes.
         @unsafe
         public init(
             pointer: UnsafeMutableRawPointer? = nil,

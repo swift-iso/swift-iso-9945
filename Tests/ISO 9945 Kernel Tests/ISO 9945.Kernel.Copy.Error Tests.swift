@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,14 +14,12 @@ extension ISO_9945.Kernel.Copy.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     @Test
     func `invalidDescriptor case exists`() {
         let error = ISO_9945.Kernel.Copy.Error.invalidDescriptor
         if case .invalidDescriptor = error {
-            // Expected
+
         } else {
             Issue.record("Expected .invalidDescriptor case")
         }
@@ -43,7 +29,7 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     func `crossDevice case exists`() {
         let error = ISO_9945.Kernel.Copy.Error.crossDevice
         if case .crossDevice = error {
-            // Expected
+
         } else {
             Issue.record("Expected .crossDevice case")
         }
@@ -53,7 +39,7 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     func `unsupported case exists`() {
         let error = ISO_9945.Kernel.Copy.Error.unsupported
         if case .unsupported = error {
-            // Expected
+
         } else {
             Issue.record("Expected .unsupported case")
         }
@@ -63,7 +49,7 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     func `noSpace case exists`() {
         let error = ISO_9945.Kernel.Copy.Error.noSpace
         if case .noSpace = error {
-            // Expected
+
         } else {
             Issue.record("Expected .noSpace case")
         }
@@ -73,7 +59,7 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     func `io case exists`() {
         let error = ISO_9945.Kernel.Copy.Error.io
         if case .io = error {
-            // Expected
+
         } else {
             Issue.record("Expected .io case")
         }
@@ -83,14 +69,12 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     func `permissionDenied case exists`() {
         let error = ISO_9945.Kernel.Copy.Error.permissionDenied
         if case .permissionDenied = error {
-            // Expected
+
         } else {
             Issue.record("Expected .permissionDenied case")
         }
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     @Test
@@ -128,8 +112,6 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
@@ -157,12 +139,10 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
         var set = Set<ISO_9945.Kernel.Copy.Error>()
         set.insert(.invalidDescriptor)
         set.insert(.crossDevice)
-        set.insert(.invalidDescriptor)  // duplicate
+        set.insert(.invalidDescriptor)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Copy.Error.Test.EdgeCase {
     @Test
@@ -183,8 +163,6 @@ extension ISO_9945.Kernel.Copy.Error.Test.EdgeCase {
         }
     }
 }
-
-// MARK: - POSIX Error Mapping Tests
 
 #if canImport(Darwin)
     import Darwin
@@ -251,7 +229,7 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
 
     @Test
     func `unknown error maps to unsupported`() {
-        // Use an unlikely error code
+
         let error = ISO_9945.Kernel.Copy.Error(posixErrno: 999)
         #expect(error == .unsupported)
     }

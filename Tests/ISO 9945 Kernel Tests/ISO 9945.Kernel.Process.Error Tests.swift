@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
@@ -31,8 +20,6 @@ extension ISO_9945.Kernel.Process.Error {
         @Suite(.serialized) struct Performance {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Process.Error.Test.Unit {
     @Test
@@ -104,8 +91,6 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
         }
     }
 }
-
-// MARK: - Semantic Tests
 
 extension ISO_9945.Kernel.Process.Error.Test.Unit {
     @Test

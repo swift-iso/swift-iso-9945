@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension System {
     }
 }
 
-// MARK: - Path Max Unit Tests
-
 extension System.Test.Unit {
     @Test
     func `pathMax is positive`() {
@@ -36,9 +22,9 @@ extension System.Test.Unit {
 
     @Test
     func `pathMax is reasonable`() {
-        // PATH_MAX should be at least 256 on any platform
+
         #expect(System.pathMax >= 256)
-        // And not unreasonably large (sanity check)
+
         #expect(System.pathMax <= 65536)
     }
 
@@ -57,8 +43,6 @@ extension System.Test.Unit {
     #endif
 }
 
-// MARK: - Page Size Unit Tests
-
 extension System.Test.Unit {
     @Test
     func `pageSize is positive`() {
@@ -68,13 +52,13 @@ extension System.Test.Unit {
     @Test
     func `pageSize is power of 2`() {
         let size = Int(System.pageSize)
-        // A power of 2 has exactly one bit set
+
         #expect(size & (size - 1) == 0)
     }
 
     @Test
     func `pageSize is at least 4KB`() {
-        // Most systems have at least 4KB pages
+
         #expect(System.pageSize >= 4096)
     }
 
@@ -85,8 +69,6 @@ extension System.Test.Unit {
         }
     #endif
 }
-
-// MARK: - Allocation Granularity Unit Tests
 
 extension System.Test.Unit {
     @Test
@@ -99,7 +81,7 @@ extension System.Test.Unit {
     @Test
     func `allocationGranularity is power of 2`() {
         let granularity = Memory.Allocation.system
-        // Memory.Alignment always represents a power of 2
+
         let size: Int = granularity.underlying.magnitude()
         #expect(size & (size - 1) == 0)
     }
@@ -107,13 +89,11 @@ extension System.Test.Unit {
     @Test
     func `allocationGranularity equals pageSize on POSIX`() {
         let granularity = Memory.Allocation.system
-        // Compare underlying values since these are different types
+
         let size: Int = granularity.underlying.magnitude()
         #expect(size == Int(System.pageSize))
     }
 }
-
-// MARK: - Consistency Tests
 
 extension System.Test.Unit {
     @Test

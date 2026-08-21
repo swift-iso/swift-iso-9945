@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension Memory.Map.Advice {
     }
 }
 
-// MARK: - Unit Tests
-
 extension Memory.Map.Advice.Test.Unit {
     @Test
     func `Advice from rawValue`() {
@@ -38,7 +24,7 @@ extension Memory.Map.Advice.Test.Unit {
     @Test
     func `normal constant exists`() {
         let advice = Memory.Map.Advice.normal
-        // Normal is typically 0 on most platforms
+
         _ = advice.rawValue
     }
 
@@ -67,8 +53,6 @@ extension Memory.Map.Advice.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension Memory.Map.Advice.Test.Unit {
     @Test
     func `Advice is Sendable`() {
@@ -90,12 +74,10 @@ extension Memory.Map.Advice.Test.Unit {
         var set = Set<Memory.Map.Advice>()
         set.insert(.normal)
         set.insert(.sequential)
-        set.insert(.normal)  // duplicate
+        set.insert(.normal)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension Memory.Map.Advice.Test.EdgeCase {
     @Test

@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
 
@@ -20,8 +9,6 @@ extension Error_Primitives.Error.Code {
         @Suite struct Unit {}
     }
 }
-
-// MARK: - Predicate Unit Tests (POSIX)
 
 extension Error_Primitives.Error.Code.Test.Unit {
     @Test

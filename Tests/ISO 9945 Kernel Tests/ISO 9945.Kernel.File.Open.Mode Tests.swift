@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension ISO_9945.Kernel.File.Open.Mode {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
     @Test
@@ -58,8 +44,6 @@ extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
     }
 }
 
-// MARK: - Conformances
-
 extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
     @Test
     func `Mode is Sendable`() {
@@ -81,12 +65,10 @@ extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Open.Mode>()
         set.insert(.read)
         set.insert(.write)
-        set.insert(.read)  // duplicate
+        set.insert(.read)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Open.Mode.Test.EdgeCase {
     @Test

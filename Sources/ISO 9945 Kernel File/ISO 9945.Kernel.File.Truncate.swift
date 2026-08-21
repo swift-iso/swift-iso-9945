@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -20,30 +9,12 @@
 #endif
 
 extension ISO_9945.Kernel.File {
-    /// File truncation namespace.
+
     public enum Truncate {}
 }
 
-// MARK: - POSIX ftruncate() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Truncate {
-    /// Truncates a file to a specified length via raw file descriptor.
-    ///
-    /// Spec-literal raw `ftruncate(2)`. If the file is larger than `length`,
-    /// the extra data is lost. If the file is shorter than `length`, it is
-    /// extended with zero bytes. The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Truncate.truncate(_:to:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor (must be open for writing).
-    ///   - length: The new file size in bytes.
-    /// - Throws: `Error_Primitives.Error` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.invalidArgument` (EINVAL): Length is negative or too large.
-    /// - `.accessDenied` (EACCES): File is not open for writing.
+
     @_spi(Syscall)
     public static func truncate(
         fd: Int32,
@@ -57,21 +28,8 @@ extension ISO_9945.Kernel.File.Truncate {
     }
 }
 
-// MARK: - Typed Convenience + path overloads
-
 extension ISO_9945.Kernel.File.Truncate {
-    /// Truncates a file to a specified length via file descriptor.
-    ///
-    /// Typed L2 form. Delegates to the raw `truncate(fd:to:)` SPI via
-    /// `descriptor._rawValue`.
-    ///
-    /// If the file is larger than `length`, the extra data is lost.
-    /// If the file is shorter than `length`, it is extended with zero bytes.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor (must be open for writing).
-    ///   - length: The new file size in bytes.
-    /// - Throws: `Error_Primitives.Error` on failure.
+
     public static func truncate(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         to length: ISO_9945.Kernel.File.Size
@@ -79,12 +37,6 @@ extension ISO_9945.Kernel.File.Truncate {
         try truncate(fd: descriptor._rawValue, to: length)
     }
 
-    /// Truncates a file to a specified length via path.
-    ///
-    /// - Parameters:
-    ///   - path: The file path.
-    ///   - length: The new file size in bytes.
-    /// - Throws: `Error_Primitives.Error` on failure.
     public static func truncate(
         path: UnsafePointer<CChar>,
         to length: ISO_9945.Kernel.File.Size

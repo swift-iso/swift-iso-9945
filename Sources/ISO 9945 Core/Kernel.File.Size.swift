@@ -1,84 +1,36 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Binary_Primitives
 
 extension ISO_9945.Kernel.File {
-    /// File size as a non-directional magnitude.
-    ///
-    /// A type-safe wrapper for file sizes and byte counts. Uses the Dimension module
-    /// to provide proper dimensional arithmetic with `Offset` and `Delta`:
-    /// - `Offset + Size = Offset` (translate position by size)
-    /// - `Size + Size = Size` (combine sizes)
-    /// - `Size - Size = Size` (difference of sizes)
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// let size: ISO_9945.Kernel.File.Size = 4096
-    /// let offset: ISO_9945.Kernel.File.Offset = 1000
-    /// let newOffset = offset + size  // File.Offset
-    ///
-    /// // Create from pages
-    /// let pageSize = ISO_9945.Kernel.File.Size(pages: 4)
-    /// ```
+
     public typealias Size = Magnitude<Space>.Value<Int64>
 }
 
-// MARK: - Size Constants
-
 extension ISO_9945.Kernel.File.Size {
-    /// One kilobyte (1024 bytes).
+
     public static let kilobyte: Self = Self(1024)
 
-    /// One megabyte (1024 * 1024 bytes).
     public static let megabyte: Self = Self(1024 * 1024)
 
-    /// One gigabyte (1024 * 1024 * 1024 bytes).
     public static let gigabyte: Self = Self(1024 * 1024 * 1024)
 
-    /// One system page.
-    ///
-    /// - Parameter pageSize: The system page size in bytes.
-    ///   Use platform-specific `System.pageSize` from POSIX or Windows packages.
     @inlinable
     public static func page(size pageSize: UInt) -> Self {
         Self(Int64(pageSize))
     }
 }
 
-// MARK: - Convenience Initializers
-
 extension ISO_9945.Kernel.File.Size {
-    /// Creates a file size from a number of pages.
-    ///
-    /// - Parameters:
-    ///   - pages: Number of pages.
-    ///   - pageSize: The system page size in bytes.
-    ///     Use platform-specific `System.pageSize` from POSIX or Windows packages.
+
     @inlinable
     public init(pages: Int, pageSize: UInt) {
         self.init(Int64(pages) * Int64(pageSize))
     }
 
-    /// Creates a file size from an Int value.
     @inlinable
     public init(_ value: Int) {
         self.init(Int64(value))
     }
 
-    /// Creates a file size from a UInt64 value.
-    ///
-    /// - Precondition: `value` must be representable as `Int64`.
-    ///   A size is a magnitude; no conversion may produce a negative value.
     @inlinable
     public init(_ value: UInt64) {
         precondition(
@@ -88,17 +40,6 @@ extension ISO_9945.Kernel.File.Size {
         self.init(Int64(value))
     }
 
-    /// Creates a file size from a file delta.
-    ///
-    /// Use this when converting a non-negative displacement to a magnitude.
-    /// For example, when computing the offset padding after alignment:
-    /// ```swift
-    /// let delta = requestedOffset - alignedOffset  // File.Delta
-    /// let padding = File.Size(delta)               // Convert to Size
-    /// ```
-    ///
-    /// - Parameter delta: The file delta (must be non-negative).
-    /// - Precondition: `delta` must be non-negative.
     @inlinable
     public init(_ delta: ISO_9945.Kernel.File.Delta) {
         precondition(delta.underlying >= 0, "Delta must be non-negative to convert to Size")
@@ -106,59 +47,39 @@ extension ISO_9945.Kernel.File.Size {
     }
 }
 
-// MARK: - Queries
-
 extension ISO_9945.Kernel.File.Size {
-    /// Whether this size is zero.
+
     @inlinable
     public var isZero: Bool {
         underlying == 0
     }
 
-    /// Whether this size is positive (greater than zero).
     @inlinable
     public var isPositive: Bool {
         underlying > 0
     }
 }
 
-// MARK: - Alignment
-
 extension ISO_9945.Kernel.File.Size {
-    /// Whether this size is aligned to the given alignment.
-    ///
-    /// - Parameter alignment: The alignment boundary (power of 2).
-    /// - Returns: `true` if this size is a multiple of the alignment.
+
     public func isAligned(to alignment: Memory.Alignment) -> Bool {
         let mask: Int64 = alignment.mask()
         return underlying & mask == 0
     }
 
-    /// Rounds this size down to the nearest alignment boundary.
-    ///
-    /// - Parameter alignment: The alignment boundary (power of 2).
-    /// - Returns: The largest aligned size ≤ `self`.
     public func alignedDown(to alignment: Memory.Alignment) -> Self {
         let mask: Int64 = alignment.mask()
         return Self(underlying & ~mask)
     }
 
-    /// Rounds this size up to the nearest alignment boundary.
-    ///
-    /// - Parameter alignment: The alignment boundary (power of 2).
-    /// - Returns: The smallest aligned size ≥ `self`.
     public func alignedUp(to alignment: Memory.Alignment) -> Self {
         let mask: Int64 = alignment.mask()
         return Self((underlying &+ mask) & ~mask)
     }
 }
 
-// MARK: - Int from File.Size
-
 extension Int {
-    /// Creates an Int from a file size for syscall boundaries.
-    ///
-    /// - Parameter size: The file size.
+
     @inlinable
     public init(_ size: ISO_9945.Kernel.File.Size) {
         self = Int(size.underlying)

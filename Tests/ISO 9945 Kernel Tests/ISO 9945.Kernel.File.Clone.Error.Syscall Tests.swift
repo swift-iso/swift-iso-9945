@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Clone.Error.Syscall {
@@ -22,8 +10,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     @Test
     func `platform case exists`() {
@@ -32,7 +18,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
             operation: .clonefile
         )
         if case .platform = syscall {
-            // Expected
+
         } else {
             Issue.record("Expected .platform case")
         }
@@ -42,14 +28,12 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     func `notSupported case exists`() {
         let syscall = ISO_9945.Kernel.File.Clone.Error.Syscall.notSupported(operation: .clonefile)
         if case .notSupported = syscall {
-            // Expected
+
         } else {
             Issue.record("Expected .notSupported case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     @Test
@@ -70,8 +54,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
         #expect(syscall is ISO_9945.Kernel.File.Clone.Error.Syscall)
     }
 }
-
-// MARK: - Associated Value Tests
 
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     @Test
@@ -115,8 +97,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     }
 }
 
-// MARK: - Edge Cases
-
 extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
     @Test
     func `platform with different codes are distinct`() {
@@ -128,7 +108,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
             code: .posix(2),
             operation: .clonefile
         )
-        // They should be different error instances
+
         _ = syscall1
         _ = syscall2
     }

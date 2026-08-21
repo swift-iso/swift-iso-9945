@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Handle.Error {
@@ -23,14 +11,12 @@ extension ISO_9945.Kernel.File.Handle.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `invalidHandle case exists`() {
         let error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
         if case .invalidHandle = error {
-            // Expected
+
         } else {
             Issue.record("Expected .invalidHandle case")
         }
@@ -40,7 +26,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     func `endOfFile case exists`() {
         let error = ISO_9945.Kernel.File.Handle.Error.endOfFile
         if case .endOfFile = error {
-            // Expected
+
         } else {
             Issue.record("Expected .endOfFile case")
         }
@@ -50,7 +36,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     func `noSpace case exists`() {
         let error = ISO_9945.Kernel.File.Handle.Error.noSpace
         if case .noSpace = error {
-            // Expected
+
         } else {
             Issue.record("Expected .noSpace case")
         }
@@ -102,7 +88,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     func `requirementsUnknown case exists`() {
         let error = ISO_9945.Kernel.File.Handle.Error.requirementsUnknown
         if case .requirementsUnknown = error {
-            // Expected
+
         } else {
             Issue.record("Expected .requirementsUnknown case")
         }
@@ -130,8 +116,6 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
         }
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
@@ -203,8 +187,6 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
@@ -227,8 +209,6 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Operation Enum Tests
 
 extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
@@ -255,8 +235,6 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
         #expect(op.rawValue == "sync")
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Handle.Error.Test.EdgeCase {
     @Test

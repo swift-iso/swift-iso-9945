@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension Memory.Map.Protection {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Protection Tests
 
 extension Memory.Map.Protection.Test.Unit {
     @Test
@@ -99,7 +85,7 @@ extension Memory.Map.Protection.Test.Unit {
         var set = Set<Memory.Map.Protection>()
         set.insert(.read)
         set.insert(.write)
-        set.insert(.read)  // duplicate
+        set.insert(.read)
 
         #expect(set.count == 2)
         #expect(set.contains(.read))

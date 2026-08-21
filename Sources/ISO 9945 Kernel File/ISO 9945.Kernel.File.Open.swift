@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,37 +8,8 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX open() syscall
-
 extension ISO_9945.Kernel.File.Open {
-    /// Opens a file at the specified path.
-    ///
-    /// Zero-allocation file open using borrowed path view.
-    ///
-    /// ## Threading
-    /// This call blocks until the open completes. The open syscall may block
-    /// on networked filesystems or when opening FIFOs/device files.
-    ///
-    /// ## Descriptor Ownership
-    /// The caller receives ownership of the returned descriptor and must close it
-    /// explicitly via ``Kernel/Close/close(_:)``. Failing to close leaks the
-    /// kernel resource until process termination.
-    ///
-    /// ## Errors
-    /// - ``Error/path(_:)``: Path does not exist, is invalid, or resolution failed
-    /// - ``Error/permission(_:)``: Insufficient permissions for requested mode
-    /// - ``Error/handle(_:)``: Process or system descriptor limit reached
-    /// - ``Error/space(_:)``: No space for file creation
-    /// - ``Error/io(_:)``: I/O error during open
-    ///
-    /// - Parameters:
-    ///   - path: The file path to open (borrowed, zero-copy).
-    ///   - mode: Read/write access mode (.read, .write, or .readWrite).
-    ///   - options: Creation and behavior options (.create, .truncate, etc.).
-    ///   - permissions: POSIX permissions for newly created files.
-    /// - Returns: A file descriptor for the opened file.
-    /// - Throws: ``Kernel/File/Open/Error`` on failure.
-    /// - Complexity: O(1) in Swift, O(path length) in kernel.
+
     public static func open(
         path: borrowing Path.Borrowed,
         mode: ISO_9945.Kernel.File.Open.Mode,
@@ -66,7 +26,6 @@ extension ISO_9945.Kernel.File.Open {
         }
     }
 
-    /// Internal implementation using unsafe C string pointer.
     @usableFromInline
     internal static func _open(
         unsafePath: UnsafePointer<Path.Char>,
@@ -76,10 +35,6 @@ extension ISO_9945.Kernel.File.Open {
     ) throws(ISO_9945.Kernel.File.Open.Error) -> ISO_9945.Kernel.Descriptor {
         let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
-        // Convert Mode to POSIX access flags at syscall boundary.
-        // (false, false) requests neither read nor write access — an
-        // unrepresentable combination in O_RDONLY/O_WRONLY/O_RDWR — and is
-        // rejected rather than silently promoted to O_RDONLY.
         guard mode.read || mode.write else {
             throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
         }
@@ -116,10 +71,8 @@ extension ISO_9945.Kernel.File.Open {
     }
 }
 
-// MARK: - Error Conversion
-
 extension ISO_9945.Kernel.File.Open.Error {
-    /// Creates an error from the current errno value.
+
     @usableFromInline
     internal static func current() -> Self {
         Self(code: .posix(errno))

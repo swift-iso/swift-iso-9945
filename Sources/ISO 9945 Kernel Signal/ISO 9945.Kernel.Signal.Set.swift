@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,36 +7,9 @@
 #endif
 
 extension ISO_9945.Kernel.Signal {
-    /// A set of signals.
-    ///
-    /// Wraps `sigset_t` with type-safe Swift operations.
-    ///
-    /// ## Sendable Rationale
-    ///
-    /// `sigset_t` is a fixed-size value type (no pointers) on all POSIX platforms:
-    /// - Darwin: `UInt32`
-    /// - Linux: `__sigset_t` (array of unsigned long)
-    ///
-    /// The storage is trivially copyable, making `Sendable` conformance safe.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Create a set with specific signals
-    /// var signals = ISO_9945.Kernel.Signal.Set()
-    /// try signals.insert(.user1)
-    /// try signals.insert(.user2)
-    ///
-    /// // Block these signals
-    /// let previous = try ISO_9945.Kernel.Signal.Mask.change(.block, signals: signals)
-    /// defer { do throws(ISO_9945.Kernel.Signal.Error) { _ = try ISO_9945.Kernel.Signal.Mask.change(.set, signals: previous) } catch {} }
-    /// ```
+
     public struct Set: Sendable {
         internal var storage: sigset_t
-
-        /// Creates an empty signal set.
-        ///
-        /// Equivalent to `sigemptyset()`.
 
         public init() {
             self.storage = sigset_t()
@@ -57,19 +19,12 @@ extension ISO_9945.Kernel.Signal {
 }
 
 extension ISO_9945.Kernel.Signal.Set {
-    /// Creates a set containing all signals.
-    ///
-    /// Equivalent to `sigfillset()`.
+
     public static var all: Self {
         var set = Self()
         unsafe sigfillset(&set.storage)
         return set
     }
-
-    /// Creates a set containing a single signal.
-    ///
-    /// - Parameter signal: The signal to include.
-    /// - Throws: `Error.set` if the signal number is invalid.
 
     public init(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
         self.init()
@@ -77,11 +32,6 @@ extension ISO_9945.Kernel.Signal.Set {
             throw .set(Error_Primitives.Error.captureErrno())
         }
     }
-
-    /// Creates a set containing multiple signals.
-    ///
-    /// - Parameter signals: The signals to include.
-    /// - Throws: `Error.set` on first invalid signal (deterministic failure point).
 
     public init(
         _ signals: some Swift.Sequence<ISO_9945.Kernel.Signal.Number>
@@ -94,24 +44,10 @@ extension ISO_9945.Kernel.Signal.Set {
         }
     }
 
-    /// Creates a set containing a single signal without validation.
-    ///
-    /// **Warning**: Bypasses signal number validation. Only use for:
-    /// - Static constants (`.user1`, `.terminate`)
-    /// - Pre-validated signal numbers
-    /// - Internal construction after validation
-    ///
-    /// For user-provided signal numbers, use the throwing `init(_:)`.
-
     public init(__unchecked: Void, _ signal: ISO_9945.Kernel.Signal.Number) {
         self.init()
         _ = unsafe sigaddset(&self.storage, signal.rawValue)
     }
-
-    /// Adds a signal to the set.
-    ///
-    /// - Parameter signal: The signal to add.
-    /// - Throws: `Error.set` if the signal number is invalid.
 
     public mutating func insert(
         _ signal: ISO_9945.Kernel.Signal.Number
@@ -121,11 +57,6 @@ extension ISO_9945.Kernel.Signal.Set {
         }
     }
 
-    /// Removes a signal from the set.
-    ///
-    /// - Parameter signal: The signal to remove.
-    /// - Throws: `Error.set` if the signal number is invalid.
-
     public mutating func remove(
         _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Signal.Error) {
@@ -133,15 +64,6 @@ extension ISO_9945.Kernel.Signal.Set {
             throw .set(Error_Primitives.Error.captureErrno())
         }
     }
-
-    /// Returns whether the set contains the signal.
-    ///
-    /// - Parameter signal: The signal to check.
-    /// - Returns: `true` if the signal is in the set.
-    /// - Throws: `Error.set` if the signal number is invalid.
-    ///
-    /// **Design note:** Throwing on error rather than returning `false` prevents
-    /// silent failures when checking invalid signal numbers.
 
     public func contains(
         _ signal: ISO_9945.Kernel.Signal.Number
@@ -155,10 +77,8 @@ extension ISO_9945.Kernel.Signal.Set {
     }
 }
 
-// MARK: - Internal Access
-
 extension ISO_9945.Kernel.Signal.Set {
-    /// Provides read access to the underlying `sigset_t` for syscall interop.
+
     @unsafe
     internal func withUnsafePointer<R, E: Swift.Error>(
         _ body: (UnsafePointer<sigset_t>) throws(E) -> R
@@ -166,15 +86,6 @@ extension ISO_9945.Kernel.Signal.Set {
         try Swift.withUnsafePointer(to: storage, body)
     }
 
-    /// Yields the set's platform-native bytes to `body` as an opaque
-    /// `UnsafeRawPointer`, for platform packages (e.g. swift-linux-standard)
-    /// that must hand the set to a platform-only syscall such as `signalfd(2)`.
-    ///
-    /// The set's underlying C type (`sigset_t`) never appears on this surface —
-    /// only the stdlib `UnsafeRawPointer` — so the cross-platform POSIX spec
-    /// layer stays free of platform C types in its API (PLAT-ARCH-005a). The
-    /// platform caller binds the pointer to its own platform type inside its
-    /// own (platform-C-importing) scope.
     @unsafe
     @_spi(Syscall)
     public func withUnsafeRawPointer<R, E: Swift.Error>(
@@ -185,7 +96,6 @@ extension ISO_9945.Kernel.Signal.Set {
         }
     }
 
-    /// Provides mutable access to the underlying `sigset_t` for syscall interop.
     @unsafe
     internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(
         _ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R
@@ -193,9 +103,6 @@ extension ISO_9945.Kernel.Signal.Set {
         try Swift.withUnsafeMutablePointer(to: &storage, body)
     }
 
-    /// Creates a set from a raw `sigset_t`.
-    ///
-    /// Used internally when receiving a set from syscalls.
     internal init(storage: sigset_t) {
         self.storage = storage
     }

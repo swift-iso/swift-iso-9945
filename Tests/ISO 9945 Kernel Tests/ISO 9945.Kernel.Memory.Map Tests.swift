@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension Memory.Map {
     }
 }
 
-// MARK: - Map Tests
-
 extension Memory.Map.Test.Unit {
     @Test
     func `anonymous map succeeds`() throws {
@@ -35,8 +21,6 @@ extension Memory.Map.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
         #expect(region.length == pageSize)
     }
@@ -46,11 +30,8 @@ extension Memory.Map.Test.Unit {
         let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
 
-        // Unmap should succeed
         try Memory.Map.unmap(region)
 
-        // Note: Accessing the memory after unmap is undefined behavior,
-        // so we can't easily verify the unmap worked other than no error.
     }
 
     @Test
@@ -62,17 +43,6 @@ extension Memory.Map.Test.Unit {
         )
         defer { try? Memory.Map.unmap(region) }
 
-        // Write to the mapped memory through the region's raw pointer.
-        //
-        // `Region` deliberately exposes no `span` / `mutableSpan` (upstream
-        // swift-memory-map-primitives `fa6ccff`): it is a plain Copyable value
-        // (base + length) carrying no lifetime relationship to the mapping's
-        // liveness, so a byte view taken from it could outlive `munmap` and
-        // silently dangle. Safe zero-copy access lives only on the ~Copyable
-        // `Memory.Map` envelope, whose `@_lifetime(borrow self)` is anchored to
-        // the owner. For a bare `Region` the honest surface is an explicitly
-        // unsafe pointer access — the pattern `Anonymous.map(_:)`'s own doc
-        // comment prescribes.
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(42), toByteOffset: 0, as: UInt8.self)
         unsafe region.base.mutablePointer.storeBytes(
             of: UInt8(123),
@@ -80,7 +50,6 @@ extension Memory.Map.Test.Unit {
             as: UInt8.self
         )
 
-        // Read back through the read-only pointer.
         #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 42)
         #expect(unsafe region.base.pointer.load(fromByteOffset: 1, as: UInt8.self) == 123)
     }
@@ -91,7 +60,6 @@ extension Memory.Map.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Sync should succeed (even for anonymous, it's a no-op but shouldn't error)
         try Memory.Map.sync(addr: region.base, length: region.length)
     }
 
@@ -104,21 +72,16 @@ extension Memory.Map.Test.Unit {
         )
         defer { try? Memory.Map.unmap(region) }
 
-        // Write some data first (see `mapped memory is readable and writable`
-        // for why a bare `Region` uses an explicitly unsafe pointer access).
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(99), toByteOffset: 0, as: UInt8.self)
 
-        // Change to read-only (should succeed)
         try Memory.Map.protect(
             addr: region.base,
             length: region.length,
             protection: .read
         )
 
-        // Reading should still work
         #expect(unsafe region.base.pointer.load(fromByteOffset: 0, as: UInt8.self) == 99)
 
-        // Note: Writing would now cause SIGBUS/SIGSEGV, which we can't test safely
     }
 
     @Test
@@ -127,7 +90,6 @@ extension Memory.Map.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // advise is advisory-only and shouldn't throw
         Memory.Map.advise(
             addr: region.base,
             length: region.length,
@@ -143,8 +105,6 @@ extension Memory.Map.Test.Unit {
 
         #expect(region.length == multiPageSize)
 
-        // Write to first and last page (see `mapped memory is readable and
-        // writable` for why a bare `Region` uses an unsafe pointer access).
         let lastOffset = try Int(region.length.subtract.saturating(.one))
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(1), toByteOffset: 0, as: UInt8.self)
         unsafe region.base.mutablePointer.storeBytes(
@@ -163,15 +123,10 @@ extension Memory.Map.Test.Unit {
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
-        // Verify region fields
-        // Memory.Address is non-null by construction (Tagged<Memory, Ordinal>);
-        // assert the bit pattern is non-zero as the observable equivalent.
         #expect(region.base.bitPattern != 0)
         #expect(region.length == pageSize)
     }
 }
-
-// MARK: - Error Tests
 
 extension Memory.Map.Test.EdgeCase {
     @Test
@@ -188,7 +143,7 @@ extension Memory.Map.Test.EdgeCase {
             Issue.record("Expected error to be thrown")
         } catch {
             if case .invalid(.length) = error {
-                // Expected
+
             } else {
                 Issue.record("Expected .invalid(.length), got \(error)")
             }

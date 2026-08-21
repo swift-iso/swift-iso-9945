@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 import Memory_Primitives
 
@@ -21,22 +10,8 @@ import Memory_Primitives
     internal import Musl
 #endif
 
-// MARK: - POSIX Shared Memory
-
 extension Memory.Shared {
-    // swift-format-ignore: AlwaysUseLowerCamelCase
-    /// Raw POSIX `shm_open(3)` syscall.
-    ///
-    /// Spec-literal name (`shm_open`) matching the C function. Returns the
-    /// raw `Int32` fd. Zero descriptor construction: the L3-policy wrapper
-    /// at swift-posix (`Memory.Shared.open(...) -> ISO_9945.Kernel.Descriptor`)
-    /// wraps the result in `ISO_9945.Kernel.Descriptor(_rawValue:)` per
-    /// [PLAT-ARCH-005] / [PLAT-ARCH-008e]. § 5.6 handle-returning
-    /// bifurcation case.
-    ///
-    /// The spec-literal rename (`open` → `shm_open`) frees the intent name
-    /// `open` for the L3-policy entry per [PLAT-ARCH-008e]'s namespace-
-    /// identity disambiguation rule (Phase-A-rename pattern).
+
     @_spi(Syscall) @unsafe
     public static func shm_open(
         name: UnsafePointer<CChar>,
@@ -44,10 +19,7 @@ extension Memory.Shared {
         options: Memory.Shared.Options = [],
         permissions: ISO_9945.Kernel.File.Permissions = .ownerReadWrite
     ) throws(Memory.Shared.Error) -> Int32 {
-        // Convert Access to POSIX flags at syscall boundary.
-        // (false, false) requests neither read nor write access — an
-        // unrepresentable combination in O_RDONLY/O_WRONLY/O_RDWR — and is
-        // rejected rather than silently promoted to O_RDONLY.
+
         guard access.read || access.write else {
             throw .open(.posix(EINVAL))
         }
@@ -62,10 +34,10 @@ extension Memory.Shared {
         let flags = accessMode | options.rawValue
 
         #if canImport(Darwin)
-            // Use shim because Darwin declares shm_open as variadic
+
             let fd = unsafe iso9945_shm_open(name, flags, mode_t(permissions.rawValue))
         #elseif canImport(Glibc)
-            // Module-qualify to disambiguate from the enclosing static method.
+
             let fd = unsafe Glibc.shm_open(name, flags, mode_t(permissions.rawValue))
         #elseif canImport(Musl)
             let fd = unsafe Musl.shm_open(name, flags, mode_t(permissions.rawValue))
@@ -77,12 +49,6 @@ extension Memory.Shared {
         return fd
     }
 
-    /// Opens or creates a POSIX shared memory object, returning a typed descriptor.
-    ///
-    /// Phase 1.5 typed L2 form. Composes the raw `shm_open` SPI form with
-    /// `ISO_9945.Kernel.Descriptor(_rawValue:)` construction. § 5.6 handle-returning
-    /// bifurcation case: the kernel produces the fd; this typed form wraps it
-    /// in the L1 descriptor type.
     @unsafe
     public static func open(
         name: UnsafePointer<CChar>,
@@ -98,11 +64,6 @@ extension Memory.Shared {
         )
         return ISO_9945.Kernel.Descriptor(_rawValue: fd)
     }
-
-    /// Removes a POSIX shared memory object.
-    ///
-    /// - Parameter name: The name of the shared memory object to remove.
-    /// - Throws: `Error.unlink` on failure.
 
     @unsafe
     public static func unlink(name: UnsafePointer<CChar>) throws(Memory.Shared.Error) {

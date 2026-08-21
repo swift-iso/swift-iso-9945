@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,38 +7,12 @@
 #endif
 
 extension ISO_9945.Kernel.Signal {
-    /// Signal action operations namespace.
-    ///
-    /// ## Threading
-    ///
-    /// `sigaction` is thread-safe (kernel provides synchronization).
-    /// Signal actions are process-wide, not per-thread.
-    ///
-    /// ## Blocking Behavior
-    ///
-    /// Operations are synchronous and non-blocking.
+
     public enum Action {}
 }
 
 extension ISO_9945.Kernel.Signal.Action {
-    /// Sets the signal action, returning the previous configuration.
-    ///
-    /// - Parameters:
-    ///   - signal: The signal to configure.
-    ///   - configuration: The new signal action configuration.
-    /// - Returns: The previous signal action configuration.
-    /// - Throws: `Error.action` on failure.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Install a custom handler
-    /// let config = Configuration(handler: .custom(myHandler), flags: .restart)
-    /// let previous = try ISO_9945.Kernel.Signal.Action.set(signal: .user1, config)
-    ///
-    /// // Always restore on cleanup
-    /// defer { do throws(ISO_9945.Kernel.Signal.Error) { _ = try ISO_9945.Kernel.Signal.Action.set(signal: .user1, previous) } catch {} }
-    /// ```
+
     @discardableResult
 
     @unsafe
@@ -67,24 +30,6 @@ extension ISO_9945.Kernel.Signal.Action {
         return unsafe Configuration(oldAction)
     }
 
-    /// Gets the current signal action configuration.
-    ///
-    /// - Parameter signal: The signal to query.
-    /// - Returns: The current signal action configuration.
-    /// - Throws: `Error.action` on failure.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// let config = try ISO_9945.Kernel.Signal.Action.get(signal: .user1)
-    /// switch config.handler {
-    /// case .default: print("Using default action")
-    /// case .ignore: print("Signal ignored")
-    /// case .custom: print("Custom handler installed")
-    /// case .customInfo: print("Custom handler with siginfo")
-    /// }
-    /// ```
-
     @unsafe
     public static func get(
         signal: ISO_9945.Kernel.Signal.Number
@@ -99,21 +44,16 @@ extension ISO_9945.Kernel.Signal.Action {
     }
 }
 
-// MARK: - sigaction ← Configuration
-
 extension sigaction {
-    /// Creates a sigaction struct from a Configuration.
+
     @unsafe
     internal init(_ configuration: ISO_9945.Kernel.Signal.Action.Configuration) {
         self.init()
 
-        // Set mask
         self.sa_mask = configuration.mask.storage
 
-        // Set flags
         self.sa_flags = configuration.flags.rawValue
 
-        // Set handler based on type
         #if canImport(Darwin)
             switch unsafe configuration.handler {
             case .default:
@@ -160,16 +100,13 @@ extension sigaction {
     }
 }
 
-// MARK: - Configuration ← sigaction
-
 extension ISO_9945.Kernel.Signal.Action.Configuration {
-    /// Creates a Configuration from a raw sigaction struct.
+
     @unsafe
     internal init(_ action: sigaction) {
         let flags = ISO_9945.Kernel.Signal.Action.Options(rawValue: action.sa_flags)
         let mask = ISO_9945.Kernel.Signal.Set(storage: action.sa_mask)
 
-        // Determine handler type
         let handler: ISO_9945.Kernel.Signal.Action.Handler
 
         #if canImport(Darwin)
@@ -183,20 +120,11 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
             let sigactionPtr = unsafe action.sa_sigaction
         #endif
 
-        // SIG_DFL and SIG_IGN are sentinel handler values (typically 0 and 1)
-        // that may be installed together with SA_SIGINFO — sa_handler and
-        // sa_sigaction are the same union storage, so the sentinel check
-        // applies to either arm's raw bit pattern before deciding which arm
-        // actually holds a callable handler. Checking this only on the
-        // non-SA_SIGINFO branch (as before) let a SIG_IGN/SIG_DFL
-        // disposition installed with SA_SIGINFO read back as `.customInfo`
-        // carrying the sentinel bit pattern as if it were a function
-        // pointer.
         let sigDflRaw = unsafe unsafeBitCast(SIG_DFL, to: Int.self)
         let sigIgnRaw = unsafe unsafeBitCast(SIG_IGN, to: Int.self)
 
         if flags.contains(.sigInfo) {
-            // SA_SIGINFO set, use sa_sigaction
+
             let handlerRaw = unsafe unsafeBitCast(sigactionPtr, to: Int.self)
             if handlerRaw == sigDflRaw {
                 unsafe (handler = .default)
@@ -205,11 +133,11 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
             } else if let ptr = unsafe sigactionPtr {
                 unsafe (handler = .customInfo(ptr))
             } else {
-                // Shouldn't happen, but fallback to default
+
                 unsafe (handler = .default)
             }
         } else {
-            // Check for special handler values using raw pointer comparison
+
             let handlerRaw = unsafe unsafeBitCast(handlerPtr, to: Int.self)
 
             if handlerRaw == sigDflRaw {
@@ -223,7 +151,6 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
             }
         }
 
-        // Use unchecked init - kernel state has correct handler/flags relationship
         unsafe self.init(__unchecked: (), handler: handler, mask: mask, flags: flags)
     }
 }

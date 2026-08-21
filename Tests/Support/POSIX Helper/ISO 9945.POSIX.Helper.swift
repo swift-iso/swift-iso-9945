@@ -1,47 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-/// POSIX test helper - performs process operations in a spawned child process.
-///
-/// Tests spawn this helper via `posix_spawn` to observe process behaviour from a
-/// separate process image, so that fork, session, and process-group operations are
-/// never performed inside the multithreaded test process itself.
-///
-/// The helper calls the platform C library directly rather than the kernel modules
-/// under test: it is the positive control for those modules and must not depend on
-/// them.
-///
-/// ## Output Protocol
-///
-/// Machine-readable key/value pairs on stdout:
-///
-/// ```
-/// OK pid=123 ppid=456 pgid=123 sid=123 exit=0
-/// ERR errno=1 msg=operation_failed
-/// ```
-///
-/// ## Usage
-///
-/// ```
-/// iso-9945-test-helper <command> [args...]
-/// ```
-///
-/// - `exit <code>` - Exit with the specified code
-/// - `stop-exit <code>` - SIGSTOP self, exit with code when continued
-/// - `verify-parent <ppid>` - Verify `getppid()` matches the expected value
-/// - `create-session` - `setsid()`
-/// - `double-setsid` - `setsid()` twice, verify the second fails with EPERM
-/// - `become-group-leader` - `setpgid(0, 0)`
-/// - `setpgid-explicit` - `setpgid(pid, pid)`
-
 #if os(macOS) || os(Linux)
 
     #if canImport(Darwin)
@@ -53,9 +9,6 @@
     @main
     enum POSIXHelper {
 
-        // MARK: - Output
-
-        /// Prints a status line carrying the current process identifiers.
         private static func printStatus(_ status: String, exitCode: Int32) {
             print(
                 "\(status) pid=\(getpid()) ppid=\(getppid()) pgid=\(getpgid(0)) sid=\(getsid(0)) exit=\(exitCode)"
@@ -63,7 +16,6 @@
             fflush(nil)
         }
 
-        /// Prints an error line carrying `errno` and a stable message token.
         private static func printError(_ code: Int32, _ message: String) {
             print("ERR errno=\(code) msg=\(message)")
             fflush(nil)
@@ -84,11 +36,6 @@
             FileHandleWriter.standardError(usage)
         }
 
-        /// Minimal standard-error writer; the helper deliberately avoids Foundation.
-        ///
-        /// Writes to descriptor 2 directly rather than through the `stderr` stream
-        /// pointer, which is a mutable global on some platforms and therefore not
-        /// available from concurrency-checked code.
         private enum FileHandleWriter {
             static func standardError(_ text: String) {
                 var line = text
@@ -101,8 +48,6 @@
             }
         }
 
-        // MARK: - Commands
-
         private static func exitCommand(_ arguments: [String]) -> Int32 {
             let code = arguments.count >= 3 ? (Int32(arguments[2]) ?? 0) : 0
             printStatus("OK", exitCode: code)
@@ -111,7 +56,7 @@
 
         private static func stopExitCommand(_ arguments: [String]) -> Int32 {
             let code = arguments.count >= 3 ? (Int32(arguments[2]) ?? 0) : 0
-            // Stop self; the parent sends SIGCONT.
+
             _ = raise(SIGSTOP)
             printStatus("OK", exitCode: code)
             return code
@@ -146,7 +91,7 @@
                 printError(errno, "first_setsid_failed")
                 return 1
             }
-            // The second call must fail: the process is already a session leader.
+
             let second = setsid()
             guard second < 0, errno == EPERM else {
                 printError(errno, "second_setsid_should_fail_eperm")
@@ -187,8 +132,6 @@
             printStatus("OK", exitCode: 0)
             return 0
         }
-
-        // MARK: - Entry Point
 
         static func main() {
             let arguments = CommandLine.arguments

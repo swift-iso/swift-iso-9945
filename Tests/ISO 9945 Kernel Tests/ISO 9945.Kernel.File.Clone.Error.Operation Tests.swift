@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Clone.Error.Operation {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Operation {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
     @Test
@@ -74,8 +60,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
     @Test
     func `Operation is Sendable`() {
@@ -104,12 +88,10 @@ extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Clone.Error.Operation>()
         set.insert(.clonefile)
         set.insert(.copyfile)
-        set.insert(.clonefile)  // duplicate
+        set.insert(.clonefile)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.EdgeCase {
     @Test

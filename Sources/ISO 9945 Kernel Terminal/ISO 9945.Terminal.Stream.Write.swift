@@ -1,37 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-/// POSIX implementation of Terminal stream write operations.
-
 #if !os(Windows)
 
     extension Terminal.Stream.Write {
-        /// Write bytes to this terminal stream.
-        ///
-        /// Composes `ISO_9945.Kernel.IO.Write.write(_:Terminal.Stream, from:)` with
-        /// a partial-write + EINTR-retry loop. Returns only when every byte has
-        /// been written, or throws if the underlying syscall reports a non-EINTR
-        /// error.
-        ///
-        /// Materializes the input sequence into contiguous storage before the
-        /// syscall. Callers with already-contiguous bytes (e.g., `ContiguousArray`,
-        /// `String.UTF8View`) pay only a single backing copy; callers with
-        /// non-contiguous sequences (e.g., a lazy filter) pay the materialization.
-        ///
-        /// - Parameter bytes: The bytes to write.
-        /// - Returns: `bytes.count` on success — this method only returns once
-        ///   every byte has been written.
-        /// - Throws: `ISO_9945.Kernel.IO.Write.Error` on a non-EINTR failure.
-        ///   The count already written before the failing syscall is not part
-        ///   of the thrown error and is not otherwise observable by the caller.
+
         @discardableResult
         public func callAsFunction(
             _ bytes: some Swift.Sequence<Byte>
@@ -44,7 +14,6 @@
             }
         }
 
-        /// Inner loop: partial-write + EINTR-retry over a contiguous raw buffer.
         private func write(
             _ raw: UnsafeRawBufferPointer
         ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {

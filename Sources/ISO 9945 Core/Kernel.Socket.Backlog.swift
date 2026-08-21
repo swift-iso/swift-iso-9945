@@ -1,34 +1,13 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Socket {
-    /// Listen backlog size.
-    ///
-    /// Specifies the maximum length of the queue of pending connections
-    /// for the `listen` syscall.
-    ///
-    /// ## Platform Implementation
-    ///
-    /// Platform-specific maximum values are defined in:
-    /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.Socket.Backlog.max`)
+
     public struct Backlog: RawRepresentable, Sendable, Equatable, Hashable {
         public let rawValue: Int32
 
-        /// Creates a backlog from a raw value.
         @inlinable
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
 
-        /// Creates a backlog from an Int32 value.
         @inlinable
         public init(_ value: Int32) {
             self.rawValue = value
@@ -37,25 +16,13 @@ extension ISO_9945.Kernel.Socket {
 }
 
 extension ISO_9945.Kernel.Socket.Backlog {
-    // MARK: - Common Values
 
-    /// Default backlog (128).
-    ///
-    /// A reasonable default for most applications.
     public static let `default` = Self(128)
 
-    /// Small backlog (16).
-    ///
-    /// Suitable for low-traffic services.
     public static let small = Self(16)
 
-    /// Large backlog (4096).
-    ///
-    /// For high-traffic servers that can handle many pending connections.
     public static let large = Self(4096)
 }
-
-// MARK: - ExpressibleByIntegerLiteral
 
 extension ISO_9945.Kernel.Socket.Backlog: ExpressibleByIntegerLiteral {
     @inlinable
@@ -63,8 +30,6 @@ extension ISO_9945.Kernel.Socket.Backlog: ExpressibleByIntegerLiteral {
         self.rawValue = value
     }
 }
-
-// MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Socket.Backlog: CustomStringConvertible {
     public var description: Swift.String {

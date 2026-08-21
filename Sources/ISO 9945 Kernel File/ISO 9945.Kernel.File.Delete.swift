@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,20 +8,14 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX unlink() syscall
-
 extension ISO_9945.Kernel.File.Delete {
-    /// Removes a file or symbolic link.
-    ///
-    /// - Parameter path: The path to the file to remove.
-    /// - Throws: `ISO_9945.Kernel.File.Delete.Error` on failure.
+
     public static func delete(_ path: borrowing Path.Borrowed) throws(Error) {
         try unsafe path.withUnsafePointer { cString throws(Error) in
             try unsafe _delete(cString)
         }
     }
 
-    /// Internal implementation for removing a file using an unsafe path pointer.
     @usableFromInline
     internal static func _delete(_ path: UnsafePointer<Path.Char>) throws(Error) {
         let cPath = unsafe UnsafePointer<CChar>(path)
@@ -49,20 +32,8 @@ extension ISO_9945.Kernel.File.Delete {
     }
 }
 
-// MARK: - POSIX unlinkat() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Delete {
-    /// Removes a file or symbolic link relative to a raw directory descriptor.
-    ///
-    /// Spec-literal raw `unlinkat(2)`. The typed L2 internal-only convenience
-    /// (`ISO_9945.Kernel.File.Delete._delete(relativeTo:path:flags:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: Raw directory descriptor (or AT_FDCWD for current directory).
-    ///   - path: The path to the file to remove.
-    ///   - flags: Options to control the operation (e.g., AT_REMOVEDIR).
-    /// - Throws: `ISO_9945.Kernel.File.Delete.Error` on failure.
+
     @_spi(Syscall)
     public static func delete(
         fd: Int32,
@@ -83,19 +54,8 @@ extension ISO_9945.Kernel.File.Delete {
     }
 }
 
-// MARK: - Typed Convenience (internal)
-
 extension ISO_9945.Kernel.File.Delete {
-    /// Removes a file or symbolic link relative to a directory descriptor.
-    ///
-    /// Internal typed L2 form. Delegates to the raw `delete(fd:path:flags:)`
-    /// SPI via `descriptor._rawValue`.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The directory descriptor (or AT_FDCWD for current directory).
-    ///   - path: The path to the file to remove.
-    ///   - flags: Options to control the operation (e.g., AT_REMOVEDIR).
-    /// - Throws: `ISO_9945.Kernel.File.Delete.Error` on failure.
+
     @usableFromInline
     internal static func _delete(
         relativeTo descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -106,14 +66,12 @@ extension ISO_9945.Kernel.File.Delete {
     }
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.File.Delete {
     public typealias Error = ISO_9945.Kernel.File.Delete.Error
 }
 
 extension ISO_9945.Kernel.File.Delete.Error {
-    /// Creates an error from the current errno value.
+
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

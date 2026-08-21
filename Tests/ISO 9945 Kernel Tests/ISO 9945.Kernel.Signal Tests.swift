@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
@@ -26,8 +15,6 @@ extension ISO_9945.Kernel.Signal {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Signal.Test.Unit {
     @Test
     func `Signal namespace exists`() {
@@ -39,8 +26,6 @@ extension ISO_9945.Kernel.Signal.Test.Unit {
         let _: ISO_9945.Kernel.Signal.Type = ISO_9945.Kernel.Signal.self
     }
 }
-
-// MARK: - Nested Types
 
 extension ISO_9945.Kernel.Signal.Test.Unit {
     #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)

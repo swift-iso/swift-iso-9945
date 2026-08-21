@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,7 +7,7 @@
 #endif
 
 extension ISO_9945.Kernel.Socket.Option {
-    /// Socket option level.
+
     public struct Level: RawRepresentable, Sendable, Equatable, Hashable {
         public let rawValue: Int32
 
@@ -28,18 +17,13 @@ extension ISO_9945.Kernel.Socket.Option {
     }
 }
 
-// MARK: - Constants
-
 extension ISO_9945.Kernel.Socket.Option.Level {
-    /// Socket-level options (SOL_SOCKET).
+
     public static let socket = Self(rawValue: SOL_SOCKET)
 
-    /// TCP-level options (IPPROTO_TCP).
     public static let tcp = Self(rawValue: Int32(IPPROTO_TCP))
 
-    /// IPv4-level options (IPPROTO_IP).
     public static let ip = Self(rawValue: Int32(IPPROTO_IP))
 
-    /// IPv6-level options (IPPROTO_IPV6).
     public static let ipv6 = Self(rawValue: Int32(IPPROTO_IPV6))
 }

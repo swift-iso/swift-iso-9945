@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if os(macOS)
 
     import Testing
@@ -29,8 +18,6 @@
         }
     }
 
-    // MARK: - Unit Tests
-
     extension ISO_9945.Kernel.Process.Session.Test.Unit {
         @Test
         func `Session.ID is type alias for Tagged`() {
@@ -38,8 +25,6 @@
             #expect(id.underlying == 123)
         }
     }
-
-    // MARK: - Integration Tests
 
     extension ISO_9945.Kernel.Process.Session.Test.Integration {
         @Test

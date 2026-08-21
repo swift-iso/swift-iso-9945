@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Stats.Error {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.File.Stats.Error {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
@@ -49,8 +35,6 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     }
 }
 
-// MARK: - Description Tests
-
 extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
     func `handle description format`() {
@@ -59,8 +43,6 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     }
 
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
@@ -84,8 +66,6 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Stats.Error.Test.EdgeCase {
     @Test

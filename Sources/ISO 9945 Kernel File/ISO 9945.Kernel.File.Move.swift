@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,15 +8,7 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX rename() syscall
-
 extension ISO_9945.Kernel.File.Move {
-    /// Moves/renames a file or directory.
-    ///
-    /// - Parameters:
-    ///   - oldPath: The current path.
-    ///   - newPath: The new path.
-    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
 
     @unsafe
     public static func move(
@@ -50,14 +31,6 @@ extension ISO_9945.Kernel.File.Move {
         }
     }
 
-    /// Moves/renames a file or directory using `Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameters:
-    ///   - oldPath: The current path.
-    ///   - newPath: The new path.
-    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
     public static func move(
         from oldPath: borrowing Path.Borrowed,
         to newPath: borrowing Path.Borrowed
@@ -71,21 +44,8 @@ extension ISO_9945.Kernel.File.Move {
     }
 }
 
-// MARK: - POSIX renameat() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.File.Move {
-    /// Moves/renames a file or directory relative to raw directory descriptors.
-    ///
-    /// Spec-literal raw `renameat(2)`. The typed L2 convenience
-    /// (`ISO_9945.Kernel.File.Move.move(from:oldPath:to:newPath:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - oldFd: Raw directory descriptor for the old path.
-    ///   - oldPath: The current path.
-    ///   - newFd: Raw directory descriptor for the new path.
-    ///   - newPath: The new path.
-    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
+
     @_spi(Syscall)
     public static func move(
         from oldFd: Int32,
@@ -110,20 +70,7 @@ extension ISO_9945.Kernel.File.Move {
     }
 }
 
-// MARK: - Typed Convenience
-
 extension ISO_9945.Kernel.File.Move {
-    /// Moves/renames a file or directory relative to directory descriptors.
-    ///
-    /// Typed L2 form. Delegates to the raw `move(from:oldPath:to:newPath:)`
-    /// SPI via `descriptor._rawValue`.
-    ///
-    /// - Parameters:
-    ///   - oldDescriptor: Directory descriptor for the old path.
-    ///   - oldPath: The current path.
-    ///   - newDescriptor: Directory descriptor for the new path.
-    ///   - newPath: The new path.
-    /// - Throws: `ISO_9945.Kernel.File.Move.Error` on failure.
 
     public static func move(
         from oldDescriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -140,14 +87,12 @@ extension ISO_9945.Kernel.File.Move {
     }
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.File.Move {
     public typealias Error = ISO_9945.Kernel.File.Move.Error
 }
 
 extension ISO_9945.Kernel.File.Move.Error {
-    /// Creates an error from the current errno value.
+
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

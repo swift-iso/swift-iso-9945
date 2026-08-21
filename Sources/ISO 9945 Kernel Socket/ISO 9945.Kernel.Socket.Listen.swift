@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) public import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -26,17 +15,12 @@
 #endif
 
 extension ISO_9945.Kernel.Socket {
-    /// Socket listen namespace.
+
     public enum Listen {}
 }
 
-// MARK: - Listen typed (Phase 1.5)
-//
-// Typed Phase-1.5 form re-added in Wave 4c-Socket Main (2026-05-01) per
-// [PLAT-ARCH-005] three-tier chain (Prerequisite II).
-
 extension ISO_9945.Kernel.Socket.Listen {
-    /// Marks a typed socket descriptor as a passive listening socket.
+
     public static func listen(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         backlog: ISO_9945.Kernel.Socket.Backlog = .max
@@ -45,20 +29,8 @@ extension ISO_9945.Kernel.Socket.Listen {
     }
 }
 
-// MARK: - Listen raw fd SPI
-
 extension ISO_9945.Kernel.Socket.Listen {
-    /// Marks a raw socket fd as a passive listening socket.
-    ///
-    /// - Parameters:
-    ///   - fd: The socket raw fd (must be SOCK_STREAM or SOCK_SEQPACKET).
-    ///   - backlog: Maximum number of pending connections. Defaults to system maximum.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.platform(.operationNotSupported)` (EOPNOTSUPP): Socket type does not support listen.
-    /// - `.platform(.addressInUse)` (EADDRINUSE): Another socket is listening on this address.
+
     internal static func listen(
         fd: Int32,
         backlog: ISO_9945.Kernel.Socket.Backlog = .max

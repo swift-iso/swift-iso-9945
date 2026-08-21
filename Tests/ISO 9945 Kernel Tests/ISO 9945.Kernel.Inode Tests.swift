@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Inode {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.Inode {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Inode.Test.Unit {
     @Test
@@ -43,8 +29,6 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
     }
 }
 
-// MARK: - ExpressibleByIntegerLiteral Tests
-
 extension ISO_9945.Kernel.Inode.Test.Unit {
     @Test
     func `Inode from integer literal`() {
@@ -52,8 +36,6 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
         #expect(inode.rawValue == 42)
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Inode.Test.Unit {
     @Test
@@ -76,12 +58,10 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
         var set = Set<ISO_9945.Kernel.Inode>()
         set.insert(ISO_9945.Kernel.Inode(1))
         set.insert(ISO_9945.Kernel.Inode(2))
-        set.insert(ISO_9945.Kernel.Inode(1))  // duplicate
+        set.insert(ISO_9945.Kernel.Inode(1))
         #expect(set.count == 2)
     }
 }
-
-// MARK: - CustomStringConvertible Tests
 
 extension ISO_9945.Kernel.Inode.Test.Unit {
     @Test
@@ -90,8 +70,6 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
         #expect(inode.description == "12345")
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Inode.Test.EdgeCase {
     @Test

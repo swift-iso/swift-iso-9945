@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Requirements {
@@ -22,15 +10,13 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     @Test
     func `known case exists`() {
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
         let requirements = ISO_9945.Kernel.File.Direct.Requirements.known(alignment)
         if case .known = requirements {
-            // Expected
+
         } else {
             Issue.record("Expected .known case")
         }
@@ -42,14 +28,12 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
             reason: .platformUnsupported
         )
         if case .unknown = requirements {
-            // Expected
+
         } else {
             Issue.record("Expected .unknown case")
         }
     }
 }
-
-// MARK: - Initializer Tests
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     @Test
@@ -81,8 +65,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     @Test
     func `Requirements is Sendable`() {
@@ -103,8 +85,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     }
 }
 
-// MARK: - Nested Types
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     @Test
     func `Alignment type exists`() {
@@ -118,8 +98,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
             .Requirements.Reason.self
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.EdgeCase {
     @Test

@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path_Primitives
@@ -24,8 +13,6 @@ extension ISO_9945.Kernel.Close {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Close Tests
 
 extension ISO_9945.Kernel.Close.Test.Unit {
     @Test
@@ -44,8 +31,6 @@ extension ISO_9945.Kernel.Close.Test.Unit {
         }
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Close.Test.EdgeCase {
     @Test

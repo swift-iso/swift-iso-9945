@@ -1,32 +1,15 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-/// Test support for cross-platform temporary file paths.
-
 import Error_Primitives
 public import ISO_9945_Kernel
 import Path_Primitives
 import String_Primitives
 
 extension ISO_9945.Kernel {
-    /// Namespace for temporary path operations in tests.
+
     public enum Temporary {}
 }
 
 extension ISO_9945.Kernel.Temporary {
-    /// Returns the system temp directory path.
-    ///
-    /// Uses platform-appropriate environment variables:
-    /// - Unix: `TMPDIR`, falling back to "/tmp"
-    /// - Windows: `TEMP` or `TMP`, falling back to "C:\Temp"
+
     public static var directory: Swift.String {
         #if os(Windows)
             if let temp = unsafe ISO_9945.Kernel.Environment.get("TEMP") {
@@ -44,10 +27,6 @@ extension ISO_9945.Kernel.Temporary {
         #endif
     }
 
-    /// Generates a unique temporary file path.
-    ///
-    /// - Parameter prefix: Prefix for the filename (e.g., "kernel-test").
-    /// - Returns: A unique path string in the system temp directory.
     public static func filePath(prefix: Swift.String) -> Swift.String {
         let pid = Int(ISO_9945.Kernel.Process.ID.current.rawValue)
         let random = Int.random(in: 0..<Int.max)

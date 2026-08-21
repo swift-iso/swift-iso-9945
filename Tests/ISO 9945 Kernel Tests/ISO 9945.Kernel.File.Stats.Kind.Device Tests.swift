@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Stats.Kind.Device {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     @Test
     func `block case exists`() {
         let device = ISO_9945.Kernel.File.Stats.Kind.Device.block
         if case .block = device {
-            // Expected
+
         } else {
             Issue.record("Expected .block case")
         }
@@ -39,14 +25,12 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     func `character case exists`() {
         let device = ISO_9945.Kernel.File.Stats.Kind.Device.character
         if case .character = device {
-            // Expected
+
         } else {
             Issue.record("Expected .character case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     @Test
@@ -69,12 +53,10 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Stats.Kind.Device>()
         set.insert(.block)
         set.insert(.character)
-        set.insert(.block)  // duplicate
+        set.insert(.block)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.EdgeCase {
     @Test

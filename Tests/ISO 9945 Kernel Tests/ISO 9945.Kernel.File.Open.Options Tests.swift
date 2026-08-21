@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -34,8 +22,6 @@ extension ISO_9945.Kernel.File.Open.Options {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     @Test
     func `Options from rawValue`() {
@@ -43,8 +29,6 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
         #expect(options.rawValue == 1)
     }
 }
-
-// MARK: - Standard Options
 
 extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     @Test
@@ -72,8 +56,6 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
         #expect(ISO_9945.Kernel.File.Open.Options.noFollow.rawValue == O_NOFOLLOW)
     }
 }
-
-// MARK: - OptionSet Operations
 
 extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     @Test
@@ -117,8 +99,6 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
         #expect(!common.contains(.append))
     }
 }
-
-// MARK: - POSIX Flag Verification
 
 extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     @Test
@@ -167,8 +147,6 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-// MARK: - Conformances
-
 extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     @Test
     func `Options is Sendable`() {
@@ -190,12 +168,10 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Open.Options>()
         set.insert([.create])
         set.insert([.truncate])
-        set.insert([.create])  // duplicate
+        set.insert([.create])
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Open.Options.Test.EdgeCase {
     @Test

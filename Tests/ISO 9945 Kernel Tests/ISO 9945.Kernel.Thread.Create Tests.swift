@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import Path_Primitives
 import Synchronization
@@ -27,8 +16,6 @@ extension ISO_9945.Kernel.Thread {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Thread.Test.Unit {
     @Test
     func `create spawns thread that executes body`() throws {
@@ -44,9 +31,9 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
     func `Handle.join waits for thread completion`() throws {
         let completed = Atomic<Bool>(false)
         let handle = try ISO_9945.Kernel.Thread.create {
-            // Small delay to ensure we're actually waiting
+
             for _ in 0..<1000 {
-                _ = 1 + 1  // Busy work
+                _ = 1 + 1
             }
             completed.store(true, ordering: .releasing)
         }
@@ -58,17 +45,14 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
     @Test
     func `Handle.isCurrent returns false from main thread`() throws {
         let handle = try ISO_9945.Kernel.Thread.create {
-            // Do nothing
+
         }
 
-        // From main thread, isCurrent should be false
         #expect(handle.isCurrent == false)
 
         try handle.join()
     }
 }
-
-// MARK: - Integration Tests
 
 extension ISO_9945.Kernel.Thread.Test.Integration {
     @Test
@@ -76,7 +60,6 @@ extension ISO_9945.Kernel.Thread.Test.Integration {
         let counter = Atomic<Int>(0)
         let numThreads = 4
 
-        // Create and join threads sequentially since Handle is ~Copyable
         for _ in 0..<numThreads {
             let handle = try ISO_9945.Kernel.Thread.create {
                 counter.wrappingAdd(1, ordering: .relaxed)
@@ -97,14 +80,11 @@ extension ISO_9945.Kernel.Thread.Test.Integration {
 
         try handle.detach()
 
-        // Give the thread time to run
         var iterations = 0
         while !started.load(ordering: .acquiring) && iterations < 1000 {
             ISO_9945.Kernel.Thread.yield()
             iterations += 1
         }
 
-        // Thread should have run (or we timeout gracefully)
-        // Note: detached threads may not complete before test ends
     }
 }

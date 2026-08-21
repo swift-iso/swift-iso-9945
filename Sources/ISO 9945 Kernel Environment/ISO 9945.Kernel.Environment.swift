@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -17,24 +6,8 @@
     internal import Musl
 #endif
 
-// MARK: - Borrow-First APIs
-
 extension ISO_9945.Kernel.Environment {
 
-    /// Canonical primitive: scoped access to environment variable bytes.
-    ///
-    /// This is the most primitive API. It provides zero-copy access to the
-    /// raw bytes of an environment variable. The closure receives a `Span`
-    /// that does NOT include the NUL terminator.
-    ///
-    /// - Warning: The caller MUST NOT call `set`, `unset`, or any other
-    ///   environment-modifying function during the closure. The underlying
-    ///   storage is process-global and can be invalidated by such calls.
-    ///
-    /// - Parameters:
-    ///   - name: Pointer to null-terminated variable name.
-    ///   - body: A closure that processes the value bytes. Non-throwing.
-    /// - Returns: The result of the closure, or `nil` if the variable is not set.
     public static func withValueBytes<R: ~Copyable>(
         _ name: UnsafePointer<String.Char>,
         _ body: (Swift.Span<String.Char>) -> R
@@ -44,7 +17,6 @@ extension ISO_9945.Kernel.Environment {
             return nil
         }
 
-        // Find length (getenv returns NUL-terminated string)
         var length = 0
         while (unsafe valuePtr[length]) != 0 {
             length += 1
@@ -55,19 +27,6 @@ extension ISO_9945.Kernel.Environment {
         return body(span)
     }
 
-    /// Convenience: scoped access as NUL-terminated view.
-    ///
-    /// This API provides a `String.Borrowed` for APIs that expect
-    /// NUL-terminated strings.
-    ///
-    /// - Warning: The caller MUST NOT call `set`, `unset`, or any other
-    ///   environment-modifying function during the closure. The underlying
-    ///   storage is process-global and can be invalidated by such calls.
-    ///
-    /// - Parameters:
-    ///   - name: Pointer to null-terminated variable name.
-    ///   - body: A closure that processes the value view. Non-throwing.
-    /// - Returns: The result of the closure, or `nil` if the variable is not set.
     public static func withValue<R: ~Copyable>(
         _ name: UnsafePointer<String.Char>,
         _ body: (borrowing String.Borrowed) -> R
@@ -82,39 +41,18 @@ extension ISO_9945.Kernel.Environment {
         return body(view)
     }
 
-    /// Owned convenience: gets an environment variable.
-    ///
-    /// This is the simplest API but involves allocation. For callers that
-    /// need to transform the result (e.g., parse the value), prefer
-    /// `withValueBytes` or `withValue` to avoid intermediate allocations.
-    ///
-    /// - Parameter name: Pointer to null-terminated variable name.
-    /// - Returns: Owned copy of the value, or nil if not set.
-    ///
-    /// - Note: Returns an owned copy to avoid lifetime issues with
-    ///   the internal storage which can be invalidated by setenv/unsetenv.
     public static func get(_ name: UnsafePointer<String.Char>) -> String? {
         unsafe withValue(name) { view in
             String(copying: view)
         }
     }
 
-    /// Sets an environment variable.
-    ///
-    /// - Parameters:
-    ///   - name: Pointer to null-terminated variable name.
-    ///   - value: Pointer to null-terminated value.
-    ///   - overwrite: If true, overwrite existing value.
-    /// - Throws: `ISO_9945.Kernel.Environment.Error` on failure.
-
     public static func set(
         _ name: UnsafePointer<String.Char>,
         to value: UnsafePointer<String.Char>,
         overwrite: Bool = true
     ) throws(ISO_9945.Kernel.Environment.Error) {
-        // POSIX reports every invalid name as one EINVAL, so the distinct
-        // conditions are validated before the call — errno alone cannot
-        // distinguish an empty name from one containing '='.
+
         try unsafe validate(name: name)
         let cName = unsafe UnsafePointer<CChar>(name)
         let cValue = unsafe UnsafePointer<CChar>(value)
@@ -123,13 +61,6 @@ extension ISO_9945.Kernel.Environment {
             throw .current()
         }
     }
-
-    /// Unsets an environment variable.
-    ///
-    /// - Parameter name: Pointer to null-terminated variable name.
-    /// - Throws: `ISO_9945.Kernel.Environment.Error` on failure.
-    ///
-    /// - Note: Does not fail if the variable does not exist.
 
     public static func unset(
         _ name: UnsafePointer<String.Char>
@@ -142,8 +73,6 @@ extension ISO_9945.Kernel.Environment {
         }
     }
 
-    /// Validates a variable name against the conditions POSIX folds into
-    /// one `EINVAL`: an empty name, or a name containing `=`.
     internal static func validate(
         name: UnsafePointer<String.Char>
     ) throws(ISO_9945.Kernel.Environment.Error) {

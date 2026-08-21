@@ -1,21 +1,8 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Glob
 import ISO_9945_Kernel
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
 import Testing
-
-// MARK: - fnmatch Tests
 
 extension ISO_9945.Glob.Fnmatch {
     @Suite
@@ -165,8 +152,6 @@ extension ISO_9945.Glob.Fnmatch.Test.`Edge Case` {
     }
 }
 
-// MARK: - glob(3) Expand Tests
-
 extension ISO_9945.Glob.Expand {
     @Suite
     struct Test {
@@ -184,7 +169,7 @@ extension ISO_9945.Glob.Expand.Test.Unit {
             }
             Issue.record("Expected noMatch error")
         } catch  where error.body == .noMatch {
-            // Expected
+
         }
     }
 }

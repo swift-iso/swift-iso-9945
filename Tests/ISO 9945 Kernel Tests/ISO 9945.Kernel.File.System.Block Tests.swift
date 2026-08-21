@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.System.Block {
@@ -22,8 +10,6 @@ extension ISO_9945.Kernel.File.System.Block {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     @Test
@@ -36,8 +22,6 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
         let _: ISO_9945.Kernel.File.System.Block.Type = ISO_9945.Kernel.File.System.Block.self
     }
 }
-
-// MARK: - Nested Types
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     @Test
@@ -52,8 +36,6 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
             .Count.self
     }
 }
-
-// MARK: - Size Tests
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     @Test
@@ -108,12 +90,10 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.System.Block.Size>()
         set.insert(ISO_9945.Kernel.File.System.Block.Size(512))
         set.insert(ISO_9945.Kernel.File.System.Block.Size(4096))
-        set.insert(ISO_9945.Kernel.File.System.Block.Size(512))  // duplicate
+        set.insert(ISO_9945.Kernel.File.System.Block.Size(512))
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Count Tests
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     @Test
@@ -138,8 +118,6 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
         #expect(diff == ISO_9945.Kernel.File.System.Block.Count(UInt(70)))
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.System.Block.Test.EdgeCase {
     @Test

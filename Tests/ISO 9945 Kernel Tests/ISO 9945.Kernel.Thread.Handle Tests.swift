@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,8 +14,6 @@ extension ISO_9945.Kernel.Thread.Handle {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
     @Test
     func `Handle type exists`() {
@@ -36,76 +22,56 @@ extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
 
     @Test
     func `Handle is ~Copyable`() {
-        // Handle is ~Copyable to enforce exactly-once join semantics
-        // This is a compile-time constraint
+
         let _: ISO_9945.Kernel.Thread.Handle.Type = ISO_9945.Kernel.Thread.Handle.self
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
     @Test
     func `Handle is @unchecked Sendable`() {
-        // Handle is @unchecked Sendable and ~Copyable
-        // Verify the type exists
+
         let _: ISO_9945.Kernel.Thread.Handle.Type = ISO_9945.Kernel.Thread.Handle.self
     }
 }
 
-// MARK: - Method Signature Tests
-
 extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
     @Test
     func `join method exists`() {
-        // join() is a consuming method that waits for thread completion
-        // Signature: consuming func join()
-        // This is verified at compile time
+
     }
 
     @Test
     func `detach method exists`() {
-        // detach() is a consuming method that detaches the thread
-        // Signature: consuming func detach()
-        // This is verified at compile time
+
     }
 
     @Test
     func `isCurrent property exists`() {
-        // isCurrent checks if the handle refers to the current thread
-        // Signature: var isCurrent: Bool { get }
-        // This is verified at compile time
+
     }
 }
-
-// MARK: - Platform-Specific Tests
 
 #if os(Windows)
     extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
         @Test
         func `Handle wraps HANDLE on Windows`() {
-            // On Windows, Handle wraps a HANDLE
-            // rawValue is of type HANDLE
+
         }
     }
 #else
     extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
         @Test
         func `Handle wraps pthread_t on POSIX`() {
-            // On POSIX, Handle wraps a pthread_t
-            // rawValue is of type pthread_t
+
         }
     }
 #endif
 
-// MARK: - Edge Cases
-
 extension ISO_9945.Kernel.Thread.Handle.Test.EdgeCase {
     @Test
     func `Handle move-only semantics prevent double-join`() {
-        // The ~Copyable constraint ensures Handle cannot be copied
-        // This prevents double-join which is undefined behavior
-        // This is enforced at compile time
+
         let _: ISO_9945.Kernel.Thread.Handle.Type = ISO_9945.Kernel.Thread.Handle.self
     }
 }

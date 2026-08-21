@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -33,8 +21,6 @@ extension ISO_9945.Kernel.Thread.Mutex {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - API Unit Tests
 
 extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
     @Test
@@ -144,14 +130,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
     }
 }
 
-// MARK: - Mutual Exclusion Tests (require threading)
-//
-// These tests use KernelThreadTest.Harness to coordinate between threads
-// without data races or cross-thread mutex unlock.
-
-// NOTE: These tests use Darwin-specific pthread API.
-// Linux pthread API differs (non-optional pthread_t, different closure signature).
-// TODO: Add Linux-compatible threading tests to swift-linux package.
 #if canImport(Darwin)
 
     extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
@@ -166,7 +144,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
             }
             let harness = KernelThreadTest.Harness(State())
 
-            // Context to pass both mutex and harness through the C function pointer
             final class Context: @unchecked Sendable {
                 let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
@@ -179,7 +156,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
             }
             let context = Context(mutex: mutex, harness: harness)
 
-            // Main thread holds the mutex
             mutex.lock()
             defer { mutex.unlock() }
 
@@ -194,7 +170,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
 
                     ctx.harness.update { $0.workerAttempting = true }
 
-                    // This should throw because main thread holds the mutex
                     var didThrow = false
                     do {
                         try ctx.mutex.lock.immediate()
@@ -214,7 +189,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
 
             #expect(rc == 0, "pthread_create should succeed")
 
-            // Wait for worker to attempt lock.immediate
             try harness.wait(until: { $0.workerAttempting })
             try harness.wait(until: { $0.workerDone })
 
@@ -251,7 +225,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
             }
             let context = Context(mutex: mutex, harness: harness)
 
-            // Main thread holds the mutex
             mutex.lock()
 
             var thread: pthread_t? = nil
@@ -265,7 +238,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
 
                     ctx.harness.update { $0.workerAttempting = true }
 
-                    // This should block until main thread unlocks
                     ctx.mutex.lock()
                     ctx.harness.update { $0.workerAcquired = true }
                     ctx.mutex.unlock()
@@ -277,19 +249,15 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
 
             #expect(rc == 0, "pthread_create should succeed")
 
-            // Wait for worker to start attempting
             try harness.wait(until: { $0.workerAttempting })
 
-            // Worker should NOT have acquired yet (it should be blocked)
             #expect(
                 harness.withLocked { $0.workerAcquired } == false,
                 "Worker should be blocked waiting for mutex"
             )
 
-            // Release the mutex
             mutex.unlock()
 
-            // Now worker should acquire
             try harness.wait(until: { $0.workerAcquired })
 
             if let t = thread {
@@ -352,7 +320,6 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
                 #expect(rc == 0, "pthread_create should succeed for thread \(i)")
             }
 
-            // Wait for all threads to complete
             try harness.wait(until: { $0.threadsCompleted >= threadCount })
 
             for i in 0..<threadCount {

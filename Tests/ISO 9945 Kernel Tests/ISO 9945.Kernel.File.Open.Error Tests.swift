@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Open.Error {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.File.Open.Error {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     @Test
@@ -60,8 +46,6 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     }
 }
 
-// MARK: - Description Tests
-
 extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     @Test
     func `path description format`() {
@@ -75,8 +59,6 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
         #expect(error.description.contains("handle:"))
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     @Test
@@ -100,8 +82,6 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Open.Error.Test.EdgeCase {
     @Test
@@ -129,13 +109,6 @@ extension ISO_9945.Kernel.File.Open.Error.Test.EdgeCase {
     }
 }
 
-// MARK: - POSIX Error Mapping (Fold) Tests
-//
-// Per the ratified 3-case shape (.path, .handle, .platform — Path X Cycle 18g
-// dropped .space; commit 6c67958), init(code:) cascades path -> descriptor ->
-// .platform only. Codes that used to route to dedicated .permission/.space/.io
-// cases now fold into .platform.
-
 #if canImport(Darwin)
     import Darwin
 #elseif canImport(Glibc)
@@ -149,8 +122,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     func `permission-classed code (EACCES) folds into platform`() {
         let error = ISO_9945.Kernel.File.Open.Error(code: .posix(EACCES))
         if case .platform = error {
-            // Expected: EACCES is not path- or handle-mapped, so it cascades
-            // through to .platform under the ratified 3-case shape.
+
         } else {
             Issue.record("Expected .platform case for EACCES")
         }
@@ -160,8 +132,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     func `space-classed code (ENOSPC) folds into platform`() {
         let error = ISO_9945.Kernel.File.Open.Error(code: .posix(ENOSPC))
         if case .platform = error {
-            // Expected: ENOSPC is not path- or handle-mapped, so it cascades
-            // through to .platform under the ratified 3-case shape.
+
         } else {
             Issue.record("Expected .platform case for ENOSPC")
         }
@@ -171,8 +142,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     func `io-classed code (EIO) folds into platform`() {
         let error = ISO_9945.Kernel.File.Open.Error(code: .posix(EIO))
         if case .platform = error {
-            // Expected: EIO is not path- or handle-mapped, so it cascades
-            // through to .platform under the ratified 3-case shape.
+
         } else {
             Issue.record("Expected .platform case for EIO")
         }

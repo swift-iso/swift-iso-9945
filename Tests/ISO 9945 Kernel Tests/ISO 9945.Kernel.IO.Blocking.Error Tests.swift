@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.IO.Blocking.Error {
@@ -22,21 +10,17 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
     func `wouldBlock case exists`() {
         let error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
         if case .wouldBlock = error {
-            // Expected
+
         } else {
             Issue.record("Expected .wouldBlock case")
         }
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
@@ -45,8 +29,6 @@ extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
         #expect(error.description == "operation would block")
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
@@ -72,7 +54,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     func `Error is Hashable`() {
         var set = Set<ISO_9945.Kernel.IO.Blocking.Error>()
         set.insert(.wouldBlock)
-        set.insert(.wouldBlock)  // duplicate
+        set.insert(.wouldBlock)
         #expect(set.count == 1)
     }
 }

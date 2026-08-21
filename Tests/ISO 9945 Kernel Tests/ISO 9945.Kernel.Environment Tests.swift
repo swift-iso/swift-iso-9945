@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -26,30 +14,24 @@ extension ISO_9945.Kernel.Environment {
     }
 }
 
-// MARK: - Get Tests
-
 extension ISO_9945.Kernel.Environment.Test.Unit {
     @Test
     func `get returns nil for unset variable`() {
         let result = ISO_9945.Kernel.Environment.get("__KERNEL_TEST_UNSET_VAR_12345__")
-        // String is ~Copyable, so we check nil-ness differently
+
         let isNil = (result == nil)
         #expect(isNil)
     }
 
     @Test
     func `get returns value for PATH`() {
-        // PATH should always be set on all platforms
+
         let result = ISO_9945.Kernel.Environment.get("PATH")
-        // String is ~Copyable, so we check nil-ness differently
+
         let isNotNil = (result != nil)
         #expect(isNotNil)
     }
 }
-
-// MARK: - Set / Unset Tests
-//
-// Mutation tests run serialized: the process environment is global.
 
 extension ISO_9945.Kernel.Environment.Test.Unit {
     @Test
@@ -71,7 +53,7 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
 
         try ISO_9945.Kernel.Environment.unset(name)
         let removed = ISO_9945.Kernel.Environment.get(name)
-        // String is ~Copyable, so we check nil-ness differently
+
         let isNil = (removed == nil)
         #expect(isNil)
     }
@@ -90,8 +72,6 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
         #expect(decoded(value.span) == "original")
     }
 }
-
-// MARK: - Validation Edge Cases
 
 extension ISO_9945.Kernel.Environment.Test.`Edge Case` {
     @Test
@@ -116,8 +96,6 @@ extension ISO_9945.Kernel.Environment.Test.`Edge Case` {
     }
 }
 
-// MARK: - Entries Iteration
-
 extension ISO_9945.Kernel.Environment.Test.Unit {
     @Test
     func `entries yields the set variable with its value`() throws {
@@ -139,14 +117,13 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
 
     @Test
     func `abandoned iteration leaves getenv intact`() throws {
-        // Regression for the destructive iterator: breaking out of the
-        // loop must not leave the '=' separator overwritten in environ.
+
         let name = "__ISO9945_ENV_ABANDON_TEST__"
         try ISO_9945.Kernel.Environment.set(name, to: "abandon-value")
         defer { try? ISO_9945.Kernel.Environment.unset(name) }
 
         var entries = ISO_9945.Kernel.Environment.entries()
-        _ = entries.next()  // abandon after the first entry
+        _ = entries.next()
 
         guard let value = ISO_9945.Kernel.Environment.get(name) else {
             Issue.record("abandoned iteration corrupted the environment")
@@ -156,10 +133,6 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
     }
 }
 
-// MARK: - Span Decoding Helper
-
-/// Decodes a byte span as UTF-8. `Span` is not a `Sequence`, so the bytes
-/// are copied out element-wise before decoding.
 private func decoded(_ span: Swift.Span<UInt8>) -> Swift.String {
     var bytes: [UInt8] = []
     bytes.reserveCapacity(span.count)

@@ -1,23 +1,9 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
-// Descriptor._rawValue is @_spi(Syscall)-gated (declared in ISO 9945 Core,
-// re-exported by ISO_9945_Kernel via @_exported import).
 @testable @_spi(Syscall) import ISO_9945_Kernel
 
 extension ISO_9945.Kernel.Descriptor {
@@ -27,14 +13,6 @@ extension ISO_9945.Kernel.Descriptor {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
-
-// ISO_9945.Kernel.Descriptor is ~Copyable, Sendable per [MEM-COPY-001] — resource types
-// are not Equatable/Hashable/Copyable. Test assertions use fileDescriptor raw
-// values for comparison and extract bool results to locals before #expect,
-// because swift-testing's #expect macro captures expressions (__checkPropertyAccess,
-// __checkBinaryOperation) which require Copyable.
 
 extension ISO_9945.Kernel.Descriptor.Test.Unit {
     @Test
@@ -51,11 +29,7 @@ extension ISO_9945.Kernel.Descriptor.Test.Unit {
 
     @Test
     func `isValid returns true for valid descriptor`() throws {
-        // Open a real file so we have a definitively valid fd without
-        // constructing Descriptor instances from well-known raw values
-        // (e.g., 0/1/2 for stdin/stdout/stderr). Constructing a
-        // ~Copyable Descriptor from such a raw value would cause its
-        // deinit to close() the test process's own standard streams.
+
         let path = KernelIOTest.makeTempPath(prefix: "valid-fd-test")
         defer { KernelIOTest.cleanup(path: path) }
         let fd = try KernelIOTest.open(at: path)

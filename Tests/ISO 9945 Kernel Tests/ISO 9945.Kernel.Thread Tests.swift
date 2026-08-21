@@ -1,27 +1,10 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
-
-// ISO_9945.Kernel.Thread.Test is defined in ISO 9945.Kernel.Thread.Create Tests.swift.
-// This file adds basic namespace existence tests to that suite.
-
-// MARK: - Namespace Existence
 
 extension ISO_9945.Kernel.Thread.Test.Unit {
     @Test
@@ -34,8 +17,6 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
         let _: ISO_9945.Kernel.Thread.Type = ISO_9945.Kernel.Thread.self
     }
 }
-
-// MARK: - Nested Types
 
 extension ISO_9945.Kernel.Thread.Test.Unit {
     @Test
@@ -59,15 +40,12 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
     }
 }
 
-// MARK: - Create Function
-
 extension ISO_9945.Kernel.Thread.Test.Unit {
     @Test
     func `create function signature exists`() {
-        // Verify the create function signature exists
-        // create(_:) -> Handle throws(Error)
+
         typealias CreateType = (@escaping @Sendable () -> Void) throws ->
             ISO_9945.Kernel.Thread.Handle
-        // The function is verified at compile time
+
     }
 }

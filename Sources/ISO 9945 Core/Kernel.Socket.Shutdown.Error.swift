@@ -1,23 +1,10 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.Socket.Shutdown {
-    /// Errors that can occur during shutdown operations.
+
     public enum Error: Swift.Error, Sendable {
-        /// A platform-specific error.
+
         case platform(Error_Primitives.Error)
     }
 }
-
-// MARK: - Equatable
 
 extension ISO_9945.Kernel.Socket.Shutdown.Error: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -27,8 +14,6 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error: Equatable {
     }
 }
 
-// MARK: - CustomStringConvertible
-
 extension ISO_9945.Kernel.Socket.Shutdown.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
@@ -36,9 +21,3 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error: CustomStringConvertible {
         }
     }
 }
-
-// MARK: - Platform Bindings
-//
-// Per [PLAT-ARCH-008c], the platform-specific `init(code:)` mapping lives in L2:
-// - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.Socket.Shutdown.Error+code.swift`)
-// - Windows: `swift-windows-standard` (`Windows.Kernel.Socket.Shutdown.Error+code.swift`)

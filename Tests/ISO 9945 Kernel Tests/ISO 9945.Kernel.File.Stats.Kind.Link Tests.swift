@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Stats.Kind.Link {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Stats.Kind.Link {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.Unit {
     @Test
     func `symbolic case exists`() {
         let link = ISO_9945.Kernel.File.Stats.Kind.Link.symbolic
         if case .symbolic = link {
-            // Expected
+
         } else {
             Issue.record("Expected .symbolic case")
         }
@@ -39,14 +25,12 @@ extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.Unit {
     func `junction case exists`() {
         let link = ISO_9945.Kernel.File.Stats.Kind.Link.junction
         if case .junction = link {
-            // Expected
+
         } else {
             Issue.record("Expected .junction case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.Unit {
     @Test
@@ -69,12 +53,10 @@ extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Stats.Kind.Link>()
         set.insert(.symbolic)
         set.insert(.junction)
-        set.insert(.symbolic)  // duplicate
+        set.insert(.symbolic)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.EdgeCase {
     @Test

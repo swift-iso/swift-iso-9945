@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Error.Syscall {
@@ -22,8 +10,6 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     @Test
     func `platform case exists`() {
@@ -32,7 +18,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
             operation: .open
         )
         if case .platform = syscall {
-            // Expected
+
         } else {
             Issue.record("Expected .platform case")
         }
@@ -42,7 +28,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     func `invalidDescriptor case exists`() {
         let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
         if case .invalidDescriptor = syscall {
-            // Expected
+
         } else {
             Issue.record("Expected .invalidDescriptor case")
         }
@@ -54,7 +40,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
             operation: .write
         )
         if case .alignmentViolation = syscall {
-            // Expected
+
         } else {
             Issue.record("Expected .alignmentViolation case")
         }
@@ -64,14 +50,12 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     func `notSupported case exists`() {
         let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
         if case .notSupported = syscall {
-            // Expected
+
         } else {
             Issue.record("Expected .notSupported case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     @Test
@@ -102,8 +86,6 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     }
 }
 
-// MARK: - Associated Value Tests
-
 extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     @Test
     func `platform stores error code`() {
@@ -130,7 +112,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
         )
         if case .platform(_, let operation) = syscall {
             if case .write = operation {
-                // Expected
+
             } else {
                 Issue.record("Expected .write operation")
             }
@@ -144,7 +126,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
         let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.invalidDescriptor(operation: .read)
         if case .invalidDescriptor(let operation) = syscall {
             if case .read = operation {
-                // Expected
+
             } else {
                 Issue.record("Expected .read operation")
             }
@@ -160,7 +142,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
         )
         if case .alignmentViolation(let operation) = syscall {
             if case .write = operation {
-                // Expected
+
             } else {
                 Issue.record("Expected .write operation")
             }
@@ -174,7 +156,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
         let syscall = ISO_9945.Kernel.File.Direct.Error.Syscall.notSupported(operation: .open)
         if case .notSupported(let operation) = syscall {
             if case .open = operation {
-                // Expected
+
             } else {
                 Issue.record("Expected .open operation")
             }
@@ -183,8 +165,6 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
         }
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.EdgeCase {
     @Test

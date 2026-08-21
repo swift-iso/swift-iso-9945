@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -17,22 +6,14 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX rmdir() syscall
-
 extension ISO_9945.Kernel.Directory.Remove {
-    /// Removes an empty directory using `Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameter path: The path to remove.
-    /// - Throws: `ISO_9945.Kernel.Directory.Remove.Error` on failure.
+
     public static func remove(_ path: borrowing Path.Borrowed) throws(Error) {
         try unsafe path.withUnsafePointer { (ptr: UnsafePointer<Path.Char>) throws(Error) in
             try unsafe _remove(ptr)
         }
     }
 
-    /// Internal implementation for removing an empty directory using an unsafe path pointer.
     @usableFromInline
     @unsafe
     internal static func _remove(_ path: UnsafePointer<Path.Char>) throws(Error) {
@@ -52,14 +33,12 @@ extension ISO_9945.Kernel.Directory.Remove {
     }
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.Directory.Remove {
     public typealias Error = ISO_9945.Kernel.Directory.Remove.Error
 }
 
 extension ISO_9945.Kernel.Directory.Remove.Error {
-    /// Creates an error from the current errno value.
+
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

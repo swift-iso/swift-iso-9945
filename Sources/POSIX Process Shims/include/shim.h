@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #ifndef CPOSIX_PROCESS_SHIM_H
 #define CPOSIX_PROCESS_SHIM_H
 
@@ -18,12 +7,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
-
-// Process-spawning availability. tvOS and watchOS mark the entire family
-// (fork, execve, posix_spawn, posix_spawn_file_actions_*) unavailable in
-// the SDK; the wrappers below compile to ENOSYS stubs there so the L2
-// surface stays uniform and the failure is a runtime error code, matching
-// POSIX semantics for unsupported operations.
 
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
@@ -36,9 +19,6 @@
 #define CPOSIX_PROCESS_SPAWN_UNAVAILABLE 0
 #endif
 
-// fork() wrapper - on Darwin, fork() is marked unavailable in Swift's overlay.
-// We provide a wrapper to bypass the Swift annotation.
-
 #if defined(__APPLE__)
 static inline pid_t swift_fork(void) {
 #if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
@@ -49,9 +29,6 @@ static inline pid_t swift_fork(void) {
 #endif
 }
 #endif
-
-// POSIX wait status macros - Swift cannot import C macros directly.
-// These wrapper functions expose the macros to Swift.
 
 static inline int swift_WIFEXITED(int status) {
     return WIFEXITED(status);
@@ -87,11 +64,8 @@ static inline int swift_WCOREDUMP(int status) {
 }
 #endif
 
-// Process management wrapper - execve expects mutable pointers but never modifies them.
-// We provide a const-correct wrapper for Swift.
-
 #if defined(__linux__)
-// Forward declaration to avoid including <unistd.h> which causes fd_set conflicts on Linux
+
 extern int execve(const char *__path, char *const __argv[], char *const __envp[]) __attribute__((__nothrow__, __leaf__));
 #else
 #include <unistd.h>
@@ -109,14 +83,10 @@ static inline int swift_execve(
     errno = ENOSYS;
     return -1;
 #else
-    // Cast away const-ness for execve's legacy signature.
-    // execve does NOT modify the strings, this is safe.
+
     return execve(path, (char *const *)argv, (char *const *)envp);
 #endif
 }
-
-// posix_spawn wrapper - similar to execve, expects const pointers.
-// posix_spawn does NOT modify the strings, this is safe.
 
 #include <spawn.h>
 #include <stdlib.h>
@@ -149,16 +119,6 @@ static inline int swift_posix_spawn(
     );
 #endif
 }
-
-// posix_spawn_file_actions wrappers.
-//
-// posix_spawn_file_actions_t is a POSIX opaque type whose concrete layout
-// differs per platform (a pointer on Darwin, a struct on glibc/Musl). To keep
-// that divergence entirely out of Swift, the init wrapper heap-allocates the
-// object and hands it back as an opaque `void *`; every other wrapper takes
-// the handle back as `void *` and casts to the concrete type internally. Swift
-// holds the handle as a plain `UnsafeMutableRawPointer` and never names the
-// platform-divergent type — so the L2 spec surface needs no `#if` for it.
 
 static inline void * _Nullable swift_posix_spawn_file_actions_init(int * _Nonnull result) {
 #if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
@@ -244,15 +204,6 @@ static inline int swift_posix_spawn_file_actions_addclose(
 #endif
 }
 
-// addchdir: change the child's working directory before exec.
-//
-// macOS 26.0 / POSIX.1-2024 standardised the non-suffixed
-// `posix_spawn_file_actions_addchdir(3)`. glibc and older Darwin SDKs
-// ship only the `_np` variant. We pick the right symbol per platform.
-//
-// On Linux the declaration is _GNU_SOURCE-gated so we forward-declare
-// it locally to avoid forcing _GNU_SOURCE on consumers.
-
 #if defined(__linux__)
 extern int posix_spawn_file_actions_addchdir_np(
     posix_spawn_file_actions_t *file_actions,
@@ -265,9 +216,7 @@ static inline int swift_posix_spawn_file_actions_addchdir(
     const char * _Nonnull path
 ) {
 #if defined(__APPLE__) && !TARGET_OS_OSX
-    // iOS-family (iOS/tvOS/watchOS/visionOS/Catalyst): both addchdir
-    // variants are marked unavailable in the SDK. Process spawning with a
-    // working directory does not exist there; report ENOSYS at runtime.
+
     (void)handle;
     (void)path;
     return ENOSYS;
@@ -281,6 +230,6 @@ static inline int swift_posix_spawn_file_actions_addchdir(
 #endif
 }
 
-#endif /* __APPLE__ || __linux__ */
+#endif
 
-#endif /* CPOSIX_PROCESS_SHIM_H */
+#endif

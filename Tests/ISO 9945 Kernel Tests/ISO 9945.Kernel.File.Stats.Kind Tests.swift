@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Stats.Kind {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Stats.Kind {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
     func `regular case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.regular
         if case .regular = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .regular case")
         }
@@ -39,7 +25,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     func `directory case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.directory
         if case .directory = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .directory case")
         }
@@ -49,7 +35,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     func `link case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.link(.symbolic)
         if case .link = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .link case")
         }
@@ -59,7 +45,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     func `device case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.device(.block)
         if case .device = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .device case")
         }
@@ -69,7 +55,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     func `fifo case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.fifo
         if case .fifo = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .fifo case")
         }
@@ -79,7 +65,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     func `socket case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.socket
         if case .socket = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .socket case")
         }
@@ -89,14 +75,12 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     func `unknown case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.unknown
         if case .unknown = kind {
-            // Expected
+
         } else {
             Issue.record("Expected .unknown case")
         }
     }
 }
-
-// MARK: - Nested Types
 
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
@@ -110,8 +94,6 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
         let _: ISO_9945.Kernel.File.Stats.Kind.Link.Type = ISO_9945.Kernel.File.Stats.Kind.Link.self
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
@@ -134,12 +116,10 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
         var set = Set<ISO_9945.Kernel.File.Stats.Kind>()
         set.insert(.regular)
         set.insert(.directory)
-        set.insert(.regular)  // duplicate
+        set.insert(.regular)
         #expect(set.count == 2)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Stats.Kind.Test.EdgeCase {
     @Test

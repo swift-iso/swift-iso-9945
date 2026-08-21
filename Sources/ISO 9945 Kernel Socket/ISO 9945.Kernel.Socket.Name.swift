@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) public import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -20,14 +9,12 @@
 #endif
 
 extension ISO_9945.Kernel.Socket {
-    /// Socket name query namespace.
+
     public enum Name {}
 }
 
-// MARK: - Name typed (Phase 1.5)
-
 extension ISO_9945.Kernel.Socket.Name {
-    /// Gets the local address of a typed socket descriptor.
+
     public static func local(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) -> (
@@ -37,7 +24,6 @@ extension ISO_9945.Kernel.Socket.Name {
         try local(fd: descriptor._rawValue)
     }
 
-    /// Gets the remote address of a connected typed socket descriptor.
     public static func peer(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) -> (
@@ -48,14 +34,8 @@ extension ISO_9945.Kernel.Socket.Name {
     }
 }
 
-// MARK: - Name raw fd SPI
-
 extension ISO_9945.Kernel.Socket.Name {
-    /// Gets the local address of a raw socket fd.
-    ///
-    /// - Parameter fd: The socket raw fd.
-    /// - Returns: The local address and its length.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
+
     internal static func local(
         fd: Int32
     ) throws(ISO_9945.Kernel.Socket.Error) -> (
@@ -77,15 +57,6 @@ extension ISO_9945.Kernel.Socket.Name {
         return (address: storage, length: ISO_9945.Kernel.Socket.Address.Length(addrLen))
     }
 
-    /// Gets the remote address of a connected raw socket fd.
-    ///
-    /// - Parameter fd: The socket raw fd (must be connected).
-    /// - Returns: The peer address and its length.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
-    ///
-    /// ## Common Errors
-    ///
-    /// - `.platform(.notConnected)` (ENOTCONN): Socket is not connected.
     internal static func peer(
         fd: Int32
     ) throws(ISO_9945.Kernel.Socket.Error) -> (

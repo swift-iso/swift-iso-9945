@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,21 +7,14 @@
 #endif
 
 extension Error_Primitives.Error {
-    /// Captures current errno as a `Error_Primitives.Error.Code`.
-    ///
-    /// Must be called immediately after a failing syscall, before any other libc call.
+
     public static func captureErrno() -> Error_Primitives.Error.Code {
         .posix(errno)
     }
 }
 
 extension Error_Primitives.Error {
-    /// Captures current errno and creates a Error_Primitives.Error with operation context.
-    ///
-    /// Must be called immediately after a failing syscall, before any other libc call.
-    ///
-    /// - Parameter operation: Description of the failing operation.
-    /// - Returns: A throwable Error_Primitives.Error with errno captured.
+
     public static func current(
         operation: StaticString,
         function: StaticString = #function,

@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Reason {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     @Test
     func `platformUnsupported case exists`() {
         let reason = ISO_9945.Kernel.File.Direct.Requirements.Reason.platformUnsupported
         if case .platformUnsupported = reason {
-            // Expected
+
         } else {
             Issue.record("Expected .platformUnsupported case")
         }
@@ -39,7 +25,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     func `sectorSizeUndetermined case exists`() {
         let reason = ISO_9945.Kernel.File.Direct.Requirements.Reason.sectorSizeUndetermined
         if case .sectorSizeUndetermined = reason {
-            // Expected
+
         } else {
             Issue.record("Expected .sectorSizeUndetermined case")
         }
@@ -49,7 +35,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     func `filesystemUnsupported case exists`() {
         let reason = ISO_9945.Kernel.File.Direct.Requirements.Reason.filesystemUnsupported
         if case .filesystemUnsupported = reason {
-            // Expected
+
         } else {
             Issue.record("Expected .filesystemUnsupported case")
         }
@@ -59,14 +45,12 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     func `invalidHandle case exists`() {
         let reason = ISO_9945.Kernel.File.Direct.Requirements.Reason.invalidHandle
         if case .invalidHandle = reason {
-            // Expected
+
         } else {
             Issue.record("Expected .invalidHandle case")
         }
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     @Test
@@ -94,8 +78,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     @Test
     func `Reason is Sendable`() {
@@ -120,8 +102,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
         #expect(!reason.description.isEmpty)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.EdgeCase {
     @Test

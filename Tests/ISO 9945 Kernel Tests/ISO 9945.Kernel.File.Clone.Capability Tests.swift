@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Clone.Capability {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.File.Clone.Capability {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
     @Test
     func `reflink case exists`() {
         let capability = ISO_9945.Kernel.File.Clone.Capability.reflink
         if case .reflink = capability {
-            // Expected
+
         } else {
             Issue.record("Expected .reflink case")
         }
@@ -39,14 +25,12 @@ extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
     func `none case exists`() {
         let capability = ISO_9945.Kernel.File.Clone.Capability.none
         if case .none = capability {
-            // Expected
+
         } else {
             Issue.record("Expected .none case")
         }
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
     @Test
@@ -64,8 +48,6 @@ extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
         #expect(a != c)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Clone.Capability.Test.EdgeCase {
     @Test

@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) public import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -20,21 +9,12 @@
 #endif
 
 extension ISO_9945.Kernel.Socket {
-    /// Socket accept namespace.
+
     public enum Accept {}
 }
 
-// MARK: - Accept typed (Phase 1.5)
-//
-// Typed Phase-1.5 form re-added in Wave 4c-Socket Main (2026-05-01) per
-// [PLAT-ARCH-005] three-tier chain (Prerequisite II). Result carries the
-// accepted descriptor typed at birth (2026-06-12): the syscall layer is
-// the ownership boundary, so the raw fd is wrapped into the move-only
-// Descriptor here — a dropped Result closes the accepted connection via
-// Descriptor deinit instead of leaking the fd.
-
 extension ISO_9945.Kernel.Socket.Accept {
-    /// Accepts an incoming connection on a typed listening descriptor.
+
     public static func accept(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) -> Result {
@@ -42,17 +22,8 @@ extension ISO_9945.Kernel.Socket.Accept {
     }
 }
 
-// MARK: - Accept raw fd SPI
-
 extension ISO_9945.Kernel.Socket.Accept {
-    /// Accepts an incoming connection on a raw listening fd.
-    ///
-    /// Spec-literal: takes a raw `Int32` fd. The L3-policy typed-descriptor
-    /// convenience lives at swift-posix per [PLAT-ARCH-005] / [PLAT-ARCH-008e].
-    ///
-    /// - Parameter fd: The listening socket raw fd.
-    /// - Returns: A result containing the new connected descriptor and peer address.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` on failure.
+
     internal static func accept(fd: Int32) throws(ISO_9945.Kernel.Socket.Error) -> Result {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)

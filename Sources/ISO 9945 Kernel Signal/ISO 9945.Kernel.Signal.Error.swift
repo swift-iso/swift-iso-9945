@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,36 +7,23 @@
 #endif
 
 extension ISO_9945.Kernel.Signal {
-    /// Signal-related errors.
-    ///
-    /// Uses operation carriers with semantic accessors to keep the enum stable
-    /// while providing rich error introspection.
+
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
-        /// Operation interrupted by signal (EINTR).
-        ///
-        /// Retained as a convenience case for cross-cutting EINTR scenarios.
+
         case interrupted
 
-        /// Signal set operation failed (sigaddset/sigdelset/sigismember).
         case set(Error_Primitives.Error.Code)
 
-        /// Signal mask operation failed (pthread_sigmask/sigpending).
         case mask(Error_Primitives.Error.Code)
 
-        /// Signal action operation failed (sigaction).
         case action(Error_Primitives.Error.Code)
 
-        /// Signal send operation failed (kill/raise).
         case send(Error_Primitives.Error.Code)
     }
 }
 
-// MARK: - Error Code Mapping
-
 extension ISO_9945.Kernel.Signal.Error {
-    /// Creates a signal error from an error code.
-    ///
-    /// Maps EINTR to `.interrupted`. Returns `nil` for non-signal error codes.
+
     public init?(code: Error_Primitives.Error.Code) {
         guard case .posix(let errno) = code else { return nil }
         switch errno {
@@ -60,10 +36,8 @@ extension ISO_9945.Kernel.Signal.Error {
     }
 }
 
-// MARK: - Semantic Accessors
-
 extension ISO_9945.Kernel.Signal.Error {
-    /// The underlying error code, if any.
+
     public var code: Error_Primitives.Error.Code? {
         switch self {
         case .interrupted:
@@ -74,19 +48,12 @@ extension ISO_9945.Kernel.Signal.Error {
         }
     }
 
-    /// Whether this is an interrupted operation (EINTR).
-    ///
-    /// Returns `true` for the `.interrupted` case or any operation carrier
-    /// with EINTR as the underlying POSIX error code.
     public var isInterrupted: Bool {
         if case .interrupted = self { return true }
         if let code, code.isInterrupted { return true }
         return false
     }
 
-    /// Semantic meaning of the error, if mappable.
-    ///
-    /// Returns `nil` for unrecognized POSIX error codes.
     public var semantic: Semantic? {
         if case .interrupted = self { return .interrupted }
         guard let posix = code?.posix else { return nil }
@@ -99,8 +66,6 @@ extension ISO_9945.Kernel.Signal.Error {
         }
     }
 }
-
-// MARK: - CustomStringConvertible
 
 extension ISO_9945.Kernel.Signal.Error: CustomStringConvertible {
     public var description: Swift.String {

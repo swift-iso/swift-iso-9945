@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Socket.Shutdown.How {
@@ -21,8 +9,6 @@ extension ISO_9945.Kernel.Socket.Shutdown.How {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Unit Tests
 
 extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     @Test
@@ -49,8 +35,6 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     @Test
     func `How is Sendable`() {
@@ -74,12 +58,10 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
         set.insert(.read)
         set.insert(.write)
         set.insert(.both)
-        set.insert(.read)  // duplicate
+        set.insert(.read)
         #expect(set.count == 3)
     }
 }
-
-// MARK: - RawValue Roundtrip Tests
 
 extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     @Test
@@ -100,8 +82,6 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
         #expect(how == .both)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Socket.Shutdown.How.Test.EdgeCase {
     @Test

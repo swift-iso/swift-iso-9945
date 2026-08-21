@@ -1,18 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Error {
@@ -23,14 +11,12 @@ extension ISO_9945.Kernel.File.Direct.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     @Test
     func `notSupported case exists`() {
         let error = ISO_9945.Kernel.File.Direct.Error.notSupported
         if case .notSupported = error {
-            // Expected
+
         } else {
             Issue.record("Expected .notSupported case")
         }
@@ -43,7 +29,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
             required: .`4096`
         )
         if case .misalignedBuffer = error {
-            // Expected
+
         } else {
             Issue.record("Expected .misalignedBuffer case")
         }
@@ -56,7 +42,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
             required: .`4096`
         )
         if case .misalignedOffset = error {
-            // Expected
+
         } else {
             Issue.record("Expected .misalignedOffset case")
         }
@@ -69,7 +55,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
             requiredMultiple: .`4096`
         )
         if case .invalidLength = error {
-            // Expected
+
         } else {
             Issue.record("Expected .invalidLength case")
         }
@@ -79,7 +65,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     func `modeChange case exists`() {
         let error = ISO_9945.Kernel.File.Direct.Error.modeChange
         if case .modeChange = error {
-            // Expected
+
         } else {
             Issue.record("Expected .modeChange case")
         }
@@ -89,7 +75,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     func `invalidHandle case exists`() {
         let error = ISO_9945.Kernel.File.Direct.Error.invalidHandle
         if case .invalidHandle = error {
-            // Expected
+
         } else {
             Issue.record("Expected .invalidHandle case")
         }
@@ -99,14 +85,12 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     func `platform case exists`() {
         let error = ISO_9945.Kernel.File.Direct.Error.platform(code: .posix(1), operation: .open)
         if case .platform = error {
-            // Expected
+
         } else {
             Issue.record("Expected .platform case")
         }
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     @Test
@@ -158,8 +142,6 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     }
 }
 
-// MARK: - Conformance Tests
-
 extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
@@ -183,8 +165,6 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     }
 }
 
-// MARK: - Nested Types
-
 extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
     @Test
     func `Operation type exists`() {
@@ -198,8 +178,6 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
             .Syscall.self
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.File.Direct.Error.Test.EdgeCase {
     @Test

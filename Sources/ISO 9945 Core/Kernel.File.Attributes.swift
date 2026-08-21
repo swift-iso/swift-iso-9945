@@ -1,63 +1,36 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.File {
-    /// File attributes operations.
-    ///
-    /// Provides cross-platform file permission/attributes modification.
-    ///
-    /// Wraps POSIX `chmod()` / Windows `SetFileAttributesW()`.
-    ///
-    /// ## Platform Implementation
-    ///
-    /// Syscall implementations are in platform-specific packages:
-    /// - POSIX: `swift-posix-primitives` (`Posix.Kernel.File.Attributes`)
+
     public enum Attributes {}
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.File.Attributes {
-    /// Errors that can occur during file attributes operations.
+
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// The path does not exist.
+
         case path(Path)
 
-        /// Permission errors.
         case permission(Permission)
 
-        /// I/O errors.
         case io(IO)
 
-        /// Platform-specific error.
         case platform(Error_Primitives.Error)
     }
 }
 
 extension ISO_9945.Kernel.File.Attributes.Error {
-    // Path-related errors
+
     public enum Path: Swift.Error, Sendable, Equatable {
         case notFound
         case tooLong
         case loop
     }
 
-    // Permission-related errors
     public enum Permission: Swift.Error, Sendable, Equatable {
         case denied
         case notPermitted
         case readOnlyFilesystem
     }
 
-    // I/O errors
     public enum IO: Swift.Error, Sendable, Equatable {
         case hardware
     }

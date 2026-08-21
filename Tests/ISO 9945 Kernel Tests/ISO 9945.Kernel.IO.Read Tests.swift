@@ -1,19 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import Error_Primitives
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -25,8 +13,6 @@ extension ISO_9945.Kernel.IO.Read {
         @Suite struct EdgeCase {}
     }
 }
-
-// MARK: - Read Tests
 
 extension ISO_9945.Kernel.IO.Read.Test.Unit {
     @Test
@@ -44,7 +30,6 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
         KernelIOTest.write("Hello, World!", to: fd)
 
-        // Seek to start
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
         var buffer = [UInt8](repeating: 0, count: 13)
@@ -63,14 +48,12 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
         KernelIOTest.write("Hi", to: fd)
 
-        // Seek to start and read all content
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 10)
         _ = try buffer.withUnsafeMutableBytes { ptr in
             try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
 
-        // Now at EOF, next read should return 0
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
             try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
@@ -100,7 +83,6 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
 
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
 
-        // Request more bytes than available
         var buffer = [UInt8](repeating: 0, count: 100)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
             try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
@@ -117,10 +99,8 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
         KernelIOTest.write("0123456789", to: fd)
 
-        // Record initial position
         let initialPos = try ISO_9945.Kernel.File.Seek.tell(fd)
 
-        // Read 3 bytes starting at offset 5
         var buffer = [UInt8](repeating: 0, count: 3)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
             try ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(5))
@@ -129,7 +109,6 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         #expect(bytesRead == 3)
         #expect(Swift.String(decoding: buffer, as: UTF8.self) == "567")
 
-        // Position should be unchanged
         let finalPos = try ISO_9945.Kernel.File.Seek.tell(fd)
         #expect(finalPos == initialPos)
     }
@@ -166,8 +145,6 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         #expect(bytesRead == 0)
     }
 }
-
-// MARK: - Error Tests
 
 extension ISO_9945.Kernel.IO.Read.Test.EdgeCase {
     @Test

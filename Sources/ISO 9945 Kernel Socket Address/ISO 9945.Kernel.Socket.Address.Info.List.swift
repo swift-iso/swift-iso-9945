@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,26 +7,10 @@
 #endif
 
 extension ISO_9945.Kernel.Socket.Address.Info {
-    /// Owned `addrinfo` chain returned by `getaddrinfo`.
-    ///
-    /// The list is the single owner of the platform chain: dropping the value
-    /// releases it via `freeaddrinfo`, mirroring the POSIX ownership contract.
-    /// The owner may be destroyed at any time after the resolving call
-    /// returns — including long after a logical requester abandoned the
-    /// result — so a late result is always freed exactly once.
-    ///
-    /// No platform pointer escapes this type; ``entries`` converts each node
-    /// into an owned ``ISO_9945/Kernel/Socket/Address/Info`` value in the
-    /// system resolver's original order.
-    ///
-    /// ## Safety Invariant
-    ///
-    /// `head` is either nil or the head pointer a successful `getaddrinfo`
-    /// call produced, owned exclusively by this move-only value. It is never
-    /// exposed, and it is freed exactly once, in `deinit`.
+
     @safe
     public struct List: ~Copyable {
-        /// The head of the owned chain.
+
         private let head: UnsafeMutablePointer<addrinfo>?
 
         internal init(head: UnsafeMutablePointer<addrinfo>?) {
@@ -52,23 +25,8 @@ extension ISO_9945.Kernel.Socket.Address.Info {
     }
 }
 
-// MARK: - Resolution
-
 extension ISO_9945.Kernel.Socket.Address.Info.List {
-    /// Resolves a host (and optionally a service) into an owned address chain.
-    ///
-    /// Wraps `getaddrinfo`. The call honors the platform's complete
-    /// resolution policy — `/etc/hosts`, NSS, search domains, and any
-    /// system-specific configuration. The call blocks the calling thread and
-    /// is not interruptible; callers that need cancellation dispatch it to a
-    /// worker they own and abandon the logical wait instead.
-    ///
-    /// - Parameters:
-    ///   - host: The node name or numeric address string to resolve.
-    ///   - service: The service name or numeric port string, or nil.
-    ///   - hints: Constraints on the returned entries.
-    /// - Returns: The owned result chain, in the system resolver's order.
-    /// - Throws: The typed `EAI_*` failure.
+
     public static func get(
         host: String,
         service: String? = nil,
@@ -99,7 +57,6 @@ extension ISO_9945.Kernel.Socket.Address.Info.List {
         return unsafe Self(head: head)
     }
 
-    /// Calls `body` with the C string form of an optional service name.
     private static func withService<R>(
         _ service: String?,
         _ body: (UnsafePointer<CChar>?) -> R
@@ -109,13 +66,8 @@ extension ISO_9945.Kernel.Socket.Address.Info.List {
     }
 }
 
-// MARK: - Owned Conversion
-
 extension ISO_9945.Kernel.Socket.Address.Info.List {
-    /// The chain converted to owned entries, in the system resolver's order.
-    ///
-    /// Each entry copies every referenced field; the returned values remain
-    /// valid after this list is destroyed.
+
     public var entries: [ISO_9945.Kernel.Socket.Address.Info] {
         var result: [ISO_9945.Kernel.Socket.Address.Info] = []
         var node = unsafe head
@@ -136,7 +88,6 @@ extension ISO_9945.Kernel.Socket.Address.Info.List {
         return result
     }
 
-    /// Copies one node's socket address into owned storage.
     private static func address(of value: addrinfo) -> ISO_9945.Kernel.Socket.Address.Storage {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         guard let source = unsafe value.ai_addr else { return storage }

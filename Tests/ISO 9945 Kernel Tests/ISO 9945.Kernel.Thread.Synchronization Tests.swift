@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Error_Primitives
 import Path_Primitives
 import Synchronization
@@ -23,12 +12,8 @@ import Testing
     import Glibc
 #endif
 
-// MARK: - Test Suites for POSIX Thread Synchronization
-
 @Suite("POSIX Thread Synchronization")
 struct POSIXThreadSynchronizationTests {}
-
-// MARK: - Mutex Unit Tests
 
 extension POSIXThreadSynchronizationTests {
     @Suite("Mutex Unit")
@@ -41,7 +26,7 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         mutex.lock()
         mutex.unlock()
-        // No error means success
+
     }
 
     @Test
@@ -74,23 +59,20 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
         let tryResult = Atomic<Bool>(false)
         let done = Atomic<Bool>(false)
 
-        // Hold the mutex in another thread
         let handle = try ISO_9945.Kernel.Thread.create {
             mutex.lock()
             held.store(true, ordering: .releasing)
-            // Wait until main thread has tried
+
             while !done.load(ordering: .acquiring) {
                 ISO_9945.Kernel.Thread.yield()
             }
             mutex.unlock()
         }
 
-        // Wait for thread to hold mutex
         while !held.load(ordering: .acquiring) {
             ISO_9945.Kernel.Thread.yield()
         }
 
-        // Try immediate lock - should fail
         do {
             try mutex.lock.immediate()
             tryResult.store(true, ordering: .releasing)
@@ -106,8 +88,6 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
     }
 }
 
-// MARK: - Condition Unit Tests
-
 extension POSIXThreadSynchronizationTests {
     @Suite("Condition Unit")
     struct ConditionUnit {}
@@ -118,14 +98,14 @@ extension POSIXThreadSynchronizationTests.ConditionUnit {
     func `condition can signal without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
         condition.signal()
-        // No error means success
+
     }
 
     @Test
     func `condition can broadcast without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
         condition.broadcast()
-        // No error means success
+
     }
 
     @Test
@@ -137,18 +117,15 @@ extension POSIXThreadSynchronizationTests.ConditionUnit {
         let result = condition.wait(mutex: mutex, timeout: .milliseconds(10))
         mutex.unlock()
 
-        #expect(result == false)  // Timed out
+        #expect(result == false)
     }
 }
-
-// MARK: - Integration Tests
 
 extension POSIXThreadSynchronizationTests {
     @Suite("Integration")
     struct Integration {}
 }
 
-/// Small sleep helper using usleep
 private func smallSleep(milliseconds: UInt32) {
     #if canImport(Darwin)
         usleep(milliseconds * 1000)
@@ -173,13 +150,11 @@ extension POSIXThreadSynchronizationTests.Integration {
             mutex.unlock()
         }
 
-        // Wait for thread to enter wait
         while !waiterReady.load(ordering: .acquiring) {
             smallSleep(milliseconds: 1)
         }
         smallSleep(milliseconds: 20)
 
-        // Signal
         mutex.lock()
         condition.signal()
         mutex.unlock()
@@ -197,7 +172,6 @@ extension POSIXThreadSynchronizationTests.Integration {
         let waitersWoken = Atomic<Int>(0)
         let numWaiters = 3
 
-        // Spawn threads and join sequentially since Handle is ~Copyable
         let handle1 = try ISO_9945.Kernel.Thread.create {
             mutex.lock()
             waitersReady.wrappingAdd(1, ordering: .releasing)
@@ -220,13 +194,11 @@ extension POSIXThreadSynchronizationTests.Integration {
             mutex.unlock()
         }
 
-        // Wait for all threads to enter wait
         while waitersReady.load(ordering: .acquiring) < numWaiters {
             smallSleep(milliseconds: 1)
         }
         smallSleep(milliseconds: 30)
 
-        // Broadcast
         mutex.lock()
         condition.broadcast()
         mutex.unlock()
@@ -247,7 +219,7 @@ extension POSIXThreadSynchronizationTests.Integration {
         let handle = try ISO_9945.Kernel.Thread.create {
             mutex.lock()
             let result = condition.wait(mutex: mutex, timeout: .milliseconds(10))
-            timedOut.store(!result, ordering: .releasing)  // false = timeout
+            timedOut.store(!result, ordering: .releasing)
             mutex.unlock()
         }
 
@@ -263,7 +235,6 @@ extension POSIXThreadSynchronizationTests.Integration {
         let iterations = 1000
         let numThreads = 4
 
-        // Create and join threads sequentially since Handle is ~Copyable
         for _ in 0..<numThreads {
             let handle = try ISO_9945.Kernel.Thread.create {
                 for _ in 0..<iterations {
@@ -282,12 +253,11 @@ extension POSIXThreadSynchronizationTests.Integration {
     func `condition variable wait/signal ping-pong`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
         let condition = ISO_9945.Kernel.Thread.Condition()
-        let turn = Atomic<Int>(0)  // 0 = ping's turn, 1 = pong's turn
+        let turn = Atomic<Int>(0)
         let pingCount = Atomic<Int>(0)
         let pongCount = Atomic<Int>(0)
         let maxRounds = 5
 
-        // Ping thread
         let ping = try ISO_9945.Kernel.Thread.create {
             mutex.lock()
             while pingCount.load(ordering: .acquiring) < maxRounds {
@@ -301,7 +271,6 @@ extension POSIXThreadSynchronizationTests.Integration {
             mutex.unlock()
         }
 
-        // Pong thread
         let pong = try ISO_9945.Kernel.Thread.create {
             mutex.lock()
             while pongCount.load(ordering: .acquiring) < maxRounds {

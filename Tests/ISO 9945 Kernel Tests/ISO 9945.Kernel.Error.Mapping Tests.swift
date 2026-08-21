@@ -1,27 +1,11 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
-// L2 init?(code:) extensions live in ISO 9945 Core
 @_spi(Syscall) import ISO_9945_Core
 import ISO_9945_Kernel
 import Memory_Primitives
 import Path_Primitives
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 @testable import Error_Primitives
-
-// Error_Primitives.Error.Mapping.swift contains extension initializers for error mapping.
-// These tests verify the error mapping functionality using Error_Primitives.Error.Code.
 
 #if !os(Windows)
 
@@ -32,8 +16,6 @@ import Testing
     #elseif canImport(Musl)
         import Musl
     #endif
-
-    // MARK: - Path.Resolution.Error Mapping Tests
 
     @Suite("Path.Resolution.Error Mapping")
     struct PathResolutionErrorMappingTests {
@@ -68,8 +50,6 @@ import Testing
         }
     }
 
-    // MARK: - Permission.Error Mapping Tests
-
     @Suite("Permission.Error Mapping")
     struct PermissionErrorMappingTests {
         @Test
@@ -96,8 +76,6 @@ import Testing
             #expect(error == nil)
         }
     }
-
-    // MARK: - Descriptor.Validity.Error Mapping Tests
 
     @Suite("Descriptor.Validity.Error Mapping")
     struct DescriptorValidityErrorMappingTests {
@@ -126,8 +104,6 @@ import Testing
         }
     }
 
-    // MARK: - IO.Blocking.Error Mapping Tests
-
     @Suite("IO.Blocking.Error Mapping")
     struct IOBlockingErrorMappingTests {
         @Test
@@ -142,8 +118,6 @@ import Testing
             #expect(error == nil)
         }
     }
-
-    // MARK: - Storage.Error Mapping Tests
 
     @Suite("Storage.Error Mapping")
     struct StorageErrorMappingTests {
@@ -166,8 +140,6 @@ import Testing
         }
     }
 
-    // MARK: - Memory.Allocation.Error Mapping Tests
-
     @Suite("Memory.Allocation.Error Mapping")
     struct MemoryAllocationErrorMappingTests {
         @Test
@@ -182,8 +154,6 @@ import Testing
             #expect(error == nil)
         }
     }
-
-    // MARK: - IO.Error Mapping Tests
 
     @Suite("IO.Error Mapping")
     struct IOErrorMappingTests {
@@ -211,8 +181,6 @@ import Testing
             #expect(error == nil)
         }
     }
-
-    // MARK: - Error_Primitives.Error Tests
 
     @Suite("Error_Primitives.Error")
     struct KernelErrorTests {
@@ -246,7 +214,7 @@ import Testing
             var set = Set<Error_Primitives.Error>()
             set.insert(Error_Primitives.Error(code: .posix(1)))
             set.insert(Error_Primitives.Error(code: .posix(2)))
-            set.insert(Error_Primitives.Error(code: .posix(1)))  // duplicate
+            set.insert(Error_Primitives.Error(code: .posix(1)))
             #expect(set.count == 2)
         }
     }

@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if canImport(Darwin)
@@ -19,10 +8,8 @@
     internal import Musl
 #endif
 
-// MARK: - POSIX symlink() syscall
-
 extension ISO_9945.Kernel.Link.Symbolic {
-    /// Internal implementation for creating a symbolic link.
+
     @usableFromInline
     internal static func _create(
         target: UnsafePointer<Path.Char>,
@@ -44,7 +31,6 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Internal implementation for reading the target into a provided buffer.
     @usableFromInline
     internal static func _readTarget(
         at path: UnsafePointer<Path.Char>,
@@ -52,9 +38,6 @@ extension ISO_9945.Kernel.Link.Symbolic {
     ) throws(Error) -> Int {
         let cPath = unsafe UnsafePointer<CChar>(path)
 
-        // An empty destination buffer is trivially too small to hold any
-        // target; report that instead of force-unwrapping the buffer's
-        // nil baseAddress.
         guard let base = buffer.baseAddress, buffer.count > 0 else {
             throw .bufferTooSmall
         }
@@ -75,21 +58,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     }
 }
 
-// MARK: - POSIX symlinkat() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.Link.Symbolic {
-    /// Creates a symbolic link relative to a raw directory descriptor.
-    ///
-    /// Spec-literal raw `symlinkat(2)`. The typed L2 internal-only convenience
-    /// (`ISO_9945.Kernel.Link.Symbolic._create(target:relativeTo:linkPath:)`
-    /// taking `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI
-    /// internally.
-    ///
-    /// - Parameters:
-    ///   - target: The path the symlink points to.
-    ///   - fd: Raw directory descriptor for the link path.
-    ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on failure.
+
     @_spi(Syscall)
     public static func create(
         target: UnsafePointer<Path.Char>,
@@ -113,14 +83,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     }
 }
 
-// MARK: - Typed Convenience (internal)
-
 extension ISO_9945.Kernel.Link.Symbolic {
-    /// Internal implementation for creating a symbolic link relative to a directory descriptor.
-    ///
-    /// Internal typed L2 form. Delegates to the raw
-    /// `create(target:relativeToFd:linkPath:)` SPI via
-    /// `descriptor._rawValue`.
+
     @usableFromInline
     internal static func _create(
         target: UnsafePointer<Path.Char>,
@@ -135,17 +99,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     }
 }
 
-// MARK: - Ergonomic Path Overloads
-
 extension ISO_9945.Kernel.Link.Symbolic {
-    /// Creates a symbolic link using `Path`.
-    ///
-    /// This is the preferred entry point.
-    ///
-    /// - Parameters:
-    ///   - target: The path the symlink points to.
-    ///   - linkPath: The path where the symlink will be created.
-    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on failure.
+
     public static func create(
         target: borrowing Path.Borrowed,
         at linkPath: borrowing Path.Borrowed
@@ -159,21 +114,8 @@ extension ISO_9945.Kernel.Link.Symbolic {
     }
 }
 
-// MARK: - Borrow-First APIs
-
 extension ISO_9945.Kernel.Link.Symbolic {
 
-    /// Canonical primitive: scoped access to symlink target bytes.
-    ///
-    /// This is the most primitive API. It provides zero-copy access to the
-    /// raw bytes returned by `readlink(2)`. The closure receives a `Span`
-    /// that does NOT include a NUL terminator (readlink returns a count).
-    ///
-    /// - Parameters:
-    ///   - path: The path to the symbolic link.
-    ///   - body: A closure that processes the target bytes. Non-throwing.
-    /// - Returns: The result of the closure.
-    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTargetBytes<R: ~Copyable>(
         at path: borrowing Path.Borrowed,
         _ body: (Swift.Span<Path.Char>) -> R
@@ -210,16 +152,6 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Convenience: scoped access as NUL-terminated view.
-    ///
-    /// This API adds a NUL terminator internally and provides a
-    /// `String.Borrowed` for APIs that expect NUL-terminated strings.
-    ///
-    /// - Parameters:
-    ///   - path: The path to the symbolic link.
-    ///   - body: A closure that processes the target view. Non-throwing.
-    /// - Returns: The result of the closure.
-    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on syscall failure.
     public static func withTarget<R: ~Copyable>(
         at path: borrowing Path.Borrowed,
         _ body: (borrowing String.Borrowed) -> R
@@ -228,7 +160,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
             var bufferSize = 256
 
             while bufferSize <= 65536 {
-                // Allocate extra byte for NUL terminator
+
                 let buffer = UnsafeMutablePointer<CChar>.allocate(capacity: bufferSize + 1)
                 defer { unsafe buffer.deallocate() }
 
@@ -245,7 +177,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
                 }
 
                 if count < bufferSize {
-                    unsafe (buffer[count] = 0)  // NUL terminate
+                    unsafe (buffer[count] = 0)
                     let u8Ptr = unsafe UnsafePointer<UInt8>(buffer)
                     let view = unsafe String.Borrowed(u8Ptr, count: count)
                     return body(view)
@@ -258,15 +190,6 @@ extension ISO_9945.Kernel.Link.Symbolic {
         }
     }
 
-    /// Owned convenience: returns allocated string.
-    ///
-    /// This is the simplest API but involves allocation. For callers that
-    /// need to transform the result (e.g., into a `File.Path`), prefer
-    /// `withTargetBytes` or `withTarget` to avoid intermediate allocations.
-    ///
-    /// - Parameter path: The path to the symbolic link.
-    /// - Returns: The target path as a `String`.
-    /// - Throws: `ISO_9945.Kernel.Link.Symbolic.Error` on failure.
     public static func readTarget(at path: borrowing Path.Borrowed) throws(Error) -> String {
         try withTarget(at: path) { view in
             String(copying: view)
@@ -274,14 +197,12 @@ extension ISO_9945.Kernel.Link.Symbolic {
     }
 }
 
-// MARK: - Error
-
 extension ISO_9945.Kernel.Link.Symbolic {
     public typealias Error = ISO_9945.Kernel.Link.Symbolic.Error
 }
 
 extension ISO_9945.Kernel.Link.Symbolic.Error {
-    /// Creates an error from the current errno for create operations.
+
     internal static func currentCreate() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {
@@ -314,7 +235,6 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
         }
     }
 
-    /// Creates an error from the current errno for read operations.
     internal static func currentRead() -> Self {
         let code = Error_Primitives.Error.Code.current()
         switch code {

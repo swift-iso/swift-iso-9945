@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -17,15 +6,12 @@
     internal import Musl
 #endif
 
-// MARK: - Result
-
 extension ISO_9945.Kernel.Process.Wait {
-    /// Result of a wait operation.
+
     public struct Result: Sendable, Equatable {
-        /// The process ID that changed state.
+
         public let pid: ISO_9945.Kernel.Process.ID
 
-        /// The status of the process.
         public let status: ISO_9945.Kernel.Process.Status
 
         public init(pid: ISO_9945.Kernel.Process.ID, status: ISO_9945.Kernel.Process.Status) {

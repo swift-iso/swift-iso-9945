@@ -1,17 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import ISO_9945_Kernel
 import Tagged_Primitives_Standard_Library_Integration
-// Tests use Apple native Testing framework
 import Testing
 
 extension ISO_9945.Kernel.Lock.Error {
@@ -22,14 +10,12 @@ extension ISO_9945.Kernel.Lock.Error {
     }
 }
 
-// MARK: - Unit Tests
-
 extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     @Test
     func `contention case exists`() {
         let error = ISO_9945.Kernel.Lock.Error.contention
         if case .contention = error {
-            // Expected
+
         } else {
             Issue.record("Expected .contention case")
         }
@@ -39,7 +25,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     func `deadlock case exists`() {
         let error = ISO_9945.Kernel.Lock.Error.deadlock
         if case .deadlock = error {
-            // Expected
+
         } else {
             Issue.record("Expected .deadlock case")
         }
@@ -49,14 +35,12 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     func `unavailable case exists`() {
         let error = ISO_9945.Kernel.Lock.Error.unavailable
         if case .unavailable = error {
-            // Expected
+
         } else {
             Issue.record("Expected .unavailable case")
         }
     }
 }
-
-// MARK: - Case Distinctness Tests
 
 extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     @Test
@@ -69,8 +53,6 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
         #expect(ISO_9945.Kernel.Lock.Error.interrupted != ISO_9945.Kernel.Lock.Error.contention)
     }
 }
-
-// MARK: - Description Tests
 
 extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     @Test
@@ -91,8 +73,6 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
         #expect(error.description == "no locks available")
     }
 }
-
-// MARK: - Conformance Tests
 
 extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     @Test
@@ -122,7 +102,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
         set.insert(.contention)
         set.insert(.deadlock)
         set.insert(.unavailable)
-        set.insert(.contention)  // duplicate
+        set.insert(.contention)
         #expect(set.count == 3)
     }
 
@@ -132,8 +112,6 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
         #expect(!error.description.isEmpty)
     }
 }
-
-// MARK: - Edge Cases
 
 extension ISO_9945.Kernel.Lock.Error.Test.EdgeCase {
     @Test
@@ -188,8 +166,6 @@ extension ISO_9945.Kernel.Lock.Error.Test.EdgeCase {
         let deadlockHash = ISO_9945.Kernel.Lock.Error.deadlock.hashValue
         let unavailableHash = ISO_9945.Kernel.Lock.Error.unavailable.hashValue
 
-        // Hash values should generally be different for different cases
-        // (not guaranteed but highly likely)
         #expect(contentionHash != deadlockHash || deadlockHash != unavailableHash)
     }
 }

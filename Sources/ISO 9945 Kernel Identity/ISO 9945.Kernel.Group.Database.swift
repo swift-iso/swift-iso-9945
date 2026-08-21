@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -18,28 +7,14 @@
 #endif
 
 extension ISO_9945.Kernel.Group {
-    /// Group database operations namespace.
+
     public enum Database {}
 }
 
-// MARK: - Lookup
-
 extension ISO_9945.Kernel.Group.Database {
-    /// The largest buffer this type will grow to before giving up on
-    /// `ERANGE` and reporting a lookup failure instead of looping forever
-    /// against a database entry (or a broken NSS module) that never fits.
-    private static let maximumBufferSize = 1 << 20  // 1 MiB
 
-    /// Looks up a group by name.
-    ///
-    /// Uses the reentrant `getgrnam_r(3)`, which reads into a caller-owned
-    /// buffer rather than the shared static storage `getgrnam(3)` returns —
-    /// safe under concurrent lookups on other threads.
-    ///
-    /// - Parameter name: The group name to look up.
-    /// - Returns: The group entry, or `nil` if no such group exists.
-    /// - Throws: `Error.lookup` if the lookup itself fails (distinct from
-    ///   the name simply having no entry).
+    private static let maximumBufferSize = 1 << 20
+
     public static func find(name: String) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, gr, result in
             name.withCString { cName in
@@ -48,14 +23,6 @@ extension ISO_9945.Kernel.Group.Database {
         }
     }
 
-    /// Looks up a group by group ID.
-    ///
-    /// Uses the reentrant `getgrgid_r(3)`; see `find(name:)`.
-    ///
-    /// - Parameter gid: The group ID to look up.
-    /// - Returns: The group entry, or `nil` if no such group exists.
-    /// - Throws: `Error.lookup` if the lookup itself fails (distinct from
-    ///   the ID simply having no entry).
     public static func find(gid: ISO_9945.Kernel.Group.ID) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, gr, result in
             unsafe getgrgid_r(
@@ -68,14 +35,6 @@ extension ISO_9945.Kernel.Group.Database {
         }
     }
 
-    /// Runs a `getgrnam_r`/`getgrgid_r`-shaped lookup, growing the scratch
-    /// buffer on `ERANGE` up to `maximumBufferSize`.
-    ///
-    /// - Parameter lookup: Invokes the underlying `_r` call with the
-    ///   current buffer, the `group` storage to fill, and the out
-    ///   parameter that is set non-nil iff an entry was found. Returns the
-    ///   `_r` call's raw result code (`0` on success, whether or not an
-    ///   entry was found; nonzero is a genuine failure).
     private static func withReentrantLookup(
         _ lookup: (
             UnsafeMutableBufferPointer<CChar>,

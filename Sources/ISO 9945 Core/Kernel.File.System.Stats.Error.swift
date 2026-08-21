@@ -1,16 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.File.System.Stats {
-    /// Error type for filesystem statistics operations.
+
     public enum Error: Swift.Error, Sendable, Equatable {
         case path(Path.Resolution.Error)
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
@@ -27,9 +16,3 @@ extension ISO_9945.Kernel.File.System.Stats.Error: CustomStringConvertible {
         }
     }
 }
-
-// MARK: - Platform Bindings
-//
-// Per [PLAT-ARCH-008c], the platform-specific `init(code:)` mapping lives in L2:
-// - POSIX: `swift-iso-9945` (`ISO 9945.Kernel.File.System.Stats.Error+code.swift`)
-// - Windows: `swift-windows-standard` (`Windows.Kernel.File.System.Stats.Error+code.swift`)

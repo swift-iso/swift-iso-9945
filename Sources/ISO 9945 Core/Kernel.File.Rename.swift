@@ -1,43 +1,19 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.File {
-    /// Atomic rename operations.
-    ///
-    /// Provides cross-platform atomic rename operations with options
-    /// like "no clobber" (fail if destination exists).
-    ///
-    /// ## Platform Implementation
-    ///
-    /// Syscall implementations are in platform-specific packages:
-    /// - POSIX: `swift-iso-9945` (`ISO_9945.Kernel.File.Rename`)
+
     public enum Rename {}
 }
 
-// MARK: - Error Type
-
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD)
     extension ISO_9945.Kernel.File.Rename {
-        /// Errors from rename operations.
+
         public enum Error: Swift.Error, Sendable, Equatable, Hashable {
-            /// Destination already exists (no-clobber mode).
+
             case exists
 
-            /// Operation not supported by filesystem or kernel.
             case notSupported
 
-            /// Permission denied.
             case permission(Error_Primitives.Error.Code)
 
-            /// Platform-specific error.
             case platform(Error_Primitives.Error.Code)
         }
     }

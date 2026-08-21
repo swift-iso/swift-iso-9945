@@ -1,39 +1,11 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension ISO_9945.Kernel.File.Direct.Requirements {
-    /// Concrete alignment values for Direct I/O.
+
     public struct Alignment: Sendable, Equatable {
-        /// Required alignment for buffer memory addresses.
-        ///
-        /// The buffer pointer passed to read/write must have an address
-        /// that is a multiple of this value.
-        ///
-        /// Typical values: 512 (legacy), 4096 (modern SSDs/NVMe).
+
         public let bufferAlignment: Memory.Alignment
 
-        /// Required alignment for file offsets.
-        ///
-        /// The file position for read/write operations must be a multiple
-        /// of this value.
-        ///
-        /// Usually matches `bufferAlignment` but may differ on some systems.
         public let offsetAlignment: Memory.Alignment
 
-        /// Required multiple for I/O transfer lengths.
-        ///
-        /// The number of bytes read/written must be a multiple of this value.
-        /// Partial sector I/O is not allowed in Direct mode.
-        ///
-        /// Usually matches `bufferAlignment`.
         public let lengthMultiple: Memory.Alignment
 
         public init(
@@ -46,9 +18,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
             self.lengthMultiple = lengthMultiple
         }
 
-        /// Creates alignment with a single value for all requirements.
-        ///
-        /// Use when buffer, offset, and length all share the same alignment.
         public init(uniform alignment: Memory.Alignment) {
             self.bufferAlignment = alignment
             self.offsetAlignment = alignment
@@ -57,16 +26,8 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
     }
 }
 
-// MARK: - Validation
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
-    /// Validates all alignment requirements for an I/O operation.
-    ///
-    /// - Parameters:
-    ///   - bufferAddress: The buffer address.
-    ///   - fileOffset: The file offset.
-    ///   - transferLength: The transfer length.
-    /// - Returns: The first validation failure, or `nil` if all pass.
+
     public func validate(
         buffer bufferAddress: Memory.Address,
         offset fileOffset: ISO_9945.Kernel.File.Offset,

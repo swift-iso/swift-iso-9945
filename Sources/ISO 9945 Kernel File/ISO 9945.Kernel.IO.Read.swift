@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-iso-9945 open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-iso-9945 project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) import ISO_9945_Core
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
@@ -23,20 +12,8 @@
     #error("ISO_9945.Kernel.IO.Read: unsupported platform")
 #endif
 
-// MARK: - POSIX read() syscall (raw @_spi(Syscall))
-
 extension ISO_9945.Kernel.IO.Read {
-    /// Reads bytes from a raw file descriptor.
-    ///
-    /// Spec-literal raw `read(2)`. The typed L2 convenience
-    /// (`ISO_9945.Kernel.IO.Read.read(_:into:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor to read from.
-    ///   - buffer: The buffer to read into.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+
     internal static func read(
         fd: Int32,
         into buffer: UnsafeMutableRawBufferPointer
@@ -69,18 +46,6 @@ extension ISO_9945.Kernel.IO.Read {
         #endif
     }
 
-    /// Reads bytes from a raw file descriptor at a specific offset.
-    ///
-    /// Spec-literal raw `pread(2)`. The typed L2 convenience
-    /// (`ISO_9945.Kernel.IO.Read.pread(_:into:at:)` taking
-    /// `borrowing ISO_9945.Kernel.Descriptor`) delegates to this raw SPI internally.
-    ///
-    /// - Parameters:
-    ///   - fd: The raw file descriptor to read from.
-    ///   - buffer: The buffer to read into.
-    ///   - offset: The file offset to read from.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     internal static func pread(
         fd: Int32,
         into buffer: UnsafeMutableRawBufferPointer,
@@ -115,22 +80,8 @@ extension ISO_9945.Kernel.IO.Read {
     }
 }
 
-// MARK: - Typed Convenience
-
 extension ISO_9945.Kernel.IO.Read {
-    /// Reads bytes from a file descriptor.
-    ///
-    /// Typed L2 form. Delegates to the raw `read(fd:into:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check. Marked
-    /// `@_disfavoredOverload` so the L3-unifier `ISO_9945.Kernel.IO.Read.read(_:into:)`
-    /// (EINTR-retry policy) wins overload resolution at consumer sites that
-    /// see both layers — raw spec access is reachable via this L2 form.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
-    ///   - buffer: The buffer to read into.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+
     @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -142,20 +93,6 @@ extension ISO_9945.Kernel.IO.Read {
         return try unsafe read(fd: descriptor._rawValue, into: buffer)
     }
 
-    /// Reads bytes from a file descriptor at a specific offset.
-    ///
-    /// Typed L2 form. Delegates to the raw `pread(fd:into:at:)` SPI via
-    /// `descriptor._rawValue` after a fast-fail validity check. Marked
-    /// `@_disfavoredOverload` so the L3-unifier
-    /// `ISO_9945.Kernel.IO.Read.pread(_:into:at:)` (EINTR-retry policy) wins overload
-    /// resolution.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
-    ///   - buffer: The buffer to read into.
-    ///   - offset: The file offset to read from.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -169,20 +106,8 @@ extension ISO_9945.Kernel.IO.Read {
     }
 }
 
-// MARK: - Span Adapters
-
 extension ISO_9945.Kernel.IO.Read {
-    /// Reads bytes from a file descriptor into an output span.
-    ///
-    /// The initialized prefix is preserved. On success, the returned kernel
-    /// count is committed to the output span's initialized count. EOF returns
-    /// zero without advancing it; a thrown error likewise leaves it unchanged.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
-    ///   - output: The output span whose uninitialized tail receives the bytes.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
+
     @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -203,13 +128,6 @@ extension ISO_9945.Kernel.IO.Read {
         }
     }
 
-    /// Reads bytes from a file descriptor into a mutable span.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
-    ///   - span: The mutable span to read into.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -221,14 +139,6 @@ extension ISO_9945.Kernel.IO.Read {
         }
     }
 
-    /// Reads bytes from a file descriptor at a specific offset into a mutable span.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The file descriptor to read from.
-    ///   - span: The mutable span to read into.
-    ///   - offset: The file offset to read from.
-    /// - Returns: Number of bytes read. Returns 0 on EOF.
-    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on failure.
     @_disfavoredOverload
     public static func pread(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
@@ -242,10 +152,8 @@ extension ISO_9945.Kernel.IO.Read {
     }
 }
 
-// MARK: - Error Conversion
-
 extension ISO_9945.Kernel.IO.Read.Error {
-    /// Creates an error from the current errno value.
+
     internal static func current() -> Self {
         let code = Error_Primitives.Error.Code.current()
         if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
