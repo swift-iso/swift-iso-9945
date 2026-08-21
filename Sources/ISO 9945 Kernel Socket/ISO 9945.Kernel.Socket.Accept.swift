@@ -57,7 +57,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
-        let acceptedFd = storage.withUnsafeMutableBytes { ptr, _ in
+        let acceptedFd = unsafe storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
             return unsafe platformAccept(fd, sockaddrPtr, &addrLen)
         }

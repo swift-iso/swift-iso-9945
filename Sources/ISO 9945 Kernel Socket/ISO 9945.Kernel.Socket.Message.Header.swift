@@ -67,7 +67,7 @@ extension ISO_9945.Kernel.Socket.Message.Header {
             unsafe cValue.msg_iov = UnsafeMutableRawPointer(newValue.pointer)?.assumingMemoryBound(
                 to: iovec.self
             )
-            cValue.msg_iovlen = numericCast(newValue.count)
+            unsafe cValue.msg_iovlen = numericCast(newValue.count)
         }
     }
 
@@ -76,13 +76,13 @@ extension ISO_9945.Kernel.Socket.Message.Header {
         get {
             unsafe Control(
                 pointer: cValue.msg_control.map { start in
-                    UnsafeMutableRawBufferPointer(start: start, count: Int(cValue.msg_controllen))
+                    unsafe UnsafeMutableRawBufferPointer(start: start, count: Int(cValue.msg_controllen))
                 }
             )
         }
         set {
             unsafe cValue.msg_control = newValue.pointer?.baseAddress
-            cValue.msg_controllen = numericCast(newValue.pointer?.count ?? 0)
+            unsafe cValue.msg_controllen = unsafe numericCast(newValue.pointer?.count ?? 0)
         }
     }
 

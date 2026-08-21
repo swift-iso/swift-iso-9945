@@ -103,7 +103,7 @@ extension ISO_9945.Kernel.Socket.Connect {
         address: ISO_9945.Kernel.Socket.Address.Storage,
         length: ISO_9945.Kernel.Socket.Address.Length
     ) throws(ISO_9945.Kernel.Socket.Error) {
-        let rc = address.withUnsafeBytes { ptr, _ in
+        let rc = unsafe address.withUnsafeBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
             return unsafe platformConnect(
                 fd,

@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Socket.Name {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
-        let rc = storage.withUnsafeMutableBytes { ptr, _ in
+        let rc = unsafe storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
             return unsafe getsockname(fd, sockaddrPtr, &addrLen)
         }
@@ -95,7 +95,7 @@ extension ISO_9945.Kernel.Socket.Name {
         var storage = ISO_9945.Kernel.Socket.Address.Storage()
         var addrLen = socklen_t(ISO_9945.Kernel.Socket.Address.Storage.size.underlying.rawValue)
 
-        let rc = storage.withUnsafeMutableBytes { ptr, _ in
+        let rc = unsafe storage.withUnsafeMutableBytes { ptr, _ in
             let sockaddrPtr = unsafe ptr.assumingMemoryBound(to: sockaddr.self)
             return unsafe getpeername(fd, sockaddrPtr, &addrLen)
         }
