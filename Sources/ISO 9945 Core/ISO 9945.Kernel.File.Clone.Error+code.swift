@@ -11,7 +11,7 @@ extension ISO_9945.Kernel.File.Clone.Error {
     }
 
     @_spi(Syscall)
-    public init(code: Error_Primitives.Error.Code, operation: Operation) {
+    public init(code: Error.Error.Code, operation: Operation) {
         switch code {
         case _ where code == .POSIX.ENOENT:
             self = .sourceNotFound
@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.File.Clone.Error {
         case _ where code == .POSIX.EISDIR:
             self = .isDirectory
 
-        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
+        case _ where Error.Error.Code.POSIX.isENOTSUP(code):
             self = .notSupported
 
         default:

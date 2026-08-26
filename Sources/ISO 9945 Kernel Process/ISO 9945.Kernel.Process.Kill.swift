@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.Process.Kill {
         #endif
 
         if rc == -1 {
-            throw .kill(Error_Primitives.Error.captureErrno())
+            throw .kill(Error.Error.captureErrno())
         }
     }
 }

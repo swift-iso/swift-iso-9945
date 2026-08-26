@@ -1,5 +1,5 @@
 @_spi(Syscall) import ISO_9945_Core
-import Memory_Primitives
+import Memory
 
 #if canImport(Darwin)
     internal import Darwin

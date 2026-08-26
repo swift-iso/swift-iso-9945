@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.Directory.Remove {
 
         case nameTooLong
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

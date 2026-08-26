@@ -1,6 +1,6 @@
-import Error_Primitives
+import Error
 import ISO_9945_Kernel
-import Path_Primitives
+import Path
 
 public final class LockedBox<T>: @unchecked Sendable {
     private var value: T

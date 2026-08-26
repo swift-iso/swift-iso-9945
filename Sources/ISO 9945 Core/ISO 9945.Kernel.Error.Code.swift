@@ -6,7 +6,7 @@
     internal import Musl
 #endif
 
-extension Error_Primitives.Error.Code {
+extension Error.Error.Code {
 
     public static func captureErrno() -> Self {
         .posix(errno)
@@ -18,7 +18,7 @@ extension Error_Primitives.Error.Code {
 }
 
 #if canImport(Darwin)
-    extension Error_Primitives.Error.Code {
+    extension Error.Error.Code {
         public static let success = Self.posix(0)
         public static let ENOENT = Self.posix(Darwin.ENOENT)
         public static let EACCES = Self.posix(Darwin.EACCES)
@@ -54,7 +54,7 @@ extension Error_Primitives.Error.Code {
         public static let ENOTSUP = Self.posix(Darwin.ENOTSUP)
     }
 #elseif canImport(Glibc)
-    extension Error_Primitives.Error.Code {
+    extension Error.Error.Code {
         public static let success = Self.posix(0)
         public static let ENOENT = Self.posix(Glibc.ENOENT)
         public static let EACCES = Self.posix(Glibc.EACCES)
@@ -90,7 +90,7 @@ extension Error_Primitives.Error.Code {
         public static let ENOTSUP = Self.posix(Glibc.ENOTSUP)
     }
 #elseif canImport(Musl)
-    extension Error_Primitives.Error.Code {
+    extension Error.Error.Code {
         public static let success = Self.posix(0)
         public static let ENOENT = Self.posix(Musl.ENOENT)
         public static let EACCES = Self.posix(Musl.EACCES)

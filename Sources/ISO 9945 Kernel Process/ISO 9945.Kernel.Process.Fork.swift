@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Process.Fork {
 
         switch pid {
         case -1:
-            throw .fork(Error_Primitives.Error.captureErrno())
+            throw .fork(Error.Error.captureErrno())
 
         case 0:
             return .child

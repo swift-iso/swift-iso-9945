@@ -1,6 +1,6 @@
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
-import Tagged_Primitives_Standard_Library_Integration
+import Tagged_Standard_Library_Integration
 import Testing
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset {

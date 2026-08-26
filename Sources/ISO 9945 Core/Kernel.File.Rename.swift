@@ -12,9 +12,9 @@ extension ISO_9945.Kernel.File {
 
             case notSupported
 
-            case permission(Error_Primitives.Error.Code)
+            case permission(Error.Error.Code)
 
-            case platform(Error_Primitives.Error.Code)
+            case platform(Error.Error.Code)
         }
     }
 

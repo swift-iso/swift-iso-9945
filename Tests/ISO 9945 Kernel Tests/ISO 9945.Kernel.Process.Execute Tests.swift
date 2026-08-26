@@ -3,8 +3,8 @@
     import Darwin
     import Testing
 
-    import Path_Primitives
-    import Error_Primitives
+    import Path
+    import Error
     @testable import ISO_9945_Kernel
 
     extension ISO_9945.Kernel.Process.Execute {

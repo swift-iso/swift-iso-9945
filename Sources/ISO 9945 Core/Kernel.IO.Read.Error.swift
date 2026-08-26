@@ -3,7 +3,7 @@ extension ISO_9945.Kernel.IO.Read {
     public enum Error: Swift.Error, Sendable {
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case blocking(ISO_9945.Kernel.IO.Blocking.Error)
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

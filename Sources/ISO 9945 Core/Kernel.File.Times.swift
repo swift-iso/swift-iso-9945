@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.File.Times {
 
         case unrepresentable
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

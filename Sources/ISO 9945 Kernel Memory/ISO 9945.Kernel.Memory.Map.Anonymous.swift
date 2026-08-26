@@ -1,6 +1,6 @@
 #if !os(Windows)
 
-    import Memory_Primitives
+    import Memory
 
     #if canImport(Darwin)
         internal import Darwin

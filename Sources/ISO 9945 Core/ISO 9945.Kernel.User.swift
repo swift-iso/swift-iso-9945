@@ -1,4 +1,4 @@
-public import Tagged_Primitives
+public import Tagged
 
 extension ISO_9945.Kernel {
 

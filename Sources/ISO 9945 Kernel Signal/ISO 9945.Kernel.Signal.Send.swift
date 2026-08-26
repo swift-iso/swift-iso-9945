@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.Signal.Send {
         pid: ISO_9945.Kernel.Process.ID
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard kill(pid.rawValue, signal.rawValue) == 0 else {
-            throw .send(Error_Primitives.Error.captureErrno())
+            throw .send(Error.Error.captureErrno())
         }
     }
 
@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.Signal.Send {
         _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard raise(signal.rawValue) == 0 else {
-            throw .send(Error_Primitives.Error.captureErrno())
+            throw .send(Error.Error.captureErrno())
         }
     }
 
@@ -39,7 +39,7 @@ extension ISO_9945.Kernel.Signal.Send {
             throw .send(.posix(EINVAL))
         }
         guard kill(-pgid.underlying, signal.rawValue) == 0 else {
-            throw .send(Error_Primitives.Error.captureErrno())
+            throw .send(Error.Error.captureErrno())
         }
     }
 }

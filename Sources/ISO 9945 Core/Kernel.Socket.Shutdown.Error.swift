@@ -2,7 +2,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
 
     public enum Error: Swift.Error, Sendable {
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

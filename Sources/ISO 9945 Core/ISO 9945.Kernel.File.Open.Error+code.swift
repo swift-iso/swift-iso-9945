@@ -2,7 +2,7 @@ extension ISO_9945.Kernel.File.Open.Error {
 
     @_spi(Syscall)
     @inlinable
-    public init(code: Error_Primitives.Error.Code) {
+    public init(code: Error.Error.Code) {
         if let e = Path.Resolution.Error(code: code) {
             self = .path(e)
             return
@@ -11,6 +11,6 @@ extension ISO_9945.Kernel.File.Open.Error {
             self = .handle(e)
             return
         }
-        self = .platform(Error_Primitives.Error(code: code))
+        self = .platform(Error.Error(code: code))
     }
 }

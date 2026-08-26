@@ -1,6 +1,6 @@
-import Error_Primitives
-import Path_Primitives
-import Tagged_Primitives_Standard_Library_Integration
+import Error
+import Path
+import Tagged_Standard_Library_Integration
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
 
     @Test
     func `error is Equatable`() {
-        let code = Error_Primitives.Error.Code.posix(1)
+        let code = Error.Error.Code.posix(1)
         #expect(
             ISO_9945.Kernel.Process.Error.fork(code) == ISO_9945.Kernel.Process.Error.fork(code)
         )
@@ -47,7 +47,7 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
 
     @Test
     func `code accessor returns underlying code`() {
-        let code = Error_Primitives.Error.Code.posix(42)
+        let code = Error.Error.Code.posix(42)
         let errors: [ISO_9945.Kernel.Process.Error] = [
             .fork(code),
             .execute(code),
@@ -63,7 +63,7 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
 
     @Test
     func `isInterrupted returns true for EINTR`() {
-        let code = Error_Primitives.Error.Code.posix(EINTR)
+        let code = Error.Error.Code.posix(EINTR)
         let error = ISO_9945.Kernel.Process.Error.wait(code)
         #expect(error.isInterrupted)
 
@@ -73,7 +73,7 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
 
     @Test
     func `all error cases are distinct`() {
-        let code = Error_Primitives.Error.Code.posix(1)
+        let code = Error.Error.Code.posix(1)
         let cases: [ISO_9945.Kernel.Process.Error] = [
             .fork(code),
             .execute(code),

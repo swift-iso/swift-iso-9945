@@ -25,11 +25,11 @@
     extension ISO_9945.Kernel.TTY.Size {
 
         @_spi(Syscall)
-        public static func query(fd: Int32) throws(Error_Primitives.Error) -> Self {
+        public static func query(fd: Int32) throws(Error.Error) -> Self {
             var ws = winsize()
             let result = unsafe iso9945_ioctl_tiocgwinsz(fd, &ws)
             guard result == 0 else {
-                throw Error_Primitives.Error.current(operation: "ioctl(TIOCGWINSZ)")
+                throw Error.Error.current(operation: "ioctl(TIOCGWINSZ)")
             }
             return Self(rows: ws.ws_row, columns: ws.ws_col)
         }
@@ -46,7 +46,7 @@
 
         public static func query(
             _ descriptor: borrowing ISO_9945.Kernel.Descriptor
-        ) throws(Error_Primitives.Error) -> Self {
+        ) throws(Error.Error) -> Self {
             try query(fd: descriptor._rawValue)
         }
     }

@@ -1,4 +1,4 @@
-extension Error_Primitives.Error.Code {
+extension Error.Error.Code {
 
     @inlinable
     public var isInterrupted: Bool {

@@ -3,7 +3,7 @@ extension ISO_9945.Kernel.Environment {
     public enum Error: Swift.Error, Sendable {
         case permission(ISO_9945.Kernel.Permission.Error)
         case invalid(Invalid)
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

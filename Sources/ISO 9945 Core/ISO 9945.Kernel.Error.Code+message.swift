@@ -6,7 +6,7 @@
     internal import Musl
 #endif
 
-extension Error_Primitives.Error.Code {
+extension Error.Error.Code {
 
     public var posixMessage: Swift.String? {
         switch self {

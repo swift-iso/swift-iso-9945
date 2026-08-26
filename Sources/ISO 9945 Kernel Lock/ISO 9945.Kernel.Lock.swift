@@ -20,7 +20,7 @@ extension ISO_9945.Kernel.Lock {
 
         let result = unsafe fcntl(fd, F_SETLKW, &fl)
         guard result != -1 else {
-            throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+            throw ISO_9945.Kernel.Lock.Error(Error.Error.Code.captureErrno())
         }
     }
 
@@ -55,7 +55,7 @@ extension ISO_9945.Kernel.Lock {
 
         let result = unsafe fcntl(fd, F_SETLK, &fl)
         guard result != -1 else {
-            throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+            throw ISO_9945.Kernel.Lock.Error(Error.Error.Code.captureErrno())
         }
     }
 
@@ -123,7 +123,7 @@ extension ISO_9945.Kernel.Lock.Immediate {
             if errno == EAGAIN || errno == EACCES {
                 throw .contention
             }
-            throw ISO_9945.Kernel.Lock.Error(Error_Primitives.Error.Code.captureErrno())
+            throw ISO_9945.Kernel.Lock.Error(Error.Error.Code.captureErrno())
         }
     }
 }
@@ -141,7 +141,7 @@ extension ISO_9945.Kernel.Lock.Immediate {
 
 extension ISO_9945.Kernel.Lock.Error {
 
-    init(_ code: Error_Primitives.Error.Code) {
+    init(_ code: Error.Error.Code) {
         switch code {
         case .posix(let errno):
             switch errno {

@@ -2,7 +2,7 @@
     extension ISO_9945.Kernel.Storage.Error {
 
         @inlinable
-        public var code: Error_Primitives.Error.Code {
+        public var code: Error.Error.Code {
             switch self {
             case .exhausted:
                 return .POSIX.ENOSPC
@@ -16,12 +16,12 @@
     extension ISO_9945.Kernel.Storage.Error {
 
         @inlinable
-        public init?(code: Error_Primitives.Error.Code) {
+        public init?(code: Error.Error.Code) {
             switch code {
             case .POSIX.ENOSPC:
                 self = .exhausted
 
-            case _ where Error_Primitives.Error.Code.POSIX.isEDQUOT(code):
+            case _ where Error.Error.Code.POSIX.isEDQUOT(code):
                 self = .quota
 
             default:

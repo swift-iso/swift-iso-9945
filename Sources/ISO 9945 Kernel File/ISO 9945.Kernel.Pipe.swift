@@ -74,10 +74,10 @@ extension ISO_9945.Kernel.Pipe {
 extension ISO_9945.Kernel.Pipe.Error {
 
     internal static func current() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
-        return .platform(Error_Primitives.Error(code: code))
+        return .platform(Error.Error(code: code))
     }
 }

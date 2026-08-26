@@ -8,7 +8,7 @@ extension ISO_9945.Kernel.Thread.Affinity {
 
         case tooManyCPUs
 
-        case platform(Error_Primitives.Error.Code)
+        case platform(Error.Error.Code)
     }
 }
 

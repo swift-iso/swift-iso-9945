@@ -14,7 +14,7 @@ extension ISO_9945.Kernel.Directory {
 
         case closed
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

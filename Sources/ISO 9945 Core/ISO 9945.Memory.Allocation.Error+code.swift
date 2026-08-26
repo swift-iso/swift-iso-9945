@@ -1,7 +1,7 @@
 extension Memory.Allocation.Error {
 
     @inlinable
-    public init?(code: Error_Primitives.Error.Code) {
+    public init?(code: Error.Error.Code) {
         switch code {
         case .POSIX.ENOMEM:
             self = .exhausted

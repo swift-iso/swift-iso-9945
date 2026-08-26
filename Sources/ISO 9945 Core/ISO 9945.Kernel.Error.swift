@@ -6,14 +6,14 @@
     internal import Musl
 #endif
 
-extension Error_Primitives.Error {
+extension Error.Error {
 
-    public static func captureErrno() -> Error_Primitives.Error.Code {
+    public static func captureErrno() -> Error.Error.Code {
         .posix(errno)
     }
 }
 
-extension Error_Primitives.Error {
+extension Error.Error {
 
     public static func current(
         operation: StaticString,

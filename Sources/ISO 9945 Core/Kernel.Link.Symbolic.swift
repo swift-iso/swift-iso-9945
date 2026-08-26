@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
 
         case bufferTooSmall
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

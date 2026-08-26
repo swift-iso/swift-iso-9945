@@ -1,5 +1,5 @@
 @_spi(Syscall) import ISO_9945_Core
-import Memory_Primitives
+import Memory
 
 #if canImport(Darwin)
     internal import Darwin
@@ -44,7 +44,7 @@ extension Memory.Shared {
         #endif
 
         guard fd >= 0 else {
-            throw .open(Error_Primitives.Error.Code.captureErrno())
+            throw .open(Error.Error.Code.captureErrno())
         }
         return fd
     }
@@ -68,7 +68,7 @@ extension Memory.Shared {
     @unsafe
     public static func unlink(name: UnsafePointer<CChar>) throws(Memory.Shared.Error) {
         guard unsafe shm_unlink(name) == 0 else {
-            throw .unlink(Error_Primitives.Error.Code.captureErrno())
+            throw .unlink(Error.Error.Code.captureErrno())
         }
     }
 }

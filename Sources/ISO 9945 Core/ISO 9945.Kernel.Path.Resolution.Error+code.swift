@@ -1,9 +1,9 @@
-public import Path_Primitives
+public import Path
 
 extension Path.Resolution.Error {
 
     @inlinable
-    public init?(code: Error_Primitives.Error.Code) {
+    public init?(code: Error.Error.Code) {
         switch code {
         case .POSIX.ENOENT:
             self = .notFound
@@ -17,16 +17,16 @@ extension Path.Resolution.Error {
         case .POSIX.ENOTDIR:
             self = .notDirectory
 
-        case _ where Error_Primitives.Error.Code.POSIX.isENOTEMPTY(code):
+        case _ where Error.Error.Code.POSIX.isENOTEMPTY(code):
             self = .notEmpty
 
-        case _ where Error_Primitives.Error.Code.POSIX.isELOOP(code):
+        case _ where Error.Error.Code.POSIX.isELOOP(code):
             self = .loop
 
         case .POSIX.EXDEV:
             self = .crossDevice
 
-        case _ where Error_Primitives.Error.Code.POSIX.isENAMETOOLONG(code):
+        case _ where Error.Error.Code.POSIX.isENAMETOOLONG(code):
             self = .nameTooLong
 
         default:

@@ -1,4 +1,4 @@
-public import String_Primitives
+public import String
 
 extension ISO_9945.Kernel.Environment {
 

@@ -1,7 +1,7 @@
 #if !os(Windows)
 
-    import Path_Primitives
-    import Error_Primitives
+    import Path
+    import Error
     public import ISO_9945_Kernel
     @_spi(Syscall) import ISO_9945_Kernel_File
 

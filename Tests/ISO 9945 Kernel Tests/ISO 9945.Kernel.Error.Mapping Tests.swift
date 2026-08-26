@@ -1,11 +1,11 @@
 @_spi(Syscall) import ISO_9945_Core
 import ISO_9945_Kernel
-import Memory_Primitives
-import Path_Primitives
-import Tagged_Primitives_Standard_Library_Integration
+import Memory
+import Path
+import Tagged_Standard_Library_Integration
 import Testing
 
-@testable import Error_Primitives
+@testable import Error
 
 #if !os(Windows)
 
@@ -182,11 +182,11 @@ import Testing
         }
     }
 
-    @Suite("Error_Primitives.Error")
+    @Suite("Error.Error")
     struct KernelErrorTests {
         @Test
         func `creates error from errno code`() {
-            let error = Error_Primitives.Error(code: .posix(EINTR))
+            let error = Error.Error(code: .posix(EINTR))
             if case .posix(let value) = error.code {
                 #expect(value == EINTR)
             } else {
@@ -196,25 +196,25 @@ import Testing
 
         @Test
         func `error is Sendable`() {
-            let error: any Sendable = Error_Primitives.Error(code: .posix(EINTR))
-            #expect(error is Error_Primitives.Error)
+            let error: any Sendable = Error.Error(code: .posix(EINTR))
+            #expect(error is Error.Error)
         }
 
         @Test
         func `error is Equatable`() {
-            let a = Error_Primitives.Error(code: .posix(EINTR))
-            let b = Error_Primitives.Error(code: .posix(EINTR))
-            let c = Error_Primitives.Error(code: .posix(ENOENT))
+            let a = Error.Error(code: .posix(EINTR))
+            let b = Error.Error(code: .posix(EINTR))
+            let c = Error.Error(code: .posix(ENOENT))
             #expect(a == b)
             #expect(a != c)
         }
 
         @Test
         func `error is Hashable`() {
-            var set = Set<Error_Primitives.Error>()
-            set.insert(Error_Primitives.Error(code: .posix(1)))
-            set.insert(Error_Primitives.Error(code: .posix(2)))
-            set.insert(Error_Primitives.Error(code: .posix(1)))
+            var set = Set<Error.Error>()
+            set.insert(Error.Error(code: .posix(1)))
+            set.insert(Error.Error(code: .posix(2)))
+            set.insert(Error.Error(code: .posix(1)))
             #expect(set.count == 2)
         }
     }

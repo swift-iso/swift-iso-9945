@@ -19,11 +19,11 @@ extension ISO_9945.Kernel.File.Truncate {
     public static func truncate(
         fd: Int32,
         to length: ISO_9945.Kernel.File.Size
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         let rc = ftruncate(fd, off_t(length.underlying))
 
         guard rc == 0 else {
-            throw Error_Primitives.Error.current(operation: "ftruncate")
+            throw Error.Error.current(operation: "ftruncate")
         }
     }
 }
@@ -33,18 +33,18 @@ extension ISO_9945.Kernel.File.Truncate {
     public static func truncate(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         to length: ISO_9945.Kernel.File.Size
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         try truncate(fd: descriptor._rawValue, to: length)
     }
 
     public static func truncate(
         path: UnsafePointer<CChar>,
         to length: ISO_9945.Kernel.File.Size
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         let rc = unsafe platformTruncate(path, off_t(length.underlying))
 
         guard rc == 0 else {
-            throw Error_Primitives.Error.current(operation: "truncate")
+            throw Error.Error.current(operation: "truncate")
         }
     }
 }

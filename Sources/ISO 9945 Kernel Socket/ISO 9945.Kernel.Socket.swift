@@ -12,7 +12,7 @@ extension ISO_9945.Kernel.Socket {
 
     public static func getError(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
-    ) throws(ISO_9945.Kernel.Socket.Error) -> Error_Primitives.Error.Code {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Error.Error.Code {
         try getError(fd: descriptor._rawValue)
     }
 }
@@ -21,7 +21,7 @@ extension ISO_9945.Kernel.Socket {
 
     internal static func getError(
         fd: Int32
-    ) throws(ISO_9945.Kernel.Socket.Error) -> Error_Primitives.Error.Code {
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Error.Error.Code {
         var err: Int32 = 0
         var len = socklen_t(MemoryLayout<Int32>.size)
 
@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Error {
 
     internal static func current() -> Self {
-        let code = Error_Primitives.Error.Code.current()
-        return .platform(Error_Primitives.Error(code: code))
+        let code = Error.Error.Code.current()
+        return .platform(Error.Error(code: code))
     }
 }

@@ -13,10 +13,10 @@ extension ISO_9945.Kernel.Group {
 
 extension ISO_9945.Kernel.Group.Supplementary {
 
-    public static func get() throws(Error_Primitives.Error) -> [ISO_9945.Kernel.Group.ID] {
+    public static func get() throws(Error.Error) -> [ISO_9945.Kernel.Group.ID] {
         let count = getgroups(0, nil)
         guard count >= 0 else {
-            throw Error_Primitives.Error.current(operation: "getgroups")
+            throw Error.Error.current(operation: "getgroups")
         }
 
         guard count > 0 else { return [] }
@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Group.Supplementary {
         }
 
         guard result >= 0 else {
-            throw Error_Primitives.Error.current(operation: "getgroups")
+            throw Error.Error.current(operation: "getgroups")
         }
 
         return gids.prefix(Int(result)).map { ISO_9945.Kernel.Group.ID(_unchecked: $0) }

@@ -204,7 +204,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
 extension ISO_9945.Kernel.Link.Symbolic.Error {
 
     internal static func currentCreate() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -231,12 +231,12 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error_Primitives.Error(code: code))
+            return .platform(Error.Error(code: code))
         }
     }
 
     internal static func currentRead() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -257,7 +257,7 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error_Primitives.Error(code: code))
+            return .platform(Error.Error(code: code))
         }
     }
 }

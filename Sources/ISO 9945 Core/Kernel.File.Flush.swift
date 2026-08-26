@@ -9,7 +9,7 @@ extension ISO_9945.Kernel.File.Flush {
 
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

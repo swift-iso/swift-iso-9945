@@ -1,7 +1,7 @@
 extension ISO_9945.Kernel.File.Control {
     public enum Error: Swift.Error, Sendable {
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

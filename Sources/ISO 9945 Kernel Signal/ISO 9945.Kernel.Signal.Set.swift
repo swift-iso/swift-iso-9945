@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.Signal.Set {
     public init(_ signal: ISO_9945.Kernel.Signal.Number) throws(ISO_9945.Kernel.Signal.Error) {
         self.init()
         guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-            throw .set(Error_Primitives.Error.captureErrno())
+            throw .set(Error.Error.captureErrno())
         }
     }
 
@@ -39,7 +39,7 @@ extension ISO_9945.Kernel.Signal.Set {
         self.init()
         for signal in signals {
             guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-                throw .set(Error_Primitives.Error.captureErrno())
+                throw .set(Error.Error.captureErrno())
             }
         }
     }
@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.Signal.Set {
         _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard unsafe sigaddset(&self.storage, signal.rawValue) == 0 else {
-            throw .set(Error_Primitives.Error.captureErrno())
+            throw .set(Error.Error.captureErrno())
         }
     }
 
@@ -61,7 +61,7 @@ extension ISO_9945.Kernel.Signal.Set {
         _ signal: ISO_9945.Kernel.Signal.Number
     ) throws(ISO_9945.Kernel.Signal.Error) {
         guard unsafe sigdelset(&self.storage, signal.rawValue) == 0 else {
-            throw .set(Error_Primitives.Error.captureErrno())
+            throw .set(Error.Error.captureErrno())
         }
     }
 
@@ -71,7 +71,7 @@ extension ISO_9945.Kernel.Signal.Set {
         var mutableStorage = storage
         let result = unsafe sigismember(&mutableStorage, signal.rawValue)
         guard result >= 0 else {
-            throw .set(Error_Primitives.Error.captureErrno())
+            throw .set(Error.Error.captureErrno())
         }
         return result == 1
     }

@@ -1,7 +1,7 @@
 #if os(Linux)
 
     import Testing
-    import Tagged_Primitives_Standard_Library_Integration
+    import Tagged_Standard_Library_Integration
     import ISO_9945_Kernel
 
     extension ISO_9945.Kernel.Copy.Range {

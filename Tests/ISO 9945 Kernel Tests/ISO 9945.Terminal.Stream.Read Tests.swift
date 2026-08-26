@@ -1,8 +1,8 @@
-@_spi(Syscall) import Error_Primitives
+@_spi(Syscall) import Error
 import ISO_9945_Kernel_Test_Support
-@_spi(Syscall) import Path_Primitives
-import Tagged_Primitives_Standard_Library_Integration
-import Terminal_Primitives
+@_spi(Syscall) import Path
+import Tagged_Standard_Library_Integration
+import Terminal
 import Testing
 
 @testable import ISO_9945_Kernel

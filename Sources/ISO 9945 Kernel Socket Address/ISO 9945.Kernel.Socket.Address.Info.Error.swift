@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.Socket.Address.Info {
 
         case socketType
 
-        case system(Error_Primitives.Error.Code)
+        case system(Error.Error.Code)
 
         case unknown(Int32)
     }

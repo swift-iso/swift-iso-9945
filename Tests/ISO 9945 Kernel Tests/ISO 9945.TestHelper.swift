@@ -6,8 +6,8 @@
         import Glibc
     #endif
 
-    import Path_Primitives
-    import Error_Primitives
+    import Path
+    import Error
     @testable import ISO_9945_Kernel
 
     enum POSIXTestHelper {

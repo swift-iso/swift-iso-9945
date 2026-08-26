@@ -73,7 +73,7 @@ extension ISO_9945.Kernel.File.Delete {
 extension ISO_9945.Kernel.File.Delete.Error {
 
     internal static func current() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -100,7 +100,7 @@ extension ISO_9945.Kernel.File.Delete.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error_Primitives.Error(code: code))
+            return .platform(Error.Error(code: code))
         }
     }
 }

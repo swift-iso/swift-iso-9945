@@ -36,7 +36,7 @@ extension ISO_9945.Kernel.File.Open {
         let cPath = unsafe UnsafePointer<CChar>(unsafePath)
 
         guard mode.read || mode.write else {
-            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+            throw .platform(Error.Error(code: .posix(EINVAL)))
         }
         let accessMode: Int32 =
             switch (mode.read, mode.write) {

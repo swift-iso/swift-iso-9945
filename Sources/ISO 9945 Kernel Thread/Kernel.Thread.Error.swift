@@ -2,15 +2,15 @@ extension ISO_9945.Kernel.Thread {
 
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
 
-        case create(Error_Primitives.Error.Code)
+        case create(Error.Error.Code)
 
-        case join(Error_Primitives.Error.Code)
+        case join(Error.Error.Code)
 
-        case detach(Error_Primitives.Error.Code)
+        case detach(Error.Error.Code)
 
-        case keyCreate(Error_Primitives.Error.Code)
+        case keyCreate(Error.Error.Code)
 
-        case keySet(Error_Primitives.Error.Code)
+        case keySet(Error.Error.Code)
     }
 }
 

@@ -42,14 +42,14 @@
     extension ISO_9945.Kernel.IO.Read.Error {
 
         fileprivate static func current() -> Self {
-            let code = Error_Primitives.Error.Code.current()
+            let code = Error.Error.Code.current()
             if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
                 return .handle(handleError)
             }
             if let blockingError = ISO_9945.Kernel.IO.Blocking.Error(code: code) {
                 return .blocking(blockingError)
             }
-            return .platform(Error_Primitives.Error(code: code))
+            return .platform(Error.Error(code: code))
         }
     }
 

@@ -1,7 +1,7 @@
-import Error_Primitives
-import Path_Primitives
+import Error
+import Path
 import Synchronization
-import Tagged_Primitives_Standard_Library_Integration
+import Tagged_Standard_Library_Integration
 import Testing
 
 @testable import ISO_9945_Kernel

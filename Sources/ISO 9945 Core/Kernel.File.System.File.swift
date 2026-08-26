@@ -1,4 +1,4 @@
-public import Cardinal_Primitives
+public import Cardinal
 
 extension ISO_9945.Kernel.File.System {
 

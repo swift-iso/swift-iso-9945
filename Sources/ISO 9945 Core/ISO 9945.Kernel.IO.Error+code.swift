@@ -1,7 +1,7 @@
 extension ISO_9945.Kernel.IO.Error {
 
     @inlinable
-    public var code: Error_Primitives.Error.Code {
+    public var code: Error.Error.Code {
         switch self {
         case .broken:
             return .POSIX.EPIPE
@@ -30,12 +30,12 @@ extension ISO_9945.Kernel.IO.Error {
 extension ISO_9945.Kernel.IO.Error {
 
     @inlinable
-    public init?(code: Error_Primitives.Error.Code) {
+    public init?(code: Error.Error.Code) {
         switch code {
         case .POSIX.EPIPE:
             self = .broken
 
-        case _ where Error_Primitives.Error.Code.POSIX.isECONNRESET(code):
+        case _ where Error.Error.Code.POSIX.isECONNRESET(code):
             self = .reset
 
         case .POSIX.EIO:
@@ -50,7 +50,7 @@ extension ISO_9945.Kernel.IO.Error {
         case .POSIX.ENXIO:
             self = .deviceUnavailable
 
-        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
+        case _ where Error.Error.Code.POSIX.isENOTSUP(code):
             self = .unsupported
 
         default:

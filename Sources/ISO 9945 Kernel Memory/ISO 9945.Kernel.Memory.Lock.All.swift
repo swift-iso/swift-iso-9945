@@ -1,4 +1,4 @@
-import Memory_Primitives
+import Memory
 
 #if canImport(Darwin)
     internal import Darwin

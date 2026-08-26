@@ -1,7 +1,7 @@
 #if os(macOS) || os(Linux)
 
-    import Path_Primitives
-    import Error_Primitives
+    import Path
+    import Error
     import ISO_9945_Kernel
     @_spi(Syscall) import ISO_9945_Kernel_Lock
     @_spi(Syscall) import ISO_9945_Kernel_File

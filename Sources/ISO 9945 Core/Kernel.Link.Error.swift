@@ -24,7 +24,7 @@ extension ISO_9945.Kernel.Link {
 
         case nameTooLong
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

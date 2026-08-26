@@ -13,7 +13,7 @@ extension ISO_9945.Kernel.File.Chown {
 
         case io(IO)
 
-        case platform(Error_Primitives.Error)
+        case platform(Error.Error)
     }
 }
 

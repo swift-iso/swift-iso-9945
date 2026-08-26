@@ -6,12 +6,12 @@
     internal import Musl
 #endif
 
-extension Error_Primitives.Error {
+extension Error.Error {
 
-    public typealias Number = Tagged<Error_Primitives.Error, Int32>
+    public typealias Number = Tagged<Error.Error, Int32>
 }
 
-extension Error_Primitives.Error.Number {
+extension Error.Error.Number {
 
     public static var noEntry: Self { Self(_unchecked: ENOENT) }
 

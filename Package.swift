@@ -126,99 +126,99 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-carrier-primitives.git",
+            url: "https://github.com/swift-molecules/swift-carrier.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
+            url: "https://github.com/swift-molecules/swift-tagged.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-loader-primitives.git",
+            url: "https://github.com/swift-molecules/swift-loader.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-string-primitives.git",
+            url: "https://github.com/swift-molecules/swift-string.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-clock-primitives.git",
+            url: "https://github.com/swift-molecules/swift-clock.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-time-primitives.git",
+            url: "https://github.com/swift-molecules/swift-time.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-binary-primitives.git",
+            url: "https://github.com/swift-molecules/swift-binary.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-dimension-primitives.git",
+            url: "https://github.com/swift-molecules/swift-dimension.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-equation-primitives.git",
+            url: "https://github.com/swift-molecules/swift-equation.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-terminal-primitives.git",
+            url: "https://github.com/swift-molecules/swift-terminal.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-error-primitives.git",
+            url: "https://github.com/swift-molecules/swift-error.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-random-primitives.git",
+            url: "https://github.com/swift-molecules/swift-random.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-path-primitives.git",
+            url: "https://github.com/swift-molecules/swift-path.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-system-primitives.git",
+            url: "https://github.com/swift-molecules/swift-system.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-allocation.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-lock-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-lock.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-shared-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-shared.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-map-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-map.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-ascii-primitives.git",
+            url: "https://github.com/swift-molecules/swift-ascii.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-cpu-primitives.git",
+            url: "https://github.com/swift-molecules/swift-cpu.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-cardinal-primitives.git",
+            url: "https://github.com/swift-molecules/swift-cardinal.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            url: "https://github.com/swift-molecules/swift-either.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-pair-primitives.git",
+            url: "https://github.com/swift-molecules/swift-pair.git",
             branch: "main"
         ),
         .package(url: "https://github.com/swift-iso/swift-iso-9899.git", branch: "main"),
@@ -228,23 +228,23 @@ let package = Package(
         .target(
             name: "ISO 9945 Core",
             dependencies: [
-                .product(name: "Memory Primitives", package: "swift-memory-primitives"),
+                .product(name: "Memory", package: "swift-memory"),
                 .product(
-                    name: "Memory Allocation Primitives",
-                    package: "swift-memory-allocation-primitives"
+                    name: "Memory Allocation",
+                    package: "swift-memory-allocation"
                 ),
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Error Primitives", package: "swift-error-primitives"),
-                .product(name: "Carrier Primitives", package: "swift-carrier-primitives"),
-                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
-                .product(name: "Time Primitives", package: "swift-time-primitives"),
-                .product(name: "Binary Primitives", package: "swift-binary-primitives"),
-                .product(name: "Dimension Primitives", package: "swift-dimension-primitives"),
-                .product(name: "Equation Primitives", package: "swift-equation-primitives"),
-                .product(name: "CPU Primitives", package: "swift-cpu-primitives"),
-                .product(name: "Cardinal Primitives", package: "swift-cardinal-primitives"),
-                .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
-                .product(name: "System Primitives", package: "swift-system-primitives"),
+                .product(name: "Path", package: "swift-path"),
+                .product(name: "Error", package: "swift-error"),
+                .product(name: "Carrier", package: "swift-carrier"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Time", package: "swift-time"),
+                .product(name: "Binary", package: "swift-binary"),
+                .product(name: "Dimension", package: "swift-dimension"),
+                .product(name: "Equation", package: "swift-equation"),
+                .product(name: "CPU", package: "swift-cpu"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "ASCII", package: "swift-ascii"),
+                .product(name: "System", package: "swift-system"),
             ]
         ),
 
@@ -265,11 +265,11 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Either Primitives", package: "swift-either-primitives"),
-                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
-                .product(name: "String Primitives", package: "swift-string-primitives"),
-                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
+                .product(name: "Path", package: "swift-path"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Pair", package: "swift-pair"),
+                .product(name: "String", package: "swift-string"),
+                .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "ISO 9899 Core", package: "swift-iso-9899"),
             ]
         ),
@@ -278,7 +278,7 @@ let package = Package(
             name: "ISO 9945 Kernel Directory",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "String Primitives", package: "swift-string-primitives"),
+                .product(name: "String", package: "swift-string"),
             ]
         ),
 
@@ -288,10 +288,10 @@ let package = Package(
                 "ISO 9945 Core",
                 "ISO 9945 Kernel Clock",
                 "ISO 9945 Kernel System",
-                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
+                .product(name: "Clock", package: "swift-clock"),
                 .product(
-                    name: "Memory Allocation Primitives",
-                    package: "swift-memory-allocation-primitives"
+                    name: "Memory Allocation",
+                    package: "swift-memory-allocation"
                 ),
             ]
         ),
@@ -310,7 +310,7 @@ let package = Package(
                 "ISO 9945 Kernel File",
                 "ISO 9945 Kernel Poll",
                 "ISO 9945 Kernel Socket Address",
-                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
+                .product(name: "Pair", package: "swift-pair"),
             ]
         ),
 
@@ -322,17 +322,17 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Memory Primitives", package: "swift-memory-primitives"),
+                .product(name: "Memory", package: "swift-memory"),
                 .product(
-                    name: "Memory Allocation Primitives",
-                    package: "swift-memory-allocation-primitives"
+                    name: "Memory Allocation",
+                    package: "swift-memory-allocation"
                 ),
-                .product(name: "Memory Lock Primitives", package: "swift-memory-lock-primitives"),
+                .product(name: "Memory Lock", package: "swift-memory-lock"),
                 .product(
-                    name: "Memory Shared Primitives",
-                    package: "swift-memory-shared-primitives"
+                    name: "Memory Shared",
+                    package: "swift-memory-shared"
                 ),
-                .product(name: "Memory Map Primitives", package: "swift-memory-map-primitives"),
+                .product(name: "Memory Map", package: "swift-memory-map"),
             ]
         ),
 
@@ -351,7 +351,7 @@ let package = Package(
                     name: "POSIX Process Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
+                .product(name: "Path", package: "swift-path"),
             ]
         ),
 
@@ -370,7 +370,7 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Terminal Primitives", package: "swift-terminal-primitives"),
+                .product(name: "Terminal", package: "swift-terminal"),
             ]
         ),
 
@@ -378,7 +378,7 @@ let package = Package(
             name: "ISO 9945 Kernel Environment",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "String Primitives", package: "swift-string-primitives"),
+                .product(name: "String", package: "swift-string"),
             ]
         ),
 
@@ -390,7 +390,7 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Clock Primitives", package: "swift-clock-primitives"),
+                .product(name: "Clock", package: "swift-clock"),
             ]
         ),
 
@@ -398,7 +398,7 @@ let package = Package(
             name: "ISO 9945 Kernel Time",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Time Primitives", package: "swift-time-primitives"),
+                .product(name: "Time", package: "swift-time"),
             ]
         ),
 
@@ -406,8 +406,8 @@ let package = Package(
             name: "ISO 9945 Kernel System",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "System Primitives", package: "swift-system-primitives"),
-                .product(name: "Random Primitives", package: "swift-random-primitives"),
+                .product(name: "System", package: "swift-system"),
+                .product(name: "Random", package: "swift-random"),
             ]
         ),
 
@@ -415,7 +415,7 @@ let package = Package(
             name: "ISO 9945 Kernel Identity",
             dependencies: [
                 "ISO 9945 Core",
-                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
+                .product(name: "Tagged", package: "swift-tagged"),
             ]
         ),
 
@@ -434,8 +434,8 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
+                .product(name: "Path", package: "swift-path"),
+                .product(name: "ASCII", package: "swift-ascii"),
             ]
         ),
 
@@ -470,7 +470,7 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Loader Primitives", package: "swift-loader-primitives"),
+                .product(name: "Loader", package: "swift-loader"),
             ]
         ),
 
@@ -479,12 +479,12 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Kernel",
                 .product(
-                    name: "Cardinal Primitives Test Support",
-                    package: "swift-cardinal-primitives"
+                    name: "Cardinal Test Support",
+                    package: "swift-cardinal"
                 ),
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Error Primitives", package: "swift-error-primitives"),
-                .product(name: "String Primitives", package: "swift-string-primitives"),
+                .product(name: "Path", package: "swift-path"),
+                .product(name: "Error", package: "swift-error"),
+                .product(name: "String", package: "swift-string"),
             ],
             path: "Tests/Support",
             exclude: ["Lock Helper", "POSIX Helper"]

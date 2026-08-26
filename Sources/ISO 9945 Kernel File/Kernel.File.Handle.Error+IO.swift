@@ -12,7 +12,7 @@ extension ISO_9945.Kernel.File.Handle.Error {
 
         case .blocking:
 
-            self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+            self = .platform(code: Error.Error.Code.POSIX.EAGAIN, operation: operation)
 
         case .platform(let platformError):
 
@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.File.Handle.Error {
 
         case .blocking:
 
-            self = .platform(code: Error_Primitives.Error.Code.POSIX.EAGAIN, operation: operation)
+            self = .platform(code: Error.Error.Code.POSIX.EAGAIN, operation: operation)
 
         case .platform(let platformError):
 

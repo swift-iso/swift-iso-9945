@@ -1,7 +1,7 @@
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
-    public import Loader_Primitives
-    import String_Primitives
+    public import Loader
+    import String
     public import ISO_9945_Core
 
     #if canImport(Darwin)
@@ -18,9 +18,9 @@
         internal static func captureError() -> Loader.Message {
             if let cstr = unsafe dlerror() {
                 let u8Ptr = unsafe UnsafePointer<UInt8>(cstr)
-                let view = unsafe String_Primitives.String.Borrowed(
+                let view = unsafe String.String.Borrowed(
                     u8Ptr,
-                    count: String_Primitives.String.length(of: u8Ptr)
+                    count: String.String.length(of: u8Ptr)
                 )
                 return unsafe Loader.Message(copying: view)
             }

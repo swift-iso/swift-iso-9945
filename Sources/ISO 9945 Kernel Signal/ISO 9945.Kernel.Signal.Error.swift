@@ -12,19 +12,19 @@ extension ISO_9945.Kernel.Signal {
 
         case interrupted
 
-        case set(Error_Primitives.Error.Code)
+        case set(Error.Error.Code)
 
-        case mask(Error_Primitives.Error.Code)
+        case mask(Error.Error.Code)
 
-        case action(Error_Primitives.Error.Code)
+        case action(Error.Error.Code)
 
-        case send(Error_Primitives.Error.Code)
+        case send(Error.Error.Code)
     }
 }
 
 extension ISO_9945.Kernel.Signal.Error {
 
-    public init?(code: Error_Primitives.Error.Code) {
+    public init?(code: Error.Error.Code) {
         guard case .posix(let errno) = code else { return nil }
         switch errno {
         case EINTR:
@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Signal.Error {
 
 extension ISO_9945.Kernel.Signal.Error {
 
-    public var code: Error_Primitives.Error.Code? {
+    public var code: Error.Error.Code? {
         switch self {
         case .interrupted:
             return nil

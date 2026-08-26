@@ -71,7 +71,7 @@ extension ISO_9945.Kernel.File.Seek {
 extension ISO_9945.Kernel.File.Seek.Error {
 
     internal static func current() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         switch code {
         case .EBADF:
             return .invalidDescriptor

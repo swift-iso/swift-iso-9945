@@ -1,7 +1,7 @@
 extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
 
     @inlinable
-    public var code: Error_Primitives.Error.Code {
+    public var code: Error.Error.Code {
         switch self {
         case .handle(let validity):
             return validity.code

@@ -26,7 +26,7 @@ extension ISO_9945.Kernel.File.Seek {
 
         case overflow
 
-        case platform(code: Error_Primitives.Error.Code)
+        case platform(code: Error.Error.Code)
     }
 }
 

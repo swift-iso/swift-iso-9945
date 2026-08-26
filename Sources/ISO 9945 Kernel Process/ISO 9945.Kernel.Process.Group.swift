@@ -31,7 +31,7 @@ extension ISO_9945.Kernel.Process.Group {
             }
 
         guard setpgid(pid, pgid) == 0 else {
-            throw .group(Error_Primitives.Error.captureErrno())
+            throw .group(Error.Error.captureErrno())
         }
     }
 
@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Process.Group {
     ) throws(ISO_9945.Kernel.Process.Error) -> ID {
         let result = getpgid(pid.rawValue)
         guard result != -1 else {
-            throw .group(Error_Primitives.Error.captureErrno())
+            throw .group(Error.Error.captureErrno())
         }
         return ID(_unchecked: result)
     }

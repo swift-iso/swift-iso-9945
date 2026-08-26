@@ -1,8 +1,8 @@
-import Error_Primitives
+import Error
 @_spi(Syscall) import ISO_9945_Kernel_Lock
 import ISO_9945_Kernel_Test_Support
-import Path_Primitives
-import Tagged_Primitives_Standard_Library_Integration
+import Path
+import Tagged_Standard_Library_Integration
 import Testing
 
 @testable import ISO_9945_Kernel

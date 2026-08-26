@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.File.Handle {
 
         case alignmentViolation(operation: Operation)
 
-        case platform(code: Error_Primitives.Error.Code, operation: Operation)
+        case platform(code: Error.Error.Code, operation: Operation)
     }
 }
 

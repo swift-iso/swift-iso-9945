@@ -1,7 +1,7 @@
 #if os(macOS) || os(Linux)
 
     import Testing
-    import Path_Primitives
+    import Path
     @testable import ISO_9945_Kernel
 
     @Suite("ISO_9945.Kernel.Process.Spawn.Actions")

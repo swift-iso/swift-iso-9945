@@ -1,7 +1,7 @@
-import Error_Primitives
+import Error
 public import ISO_9945_Kernel
-import Path_Primitives
-import String_Primitives
+import Path
+import String
 
 extension ISO_9945.Kernel {
 

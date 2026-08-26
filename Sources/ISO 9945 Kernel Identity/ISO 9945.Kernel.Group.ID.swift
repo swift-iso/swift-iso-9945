@@ -19,9 +19,9 @@ extension ISO_9945.Kernel.Group.Real {
 
     public static func set(
         _ gid: ISO_9945.Kernel.Group.ID
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         guard setgid(gid.underlying) == 0 else {
-            throw Error_Primitives.Error.current(operation: "setgid")
+            throw Error.Error.current(operation: "setgid")
         }
     }
 }

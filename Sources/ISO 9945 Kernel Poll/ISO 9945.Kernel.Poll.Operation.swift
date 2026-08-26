@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.Poll {
     public static func poll(
         _ entries: inout [Entry],
         timeout: Int32
-    ) throws(Error_Primitives.Error) -> Int {
+    ) throws(Error.Error) -> Int {
         let count = entries.withUnsafeMutableBufferPointer { buffer in
             guard let base = buffer.baseAddress else { return Int32(0) }
             return unsafe base.withMemoryRebound(to: pollfd.self, capacity: buffer.count) {
@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Poll {
         }
 
         guard count >= 0 else {
-            throw Error_Primitives.Error.current(operation: "poll")
+            throw Error.Error.current(operation: "poll")
         }
 
         return Int(count)

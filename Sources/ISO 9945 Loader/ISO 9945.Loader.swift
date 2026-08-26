@@ -1,7 +1,7 @@
 public import ISO_9945_Core
-public import Loader_Primitives
+public import Loader
 
 extension ISO_9945 {
 
-    public typealias Loader = Loader_Primitives.Loader
+    public typealias Loader = Loader.Loader
 }

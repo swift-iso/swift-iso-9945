@@ -7,13 +7,13 @@
 #endif
 
 extension ISO_9945.Kernel.Environment.Error {
-    internal init(code: Error_Primitives.Error.Code) {
+    internal init(code: Error.Error.Code) {
         if let e = ISO_9945.Kernel.Permission.Error(code: code) {
             self = .permission(e)
             return
         }
 
-        self = .platform(Error_Primitives.Error(code: code))
+        self = .platform(Error.Error(code: code))
     }
 
     internal static func current() -> Self {

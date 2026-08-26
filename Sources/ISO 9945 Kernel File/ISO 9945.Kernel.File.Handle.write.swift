@@ -1,4 +1,4 @@
-import Either_Primitives
+import Either
 
 extension ISO_9945.Kernel.File.Handle {
 

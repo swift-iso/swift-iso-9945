@@ -1,7 +1,7 @@
 extension ISO_9945.Kernel.Descriptor.Validity.Error {
 
     @inlinable
-    public var code: Error_Primitives.Error.Code {
+    public var code: Error.Error.Code {
         switch self {
         case .invalid:
             return .POSIX.EBADF
@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error {
 extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit {
 
     @inlinable
-    public var code: Error_Primitives.Error.Code {
+    public var code: Error.Error.Code {
         switch self {
         case .process:
             return .POSIX.EMFILE
@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit {
 extension ISO_9945.Kernel.Descriptor.Validity.Error {
 
     @inlinable
-    public init?(code: Error_Primitives.Error.Code) {
+    public init?(code: Error.Error.Code) {
         switch code {
         case .POSIX.EBADF:
             self = .invalid

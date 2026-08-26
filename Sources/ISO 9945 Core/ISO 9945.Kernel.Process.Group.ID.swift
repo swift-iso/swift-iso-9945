@@ -1,4 +1,4 @@
-public import Tagged_Primitives
+public import Tagged
 
 #if canImport(Darwin)
     internal import Darwin

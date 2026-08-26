@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.Directory.Working {
                 #endif
 
                 guard unsafe (cwdResult != nil) else {
-                    let code = Error_Primitives.Error.Code.current()
+                    let code = Error.Error.Code.current()
                     if case .posix(ERANGE) = code, capacity < maxCapacity {
                         rangeExceeded = true
                         return
@@ -122,7 +122,7 @@ extension ISO_9945.Kernel.Directory.Working {
                 #endif
 
                 guard unsafe (cwdResult != nil) else {
-                    let code = Error_Primitives.Error.Code.current()
+                    let code = Error.Error.Code.current()
                     if case .posix(ERANGE) = code, capacity < maxCapacity {
                         rangeExceeded = true
                         return
@@ -154,14 +154,14 @@ extension ISO_9945.Kernel.Directory.Working {
 
 extension ISO_9945.Kernel.Directory.Working.Error {
 
-    internal static func current(code: Error_Primitives.Error.Code) -> Self {
+    internal static func current(code: Error.Error.Code) -> Self {
         if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
-        return .platform(Error_Primitives.Error(code: code))
+        return .platform(Error.Error(code: code))
     }
 
     internal static func current() -> Self {
-        current(code: Error_Primitives.Error.Code.current())
+        current(code: Error.Error.Code.current())
     }
 }

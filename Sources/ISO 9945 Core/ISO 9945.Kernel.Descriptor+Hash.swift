@@ -1,4 +1,4 @@
-import Hash_Primitives
+import Hash
 
 extension ISO_9945.Kernel.Descriptor: Hash.`Protocol` {
     @inlinable

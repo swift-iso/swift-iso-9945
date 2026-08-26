@@ -1,10 +1,10 @@
 #if os(macOS)
 
     import Testing
-    import Tagged_Primitives_Standard_Library_Integration
+    import Tagged_Standard_Library_Integration
 
-    import Path_Primitives
-    import Error_Primitives
+    import Path
+    import Error
     @testable import ISO_9945_Kernel
     import ISO_9945_Kernel_Test_Support
 

@@ -1,5 +1,5 @@
 public import ISO_9945_Core
-public import Loader_Primitives
+public import Loader
 
 #if canImport(Darwin)
     internal import Darwin

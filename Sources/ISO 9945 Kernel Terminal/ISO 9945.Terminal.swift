@@ -10,7 +10,7 @@
     extension Terminal.Size {
 
         public static func query(stream: Terminal.Stream = .stdout) throws(Terminal.Error) -> Self {
-            do throws(Error_Primitives.Error) {
+            do throws(Error.Error) {
                 let kernelSize = try ISO_9945.Kernel.TTY.Size.query(fd: stream.rawValue)
                 return Terminal.Size(rows: kernelSize.rows, columns: kernelSize.columns)
             } catch let error {

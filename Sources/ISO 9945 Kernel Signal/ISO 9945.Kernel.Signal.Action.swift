@@ -24,7 +24,7 @@ extension ISO_9945.Kernel.Signal.Action {
         var oldAction = sigaction()
 
         guard unsafe sigaction(signal.rawValue, &newAction, &oldAction) == 0 else {
-            throw .action(Error_Primitives.Error.captureErrno())
+            throw .action(Error.Error.captureErrno())
         }
 
         return unsafe Configuration(oldAction)
@@ -37,7 +37,7 @@ extension ISO_9945.Kernel.Signal.Action {
         var action = sigaction()
 
         guard unsafe sigaction(signal.rawValue, nil, &action) == 0 else {
-            throw .action(Error_Primitives.Error.captureErrno())
+            throw .action(Error.Error.captureErrno())
         }
 
         return unsafe Configuration(action)

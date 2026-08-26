@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.Close {
             result = unsafe Musl.close(raw)
         #endif
         if result == -1 {
-            throw .platform(Error_Primitives.Error(code: .posix(errno)))
+            throw .platform(Error.Error(code: .posix(errno)))
         }
     }
 }

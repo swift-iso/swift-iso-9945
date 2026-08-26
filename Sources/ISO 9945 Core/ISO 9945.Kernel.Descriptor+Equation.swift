@@ -1,4 +1,4 @@
-import Equation_Primitives
+import Equation
 
 extension ISO_9945.Kernel.Descriptor: Equation.`Protocol` {
     @inlinable

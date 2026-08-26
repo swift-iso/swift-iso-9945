@@ -19,9 +19,9 @@ extension ISO_9945.Kernel.User.Real {
 
     public static func set(
         _ uid: ISO_9945.Kernel.User.ID
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         guard setuid(uid.underlying) == 0 else {
-            throw Error_Primitives.Error.current(operation: "setuid")
+            throw Error.Error.current(operation: "setuid")
         }
     }
 }

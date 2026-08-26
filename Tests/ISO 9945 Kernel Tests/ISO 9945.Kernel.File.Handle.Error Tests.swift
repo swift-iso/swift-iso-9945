@@ -1,6 +1,6 @@
 import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
-import Tagged_Primitives_Standard_Library_Integration
+import Tagged_Standard_Library_Integration
 import Testing
 
 extension ISO_9945.Kernel.File.Handle.Error {
@@ -106,7 +106,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 
     @Test
     func `platform case stores code and operation`() {
-        let code = Error_Primitives.Error.Code.posix(22)
+        let code = Error.Error.Code.posix(22)
         let error = ISO_9945.Kernel.File.Handle.Error.platform(code: code, operation: .write)
         if case .platform(let storedCode, let op) = error {
             #expect(storedCode == code)

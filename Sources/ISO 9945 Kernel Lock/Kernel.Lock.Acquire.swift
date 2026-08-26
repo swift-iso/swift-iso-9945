@@ -1,4 +1,4 @@
-public import Clock_Primitives
+public import Clock
 
 extension ISO_9945.Kernel.Lock {
 

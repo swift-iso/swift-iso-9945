@@ -17,7 +17,7 @@ extension ISO_9945.Kernel.File.Direct.Error {
     }
 
     @usableFromInline
-    internal init(code: Error_Primitives.Error.Code, operation: Operation) {
+    internal init(code: Error.Error.Code, operation: Operation) {
         switch code {
         case _ where code == .POSIX.EINVAL:
             self = .platform(code: code, operation: operation)
@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.File.Direct.Error {
         case _ where code == .POSIX.EBADF:
             self = .invalidHandle
 
-        case _ where Error_Primitives.Error.Code.POSIX.isENOTSUP(code):
+        case _ where Error.Error.Code.POSIX.isENOTSUP(code):
             self = .notSupported
 
         default:

@@ -13,11 +13,11 @@
     extension ISO_9945.Kernel.Termios.Attributes {
 
         @_spi(Syscall)
-        public static func get(fd: Int32) throws(Error_Primitives.Error) -> Self {
+        public static func get(fd: Int32) throws(Error.Error) -> Self {
             var t = termios()
             let result = unsafe tcgetattr(fd, &t)
             guard result == 0 else {
-                throw Error_Primitives.Error.current(operation: "tcgetattr")
+                throw Error.Error.current(operation: "tcgetattr")
             }
 
             var attrs = ISO_9945.Kernel.Termios.Attributes(_storage: .init())
@@ -36,7 +36,7 @@
             _ attributes: Self,
             fd: Int32,
             action: Action = .now
-        ) throws(Error_Primitives.Error) {
+        ) throws(Error.Error) {
             var t = termios()
             unsafe attributes.withUnsafeStorageBytes { buffer in
                 withUnsafeMutableBytes(of: &t) { dest in
@@ -47,7 +47,7 @@
             }
             let result = unsafe tcsetattr(fd, action.rawValue, &t)
             guard result == 0 else {
-                throw Error_Primitives.Error.current(operation: "tcsetattr")
+                throw Error.Error.current(operation: "tcsetattr")
             }
         }
     }
@@ -56,7 +56,7 @@
 
         public static func get(
             _ descriptor: borrowing ISO_9945.Kernel.Descriptor
-        ) throws(Error_Primitives.Error) -> Self {
+        ) throws(Error.Error) -> Self {
             try get(fd: descriptor._rawValue)
         }
 
@@ -64,7 +64,7 @@
             _ attributes: Self,
             on descriptor: borrowing ISO_9945.Kernel.Descriptor,
             action: Action = .now
-        ) throws(Error_Primitives.Error) {
+        ) throws(Error.Error) {
             try set(attributes, fd: descriptor._rawValue, action: action)
         }
     }

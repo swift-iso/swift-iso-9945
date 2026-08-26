@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.IO.Vector {
     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
 
         guard unsafe !buffers.isEmpty, unsafe buffers.count <= Self.iovMax else {
-            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+            throw .platform(Error.Error(code: .posix(EINVAL)))
         }
         let iovecs = unsafe buffers.map { unsafe $0.cValue }
         let result = iovecs.withUnsafeBufferPointer { buf in
@@ -54,7 +54,7 @@ extension ISO_9945.Kernel.IO.Vector {
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
 
         guard unsafe !buffers.isEmpty, unsafe buffers.count <= Self.iovMax else {
-            throw .platform(Error_Primitives.Error(code: .posix(EINVAL)))
+            throw .platform(Error.Error(code: .posix(EINVAL)))
         }
         let iovecs = unsafe buffers.map { unsafe $0.cValue }
         let result = iovecs.withUnsafeBufferPointer { buf in

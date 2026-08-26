@@ -112,7 +112,7 @@ extension ISO_9945.Kernel.Directory.Stream {
 extension ISO_9945.Kernel.Directory.Error {
 
     internal static func currentOpen() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -127,18 +127,18 @@ extension ISO_9945.Kernel.Directory.Error {
             return .tooManyOpenFiles
 
         default:
-            return .platform(Error_Primitives.Error(code: code))
+            return .platform(Error.Error(code: code))
         }
     }
 
     internal static func currentRead() -> Self {
-        let code = Error_Primitives.Error.Code.current()
+        let code = Error.Error.Code.current()
         switch code {
         case .EIO:
             return .io
 
         default:
-            return .platform(Error_Primitives.Error(code: code))
+            return .platform(Error.Error(code: code))
         }
     }
 }

@@ -1,4 +1,4 @@
-@_spi(Internal) public import Tagged_Primitives
+@_spi(Internal) public import Tagged
 
 extension ISO_9945.Kernel.Event {
 

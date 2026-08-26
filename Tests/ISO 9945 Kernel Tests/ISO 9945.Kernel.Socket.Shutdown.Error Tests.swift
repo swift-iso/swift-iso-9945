@@ -1,5 +1,5 @@
 import ISO_9945_Kernel
-import Tagged_Primitives_Standard_Library_Integration
+import Tagged_Standard_Library_Integration
 import Testing
 
 extension ISO_9945.Kernel.Socket.Shutdown.Error {
@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
 
     @Test
     func `platform case exists`() {
-        let platformError = Error_Primitives.Error(code: .posix(999))
+        let platformError = Error.Error(code: .posix(999))
         let error = ISO_9945.Kernel.Socket.Shutdown.Error.platform(platformError)
         if case .platform(let e) = error {
             #expect(e == platformError)
@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift.Error = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(1))
+            Error.Error(code: .posix(1))
         )
         #expect(error is ISO_9945.Kernel.Socket.Shutdown.Error)
     }
@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     @Test
     func `Error is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(1))
+            Error.Error(code: .posix(1))
         )
         #expect(value is ISO_9945.Kernel.Socket.Shutdown.Error)
     }
@@ -49,13 +49,13 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     @Test
     func `Error is Equatable`() {
         let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(1))
+            Error.Error(code: .posix(1))
         )
         let b = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(1))
+            Error.Error(code: .posix(1))
         )
         let c = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(2))
+            Error.Error(code: .posix(2))
         )
         #expect(a == b)
         #expect(a != c)
@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
 extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     @Test
     func `platform error description`() {
-        let platformError = Error_Primitives.Error(code: .posix(42))
+        let platformError = Error.Error(code: .posix(42))
         let error = ISO_9945.Kernel.Socket.Shutdown.Error.platform(platformError)
         #expect(!error.description.isEmpty)
     }
@@ -75,10 +75,10 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.EdgeCase {
     @Test
     func `Same case with different values are not equal`() {
         let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(1))
+            Error.Error(code: .posix(1))
         )
         let b = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
-            Error_Primitives.Error(code: .posix(2))
+            Error.Error(code: .posix(2))
         )
         #expect(a != b)
     }

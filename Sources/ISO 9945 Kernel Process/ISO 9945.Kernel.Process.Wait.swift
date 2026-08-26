@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Process.Wait {
         let result = unsafe waitpid(pid, &status, options.rawValue)
 
         if result == -1 {
-            throw .wait(Error_Primitives.Error.captureErrno())
+            throw .wait(Error.Error.captureErrno())
         }
 
         if result == 0 {
