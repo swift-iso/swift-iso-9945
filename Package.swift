@@ -134,7 +134,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-loader.git",
+            url: "https://github.com/swift-molecules/swift-loader-vocabulary.git",
             branch: "main"
         ),
         .package(
@@ -470,7 +470,7 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Loader", package: "swift-loader"),
+                .product(name: "Loader", package: "swift-loader-vocabulary"),
             ]
         ),
 

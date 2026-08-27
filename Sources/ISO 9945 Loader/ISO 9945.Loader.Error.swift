@@ -1,6 +1,6 @@
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
-    public import Loader
+    public import Loader_Vocabulary
     import String
     public import ISO_9945_Core
 

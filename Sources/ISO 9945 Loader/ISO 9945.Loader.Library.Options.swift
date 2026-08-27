@@ -1,5 +1,5 @@
 public import ISO_9945_Core
-public import Loader
+public import Loader_Vocabulary
 
 #if canImport(Darwin)
     internal import Darwin
