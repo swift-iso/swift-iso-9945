@@ -154,7 +154,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-dimension.git",
+            url: "https://github.com/swift-atoms/swift-spatial.git",
             branch: "main"
         ),
         .package(
@@ -239,7 +239,7 @@ let package = Package(
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Time", package: "swift-time"),
                 .product(name: "Binary", package: "swift-binary"),
-                .product(name: "Dimension", package: "swift-dimension"),
+                .product(name: "Spatial", package: "swift-spatial"),
                 .product(name: "Equation", package: "swift-equation"),
                 .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Cardinal", package: "swift-cardinal"),

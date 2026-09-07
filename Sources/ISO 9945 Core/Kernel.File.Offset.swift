@@ -1,5 +1,5 @@
 public import Binary
-public import Dimension
+public import Spatial
 
 extension ISO_9945.Kernel.File {
 
