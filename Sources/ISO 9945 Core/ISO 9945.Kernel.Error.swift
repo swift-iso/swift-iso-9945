@@ -8,7 +8,7 @@
 
 extension Error.Error {
 
-    public static func captureErrno() -> Error.Error.Code {
+    public static func captureErrno() -> Error::Error.Code {
         .posix(errno)
     }
 }

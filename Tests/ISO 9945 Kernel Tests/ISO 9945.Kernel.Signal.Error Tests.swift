@@ -1,7 +1,7 @@
 #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
     import Testing
-    import Tagged_Standard_Library_Integration
+    import Tagged
 
     import Path
     import Error

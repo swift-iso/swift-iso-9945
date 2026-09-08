@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.Thread.Mutex.Lock {
 
         case contention
 
-        case platform(Error.Error.Code)
+        case platform(Error::Error.Code)
     }
 }
 

@@ -94,7 +94,7 @@ extension ISO_9945.Kernel.File.Move {
 extension ISO_9945.Kernel.File.Move.Error {
 
     internal static func current() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound

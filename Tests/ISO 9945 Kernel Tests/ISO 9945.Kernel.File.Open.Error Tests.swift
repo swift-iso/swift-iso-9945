@@ -1,5 +1,5 @@
 @_spi(Syscall) import ISO_9945_Kernel
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 extension ISO_9945.Kernel.File.Open.Error {
@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
 
     @Test
     func `platform case stores Error.Error`() {
-        let code = Error.Error.Code.posix(999)
+        let code = Error::Error.Code.posix(999)
         let unmappedError = Error.Error(code: code)
         let error = ISO_9945.Kernel.File.Open.Error.platform(unmappedError)
         if case .platform(let stored) = error {

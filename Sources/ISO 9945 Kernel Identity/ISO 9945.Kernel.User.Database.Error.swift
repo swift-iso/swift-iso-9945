@@ -1,7 +1,7 @@
 extension ISO_9945.Kernel.User.Database {
 
     public enum Error: Swift.Error, Sendable, Equatable {
-        case lookup(Error.Error.Code)
+        case lookup(Error::Error.Code)
     }
 }
 

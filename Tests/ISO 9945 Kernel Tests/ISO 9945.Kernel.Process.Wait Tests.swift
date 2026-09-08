@@ -1,7 +1,7 @@
 #if os(macOS)
 
     import Testing
-    import Tagged_Standard_Library_Integration
+    import Tagged
 
     import Path
     import Error

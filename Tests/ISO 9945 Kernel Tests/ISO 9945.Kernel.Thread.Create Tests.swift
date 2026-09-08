@@ -1,7 +1,7 @@
 import Error
 import Path
 import Synchronization
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 @testable import ISO_9945_Kernel

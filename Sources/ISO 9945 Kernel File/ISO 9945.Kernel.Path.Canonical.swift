@@ -80,7 +80,7 @@ extension Path.Canonical.Error {
 
     static func current() -> Path.Canonical.Error {
         let e = errno
-        let code = Error.Error.Code.posix(e)
+        let code = Error::Error.Code.posix(e)
         if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }

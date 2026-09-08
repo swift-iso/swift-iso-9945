@@ -10,25 +10,25 @@ extension ISO_9945.Kernel.Process {
 
     public enum Error: Swift.Error, Sendable, Equatable, Hashable {
 
-        case fork(Error.Error.Code)
+        case fork(Error::Error.Code)
 
-        case execute(Error.Error.Code)
+        case execute(Error::Error.Code)
 
-        case wait(Error.Error.Code)
+        case wait(Error::Error.Code)
 
-        case kill(Error.Error.Code)
+        case kill(Error::Error.Code)
 
-        case session(Error.Error.Code)
+        case session(Error::Error.Code)
 
-        case group(Error.Error.Code)
+        case group(Error::Error.Code)
 
-        case spawn(Error.Error.Code)
+        case spawn(Error::Error.Code)
     }
 }
 
 extension ISO_9945.Kernel.Process.Error {
 
-    public var code: Error.Error.Code {
+    public var code: Error::Error.Code {
         switch self {
         case .fork(let c), .execute(let c), .wait(let c), .kill(let c),
             .session(let c), .group(let c), .spawn(let c):

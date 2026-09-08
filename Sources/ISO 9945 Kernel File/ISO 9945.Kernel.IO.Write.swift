@@ -121,7 +121,7 @@ extension ISO_9945.Kernel.IO.Write {
 extension ISO_9945.Kernel.IO.Write.Error {
 
     internal static func current() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }

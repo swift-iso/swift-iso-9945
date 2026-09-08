@@ -1,7 +1,7 @@
 @_spi(Syscall) import Error
 import ISO_9945_Kernel_Test_Support
 @_spi(Syscall) import Path
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 @testable @_spi(Syscall) import ISO_9945_Kernel

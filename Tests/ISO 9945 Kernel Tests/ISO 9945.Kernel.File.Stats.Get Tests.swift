@@ -1,3 +1,3 @@
 import ISO_9945_Kernel
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing

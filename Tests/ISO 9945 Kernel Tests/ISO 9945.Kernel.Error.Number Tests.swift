@@ -1,7 +1,7 @@
 import Error
 import ISO_9945_Kernel_Test_Support
 import Path
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 @testable import ISO_9945_Kernel
@@ -107,8 +107,8 @@ extension Error.Error.Number.Test.Unit {
     func `inProgress equals EINPROGRESS and classifies its code`() {
         let number = Error.Error.Number.inProgress
         #expect(number == Error.Error.Number(_unchecked: EINPROGRESS))
-        #expect(Error.Error.Code.posix(number.underlying).isInProgress)
-        #expect(!Error.Error.Code.POSIX.EINTR.isInProgress)
+        #expect(Error::Error.Code.posix(number.underlying).isInProgress)
+        #expect(!Error::Error.Code.POSIX.EINTR.isInProgress)
     }
 
     @Test

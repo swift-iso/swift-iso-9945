@@ -119,7 +119,7 @@ extension ISO_9945.Kernel.File.Times.Error {
 
     @usableFromInline
     internal static func current() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         switch code {
         case .ENOENT:
             return .path(.notFound)

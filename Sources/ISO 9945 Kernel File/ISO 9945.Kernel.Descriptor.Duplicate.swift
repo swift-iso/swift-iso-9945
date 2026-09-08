@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate {
 extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
 
     internal static func current() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         switch code {
         case .EBADF:
             return .handle(.invalid)

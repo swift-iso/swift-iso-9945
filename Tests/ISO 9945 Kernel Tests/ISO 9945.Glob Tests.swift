@@ -1,7 +1,7 @@
 import ISO_9945_Glob
 import ISO_9945_Kernel
 import Path
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 extension ISO_9945.Glob.Fnmatch {

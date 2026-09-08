@@ -1,7 +1,7 @@
 #if os(macOS)
 
     import Testing
-    import Tagged_Standard_Library_Integration
+    import Tagged
     import ISO_9945_Kernel_Test_Support
     import Path
     import Error

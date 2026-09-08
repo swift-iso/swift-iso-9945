@@ -2,7 +2,7 @@
 import ISO_9945_Kernel
 import Memory
 import Path
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 @testable import Error

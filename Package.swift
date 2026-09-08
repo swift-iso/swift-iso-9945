@@ -120,11 +120,17 @@ let package = Package(
         ),
 
         .library(
+            name: "ISO 9945 Utility",
+            targets: ["ISO 9945 Utility"]
+        ),
+
+        .library(
             name: "ISO 9945 Kernel Test Support",
             targets: ["ISO 9945 Kernel Test Support"]
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-molecules/swift-terminal-error.git", branch: "main"),
         .package(
             url: "https://github.com/swift-molecules/swift-carrier.git",
             branch: "main"
@@ -166,7 +172,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-error.git",
+            url: "https://github.com/swift-atoms/swift-error.git",
             branch: "main"
         ),
         .package(
@@ -202,11 +208,11 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-ascii.git",
+            url: "https://github.com/swift-atoms/swift-ascii.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-cpu.git",
+            url: "https://github.com/swift-atoms/swift-cpu.git",
             branch: "main"
         ),
         .package(
@@ -365,6 +371,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Terminal",
             dependencies: [
+                .product(name: "Terminal Error", package: "swift-terminal-error"),
                 "ISO 9945 Core",
                 .target(
                     name: "ISO 9945 Shims",
@@ -471,6 +478,21 @@ let package = Package(
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
                 .product(name: "Loader", package: "swift-loader-vocabulary"),
+            ]
+        ),
+
+        .target(
+            name: "ISO 9945 Utility",
+            dependencies: [
+                "ISO 9945 Core"
+            ]
+        ),
+
+        .testTarget(
+            name: "ISO 9945 Utility Tests",
+            dependencies: [
+                "ISO 9945 Core",
+                "ISO 9945 Utility",
             ]
         ),
 

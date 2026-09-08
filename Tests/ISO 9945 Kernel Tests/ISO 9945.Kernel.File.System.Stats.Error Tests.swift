@@ -1,5 +1,5 @@
 import ISO_9945_Kernel
-import Tagged_Standard_Library_Integration
+import Tagged
 import Testing
 
 extension ISO_9945.Kernel.File.System.Stats.Error {
@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
 
     @Test
     func `platform case exists`() {
-        let code = Error.Error.Code.posix(999)
+        let code = Error::Error.Code.posix(999)
         let unmapped = Error.Error(code: code)
         let error = ISO_9945.Kernel.File.System.Stats.Error.platform(unmapped)
         if case .platform = error {
@@ -93,7 +93,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
 extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
     @Test
     func `all cases are distinct`() {
-        let code = Error.Error.Code.posix(999)
+        let code = Error::Error.Code.posix(999)
         let unmapped = Error.Error(code: code)
 
         let cases: [ISO_9945.Kernel.File.System.Stats.Error] = [
@@ -125,7 +125,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
 
     @Test
     func `all descriptions are non-empty`() {
-        let code = Error.Error.Code.posix(999)
+        let code = Error::Error.Code.posix(999)
         let unmapped = Error.Error(code: code)
 
         let cases: [ISO_9945.Kernel.File.System.Stats.Error] = [

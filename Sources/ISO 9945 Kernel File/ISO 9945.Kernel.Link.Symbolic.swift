@@ -204,7 +204,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
 extension ISO_9945.Kernel.Link.Symbolic.Error {
 
     internal static func currentCreate() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound
@@ -236,7 +236,7 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
     }
 
     internal static func currentRead() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         switch code {
         case .ENOENT:
             return .notFound

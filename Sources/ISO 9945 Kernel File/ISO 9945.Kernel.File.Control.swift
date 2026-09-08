@@ -101,7 +101,7 @@ extension ISO_9945.Kernel.File.Control {
 extension ISO_9945.Kernel.File.Control.Error {
 
     internal static func current() -> Self {
-        let code = Error.Error.Code.current()
+        let code = Error::Error.Code.current()
         if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
