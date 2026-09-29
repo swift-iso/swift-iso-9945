@@ -193,7 +193,7 @@ let package = Package(
             branch: "main", traits: ["Lock", "Map", "Shared", "Cursor"]),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
-            branch: "main", traits: ["MemorySmall"]
+            branch: "main", traits: ["MemorySmall", "MemoryAllocatorArena", "MemoryInline"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-ascii.git",
@@ -219,7 +219,7 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-coder.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main", traits: [.trait(name: "Append", condition: .when(traits: ["Coder"])), .trait(name: "IteratorLeaves", condition: .when(traits: ["Coder"])), .trait(name: "Map", condition: .when(traits: ["Coder"])), .trait(name: "Product", condition: .when(traits: ["Coder"])), .trait(name: "Skip", condition: .when(traits: ["Coder"]))]),
+        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main", traits: [.trait(name: "Append", condition: .when(traits: ["Coder", "Either"])), .trait(name: "IteratorLeaves", condition: .when(traits: ["Coder"])), .trait(name: "Map", condition: .when(traits: ["Coder"])), .trait(name: "Product", condition: .when(traits: ["Coder"])), .trait(name: "Skip", condition: .when(traits: ["Coder"]))]),
         .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main"),
     ],
     targets: [
