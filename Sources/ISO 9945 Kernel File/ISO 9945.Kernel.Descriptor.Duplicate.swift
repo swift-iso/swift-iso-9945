@@ -74,7 +74,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
             return .tooManyOpen
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

@@ -30,6 +30,6 @@ extension ISO_9945.Kernel.Process.Execute {
         #elseif canImport(Musl)
             _ = unsafe Musl.execve(path, argv, envp)
         #endif
-        throw .execute(Error.Error.captureErrno())
+        throw .execute(Error::Error.captureErrno())
     }
 }

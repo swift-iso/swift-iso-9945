@@ -13,7 +13,7 @@ extension ISO_9945.Kernel.Environment.Error {
             return
         }
 
-        self = .platform(Error.Error(code: code))
+        self = .platform(Error::Error(code: code))
     }
 
     internal static func current() -> Self {

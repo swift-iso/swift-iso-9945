@@ -18,9 +18,9 @@
         internal static func captureError() -> Loader.Message {
             if let cstr = unsafe dlerror() {
                 let u8Ptr = unsafe UnsafePointer<UInt8>(cstr)
-                let view = unsafe String.String.Borrowed(
+                let view = unsafe String::String.Borrowed(
                     u8Ptr,
-                    count: String.String.length(of: u8Ptr)
+                    count: String::String.length(of: u8Ptr)
                 )
                 return unsafe Loader.Message(copying: view)
             }

@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.File.Move {
 
         case noSpace
 
-        case platform(Error.Error)
+        case platform(Error::Error)
     }
 }
 

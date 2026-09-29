@@ -84,6 +84,6 @@ extension Path.Canonical.Error {
         if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
-        return .platform(Error.Error(code: code))
+        return .platform(Error::Error(code: code))
     }
 }

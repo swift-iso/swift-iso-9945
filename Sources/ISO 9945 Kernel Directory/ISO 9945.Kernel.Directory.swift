@@ -127,7 +127,7 @@ extension ISO_9945.Kernel.Directory.Error {
             return .tooManyOpenFiles
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 
@@ -138,7 +138,7 @@ extension ISO_9945.Kernel.Directory.Error {
             return .io
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

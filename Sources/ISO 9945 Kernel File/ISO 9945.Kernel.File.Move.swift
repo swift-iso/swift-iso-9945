@@ -130,7 +130,7 @@ extension ISO_9945.Kernel.File.Move.Error {
             return .noSpace
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

@@ -67,7 +67,7 @@ extension ISO_9945.Kernel.Directory.Remove.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

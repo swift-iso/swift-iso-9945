@@ -143,7 +143,7 @@ extension ISO_9945.Kernel.File.Times.Error {
             return .io(.hardware)
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

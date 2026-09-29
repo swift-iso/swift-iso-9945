@@ -2,7 +2,7 @@ extension ISO_9945.Kernel.Socket {
 
     public enum Error: Swift.Error, Sendable {
 
-        case platform(Error.Error)
+        case platform(Error::Error)
 
         case interrupted
     }

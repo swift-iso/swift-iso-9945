@@ -6,6 +6,6 @@ extension ISO_9945.Kernel.Directory.Working.Error {
             self = .path(e)
             return
         }
-        self = .platform(Error.Error(code: code))
+        self = .platform(Error::Error(code: code))
     }
 }

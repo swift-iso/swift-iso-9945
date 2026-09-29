@@ -128,6 +128,6 @@ extension ISO_9945.Kernel.IO.Write.Error {
         if let blockingError = ISO_9945.Kernel.IO.Blocking.Error(code: code) {
             return .blocking(blockingError)
         }
-        return .platform(Error.Error(code: code))
+        return .platform(Error::Error(code: code))
     }
 }

@@ -23,9 +23,9 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     }
 
     @Test
-    func `platform case stores Error.Error`() {
+    func `platform case stores Error::Error`() {
         let code = Error::Error.Code.posix(999)
-        let unmappedError = Error.Error(code: code)
+        let unmappedError = Error::Error(code: code)
         let error = ISO_9945.Kernel.File.Stats.Error.platform(unmappedError)
         if case .platform(let stored) = error {
             #expect(stored == unmappedError)
@@ -61,7 +61,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     func `Error is Equatable`() {
         let a = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
         let b = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
-        let c = ISO_9945.Kernel.File.Stats.Error.platform(Error.Error(code: .posix(2)))
+        let c = ISO_9945.Kernel.File.Stats.Error.platform(Error::Error(code: .posix(2)))
         #expect(a == b)
         #expect(a != c)
     }
@@ -72,7 +72,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.EdgeCase {
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Stats.Error] = [
             .handle(.invalid),
-            .platform(Error.Error(code: .posix(1))),
+            .platform(Error::Error(code: .posix(1))),
         ]
 
         for i in 0..<cases.count {

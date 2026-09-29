@@ -98,7 +98,7 @@ extension ISO_9945.Kernel.File.Attributes.Error {
             return .io(.hardware)
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

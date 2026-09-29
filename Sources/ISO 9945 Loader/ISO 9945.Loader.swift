@@ -3,5 +3,5 @@ public import Loader_Vocabulary
 
 extension ISO_9945 {
 
-    public typealias Loader = Loader.Loader
+    public typealias Loader = Loader_Vocabulary::Loader
 }

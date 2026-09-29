@@ -13,6 +13,6 @@ extension ISO_9945.Kernel.Socket.Error {
 
     @inlinable
     public init(code: Error::Error.Code) {
-        self = .platform(Error.Error(code: code))
+        self = .platform(Error::Error(code: code))
     }
 }

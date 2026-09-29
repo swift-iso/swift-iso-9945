@@ -132,7 +132,7 @@ extension ISO_9945.Kernel.File.Chown.Error {
             return .io(.hardware)
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

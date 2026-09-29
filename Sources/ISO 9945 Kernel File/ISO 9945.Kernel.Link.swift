@@ -134,7 +134,7 @@ extension ISO_9945.Kernel.Link.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }

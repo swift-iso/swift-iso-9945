@@ -34,9 +34,9 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     }
 
     @Test
-    func `platform case stores Error.Error`() {
+    func `platform case stores Error::Error`() {
         let code = Error::Error.Code.posix(999)
-        let unmappedError = Error.Error(code: code)
+        let unmappedError = Error::Error(code: code)
         let error = ISO_9945.Kernel.File.Open.Error.platform(unmappedError)
         if case .platform(let stored) = error {
             #expect(stored == unmappedError)
@@ -89,7 +89,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.EdgeCase {
         let cases: [ISO_9945.Kernel.File.Open.Error] = [
             .path(.notFound),
             .handle(.invalid),
-            .platform(Error.Error(code: .posix(1))),
+            .platform(Error::Error(code: .posix(1))),
         ]
 
         for i in 0..<cases.count {

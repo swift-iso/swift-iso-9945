@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.File.Delete {
 
         case nameTooLong
 
-        case platform(Error.Error)
+        case platform(Error::Error)
     }
 }
 

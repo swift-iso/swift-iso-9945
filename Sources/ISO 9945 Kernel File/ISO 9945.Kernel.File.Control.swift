@@ -105,6 +105,6 @@ extension ISO_9945.Kernel.File.Control.Error {
         if let handleError = ISO_9945.Kernel.Descriptor.Validity.Error(code: code) {
             return .handle(handleError)
         }
-        return .platform(Error.Error(code: code))
+        return .platform(Error::Error(code: code))
     }
 }

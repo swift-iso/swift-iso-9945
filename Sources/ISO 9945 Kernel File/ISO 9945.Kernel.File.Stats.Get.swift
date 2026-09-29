@@ -123,7 +123,7 @@ extension ISO_9945.Kernel.File.Stats.Error {
             self = .handle(e)
             return
         }
-        self = .platform(Error.Error(code: errorCode))
+        self = .platform(Error::Error(code: errorCode))
     }
 }
 

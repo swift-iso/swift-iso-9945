@@ -22,6 +22,6 @@ extension ISO_9945.Kernel.IO.Read.Error {
             self = .blocking(e)
             return
         }
-        self = .platform(Error.Error(code: code))
+        self = .platform(Error::Error(code: code))
     }
 }

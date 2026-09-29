@@ -158,7 +158,7 @@ extension ISO_9945.Kernel.Directory.Working.Error {
         if let pathError = Path.Resolution.Error(code: code) {
             return .path(pathError)
         }
-        return .platform(Error.Error(code: code))
+        return .platform(Error::Error(code: code))
     }
 
     internal static func current() -> Self {

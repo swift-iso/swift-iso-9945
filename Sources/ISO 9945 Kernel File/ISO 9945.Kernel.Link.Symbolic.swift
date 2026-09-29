@@ -231,7 +231,7 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 
@@ -257,7 +257,7 @@ extension ISO_9945.Kernel.Link.Symbolic.Error {
             return .nameTooLong
 
         default:
-            return .platform(Error.Error(code: code))
+            return .platform(Error::Error(code: code))
         }
     }
 }
