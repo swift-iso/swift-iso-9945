@@ -1,3 +1,4 @@
+public import System
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -12,13 +13,22 @@ extension System {
         System.Path.Length(_unchecked: Cardinal(UInt(PATH_MAX)))
     }
 
-    public static var pageSize: System.Page.Size {
-        System.Page.Size(_unchecked: Cardinal(UInt(sysconf(Int32(_SC_PAGESIZE)))))
+    /// The signed platform result; invalid page sizes are rejected by Memory.Alignment.
+    public static var pageSize: Int {
+        let raw = sysconf(Int32(_SC_PAGESIZE))
+        guard let size = Int(exactly: raw) else {
+            preconditionFailure("Platform page size is not representable as Int")
+        }
+        return size
     }
 
-    public static var processorCount: System.Processor.Count {
+    public static var processorCount: Int {
         let count = sysconf(Int32(_SC_NPROCESSORS_ONLN))
-        return System.Processor.Count(_unchecked: Cardinal(UInt(count > 0 ? count : 1)))
+        guard count > 0 else { return 1 }
+        guard let result = Int(exactly: count) else {
+            preconditionFailure("Processor count is not representable as Int")
+        }
+        return result
     }
 
     public static func sleep(_ duration: Duration) {

@@ -1,6 +1,5 @@
-import Equation
 
-extension ISO_9945.Kernel.Descriptor: Equation.`Protocol` {
+extension ISO_9945.Kernel.Descriptor: Swift.Equatable {
     @inlinable
     public static func == (
         lhs: borrowing ISO_9945.Kernel.Descriptor,

@@ -128,15 +128,21 @@ let package = Package(
             name: "ISO 9945 Kernel Test Support",
             targets: ["ISO 9945 Kernel Test Support"]
         ),
+        .library(
+            name: "ISO 9945 Utility Coder",
+            targets: ["ISO 9945 Utility Coder"]
+        ),
+    ],
+    traits: [
+        .trait(name: "Coder", description: "Coder integration for utility invocations"),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-molecules/swift-terminal-error.git", branch: "main"),
         .package(
-            url: "https://github.com/swift-molecules/swift-carrier.git",
+            url: "https://github.com/swift-atoms/swift-carrier.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-tagged.git",
+            url: "https://github.com/swift-atoms/swift-tagged.git",
             branch: "main"
         ),
         .package(
@@ -144,19 +150,19 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-string.git",
+            url: "https://github.com/swift-atoms/swift-string.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-clock.git",
+            url: "https://github.com/swift-atoms/swift-clock.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-time.git",
+            url: "https://github.com/swift-atoms/swift-time.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-binary.git",
+            url: "https://github.com/swift-atoms/swift-binary.git",
             branch: "main"
         ),
         .package(
@@ -164,47 +170,29 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-equation.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-terminal.git",
-            branch: "main"
-        ),
+            url: "https://github.com/swift-atoms/swift-terminal.git",
+            branch: "main", traits: ["Error"]),
         .package(
             url: "https://github.com/swift-atoms/swift-error.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-random.git",
+            url: "https://github.com/swift-atoms/swift-random.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-path.git",
+            url: "https://github.com/swift-atoms/swift-path.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-system.git",
+            url: "https://github.com/swift-atoms/swift-system.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-memory.git",
-            branch: "main"
-        ),
+            url: "https://github.com/swift-atoms/swift-memory.git",
+            branch: "main", traits: ["Lock", "Map", "Shared"]),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-memory-lock.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-memory-shared.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-memory-map.git",
             branch: "main"
         ),
         .package(
@@ -216,20 +204,49 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-cardinal.git",
+            url: "https://github.com/swift-atoms/swift-cardinal.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-either.git",
+            url: "https://github.com/swift-atoms/swift-either.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-pair.git",
+            url: "https://github.com/swift-atoms/swift-pair.git",
             branch: "main"
         ),
         .package(url: "https://github.com/swift-iso/swift-iso-9899.git", branch: "main"),
+        .package(url: "https://github.com/swift-compositions/swift-test-application.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-coder.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main"),
     ],
     targets: [
+        .target(
+            name: "ISO 9945 Utility Coder",
+            dependencies: [
+                .target(name: "ISO 9945 Core"),
+                .target(name: "ISO 9945 Utility"),
+                .product(name: "Checkpoint", package: "swift-checkpoint", condition: .when(traits: ["Coder"])),
+                .product(name: "Coder", package: "swift-coder", condition: .when(traits: ["Coder"])),
+                .product(name: "Cursor", package: "swift-cursor", condition: .when(traits: ["Coder"])),
+                .product(name: "Parser", package: "swift-parser", condition: .when(traits: ["Coder"])),
+                .product(name: "Serializer", package: "swift-serializer", condition: .when(traits: ["Coder"])),
+            ]
+        ),
+        .testTarget(
+            name: "ISO 9945 Utility Coder Tests",
+            dependencies: [
+                .target(name: "ISO 9945 Utility Coder"),
+                .target(name: "ISO 9945 Core"),
+                .target(name: "ISO 9945 Utility"),
+                .product(name: "Coder", package: "swift-coder", condition: .when(traits: ["Coder"])),
+                .product(name: "Parser", package: "swift-parser", condition: .when(traits: ["Coder"])),
+                .product(name: "Serializer", package: "swift-serializer", condition: .when(traits: ["Coder"])),
+            ]
+        ),
 
         .target(
             name: "ISO 9945 Core",
@@ -246,7 +263,6 @@ let package = Package(
                 .product(name: "Time", package: "swift-time"),
                 .product(name: "Binary", package: "swift-binary"),
                 .product(name: "Spatial", package: "swift-spatial"),
-                .product(name: "Equation", package: "swift-equation"),
                 .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "ASCII", package: "swift-ascii"),
@@ -333,12 +349,6 @@ let package = Package(
                     name: "Memory Allocation",
                     package: "swift-memory-allocation"
                 ),
-                .product(name: "Memory Lock", package: "swift-memory-lock"),
-                .product(
-                    name: "Memory Shared",
-                    package: "swift-memory-shared"
-                ),
-                .product(name: "Memory Map", package: "swift-memory-map"),
             ]
         ),
 
@@ -371,7 +381,6 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Terminal",
             dependencies: [
-                .product(name: "Terminal Error", package: "swift-terminal-error"),
                 "ISO 9945 Core",
                 .target(
                     name: "ISO 9945 Shims",
@@ -415,6 +424,8 @@ let package = Package(
                 "ISO 9945 Core",
                 .product(name: "System", package: "swift-system"),
                 .product(name: "Random", package: "swift-random"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Memory", package: "swift-memory"),
             ]
         ),
 
@@ -518,6 +529,12 @@ let package = Package(
                 "ISO 9945 Kernel",
                 "ISO 9945 Glob",
                 "ISO 9945 Kernel Test Support",
+                .product(name: "Error", package: "swift-error"),
+                .product(name: "Path", package: "swift-path"),
+                .product(name: "System", package: "swift-system"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Testing", package: "swift-test-application"),
+                .product(name: "Memory", package: "swift-memory"),
             ]
         ),
     ] + testHelperTargets,

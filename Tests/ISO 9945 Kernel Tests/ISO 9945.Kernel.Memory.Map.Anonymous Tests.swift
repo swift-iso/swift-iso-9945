@@ -29,7 +29,7 @@ extension Memory.Map.Anonymous.Test.Unit {
 extension Memory.Map.Anonymous.Test.Unit {
     @Test
     func `map creates a valid region`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -39,7 +39,7 @@ extension Memory.Map.Anonymous.Test.Unit {
 
     @Test
     func `map with custom protection`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(
             length: pageSize,
             protection: .read
@@ -51,7 +51,7 @@ extension Memory.Map.Anonymous.Test.Unit {
 
     @Test
     func `map private by default`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -60,7 +60,7 @@ extension Memory.Map.Anonymous.Test.Unit {
 
     @Test
     func `map shared when specified`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(
             length: pageSize,
             shared: true
@@ -75,7 +75,7 @@ extension Memory.Map.Anonymous.Test.Unit {
     extension Memory.Map.Anonymous.Test.Unit {
         @Test
         func `map creates a valid region on Windows`() throws {
-            let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+            let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
             let region = try Memory.Map.Anonymous.map(length: pageSize)
             defer { try? Memory.Map.unmap(region) }
 

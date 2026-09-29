@@ -17,7 +17,7 @@ extension Memory.Map {
 extension Memory.Map.Test.Unit {
     @Test
     func `anonymous map succeeds`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -27,7 +27,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `map and unmap cycle works`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
 
         try Memory.Map.unmap(region)
@@ -36,7 +36,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `mapped memory is readable and writable`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(
             length: pageSize,
             protection: .readWrite
@@ -56,7 +56,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `sync succeeds on mapped region`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -65,7 +65,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `protect changes memory protection`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(
             length: pageSize,
             protection: .readWrite
@@ -86,7 +86,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `advise does not throw`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -99,7 +99,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `multi-page mapping works`() throws {
-        let multiPageSize = Memory.Address.Count(4 * UInt(Int(System.pageSize)))
+        let multiPageSize = Memory.Address.Count(4 * (try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: multiPageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -119,7 +119,7 @@ extension Memory.Map.Test.Unit {
 
     @Test
     func `Region struct stores base and length`() throws {
-        let pageSize = Memory.Address.Count(UInt(Int(System.pageSize)))
+        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 

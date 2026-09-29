@@ -1,5 +1,5 @@
 import Error
-public import Terminal_Error
+public import Terminal
 
 #if !os(Windows)
 
