@@ -216,7 +216,6 @@ let package = Package(
             branch: "main"
         ),
         .package(url: "https://github.com/swift-iso/swift-iso-9899.git", branch: "main"),
-        .package(url: "https://github.com/swift-compositions/swift-test-application.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-coder.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
@@ -533,7 +532,6 @@ let package = Package(
                 .product(name: "Path", package: "swift-path"),
                 .product(name: "System", package: "swift-system"),
                 .product(name: "Tagged", package: "swift-tagged"),
-                .product(name: "Testing", package: "swift-test-application"),
                 .product(name: "Memory", package: "swift-memory"),
             ]
         ),
