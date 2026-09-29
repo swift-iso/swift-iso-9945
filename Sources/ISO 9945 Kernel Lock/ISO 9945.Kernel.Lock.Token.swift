@@ -112,7 +112,7 @@ extension ISO_9945.Kernel.Lock.Token {
                 }
             }
 
-            let remaining = deadline - Clock.Continuous.now
+            let remaining = deadline.offset - Clock.Continuous.now.offset
             if remaining <= .zero {
                 throw .timedOut
             }

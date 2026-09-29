@@ -20,7 +20,7 @@ extension Clock.Continuous {
             clock_gettime(CLOCK_BOOTTIME, &ts)
             let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #endif
-        return Clock.Continuous.Instant(nanoseconds: ns)
+        return Clock.Continuous.Instant(offset: .nanoseconds(ns))
     }
 }
 
@@ -38,6 +38,6 @@ extension Clock.Suspending {
             clock_gettime(CLOCK_MONOTONIC, &ts)
             let ns = UInt64(ts.tv_sec) * 1_000_000_000 + UInt64(ts.tv_nsec)
         #endif
-        return Clock.Suspending.Instant(nanoseconds: ns)
+        return Clock.Suspending.Instant(offset: .nanoseconds(ns))
     }
 }

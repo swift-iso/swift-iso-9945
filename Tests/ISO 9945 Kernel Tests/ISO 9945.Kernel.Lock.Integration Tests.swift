@@ -42,7 +42,7 @@ private enum LockTestHelper {
         on fd: borrowing ISO_9945.Kernel.Descriptor,
         timeout: Duration = .milliseconds(2000)
     ) -> Bool {
-        let deadline = Clock.Continuous.now + timeout
+        let deadline = Clock.Continuous.Instant(offset: Clock.Continuous.now.offset + timeout)
         while Clock.Continuous.now < deadline {
             do {
 
@@ -172,7 +172,7 @@ extension POSIXLockIntegration {
         let detected = LockTestHelper.waitForContention(on: contentFd, timeout: .milliseconds(2000))
         #expect(detected, "Helper should have acquired the lock")
 
-        let deadline = Clock.Continuous.now + .milliseconds(100)
+        let deadline = Clock.Continuous.Instant(offset: Clock.Continuous.now.offset + .milliseconds(100))
         #expect(throws: ISO_9945.Kernel.Lock.Error.self) {
             _ = try ISO_9945.Kernel.Lock.Token(
                 descriptor: try openLockTestFile(pathString),

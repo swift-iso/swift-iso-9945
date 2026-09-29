@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.Lock {
                 self = .bytes(start: offset, end: .max)
                 return
             }
-            let roundedEnd = granularity.underlying.alignUp(ISO_9945.Kernel.File.Offset(sum))
+            let roundedEnd = ISO_9945.Kernel.File.Offset(granularity.underlying.alignUp(sum))
             self = .bytes(start: offset, end: roundedEnd)
         }
     }

@@ -2,7 +2,7 @@ public import Binary
 
 extension ISO_9945.Kernel.File {
 
-    public typealias Size = Magnitude<Space>.Value<Int64>
+    public typealias Size = Spatial::Magnitude<Space>.Value<Int64>
 }
 
 extension ISO_9945.Kernel.File.Size {

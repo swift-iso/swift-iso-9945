@@ -18,7 +18,7 @@ extension ISO_9945.Kernel {
 
 extension ISO_9945.Kernel.Event {
 
-    public static let empty = Self(id: .zero, interest: [], flags: [])
+    public static let empty = Self(id: ID(0), interest: [], flags: [])
 }
 
 extension ISO_9945.Kernel.Event: CustomStringConvertible {

@@ -12,5 +12,5 @@ extension ISO_9945.Kernel.Group {
 
 extension Tagged where Tag == ISO_9945.Kernel.Group, Underlying == UInt32 {
 
-    public static var root: Self { .zero }
+    public static var root: Self { Self(0) }
 }

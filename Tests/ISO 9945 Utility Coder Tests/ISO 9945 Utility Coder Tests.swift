@@ -113,7 +113,7 @@ struct `ISO 9945 Utility Coder` {
         let vector = ["greeting", "greet", "Ada"]
         var arguments: ArraySlice<String> = vector[...]
 
-        let invocation = try ISO_9945.Utility.Invocation(decoding: &arguments)
+        let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
         var written: [String] = []
         try invocation.encode(into: &written)
 
@@ -181,7 +181,7 @@ struct `ISO 9945 Utility Coder` {
     func `a utility name is codable on its own`() throws(any Swift.Error) {
         var arguments: ArraySlice<String> = ["counter", "increment"]
 
-        let name = try ISO_9945.Utility.Name(decoding: &arguments)
+        let name = try ISO_9945.Utility.Name.coder.parse(&arguments)
         var written: [String] = []
         try name.encode(into: &written)
 
@@ -193,7 +193,7 @@ struct `ISO 9945 Utility Coder` {
     func `an operand is codable on its own`() throws(any Swift.Error) {
         var arguments: ArraySlice<String> = ["Ada"]
 
-        let operand = try ISO_9945.Utility.Operand(decoding: &arguments)
+        let operand = try ISO_9945.Utility.Operand.coder.parse(&arguments)
         var written: [String] = []
         try operand.encode(into: &written)
 
