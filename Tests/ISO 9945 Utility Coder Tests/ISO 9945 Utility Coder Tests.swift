@@ -115,7 +115,7 @@ struct `ISO 9945 Utility Coder` {
 
         let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
         var written: [String] = []
-        try invocation.encode(into: &written)
+        try ISO_9945.Utility.Invocation.coder.serialize(invocation, into: &written)
 
         #expect(written == vector)
     }
@@ -183,7 +183,7 @@ struct `ISO 9945 Utility Coder` {
 
         let name = try ISO_9945.Utility.Name.coder.parse(&arguments)
         var written: [String] = []
-        try name.encode(into: &written)
+        try ISO_9945.Utility.Name.coder.serialize(name, into: &written)
 
         #expect(written == ["counter"])
         #expect(arguments == ["increment"])
@@ -195,7 +195,7 @@ struct `ISO 9945 Utility Coder` {
 
         let operand = try ISO_9945.Utility.Operand.coder.parse(&arguments)
         var written: [String] = []
-        try operand.encode(into: &written)
+        try ISO_9945.Utility.Operand.coder.serialize(operand, into: &written)
 
         #expect(operand.rawValue == "Ada")
         #expect(written == ["Ada"])
