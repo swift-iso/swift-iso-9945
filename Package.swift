@@ -163,7 +163,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-binary.git",
-            branch: "main"
+            branch: "main", traits: ["Serializer"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-spatial.git",
@@ -171,7 +171,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-terminal.git",
-            branch: "main", traits: ["Error"]),
+            branch: "main", traits: ["Error", "Input"]),
         .package(
             url: "https://github.com/swift-atoms/swift-error.git",
             branch: "main"
@@ -190,14 +190,14 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-memory.git",
-            branch: "main", traits: ["Lock", "Map", "Shared"]),
+            branch: "main", traits: ["Lock", "Map", "Shared", "Cursor"]),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
-            branch: "main"
+            branch: "main", traits: ["MemorySmall"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-ascii.git",
-            branch: "main"
+            branch: "main", traits: ["Parser", "Serializer"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-cpu.git",
@@ -220,7 +220,7 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-coder.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main", traits: [.trait(name: "Append", condition: .when(traits: ["Coder"])), .trait(name: "IteratorLeaves", condition: .when(traits: ["Coder"])), .trait(name: "Map", condition: .when(traits: ["Coder"])), .trait(name: "Product", condition: .when(traits: ["Coder"])), .trait(name: "Skip", condition: .when(traits: ["Coder"]))]),
         .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main"),
     ],
     targets: [
@@ -488,7 +488,7 @@ let package = Package(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
-                .product(name: "Loader", package: "swift-loader-vocabulary"),
+                .product(name: "Loader Vocabulary", package: "swift-loader-vocabulary"),
             ]
         ),
 
