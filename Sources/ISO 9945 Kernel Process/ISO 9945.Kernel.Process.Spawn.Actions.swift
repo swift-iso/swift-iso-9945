@@ -83,3 +83,13 @@ extension ISO_9945.Kernel.Process.Spawn.Actions {
         guard rc == 0 else { throw .spawn(.posix(rc)) }
     }
 }
+
+extension ISO_9945.Kernel.Process.Spawn.Actions {
+
+    public mutating func isolate() throws(ISO_9945.Kernel.Process.Error) -> Bool {
+        let rc = unsafe swift_posix_spawn_file_actions_isolate(_handle)
+        if rc == ENOTSUP { return false }
+        guard rc == 0 else { throw .spawn(.posix(rc)) }
+        return true
+    }
+}

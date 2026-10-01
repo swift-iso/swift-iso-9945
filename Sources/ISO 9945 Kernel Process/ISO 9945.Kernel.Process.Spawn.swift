@@ -65,18 +65,15 @@ extension ISO_9945.Kernel.Process.Spawn {
         path: UnsafePointer<CChar>,
         argv: UnsafePointer<UnsafePointer<CChar>?>,
         envp: UnsafePointer<UnsafePointer<CChar>?>,
-        actions: borrowing Actions
+        actions: borrowing Actions,
+        isolated: Bool = false
     ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         var pid: pid_t = 0
 
-        let rc = unsafe swift_posix_spawn(
-            &pid,
-            path,
-            actions._handle,
-            nil,
-            argv,
-            envp
-        )
+        let rc =
+            isolated
+            ? unsafe swift_posix_spawn_isolated(&pid, path, actions._handle, argv, envp)
+            : unsafe swift_posix_spawn(&pid, path, actions._handle, nil, argv, envp)
 
         guard rc == 0 else {
             throw .spawn(.posix(rc))
@@ -90,7 +87,8 @@ extension ISO_9945.Kernel.Process.Spawn {
         path: UnsafePointer<Path.Char>,
         argv: UnsafePointer<UnsafePointer<Path.Char>?>,
         envp: UnsafePointer<UnsafePointer<Path.Char>?>,
-        actions: borrowing Actions
+        actions: borrowing Actions,
+        isolated: Bool = false
     ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID {
         let pathCChar = unsafe UnsafePointer<CChar>(path)
         let argvCChar = unsafe UnsafeRawPointer(argv).assumingMemoryBound(
@@ -104,7 +102,8 @@ extension ISO_9945.Kernel.Process.Spawn {
             path: pathCChar,
             argv: argvCChar,
             envp: envpCChar,
-            actions: actions
+            actions: actions,
+            isolated: isolated
         )
     }
 }

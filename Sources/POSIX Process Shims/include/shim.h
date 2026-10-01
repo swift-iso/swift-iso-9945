@@ -230,6 +230,74 @@ static inline int swift_posix_spawn_file_actions_addchdir(
 #endif
 }
 
+
+static inline int swift_posix_spawn_file_actions_isolate(void * _Nonnull handle) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)handle;
+    return ENOSYS;
+#elif defined(__APPLE__)
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
+    for (int fildes = 0; fildes <= 2; fildes++) {
+        int rc = posix_spawn_file_actions_addinherit_np(actions, fildes);
+        if (rc != 0) {
+            return rc;
+        }
+    }
+    return 0;
+#elif defined(__GLIBC__) && (__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 34))
+    posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
+    return posix_spawn_file_actions_addclosefrom_np(actions, 3);
+#else
+    (void)handle;
+    return ENOTSUP;
+#endif
+}
+
+static inline int swift_posix_spawn_isolated(
+    pid_t * _Nonnull pid,
+    const char * _Nonnull path,
+    const void * _Nullable file_actions,
+    const char * _Nullable const * _Nonnull argv,
+    const char * _Nullable const * _Nonnull envp
+) {
+#if CPOSIX_PROCESS_SPAWN_UNAVAILABLE
+    (void)pid;
+    (void)path;
+    (void)file_actions;
+    (void)argv;
+    (void)envp;
+    return ENOSYS;
+#elif defined(__APPLE__)
+    posix_spawnattr_t attributes;
+    int rc = posix_spawnattr_init(&attributes);
+    if (rc != 0) {
+        return rc;
+    }
+    rc = posix_spawnattr_setflags(&attributes, POSIX_SPAWN_CLOEXEC_DEFAULT);
+    if (rc == 0) {
+        rc = posix_spawn(
+            pid,
+            path,
+            (const posix_spawn_file_actions_t *)file_actions,
+            &attributes,
+            (char *const *)argv,
+            (char *const *)envp
+        );
+    }
+    int destroyed = posix_spawnattr_destroy(&attributes);
+    return rc != 0 ? rc : destroyed;
+#else
+    return posix_spawn(
+        pid,
+        path,
+        (const posix_spawn_file_actions_t *)file_actions,
+        NULL,
+        (char *const *)argv,
+        (char *const *)envp
+    );
+#endif
+}
+
 #endif
 
 #endif
