@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.File.System {
 
 extension ISO_9945.Kernel.File.System.Block {
 
-    public typealias Size = Spatial::Magnitude<ISO_9945.Kernel.File.System.Block>.Value<UInt64>
+    public typealias Size = Space::Magnitude<ISO_9945.Kernel.File.System.Block>.Value<UInt64>
 }
 
 extension ISO_9945.Kernel.File.System.Block.Size {

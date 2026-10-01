@@ -1,11 +1,11 @@
 public import Binary
-public import Spatial
+public import Space
 
 extension ISO_9945.Kernel.File {
 
-    public typealias Offset = Spatial::Coordinate.X<Space>.Value<Int64>
+    public typealias Offset = Space::Coordinate.X<Space>.Value<Int64>
 
-    public typealias Delta = Spatial::Displacement.X<Space>.Value<Int64>
+    public typealias Delta = Space::Displacement.X<Space>.Value<Int64>
 }
 
 extension ISO_9945.Kernel.File.Offset {

@@ -261,7 +261,7 @@ let package = Package(
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Time", package: "swift-time"),
                 .product(name: "Binary", package: "swift-binary"),
-                .product(name: "Spatial", package: "swift-spatial"),
+                .product(name: "Space", package: "swift-spatial"),
                 .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "ASCII", package: "swift-ascii"),
