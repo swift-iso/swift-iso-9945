@@ -89,6 +89,7 @@ static inline int swift_execve(
 }
 
 #include <spawn.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <errno.h>
 
@@ -238,6 +239,9 @@ static inline int swift_posix_spawn_file_actions_isolate(void * _Nonnull handle)
 #elif defined(__APPLE__)
     posix_spawn_file_actions_t *actions = (posix_spawn_file_actions_t *)handle;
     for (int fildes = 0; fildes <= 2; fildes++) {
+        if (fcntl(fildes, F_GETFD) == -1 && errno == EBADF) {
+            continue;
+        }
         int rc = posix_spawn_file_actions_addinherit_np(actions, fildes);
         if (rc != 0) {
             return rc;
