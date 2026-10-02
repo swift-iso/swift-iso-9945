@@ -88,6 +88,7 @@ static inline int swift_execve(
 #endif
 }
 
+#include <signal.h>
 #include <spawn.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -277,7 +278,19 @@ static inline int swift_posix_spawn_isolated(
     if (rc != 0) {
         return rc;
     }
-    rc = posix_spawnattr_setflags(&attributes, POSIX_SPAWN_CLOEXEC_DEFAULT);
+    sigset_t defaults;
+    sigfillset(&defaults);
+    sigdelset(&defaults, SIGKILL);
+    sigdelset(&defaults, SIGSTOP);
+    sigset_t mask;
+    sigemptyset(&mask);
+    rc = posix_spawnattr_setsigdefault(&attributes, &defaults);
+    if (rc == 0) {
+        rc = posix_spawnattr_setsigmask(&attributes, &mask);
+    }
+    if (rc == 0) {
+        rc = posix_spawnattr_setflags(&attributes, POSIX_SPAWN_CLOEXEC_DEFAULT | POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
+    }
     if (rc == 0) {
         rc = posix_spawn(
             pid,
