@@ -18,3 +18,5 @@ extension ISO_9945.Utility.Option.Argument: CustomStringConvertible {
         rawValue
     }
 }
+
+extension ISO_9945.Utility.Option.Argument: LosslessStringConvertible {}

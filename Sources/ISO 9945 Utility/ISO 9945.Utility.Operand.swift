@@ -25,3 +25,5 @@ extension ISO_9945.Utility.Operand: CustomStringConvertible {
         rawValue
     }
 }
+
+extension ISO_9945.Utility.Operand: LosslessStringConvertible {}
