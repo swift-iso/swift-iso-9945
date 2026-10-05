@@ -14,6 +14,12 @@ extension ISO_9945.Utility.Option {
         [ISO_9945.Utility.Option],
         ISO_9945.Utility.Option.Coder.Error
     > {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
+
 
         public let arguments: Set<Character>
 
