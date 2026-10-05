@@ -4,13 +4,10 @@ import Testing
 
 extension ISO_9945.Utility.Operand {
     @Suite
-    struct Test {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+    struct Test {}
 }
 
-extension ISO_9945.Utility.Operand.Test.Unit {
+extension ISO_9945.Utility.Operand.Test {
 
     @Test(arguments: ["file.txt", "", " ", "  leading and trailing  ", "\t\n", "naïve 日本語 🦀", "-", "--", "-l", "--verbose", "a=b,c;d"])
     func `an operand round-trips through its description`(_ text: String) {
@@ -28,21 +25,21 @@ extension ISO_9945.Utility.Operand.Test.Unit {
     }
 }
 
-extension ISO_9945.Utility.Operand.Test.`Edge Case` {
+extension ISO_9945.Utility.Operand.Test {
 
     @Test
     func `an empty operand keeps its empty raw value`() {
         let operand = ISO_9945.Utility.Operand("")
 
-        #expect(operand.rawValue.isEmpty)
         #expect(operand.description.isEmpty)
+        #expect(lossless(ISO_9945.Utility.Operand.self, from: "") == operand)
     }
 
     @Test
     func `an option-looking operand stays an operand`() {
         let operand = ISO_9945.Utility.Operand("-l")
 
-        #expect(operand.rawValue == "-l")
+        #expect(operand.description == "-l")
         #expect(operand.requiresDelimiter)
     }
 }

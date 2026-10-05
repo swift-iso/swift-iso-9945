@@ -4,13 +4,10 @@ import Testing
 
 extension ISO_9945.Utility.Option.Argument {
     @Suite
-    struct Test {
-        @Suite struct Unit {}
-        @Suite struct `Edge Case` {}
-    }
+    struct Test {}
 }
 
-extension ISO_9945.Utility.Option.Argument.Test.Unit {
+extension ISO_9945.Utility.Option.Argument.Test {
 
     @Test(arguments: ["3", "", " ", "  leading and trailing  ", "\t\n", "naïve 日本語 🦀", "-", "--", "-l", "--verbose", "a=b,c;d"])
     func `an option argument round-trips through its description`(_ text: String) {
@@ -28,14 +25,14 @@ extension ISO_9945.Utility.Option.Argument.Test.Unit {
     }
 }
 
-extension ISO_9945.Utility.Option.Argument.Test.`Edge Case` {
+extension ISO_9945.Utility.Option.Argument.Test {
 
     @Test
     func `an empty option argument keeps its empty raw value`() {
         let argument = ISO_9945.Utility.Option.Argument("")
 
-        #expect(argument.rawValue.isEmpty)
         #expect(argument.description.isEmpty)
+        #expect(lossless(ISO_9945.Utility.Option.Argument.self, from: "") == argument)
     }
 }
 
