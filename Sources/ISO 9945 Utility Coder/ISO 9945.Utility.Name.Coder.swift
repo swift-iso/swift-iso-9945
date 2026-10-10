@@ -11,11 +11,6 @@ extension ISO_9945.Utility.Name {
         ISO_9945.Utility.Name,
         ISO_9945.Utility.Name.Coder.Error
     > {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
 
         public init() {}
