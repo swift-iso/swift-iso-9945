@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
             return validity.code
 
         case .tooManyOpen:
-            return .POSIX.EMFILE
+            return .EMFILE
 
         case .platform(let error):
             return error.code

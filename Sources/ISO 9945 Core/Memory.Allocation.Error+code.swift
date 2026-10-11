@@ -3,7 +3,7 @@ extension Memory.Allocation.Error {
     @inlinable
     public init?(code: Error::Error.Code) {
         switch code {
-        case .POSIX.ENOMEM:
+        case .ENOMEM:
             self = .exhausted
 
         default:

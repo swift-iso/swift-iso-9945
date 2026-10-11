@@ -4,7 +4,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
     public var code: Error::Error.Code {
         switch self {
         case .wouldBlock:
-            return .POSIX.EAGAIN
+            return .EAGAIN
         }
     }
 }

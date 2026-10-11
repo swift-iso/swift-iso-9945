@@ -4,7 +4,7 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error {
     public var code: Error::Error.Code {
         switch self {
         case .invalid:
-            return .POSIX.EBADF
+            return .EBADF
 
         case .limit(let limit):
             return limit.code
@@ -18,10 +18,10 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit {
     public var code: Error::Error.Code {
         switch self {
         case .process:
-            return .POSIX.EMFILE
+            return .EMFILE
 
         case .system:
-            return .POSIX.ENFILE
+            return .ENFILE
         }
     }
 }
@@ -31,13 +31,13 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error {
     @inlinable
     public init?(code: Error::Error.Code) {
         switch code {
-        case .POSIX.EBADF:
+        case .EBADF:
             self = .invalid
 
-        case .POSIX.EMFILE:
+        case .EMFILE:
             self = .limit(.process)
 
-        case .POSIX.ENFILE:
+        case .ENFILE:
             self = .limit(.system)
 
         default:

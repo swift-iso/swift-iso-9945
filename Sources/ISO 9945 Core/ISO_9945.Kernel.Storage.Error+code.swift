@@ -5,10 +5,10 @@
         public var code: Error::Error.Code {
             switch self {
             case .exhausted:
-                return .POSIX.ENOSPC
+                return .ENOSPC
 
             case .quota:
-                return .POSIX.EDQUOT
+                return .EDQUOT
             }
         }
     }
@@ -18,7 +18,7 @@
         @inlinable
         public init?(code: Error::Error.Code) {
             switch code {
-            case .POSIX.ENOSPC:
+            case .ENOSPC:
                 self = .exhausted
 
             case _ where Error::Error.Code.POSIX.isEDQUOT(code):

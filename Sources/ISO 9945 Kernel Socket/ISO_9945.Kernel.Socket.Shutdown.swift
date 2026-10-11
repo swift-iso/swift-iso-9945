@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.Socket.Shutdown {
 extension ISO_9945.Kernel.Socket.Shutdown.Error {
 
     internal static func current() -> Self {
-        let code = Error::Error.Code.current()
+        let code = Error::Error.Code.captureErrno()
         return .platform(Error::Error(code: code))
     }
 }

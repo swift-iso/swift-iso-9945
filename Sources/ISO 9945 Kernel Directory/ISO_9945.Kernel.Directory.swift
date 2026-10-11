@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Directory {
 extension ISO_9945.Kernel.Directory.Error {
 
     internal static func currentOpen() -> Self {
-        let code = Error::Error.Code.current()
+        let code = Error::Error.Code.captureErrno()
         switch code {
         case .ENOENT:
             return .notFound
@@ -52,7 +52,7 @@ extension ISO_9945.Kernel.Directory.Error {
     }
 
     internal static func currentRead() -> Self {
-        let code = Error::Error.Code.current()
+        let code = Error::Error.Code.captureErrno()
         switch code {
         case .EIO:
             return .io

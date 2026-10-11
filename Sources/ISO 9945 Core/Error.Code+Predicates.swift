@@ -2,12 +2,12 @@ extension Error::Error.Code {
 
     @inlinable
     public var isNotFound: Bool {
-        self == .POSIX.ENOENT
+        self == .ENOENT
     }
 
     @inlinable
     public var isPermissionDenied: Bool {
-        self == .POSIX.EACCES || self == .POSIX.EPERM
+        self == .EACCES || self == .EPERM
     }
 
     @inlinable
@@ -17,17 +17,17 @@ extension Error::Error.Code {
 
     @inlinable
     public var isReadOnly: Bool {
-        self == .POSIX.EROFS
+        self == .EROFS
     }
 
     @inlinable
     public var isNoSpace: Bool {
-        self == .POSIX.ENOSPC
+        self == .ENOSPC
     }
 
     @inlinable
     public var isNotDirectory: Bool {
-        self == .POSIX.ENOTDIR
+        self == .ENOTDIR
     }
 
     @inlinable

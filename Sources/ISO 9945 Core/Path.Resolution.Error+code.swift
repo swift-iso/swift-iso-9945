@@ -5,16 +5,16 @@ extension Path.Resolution.Error {
     @inlinable
     public init?(code: Error::Error.Code) {
         switch code {
-        case .POSIX.ENOENT:
+        case .ENOENT:
             self = .notFound
 
-        case .POSIX.EEXIST:
+        case .EEXIST:
             self = .exists
 
-        case .POSIX.EISDIR:
+        case .EISDIR:
             self = .isDirectory
 
-        case .POSIX.ENOTDIR:
+        case .ENOTDIR:
             self = .notDirectory
 
         case _ where Error::Error.Code.POSIX.isENOTEMPTY(code):
@@ -23,7 +23,7 @@ extension Path.Resolution.Error {
         case _ where Error::Error.Code.POSIX.isELOOP(code):
             self = .loop
 
-        case .POSIX.EXDEV:
+        case .EXDEV:
             self = .crossDevice
 
         case _ where Error::Error.Code.POSIX.isENAMETOOLONG(code):
