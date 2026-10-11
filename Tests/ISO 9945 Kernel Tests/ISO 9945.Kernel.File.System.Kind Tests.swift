@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.System.Kind {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -129,7 +129,7 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
         }
     }
 
-    extension ISO_9945.Kernel.File.System.Kind.Test.EdgeCase {
+    extension ISO_9945.Kernel.File.System.Kind.Test.`Edge Case` {
         @Test
         func `zero raw value`() {
             let kind = ISO_9945.Kernel.File.System.Kind(0)

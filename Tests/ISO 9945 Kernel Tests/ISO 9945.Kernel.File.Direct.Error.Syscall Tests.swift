@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -166,7 +166,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Error.Syscall.Test.`Edge Case` {
     @Test
     func `different cases with same operation are distinct`() {
         let invalidDesc = ISO_9945.Kernel.File.Direct.Error.Syscall.invalidDescriptor(

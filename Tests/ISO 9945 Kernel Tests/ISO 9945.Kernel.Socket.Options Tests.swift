@@ -18,15 +18,11 @@ extension ISO_9945.Kernel.Socket.Options {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Socket.Options.Test.Unit {
-    @Test
-    func `Options type exists`() {
-        let _: ISO_9945.Kernel.Socket.Options.Type = ISO_9945.Kernel.Socket.Options.self
-    }
 
     @Test
     func `Options from rawValue`() {
@@ -102,7 +98,7 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Options.Test.EdgeCase {
+extension ISO_9945.Kernel.Socket.Options.Test.`Edge Case` {
     @Test
     func `Empty flags is none`() {
         let empty: ISO_9945.Kernel.Socket.Options = []

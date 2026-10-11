@@ -12,7 +12,6 @@ extension ISO_9945.Kernel.File.Handle {
         @Suite struct Unit {}
         @Suite struct `Edge Case` {}
         @Suite struct Integration {}
-        @Suite(.serialized) struct Performance {}
     }
 }
 

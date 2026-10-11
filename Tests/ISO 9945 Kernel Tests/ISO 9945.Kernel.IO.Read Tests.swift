@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.IO.Read {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -146,7 +146,7 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Test.EdgeCase {
+extension ISO_9945.Kernel.IO.Read.Test.`Edge Case` {
     @Test
     func `read throws on invalid descriptor`() {
         var buffer = [UInt8](repeating: 0, count: 10)

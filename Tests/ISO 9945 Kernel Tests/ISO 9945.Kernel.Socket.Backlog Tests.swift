@@ -10,15 +10,11 @@ extension ISO_9945.Kernel.Socket.Backlog {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
-    @Test
-    func `Backlog type exists`() {
-        let _: ISO_9945.Kernel.Socket.Backlog.Type = ISO_9945.Kernel.Socket.Backlog.self
-    }
 
     @Test
     func `Backlog from rawValue`() {
@@ -98,7 +94,7 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.EdgeCase {
+extension ISO_9945.Kernel.Socket.Backlog.Test.`Edge Case` {
     @Test
     func `Backlog zero`() {
         let backlog = ISO_9945.Kernel.Socket.Backlog(0)

@@ -10,25 +10,11 @@ extension ISO_9945.Kernel.User {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.User.Test.Unit {
-    @Test
-    func `User namespace exists`() {
-        _ = ISO_9945.Kernel.User.self
-    }
-
-    @Test
-    func `User is an enum`() {
-        let _: ISO_9945.Kernel.User.Type = ISO_9945.Kernel.User.self
-    }
-
-    @Test
-    func `User.ID type exists`() {
-        let _: ISO_9945.Kernel.User.ID.Type = ISO_9945.Kernel.User.ID.self
-    }
 }
 
 extension ISO_9945.Kernel.User.Test.Unit {
@@ -73,7 +59,7 @@ extension ISO_9945.Kernel.User.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.User.Test.EdgeCase {
+extension ISO_9945.Kernel.User.Test.`Edge Case` {
     @Test
     func `User.ID zero is root`() {
         let uid: ISO_9945.Kernel.User.ID = 0

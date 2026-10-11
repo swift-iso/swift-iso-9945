@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Operation {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -120,7 +120,7 @@ extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Error.Operation.Test.`Edge Case` {
     @Test
     func `all simple operations are distinct`() {
         let open = ISO_9945.Kernel.File.Direct.Error.Operation.open

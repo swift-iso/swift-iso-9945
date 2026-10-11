@@ -10,25 +10,11 @@ extension ISO_9945.Kernel.Group {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Group.Test.Unit {
-    @Test
-    func `Group namespace exists`() {
-        _ = ISO_9945.Kernel.Group.self
-    }
-
-    @Test
-    func `Group is an enum`() {
-        let _: ISO_9945.Kernel.Group.Type = ISO_9945.Kernel.Group.self
-    }
-
-    @Test
-    func `Group.ID type exists`() {
-        let _: ISO_9945.Kernel.Group.ID.Type = ISO_9945.Kernel.Group.ID.self
-    }
 }
 
 extension ISO_9945.Kernel.Group.Test.Unit {
@@ -73,7 +59,7 @@ extension ISO_9945.Kernel.Group.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Group.Test.EdgeCase {
+extension ISO_9945.Kernel.Group.Test.`Edge Case` {
     @Test
     func `Group.ID zero is root`() {
         let gid: ISO_9945.Kernel.Group.ID = 0

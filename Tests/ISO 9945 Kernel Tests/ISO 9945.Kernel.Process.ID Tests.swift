@@ -5,8 +5,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite("ISO_9945.Kernel.Process.ID Parent Tests")
-struct KernelProcessIDParentTests {
+@Suite
+struct `Process ID Parent Tests` {
     @Test
     func `parent returns positive PID`() {
         let parent = ISO_9945.Kernel.Process.ID.parent

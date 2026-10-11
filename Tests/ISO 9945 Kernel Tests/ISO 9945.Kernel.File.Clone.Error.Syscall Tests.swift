@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -97,7 +97,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Error.Syscall.Test.`Edge Case` {
     @Test
     func `platform with different codes are distinct`() {
         let syscall1 = ISO_9945.Kernel.File.Clone.Error.Syscall.platform(

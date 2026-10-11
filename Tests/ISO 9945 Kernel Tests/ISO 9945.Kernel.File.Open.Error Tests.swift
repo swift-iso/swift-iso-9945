@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Open.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -83,7 +83,7 @@ extension ISO_9945.Kernel.File.Open.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Open.Error.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Open.Error] = [

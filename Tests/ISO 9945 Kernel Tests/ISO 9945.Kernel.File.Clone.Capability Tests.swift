@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Clone.Capability {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.File.Clone.Capability.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Clone.Capability.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Capability.Test.`Edge Case` {
     @Test
     func `reflink and none are distinct`() {
         let reflink = ISO_9945.Kernel.File.Clone.Capability.reflink

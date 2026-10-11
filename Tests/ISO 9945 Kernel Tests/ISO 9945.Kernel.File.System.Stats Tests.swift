@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.File.System.Stats {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 

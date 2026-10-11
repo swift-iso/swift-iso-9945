@@ -10,7 +10,7 @@ extension Memory.Map.Advice {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -21,36 +21,6 @@ extension Memory.Map.Advice.Test.Unit {
         #expect(advice.rawValue == 0)
     }
 
-    @Test
-    func `normal constant exists`() {
-        let advice = Memory.Map.Advice.normal
-
-        _ = advice.rawValue
-    }
-
-    @Test
-    func `sequential constant exists`() {
-        let advice = Memory.Map.Advice.sequential
-        _ = advice.rawValue
-    }
-
-    @Test
-    func `random constant exists`() {
-        let advice = Memory.Map.Advice.random
-        _ = advice.rawValue
-    }
-
-    @Test
-    func `willNeed constant exists`() {
-        let advice = Memory.Map.Advice.willNeed
-        _ = advice.rawValue
-    }
-
-    @Test
-    func `dontNeed constant exists`() {
-        let advice = Memory.Map.Advice.dontNeed
-        _ = advice.rawValue
-    }
 }
 
 extension Memory.Map.Advice.Test.Unit {
@@ -79,7 +49,7 @@ extension Memory.Map.Advice.Test.Unit {
     }
 }
 
-extension Memory.Map.Advice.Test.EdgeCase {
+extension Memory.Map.Advice.Test.`Edge Case` {
     @Test
     func `all advice types are distinct`() {
         let advices: [Memory.Map.Advice] = [

@@ -10,20 +10,11 @@ extension Memory.Map.Anonymous {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension Memory.Map.Anonymous.Test.Unit {
-    @Test
-    func `Anonymous namespace exists`() {
-        _ = Memory.Map.Anonymous.self
-    }
-
-    @Test
-    func `Anonymous is an enum`() {
-        let _: Memory.Map.Anonymous.Type = Memory.Map.Anonymous.self
-    }
 }
 
 extension Memory.Map.Anonymous.Test.Unit {

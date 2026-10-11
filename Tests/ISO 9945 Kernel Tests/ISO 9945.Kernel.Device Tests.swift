@@ -6,15 +6,11 @@ extension ISO_9945.Kernel.Device {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Device.Test.Unit {
-    @Test
-    func `Device type exists`() {
-        let _: ISO_9945.Kernel.Device.Type = ISO_9945.Kernel.Device.self
-    }
 
     @Test
     func `Device from rawValue`() {
@@ -63,7 +59,7 @@ extension ISO_9945.Kernel.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Device.Test.EdgeCase {
+extension ISO_9945.Kernel.Device.Test.`Edge Case` {
     @Test
     func `Device zero`() {
         let device = ISO_9945.Kernel.Device(0)

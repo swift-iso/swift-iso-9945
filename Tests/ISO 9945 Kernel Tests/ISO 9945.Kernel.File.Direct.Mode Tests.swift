@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Mode {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -70,20 +70,9 @@ extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Direct.Mode.Test.Unit {
-    @Test
-    func `Mode.Policy type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Mode.Policy.Type = ISO_9945.Kernel.File.Direct.Mode
-            .Policy.self
-    }
-
-    @Test
-    func `Mode.Resolved type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Mode.Resolved.Type = ISO_9945.Kernel.File.Direct.Mode
-            .Resolved.self
-    }
 }
 
-extension ISO_9945.Kernel.File.Direct.Mode.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Mode.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Direct.Mode] = [

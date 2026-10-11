@@ -6,15 +6,11 @@ extension ISO_9945.Kernel.Inode {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Inode.Test.Unit {
-    @Test
-    func `Inode type exists`() {
-        let _: ISO_9945.Kernel.Inode.Type = ISO_9945.Kernel.Inode.self
-    }
 
     @Test
     func `Inode from rawValue`() {
@@ -71,7 +67,7 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Inode.Test.EdgeCase {
+extension ISO_9945.Kernel.Inode.Test.`Edge Case` {
     @Test
     func `Inode zero`() {
         let inode = ISO_9945.Kernel.Inode(0)

@@ -6,8 +6,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite("ISO_9945.Kernel.Thread.Yield")
-struct KernelThreadYieldTests {
+@Suite
+struct `Thread Yield Tests` {
 
     @Test
     func `yield completes without error`() {
@@ -44,7 +44,7 @@ struct KernelThreadYieldTests {
 #if canImport(Darwin)
     import Darwin
 
-    extension KernelThreadYieldTests {
+    extension `Thread Yield Tests` {
         @Test
         func `yield from multiple OS threads`() throws {
 

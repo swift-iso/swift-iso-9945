@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.Thread.Mutex {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 

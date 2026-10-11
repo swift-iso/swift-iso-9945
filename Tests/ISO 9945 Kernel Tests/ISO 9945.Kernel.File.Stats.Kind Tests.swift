@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Stats.Kind {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -83,16 +83,6 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
-    @Test
-    func `Device type exists`() {
-        let _: ISO_9945.Kernel.File.Stats.Kind.Device.Type = ISO_9945.Kernel.File.Stats.Kind.Device
-            .self
-    }
-
-    @Test
-    func `Link type exists`() {
-        let _: ISO_9945.Kernel.File.Stats.Kind.Link.Type = ISO_9945.Kernel.File.Stats.Kind.Link.self
-    }
 }
 
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
@@ -121,7 +111,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Kind.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Stats.Kind] = [

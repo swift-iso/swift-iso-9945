@@ -6,8 +6,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite("File I/O Integration")
-struct FileIOIntegrationTests {
+@Suite
+struct `File IO Integration Tests` {
     @Test
     func `open and close file`() throws {
         let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test")
@@ -110,7 +110,7 @@ struct FileIOIntegrationTests {
     }
 }
 
-extension FileIOIntegrationTests {
+extension `File IO Integration Tests` {
     @Test
     func `close invalid descriptor throws`() {
         var threwError = false

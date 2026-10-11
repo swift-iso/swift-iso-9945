@@ -6,31 +6,12 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
-    @Test
-    func `Shutdown namespace exists`() {
-        _ = ISO_9945.Kernel.Socket.Shutdown.self
-    }
-
-    @Test
-    func `Shutdown is an enum`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.Type = ISO_9945.Kernel.Socket.Shutdown.self
-    }
 }
 
 extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
-    @Test
-    func `Shutdown.How type exists`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.How.Type = ISO_9945.Kernel.Socket.Shutdown.How.self
-    }
-
-    @Test
-    func `Shutdown.Error type exists`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error
-            .self
-    }
 }

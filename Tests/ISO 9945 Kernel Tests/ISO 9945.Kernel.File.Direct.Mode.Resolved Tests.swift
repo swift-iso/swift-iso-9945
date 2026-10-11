@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Mode.Resolved {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -59,7 +59,7 @@ extension ISO_9945.Kernel.File.Direct.Mode.Resolved.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Mode.Resolved.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Mode.Resolved.Test.`Edge Case` {
     @Test
     func `all resolved modes are distinct`() {
         let cases: [ISO_9945.Kernel.File.Direct.Mode.Resolved] = [

@@ -7,34 +7,14 @@ extension ISO_9945.Kernel.File.System.Block {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
-    @Test
-    func `Block namespace exists`() {
-        _ = ISO_9945.Kernel.File.System.Block.self
-    }
-
-    @Test
-    func `Block is an enum`() {
-        let _: ISO_9945.Kernel.File.System.Block.Type = ISO_9945.Kernel.File.System.Block.self
-    }
 }
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
-    @Test
-    func `Block.Size type exists`() {
-        let _: ISO_9945.Kernel.File.System.Block.Size.Type = ISO_9945.Kernel.File.System.Block.Size
-            .self
-    }
-
-    @Test
-    func `Block.Count type exists`() {
-        let _: ISO_9945.Kernel.File.System.Block.Count.Type = ISO_9945.Kernel.File.System.Block
-            .Count.self
-    }
 }
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
@@ -119,7 +99,7 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Block.Test.EdgeCase {
+extension ISO_9945.Kernel.File.System.Block.Test.`Edge Case` {
     @Test
     func `Size zero value`() {
         let size = ISO_9945.Kernel.File.System.Block.Size(0)

@@ -4,13 +4,14 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite("ISO_9945.Kernel.Thread.Key")
-struct KeyTests {
-    @Suite struct Unit {}
-    @Suite struct Lifecycle {}
+extension ISO_9945.Kernel.Thread.Key {
+    @Suite
+    struct Test {
+        @Suite struct Unit {}
+    }
 }
 
-extension KeyTests.Unit {
+extension ISO_9945.Kernel.Thread.Key.Test.Unit {
 
     @Test
     func `freshly-allocated slot reads as nil`() throws {
@@ -61,7 +62,7 @@ extension KeyTests.Unit {
     }
 }
 
-extension KeyTests.Lifecycle {
+extension ISO_9945.Kernel.Thread.Key.Test.Unit {
 
     @Test
     func `Key can be allocated and deallocated repeatedly`() throws {

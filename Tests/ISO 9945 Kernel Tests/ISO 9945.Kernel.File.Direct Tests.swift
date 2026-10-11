@@ -10,44 +10,14 @@ extension ISO_9945.Kernel.File.Direct {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
-    @Test
-    func `Direct namespace exists`() {
-        _ = ISO_9945.Kernel.File.Direct.self
-    }
-
-    @Test
-    func `Direct is an enum`() {
-        let _: ISO_9945.Kernel.File.Direct.Type = ISO_9945.Kernel.File.Direct.self
-    }
 }
 
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
-    @Test
-    func `Direct.Capability type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Capability.Type = ISO_9945.Kernel.File.Direct.Capability
-            .self
-    }
-
-    @Test
-    func `Direct.Mode type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Mode.Type = ISO_9945.Kernel.File.Direct.Mode.self
-    }
-
-    @Test
-    func `Direct.Requirements type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Type = ISO_9945.Kernel.File.Direct
-            .Requirements.self
-    }
-
-    @Test
-    func `Direct.Error type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Error.Type = ISO_9945.Kernel.File.Direct.Error.self
-    }
 }
 
 extension ISO_9945.Kernel.File.Direct.Test.Unit {

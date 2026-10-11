@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.File.Seek.Origin {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -54,7 +54,7 @@ extension ISO_9945.Kernel.File.Seek.Origin.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Seek.Origin.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Seek.Origin.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let start = ISO_9945.Kernel.File.Seek.Origin.start

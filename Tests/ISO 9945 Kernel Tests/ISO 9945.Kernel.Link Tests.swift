@@ -10,30 +10,11 @@ extension ISO_9945.Kernel.Link {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Link.Test.Unit {
-    @Test
-    func `Link namespace exists`() {
-        _ = ISO_9945.Kernel.Link.self
-    }
-
-    @Test
-    func `Link is an enum`() {
-        let _: ISO_9945.Kernel.Link.Type = ISO_9945.Kernel.Link.self
-    }
-
-    @Test
-    func `Link.Count type exists`() {
-        let _: ISO_9945.Kernel.Link.Count.Type = ISO_9945.Kernel.Link.Count.self
-    }
-
-    @Test
-    func `Link.Error type exists`() {
-        let _: ISO_9945.Kernel.Link.Error.Type = ISO_9945.Kernel.Link.Error.self
-    }
 }
 
 extension ISO_9945.Kernel.Link.Test.Unit {
@@ -94,7 +75,7 @@ extension ISO_9945.Kernel.Link.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Link.Test.EdgeCase {
+extension ISO_9945.Kernel.Link.Test.`Edge Case` {
     @Test
     func `Link.Error descriptions are non-empty`() {
         let cases: [ISO_9945.Kernel.Link.Error] = [

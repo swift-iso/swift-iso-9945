@@ -7,23 +7,11 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.Unit {
-    @Test
-    func `Offset type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Type =
-            ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.self
-    }
-
-    @Test
-    func `isAligned method exists`() {
-        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let offset = alignment.offset
-        _ = offset.isAligned(0)
-    }
 
     @Test
     func `isAligned returns true for aligned offset`() {
@@ -53,7 +41,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Offset.Test.`Edge Case` {
     @Test
     func `offset accessor returns consistent value`() {
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)

@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.File.Open {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
     @Test
     func `empty options has zero raw value`() {
         let empty = ISO_9945.Kernel.File.Open.Options()
@@ -206,7 +206,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
     @Test
     func `open nonexistent file without create throws`() throws {
         try Path.scope("/nonexistent/path/to/file") { path in

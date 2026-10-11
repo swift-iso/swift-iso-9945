@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Mode.Policy {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Mode.Policy.Test.`Edge Case` {
     @Test
     func `all policies are distinct`() {
         let fallback = ISO_9945.Kernel.File.Direct.Mode.Policy.fallbackToBuffered

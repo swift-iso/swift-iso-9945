@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.Lock.Acquire {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -87,7 +87,7 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Acquire.Test.EdgeCase {
+extension ISO_9945.Kernel.Lock.Acquire.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.Lock.Acquire] = [

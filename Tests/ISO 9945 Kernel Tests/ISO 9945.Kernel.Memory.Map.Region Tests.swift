@@ -10,21 +10,11 @@ extension Memory.Map.Region {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension Memory.Map.Region.Test.Unit {
-    @Test
-    func `Region type exists`() {
-        let _: Memory.Map.Region.Type = Memory.Map.Region.self
-    }
-
-    @Test
-    func `Region is @unchecked Sendable`() {
-
-        let _: any Sendable.Type = Memory.Map.Region.self
-    }
 }
 
 extension Memory.Map.Region.Test.Unit {

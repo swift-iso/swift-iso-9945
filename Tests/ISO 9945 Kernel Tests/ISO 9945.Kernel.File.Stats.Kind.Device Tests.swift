@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.`Edge Case` {
     @Test
     func `block and character are distinct`() {
         let block = ISO_9945.Kernel.File.Stats.Kind.Device.block

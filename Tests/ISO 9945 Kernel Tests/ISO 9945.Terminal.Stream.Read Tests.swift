@@ -13,19 +13,10 @@ extension Terminal.Stream.Read {
         @Suite struct Unit {}
         @Suite struct `Edge Case` {}
         @Suite struct Integration {}
-        @Suite(.serialized) struct Performance {}
     }
 }
 
 extension Terminal.Stream.Read.Test.Integration {
-    @Test(
-        .disabled(
-            "pending: stdin redirection needs non-owning descriptor API or child-process harness"
-        )
-    )
-    func `Read bytes from pipe via stdin redirect`() throws {
-
-    }
 
     @Test
     func `Read returns 0 on EOF when write end closed`() throws {
@@ -42,21 +33,4 @@ extension Terminal.Stream.Read.Test.Integration {
 
     }
 
-    @Test(
-        .disabled(
-            "pending: stdin redirection needs non-owning descriptor API or child-process harness"
-        )
-    )
-    func `Read escape sequence bytes from pipe`() throws {
-
-    }
-
-    @Test(
-        .disabled(
-            "pending: stdin redirection needs non-owning descriptor API or child-process harness"
-        )
-    )
-    func `Read multiple bytes preserves order`() throws {
-
-    }
 }

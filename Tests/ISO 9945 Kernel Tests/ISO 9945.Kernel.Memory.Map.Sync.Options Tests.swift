@@ -10,7 +10,7 @@ extension Memory.Map.Sync.Options {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -21,23 +21,6 @@ extension Memory.Map.Sync.Options.Test.Unit {
         #expect(flags.rawValue == 0)
     }
 
-    @Test
-    func `sync constant exists`() {
-        let flags = Memory.Map.Sync.Options.sync
-        _ = flags.rawValue
-    }
-
-    @Test
-    func `async constant exists`() {
-        let flags = Memory.Map.Sync.Options.async
-        _ = flags.rawValue
-    }
-
-    @Test
-    func `invalidate constant exists`() {
-        let flags = Memory.Map.Sync.Options.invalidate
-        _ = flags.rawValue
-    }
 }
 
 extension Memory.Map.Sync.Options.Test.Unit {
@@ -77,7 +60,7 @@ extension Memory.Map.Sync.Options.Test.Unit {
     }
 }
 
-extension Memory.Map.Sync.Options.Test.EdgeCase {
+extension Memory.Map.Sync.Options.Test.`Edge Case` {
     @Test
     func `sync and async are distinct`() {
         let sync = Memory.Map.Sync.Options.sync

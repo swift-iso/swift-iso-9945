@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.Lock.Range {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -109,7 +109,7 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Range.Test.EdgeCase {
+extension ISO_9945.Kernel.Lock.Range.Test.`Edge Case` {
     @Test
     func `file and bytes are distinct`() {
         let file = ISO_9945.Kernel.Lock.Range.file

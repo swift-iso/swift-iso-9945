@@ -12,20 +12,11 @@ import Testing
         @Suite
         struct Test {
             @Suite struct Unit {}
-            @Suite struct EdgeCase {}
+            @Suite struct `Edge Case` {}
         }
     }
 
     extension ISO_9945.Kernel.Copy.Clone.Test.Unit {
-        @Test
-        func `Clone namespace exists`() {
-            _ = ISO_9945.Kernel.Copy.Clone.self
-        }
-
-        @Test
-        func `Clone is an enum`() {
-            let _: ISO_9945.Kernel.Copy.Clone.Type = ISO_9945.Kernel.Copy.Clone.self
-        }
     }
 
     #if os(Linux)
@@ -42,11 +33,6 @@ import Testing
 
     #if canImport(Darwin)
         extension ISO_9945.Kernel.Copy.Clone.Test.Unit {
-            @Test
-            func `file function exists on Darwin`() {
-
-                _ = ISO_9945.Kernel.Copy.Clone.self
-            }
         }
     #endif
 

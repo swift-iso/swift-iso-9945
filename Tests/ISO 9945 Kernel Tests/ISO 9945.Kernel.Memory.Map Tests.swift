@@ -10,7 +10,7 @@ extension Memory.Map {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -128,7 +128,7 @@ extension Memory.Map.Test.Unit {
     }
 }
 
-extension Memory.Map.Test.EdgeCase {
+extension Memory.Map.Test.`Edge Case` {
     @Test
     func `map with zero length throws`() {
         #expect(throws: Memory.Map.Error.self) {

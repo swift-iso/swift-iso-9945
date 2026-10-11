@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.Lock.Kind {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Kind.Test.EdgeCase {
+extension ISO_9945.Kernel.Lock.Kind.Test.`Edge Case` {
     @Test
     func `shared and exclusive are distinct`() {
         let shared = ISO_9945.Kernel.Lock.Kind.shared

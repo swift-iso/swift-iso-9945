@@ -6,16 +6,11 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
-    @Test
-    func `Error type exists`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.Error.Type = ISO_9945.Kernel.Socket.Shutdown.Error
-            .self
-    }
 
     @Test
     func `platform case exists`() {
@@ -71,7 +66,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.`Edge Case` {
     @Test
     func `Same case with different values are not equal`() {
         let a = ISO_9945.Kernel.Socket.Shutdown.Error.platform(

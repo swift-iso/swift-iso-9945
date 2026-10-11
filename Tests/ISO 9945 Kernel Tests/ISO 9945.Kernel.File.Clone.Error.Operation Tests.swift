@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Operation {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -93,7 +93,7 @@ extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Error.Operation.Test.`Edge Case` {
     @Test
     func `all operations are distinct`() {
         let operations: [ISO_9945.Kernel.File.Clone.Error.Operation] = [

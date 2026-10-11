@@ -6,14 +6,9 @@ extension ISO_9945.Kernel.File {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.File.Test.Unit {
-    @Test
-    func `File namespace exists`() {
-
-        _ = ISO_9945.Kernel.File.self
-    }
 }

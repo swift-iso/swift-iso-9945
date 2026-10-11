@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.Close {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Close.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Close.Test.EdgeCase {
+extension ISO_9945.Kernel.Close.Test.`Edge Case` {
     @Test
     func `close throws on negative descriptor`() {
         #expect(throws: ISO_9945.Kernel.Close.Error.self) {

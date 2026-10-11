@@ -6,8 +6,8 @@ import Testing
 
 @testable @_spi(Syscall) import ISO_9945_Kernel
 
-@Suite("ISO_9945.Kernel.Event.ID Tests")
-struct EventIDTests {
+@Suite
+struct `Event ID Tests` {
 
     @Test
     func `ID can be created from UInt literal`() {

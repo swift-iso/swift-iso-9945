@@ -6,15 +6,11 @@ extension ISO_9945.Kernel.Socket.Shutdown.How {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
-    @Test
-    func `How type exists`() {
-        let _: ISO_9945.Kernel.Socket.Shutdown.How.Type = ISO_9945.Kernel.Socket.Shutdown.How.self
-    }
 
     @Test
     func `read case has rawValue 0`() {
@@ -83,7 +79,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.How.Test.EdgeCase {
+extension ISO_9945.Kernel.Socket.Shutdown.How.Test.`Edge Case` {
     @Test
     func `How from invalid rawValue is nil`() {
         let how = ISO_9945.Kernel.Socket.Shutdown.How(rawValue: 99)

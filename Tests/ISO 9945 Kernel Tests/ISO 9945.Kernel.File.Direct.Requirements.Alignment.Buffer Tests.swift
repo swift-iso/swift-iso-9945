@@ -6,26 +6,11 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
-    @Test
-    func `Buffer type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Type =
-            ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.self
-    }
-
-    @Test
-    func `isAligned method exists`() {
-        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let buffer = alignment.buffer
-        let bytes = [UInt8](repeating: 0, count: 4096)
-        bytes.withUnsafeBytes { pointer in
-            _ = buffer.isAligned(Memory.Address(pointer.baseAddress!))
-        }
-    }
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
@@ -37,7 +22,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.`Edge Case` {
     @Test
     func `buffer accessor returns consistent value`() {
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)

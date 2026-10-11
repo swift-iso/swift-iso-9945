@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.File.Open.Options {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -173,7 +173,7 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Open.Options.Test.`Edge Case` {
     @Test
     func `all standard options are distinct`() {
         let options: [ISO_9945.Kernel.File.Open.Options] = [

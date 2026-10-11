@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Clone.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -162,20 +162,9 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
-    @Test
-    func `Operation type exists`() {
-        let _: ISO_9945.Kernel.File.Clone.Error.Operation.Type = ISO_9945.Kernel.File.Clone.Error
-            .Operation.self
-    }
-
-    @Test
-    func `Syscall type exists`() {
-        let _: ISO_9945.Kernel.File.Clone.Error.Syscall.Type = ISO_9945.Kernel.File.Clone.Error
-            .Syscall.self
-    }
 }
 
-extension ISO_9945.Kernel.File.Clone.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Clone.Error.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Clone.Error] = [

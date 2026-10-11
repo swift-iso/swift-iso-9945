@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -103,7 +103,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Reason.Test.`Edge Case` {
     @Test
     func `all reasons are distinct`() {
         let reasons: [ISO_9945.Kernel.File.Direct.Requirements.Reason] = [

@@ -12,15 +12,15 @@ import Testing
     import Glibc
 #endif
 
-@Suite("POSIX Thread Synchronization")
-struct POSIXThreadSynchronizationTests {}
+@Suite
+struct `Thread Synchronization Tests` {}
 
-extension POSIXThreadSynchronizationTests {
+extension `Thread Synchronization Tests` {
     @Suite("Mutex Unit")
     struct MutexUnit {}
 }
 
-extension POSIXThreadSynchronizationTests.MutexUnit {
+extension `Thread Synchronization Tests`.MutexUnit {
     @Test
     func `mutex can be locked and unlocked`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
@@ -88,12 +88,12 @@ extension POSIXThreadSynchronizationTests.MutexUnit {
     }
 }
 
-extension POSIXThreadSynchronizationTests {
+extension `Thread Synchronization Tests` {
     @Suite("Condition Unit")
     struct ConditionUnit {}
 }
 
-extension POSIXThreadSynchronizationTests.ConditionUnit {
+extension `Thread Synchronization Tests`.ConditionUnit {
     @Test
     func `condition can signal without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
@@ -121,7 +121,7 @@ extension POSIXThreadSynchronizationTests.ConditionUnit {
     }
 }
 
-extension POSIXThreadSynchronizationTests {
+extension `Thread Synchronization Tests` {
     @Suite("Integration")
     struct Integration {}
 }
@@ -134,7 +134,7 @@ private func smallSleep(milliseconds: UInt32) {
     #endif
 }
 
-extension POSIXThreadSynchronizationTests.Integration {
+extension `Thread Synchronization Tests`.Integration {
     @Test
     func `signal wakes one waiter`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()

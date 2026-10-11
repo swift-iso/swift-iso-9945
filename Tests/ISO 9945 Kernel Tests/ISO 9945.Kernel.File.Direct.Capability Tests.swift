@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Capability {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -120,7 +120,7 @@ extension ISO_9945.Kernel.File.Direct.Capability.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Capability.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Capability.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {
         let uncached = ISO_9945.Kernel.File.Direct.Capability.uncachedOnly

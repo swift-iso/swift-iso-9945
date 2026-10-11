@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.File.Stats {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -143,7 +143,7 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Test.`Edge Case` {
     @Test
     func `zero size file`() {
         let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 0)

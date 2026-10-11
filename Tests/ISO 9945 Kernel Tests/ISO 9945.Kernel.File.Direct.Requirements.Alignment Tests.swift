@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -51,23 +51,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
-    @Test
-    func `buffer accessor exists`() {
-        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let _ = alignment.buffer
-    }
-
-    @Test
-    func `offset accessor exists`() {
-        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let _ = alignment.offset
-    }
-
-    @Test
-    func `length accessor exists`() {
-        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let _ = alignment.length
-    }
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
@@ -89,7 +72,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Test.`Edge Case` {
     @Test
     func `alignments with different buffer values are distinct`() {
         let a = ISO_9945.Kernel.File.Direct.Requirements.Alignment(

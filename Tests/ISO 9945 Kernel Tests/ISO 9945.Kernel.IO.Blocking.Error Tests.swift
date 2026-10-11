@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 

@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -90,7 +90,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.System.Stats.Error.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let code = Error::Error.Code.posix(999)

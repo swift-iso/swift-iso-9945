@@ -6,6 +6,6 @@ extension ISO_9945.Kernel.File.Open.Blocking {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }

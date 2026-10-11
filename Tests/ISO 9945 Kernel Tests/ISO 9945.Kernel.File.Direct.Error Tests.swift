@@ -7,7 +7,7 @@ extension ISO_9945.Kernel.File.Direct.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -166,20 +166,9 @@ extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Direct.Error.Test.Unit {
-    @Test
-    func `Operation type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Error.Operation.Type = ISO_9945.Kernel.File.Direct.Error
-            .Operation.self
-    }
-
-    @Test
-    func `Syscall type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Error.Syscall.Type = ISO_9945.Kernel.File.Direct.Error
-            .Syscall.self
-    }
 }
 
-extension ISO_9945.Kernel.File.Direct.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Error.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Direct.Error] = [

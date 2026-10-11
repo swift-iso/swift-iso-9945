@@ -10,15 +10,11 @@ extension ISO_9945.Kernel.Storage.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Storage.Error.Test.Unit {
-    @Test
-    func `Error type exists`() {
-        let _: ISO_9945.Kernel.Storage.Error.Type = ISO_9945.Kernel.Storage.Error.self
-    }
 
     @Test
     func `exhausted case exists`() {
@@ -87,7 +83,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Storage.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.Storage.Error.Test.`Edge Case` {
     @Test
     func `All cases are distinct`() {
         let cases: [ISO_9945.Kernel.Storage.Error] = [.exhausted, .quota]

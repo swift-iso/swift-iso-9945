@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Permissions {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -218,7 +218,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Permissions.Test.`Edge Case` {
     @Test
     func `combining all individual permissions equals 0o777`() {
         let all =

@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.IO.Write {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -148,7 +148,7 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Write.Test.EdgeCase {
+extension ISO_9945.Kernel.IO.Write.Test.`Edge Case` {
     @Test
     func `write throws on invalid descriptor`() {
         let content = Array("test".utf8)

@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Link {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.`Edge Case` {
     @Test
     func `symbolic and junction are distinct`() {
         let symbolic = ISO_9945.Kernel.File.Stats.Kind.Link.symbolic

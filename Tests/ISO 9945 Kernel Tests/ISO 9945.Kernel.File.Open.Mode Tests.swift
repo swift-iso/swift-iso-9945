@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.File.Open.Mode {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -70,7 +70,7 @@ extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Mode.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Open.Mode.Test.`Edge Case` {
     @Test
     func `.read and .write are distinct modes`() {
         #expect(ISO_9945.Kernel.File.Open.Mode.read != ISO_9945.Kernel.File.Open.Mode.write)

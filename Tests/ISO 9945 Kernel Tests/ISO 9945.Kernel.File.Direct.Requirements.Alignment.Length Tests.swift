@@ -7,23 +7,11 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.Test.Unit {
-    @Test
-    func `Length type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.Type =
-            ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.self
-    }
-
-    @Test
-    func `isValid method exists`() {
-        let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)
-        let length = alignment.length
-        _ = length.isValid(ISO_9945.Kernel.File.Size(0))
-    }
 
     @Test
     func `isValid returns true for valid lengths`() {
@@ -55,7 +43,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Length.Test.`Edge Case` {
     @Test
     func `length accessor returns consistent value`() {
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)

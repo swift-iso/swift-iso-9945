@@ -6,8 +6,8 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite("ISO_9945.Kernel.File.Size Tests")
-struct FileSizeTests {
+@Suite
+struct `File Size Tests` {
 
     @Test
     func `Size from integer literal`() {

@@ -6,15 +6,11 @@ extension ISO_9945.Kernel.Socket.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
 extension ISO_9945.Kernel.Socket.Error.Test.Unit {
-    @Test
-    func `Error type exists`() {
-        let _: ISO_9945.Kernel.Socket.Error.Type = ISO_9945.Kernel.Socket.Error.self
-    }
 
     @Test
     func `platform case exists`() {
@@ -64,7 +60,7 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.Socket.Error.Test.`Edge Case` {
     @Test
     func `Same case with different values are not equal`() {
         let a = ISO_9945.Kernel.Socket.Error.platform(Error::Error(code: .posix(1)))

@@ -6,7 +6,7 @@ extension ISO_9945.Kernel.File.Direct.Requirements {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -86,20 +86,9 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
-    @Test
-    func `Alignment type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Alignment.Type = ISO_9945.Kernel.File.Direct
-            .Requirements.Alignment.self
-    }
-
-    @Test
-    func `Reason type exists`() {
-        let _: ISO_9945.Kernel.File.Direct.Requirements.Reason.Type = ISO_9945.Kernel.File.Direct
-            .Requirements.Reason.self
-    }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Test.EdgeCase {
+extension ISO_9945.Kernel.File.Direct.Requirements.Test.`Edge Case` {
     @Test
     func `known with different alignments are distinct`() {
         let align1 = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`512`)

@@ -10,7 +10,7 @@ extension ISO_9945.Kernel.Copy.Error {
     @Suite
     struct Test {
         @Suite struct Unit {}
-        @Suite struct EdgeCase {}
+        @Suite struct `Edge Case` {}
     }
 }
 
@@ -144,7 +144,7 @@ extension ISO_9945.Kernel.Copy.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Copy.Error.Test.EdgeCase {
+extension ISO_9945.Kernel.Copy.Error.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.Copy.Error] = [
