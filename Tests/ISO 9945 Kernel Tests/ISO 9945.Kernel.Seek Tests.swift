@@ -14,21 +14,19 @@ extension ISO_9945.Kernel.File.Seek {
     }
 }
 
+#if canImport(Darwin)
+    import Darwin
+#elseif canImport(Glibc)
+    import Glibc
+#elseif canImport(Musl)
+    import Musl
+#endif
+
 extension ISO_9945.Kernel.File.Seek.Test.Unit {
     @Test
-    func `Origin cases are distinct`() {
-        let start = ISO_9945.Kernel.File.Seek.Origin.start
-        let current = ISO_9945.Kernel.File.Seek.Origin.current
-        let end = ISO_9945.Kernel.File.Seek.Origin.end
-
-        #expect(start != current)
-        #expect(start != end)
-        #expect(current != end)
-    }
-
-    @Test
-    func `Origin is Sendable`() {
-        let origin: any Sendable = ISO_9945.Kernel.File.Seek.Origin.start
-        #expect(origin is ISO_9945.Kernel.File.Seek.Origin)
+    func `POSIX.1-2024 lseek whence values are SEEK_SET, SEEK_CUR and SEEK_END`() {
+        #expect(ISO_9945.Kernel.File.Seek.Whence.start.rawValue == SEEK_SET)
+        #expect(ISO_9945.Kernel.File.Seek.Whence.current.rawValue == SEEK_CUR)
+        #expect(ISO_9945.Kernel.File.Seek.Whence.end.rawValue == SEEK_END)
     }
 }
