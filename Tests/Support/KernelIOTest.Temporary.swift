@@ -3,12 +3,12 @@ public import ISO_9945_Kernel
 import Path
 import String
 
-extension ISO_9945.Kernel {
+extension KernelIOTest {
 
     public enum Temporary {}
 }
 
-extension ISO_9945.Kernel.Temporary {
+extension KernelIOTest.Temporary {
 
     public static var directory: Swift.String {
         #if os(Windows)

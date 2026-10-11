@@ -97,7 +97,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
 
     @Test
     func `open with create creates new file`() throws {
-        let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "open-create-test")
+        let pathString = KernelIOTest.Temporary.filePath(prefix: "open-create-test")
         let fd = try Path.scope(pathString) { path in
             try ISO_9945.Kernel.File.Open.open(
                 path: path,

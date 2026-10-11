@@ -8,7 +8,7 @@
     public enum KernelIOTest {
 
         public static func makeTempPath(prefix: Swift.String = "io-test") -> Swift.String {
-            ISO_9945.Kernel.Temporary.filePath(prefix: prefix)
+            KernelIOTest.Temporary.filePath(prefix: prefix)
         }
 
         public static func open(at path: Swift.String) throws -> ISO_9945.Kernel.Descriptor {

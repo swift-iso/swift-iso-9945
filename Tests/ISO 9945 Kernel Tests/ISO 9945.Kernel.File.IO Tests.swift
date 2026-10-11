@@ -10,7 +10,7 @@ import Testing
 struct `File IO Integration Tests` {
     @Test
     func `open and close file`() throws {
-        let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test")
+        let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test")
 
         try Path.scope(pathString) { path in
 
@@ -52,7 +52,7 @@ struct `File IO Integration Tests` {
 
     @Test
     func `write and read data`() throws {
-        let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-rw")
+        let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test-rw")
         let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
 
         try Path.scope(pathString) { path in
@@ -85,7 +85,7 @@ struct `File IO Integration Tests` {
 
     @Test
     func `read returns 0 on EOF`() throws {
-        let pathString = ISO_9945.Kernel.Temporary.filePath(prefix: "posix-io-test-eof")
+        let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test-eof")
 
         try Path.scope(pathString) { path in
 
