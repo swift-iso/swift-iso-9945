@@ -85,9 +85,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Direct.Requirements.Test.Unit {
-}
-
 extension ISO_9945.Kernel.File.Direct.Requirements.Test.`Edge Case` {
     @Test
     func `known with different alignments are distinct`() {

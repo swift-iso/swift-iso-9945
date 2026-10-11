@@ -10,8 +10,3 @@ extension ISO_9945.Kernel.File.System {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.System.Test.Unit {
-}

@@ -9,6 +9,3 @@ extension ISO_9945.Kernel.File {
         @Suite struct `Edge Case` {}
     }
 }
-
-extension ISO_9945.Kernel.File.Test.Unit {
-}

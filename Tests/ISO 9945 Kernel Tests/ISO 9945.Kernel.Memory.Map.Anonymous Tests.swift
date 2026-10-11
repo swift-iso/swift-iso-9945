@@ -15,9 +15,6 @@ extension Memory.Map.Anonymous {
 }
 
 extension Memory.Map.Anonymous.Test.Unit {
-}
-
-extension Memory.Map.Anonymous.Test.Unit {
     @Test
     func `map creates a valid region`() throws {
         let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))

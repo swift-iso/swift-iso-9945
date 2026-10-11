@@ -161,9 +161,6 @@ extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Clone.Error.Test.Unit {
-}
-
 extension ISO_9945.Kernel.File.Clone.Error.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {

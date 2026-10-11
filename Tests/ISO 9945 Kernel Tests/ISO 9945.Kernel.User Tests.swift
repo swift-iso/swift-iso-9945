@@ -15,9 +15,6 @@ extension ISO_9945.Kernel.User {
 }
 
 extension ISO_9945.Kernel.User.Test.Unit {
-}
-
-extension ISO_9945.Kernel.User.Test.Unit {
     @Test
     func `User.ID from UInt32`() {
         let uid: ISO_9945.Kernel.User.ID = 501

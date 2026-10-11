@@ -10,8 +10,3 @@ extension ISO_9945.Kernel.Socket.Shutdown {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Socket.Shutdown.Test.Unit {
-}

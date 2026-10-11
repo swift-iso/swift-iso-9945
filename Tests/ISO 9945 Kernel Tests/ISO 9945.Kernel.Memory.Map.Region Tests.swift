@@ -15,9 +15,6 @@ extension Memory.Map.Region {
 }
 
 extension Memory.Map.Region.Test.Unit {
-}
-
-extension Memory.Map.Region.Test.Unit {
     @Test
     func `Region stores base address`() throws {
         let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))

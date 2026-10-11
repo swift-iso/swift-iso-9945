@@ -11,9 +11,6 @@ extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer {
 }
 
 extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.Direct.Requirements.Alignment.Buffer.Test.Unit {
     @Test
     func `Buffer is Sendable`() {
         let alignment = ISO_9945.Kernel.File.Direct.Requirements.Alignment(uniform: .`4096`)

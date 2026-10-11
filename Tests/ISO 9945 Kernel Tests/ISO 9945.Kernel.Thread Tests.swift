@@ -7,12 +7,6 @@ import Testing
 @testable import ISO_9945_Kernel
 
 extension ISO_9945.Kernel.Thread.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Thread.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Thread.Test.Unit {
     @Test
     func `create function signature exists`() {
 

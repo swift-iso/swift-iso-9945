@@ -15,9 +15,6 @@ extension ISO_9945.Kernel.Lock.Token {
 }
 
 extension ISO_9945.Kernel.Lock.Token.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Lock.Token.Test.Unit {
     @Test
     func `withExclusive exists`() {
 
@@ -43,11 +40,3 @@ extension ISO_9945.Kernel.Lock.Token.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Token.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Lock.Token.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Lock.Token.Test.`Edge Case` {
-}

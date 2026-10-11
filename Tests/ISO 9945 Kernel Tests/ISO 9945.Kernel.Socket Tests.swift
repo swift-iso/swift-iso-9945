@@ -11,9 +11,6 @@ extension ISO_9945.Kernel.Socket {
 }
 
 extension ISO_9945.Kernel.Socket.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Socket.Test.Unit {
 
     #if !os(Windows)
 

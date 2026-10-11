@@ -15,9 +15,6 @@ extension ISO_9945.Kernel.Group {
 }
 
 extension ISO_9945.Kernel.Group.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Group.Test.Unit {
     @Test
     func `Group.ID from literal`() {
         let gid: ISO_9945.Kernel.Group.ID = 100

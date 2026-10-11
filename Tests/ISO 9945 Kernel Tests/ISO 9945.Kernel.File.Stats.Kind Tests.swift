@@ -83,9 +83,6 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
 }
 
 extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     @Test
     func `Kind is Sendable`() {
         let kind: any Sendable = ISO_9945.Kernel.File.Stats.Kind.regular

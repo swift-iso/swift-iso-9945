@@ -10,8 +10,3 @@ extension ISO_9945.Kernel.IO.Blocking {
     }
 }
 
-extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
-}
-
-extension ISO_9945.Kernel.IO.Blocking.Test.Unit {
-}

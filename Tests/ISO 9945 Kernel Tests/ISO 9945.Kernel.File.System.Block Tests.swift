@@ -12,12 +12,6 @@ extension ISO_9945.Kernel.File.System.Block {
 }
 
 extension ISO_9945.Kernel.File.System.Block.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.System.Block.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     @Test
     func `Size from UInt64`() {
         let size = ISO_9945.Kernel.File.System.Block.Size(512)

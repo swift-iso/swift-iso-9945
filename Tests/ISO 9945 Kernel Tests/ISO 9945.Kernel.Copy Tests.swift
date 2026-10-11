@@ -11,9 +11,6 @@ extension ISO_9945.Kernel.Copy {
 }
 
 extension ISO_9945.Kernel.Copy.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Copy.Test.Unit {
 
     #if os(Linux) || canImport(Darwin)
 

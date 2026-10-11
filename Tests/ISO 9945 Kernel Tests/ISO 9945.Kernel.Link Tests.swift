@@ -15,9 +15,6 @@ extension ISO_9945.Kernel.Link {
 }
 
 extension ISO_9945.Kernel.Link.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Link.Test.Unit {
     @Test
     func `Link.Count zero constant`() {
         let zero = ISO_9945.Kernel.Link.Count.zero

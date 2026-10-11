@@ -15,12 +15,6 @@ extension ISO_9945.Kernel.File.Direct {
 }
 
 extension ISO_9945.Kernel.File.Direct.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.Direct.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.Direct.Test.Unit {
     @Test
     func `direct mode resolved is equatable`() {
         #expect(ISO_9945.Kernel.File.Direct.Mode.Resolved.buffered == .buffered)

@@ -10,8 +10,3 @@ extension ISO_9945.Kernel.File.Clone {
     }
 }
 
-extension ISO_9945.Kernel.File.Clone.Test.Unit {
-}
-
-extension ISO_9945.Kernel.File.Clone.Test.Unit {
-}

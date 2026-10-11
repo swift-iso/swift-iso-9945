@@ -10,8 +10,3 @@ extension ISO_9945.Kernel.Storage {
     }
 }
 
-extension ISO_9945.Kernel.Storage.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Storage.Test.Unit {
-}

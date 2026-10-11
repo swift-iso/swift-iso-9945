@@ -15,9 +15,6 @@ extension ISO_9945.Kernel.Signal {
 }
 
 extension ISO_9945.Kernel.Signal.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Signal.Test.Unit {
     #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
     #endif

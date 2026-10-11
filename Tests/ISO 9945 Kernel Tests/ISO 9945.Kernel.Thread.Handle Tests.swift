@@ -14,15 +14,6 @@ extension ISO_9945.Kernel.Thread.Handle {
     }
 }
 
-extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
-}
-
-extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
-}
-
 #if os(Windows)
     extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
     }
@@ -30,6 +21,3 @@ extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
     extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
     }
 #endif
-
-extension ISO_9945.Kernel.Thread.Handle.Test.`Edge Case` {
-}
