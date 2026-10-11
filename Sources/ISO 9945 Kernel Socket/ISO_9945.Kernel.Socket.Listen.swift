@@ -22,7 +22,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Listen {
 
     public static func listen(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         backlog: ISO_9945.Kernel.Socket.Backlog = .max
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try listen(fd: descriptor._rawValue, backlog: backlog)

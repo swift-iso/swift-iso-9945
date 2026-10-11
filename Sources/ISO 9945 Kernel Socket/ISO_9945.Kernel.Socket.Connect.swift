@@ -22,7 +22,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Connect {
 
     public static func connect(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Storage,
         length: ISO_9945.Kernel.Socket.Address.Length
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -30,21 +30,21 @@ extension ISO_9945.Kernel.Socket.Connect {
     }
 
     public static func connect(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv4
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try connect(fd: descriptor._rawValue, address: address)
     }
 
     public static func connect(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv6
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try connect(fd: descriptor._rawValue, address: address)
     }
 
     public static func connect(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Unix
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try connect(fd: descriptor._rawValue, address: address)

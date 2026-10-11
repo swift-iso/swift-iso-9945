@@ -16,7 +16,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Accept {
 
     public static func accept(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) -> Result {
         try accept(fd: descriptor._rawValue)
     }
@@ -38,7 +38,7 @@ extension ISO_9945.Kernel.Socket.Accept {
         }
 
         return Result(
-            descriptor: ISO_9945.Kernel.Socket.Descriptor(_raw: acceptedFd),
+            descriptor: ISO_9945.Kernel.Descriptor(_raw: acceptedFd),
             address: storage,
             length: ISO_9945.Kernel.Socket.Address.Length(addrLen)
         )

@@ -20,7 +20,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Send {
 
     public static func send(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.Socket.Send {
     }
 
     public static func to(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         from span: Swift.Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = [],
         address: ISO_9945.Kernel.Socket.Address.Storage,
@@ -44,7 +44,7 @@ extension ISO_9945.Kernel.Socket.Send {
     }
 
     public static func message(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         header: inout ISO_9945.Kernel.Socket.Message.Header,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {

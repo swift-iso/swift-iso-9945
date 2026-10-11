@@ -16,7 +16,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Option {
 
     public static func get(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         level: Level,
         name: Name
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int32 {
@@ -24,7 +24,7 @@ extension ISO_9945.Kernel.Socket.Option {
     }
 
     public static func set(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         level: Level,
         name: Name,
         value: Int32
@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Option {
     }
 
     public static func get(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         level: Level,
         name: Name
     ) throws(ISO_9945.Kernel.Socket.Error) -> Bool {
@@ -41,7 +41,7 @@ extension ISO_9945.Kernel.Socket.Option {
     }
 
     public static func set(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         level: Level,
         name: Name,
         enabled: Bool

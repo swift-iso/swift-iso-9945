@@ -11,7 +11,7 @@
 extension ISO_9945.Kernel.Socket {
 
     public static func getError(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) -> Error::Error.Code {
         try getError(fd: descriptor._rawValue)
     }

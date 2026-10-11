@@ -3,14 +3,14 @@ extension ISO_9945.Kernel.File {
     @frozen
     public struct Handle: ~Copyable, Sendable {
 
-        public let descriptor: ISO_9945.Kernel.File.Descriptor
+        public let descriptor: ISO_9945.Kernel.Descriptor
 
         public let direct: ISO_9945.Kernel.File.Direct.Mode.Resolved
 
         public let requirements: ISO_9945.Kernel.File.Direct.Requirements
 
         public init(
-            descriptor: consuming ISO_9945.Kernel.File.Descriptor,
+            descriptor: consuming ISO_9945.Kernel.Descriptor,
             direct: ISO_9945.Kernel.File.Direct.Mode.Resolved,
             requirements: ISO_9945.Kernel.File.Direct.Requirements
         ) {

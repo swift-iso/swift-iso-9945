@@ -20,7 +20,7 @@ extension ISO_9945.Kernel.Socket {
 extension ISO_9945.Kernel.Socket.Bind {
 
     public static func bind(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Storage,
         length: ISO_9945.Kernel.Socket.Address.Length
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -28,21 +28,21 @@ extension ISO_9945.Kernel.Socket.Bind {
     }
 
     public static func bind(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv4
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try bind(fd: descriptor._rawValue, address: address)
     }
 
     public static func bind(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv6
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try bind(fd: descriptor._rawValue, address: address)
     }
 
     public static func bind(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Unix
     ) throws(ISO_9945.Kernel.Socket.Error) {
         try bind(fd: descriptor._rawValue, address: address)

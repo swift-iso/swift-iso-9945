@@ -17,7 +17,7 @@
 extension ISO_9945.Kernel.Socket.Shutdown {
 
     public static func shutdown(
-        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         how: How
     ) throws(Error) {
         try shutdown(fd: descriptor._rawValue, how: how)
