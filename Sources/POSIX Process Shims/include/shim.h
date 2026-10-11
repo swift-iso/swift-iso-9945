@@ -201,8 +201,8 @@ static inline int swift_posix_spawn_file_actions_addclose(
 
 #if defined(__linux__)
 extern int posix_spawn_file_actions_addchdir_np(
-    posix_spawn_file_actions_t *file_actions,
-    const char *path
+    posix_spawn_file_actions_t * _Nonnull file_actions,
+    const char * _Nonnull path
 );
 #endif
 
