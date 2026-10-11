@@ -8,19 +8,6 @@
 
 extension ISO_9945.Kernel.Time {
 
-    internal static func timespec(from duration: Duration?) -> timespec? {
-        guard let duration else { return nil }
-        let (seconds, attoseconds) = duration.components
-        let nanoseconds = attoseconds / 1_000_000_000
-        #if canImport(Darwin)
-            return Darwin.timespec(tv_sec: Int(seconds), tv_nsec: Int(nanoseconds))
-        #elseif canImport(Musl)
-            return Musl.timespec(tv_sec: Int(seconds), tv_nsec: Int(nanoseconds))
-        #elseif canImport(Glibc)
-            return Glibc.timespec(tv_sec: Int(seconds), tv_nsec: Int(nanoseconds))
-        #endif
-    }
-
     public static func realtime() -> ISO_9945.Kernel.Time {
         #if canImport(Darwin)
             var ts = Darwin.timespec()

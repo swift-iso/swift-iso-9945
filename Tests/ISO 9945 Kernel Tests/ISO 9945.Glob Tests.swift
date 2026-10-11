@@ -173,3 +173,22 @@ extension ISO_9945.Glob.Expand.Test.Unit {
         }
     }
 }
+
+extension ISO_9945.Glob.Expand.Test.Unit {
+    @Testing.Test
+    func `POSIX.1-2024 glob GLOB_NOCHECK returns the pattern when nothing matches`() throws {
+        let pattern = "/nonexistent-iso-9945-glob/*.none"
+        let paths = try Path.scope(pattern) { pattern in
+            try ISO_9945.Glob.expand(pattern: pattern, options: .nocheck)
+        }
+        #expect(paths == [pattern])
+    }
+
+    @Testing.Test
+    func `POSIX.1-2024 glob GLOB_MARK appends a slash to matched directories`() throws {
+        let marked = try Path.scope("/us[r]") { pattern in
+            try ISO_9945.Glob.expand(pattern: pattern, options: .mark)
+        }
+        #expect(marked == ["/usr/"])
+    }
+}

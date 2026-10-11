@@ -527,7 +527,9 @@ let package = Package(
             dependencies: [
                 "ISO 9945 Kernel",
                 "ISO 9945 Glob",
+                "ISO 9945 Loader",
                 "ISO 9945 Kernel Test Support",
+                .product(name: "Loader Vocabulary", package: "swift-loader-vocabulary"),
                 .product(name: "Error", package: "swift-error"),
                 .product(name: "Path", package: "swift-path"),
                 .product(name: "System", package: "swift-system"),
