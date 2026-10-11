@@ -22,47 +22,6 @@ extension ISO_9945.Kernel.File.Handle {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Error {
-
-    public init(from directError: ISO_9945.Kernel.File.Direct.Error) {
-        switch directError {
-        case .notSupported:
-            self = .requirementsUnknown
-
-        case .misalignedBuffer(let address, let required):
-            self = .misalignedBuffer(address: address, required: required)
-
-        case .misalignedOffset(let offset, let required):
-            self = .misalignedOffset(offset: offset, required: required)
-
-        case .invalidLength(let length, let requiredMultiple):
-            self = .invalidLength(length: length, requiredMultiple: requiredMultiple)
-
-        case .modeChange:
-            self = .platform(code: .posix(-1), operation: .sync)
-
-        case .invalidHandle:
-            self = .invalidHandle
-
-        case .platform(let code, let operation):
-
-            switch operation {
-            case .open:
-                self = .platform(code: code, operation: .read)
-
-            case .cache, .sector:
-                self = .platform(code: code, operation: .sync)
-
-            case .read:
-                self = .platform(code: code, operation: .read)
-
-            case .write:
-                self = .platform(code: code, operation: .write)
-            }
-        }
-    }
-}
-
 extension ISO_9945.Kernel.File.Handle.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {

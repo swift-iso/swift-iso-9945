@@ -2,24 +2,20 @@
 
 import PackageDescription
 
-#if os(Windows)
-    let testHelperTargets: [Target] = []
-#else
-    let testHelperTargets: [Target] = [
-        .executableTarget(
-            name: "iso-9945-test-helper",
-            dependencies: [],
-            path: "Tests/Support/POSIX Helper"
-        ),
-        .executableTarget(
-            name: "iso-9945-lock-helper",
-            dependencies: [
-                "ISO 9945 Kernel"
-            ],
-            path: "Tests/Support/Lock Helper"
-        ),
-    ]
-#endif
+let testHelperTargets: [Target] = [
+    .executableTarget(
+        name: "iso-9945-test-helper",
+        dependencies: [],
+        path: "Tests/Support/POSIX Helper"
+    ),
+    .executableTarget(
+        name: "iso-9945-lock-helper",
+        dependencies: [
+            "ISO 9945 Kernel"
+        ],
+        path: "Tests/Support/Lock Helper"
+    ),
+]
 
 let package = Package(
     name: "swift-iso-9945",

@@ -127,13 +127,6 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.`Edge Case` {
     }
 
     @Test
-    func `link cases with different types are distinct`() {
-        let symbolic = ISO_9945.Kernel.File.Stats.Kind.link(.symbolic)
-        let junction = ISO_9945.Kernel.File.Stats.Kind.link(.junction)
-        #expect(symbolic != junction)
-    }
-
-    @Test
     func `device cases with different types are distinct`() {
         let block = ISO_9945.Kernel.File.Stats.Kind.device(.block)
         let character = ISO_9945.Kernel.File.Stats.Kind.device(.character)

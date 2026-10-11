@@ -15,8 +15,5 @@ extension ISO_9945.Kernel.Process.Group {
 
 extension Tagged where Tag == ISO_9945.Kernel.Process.Group, Underlying == Int32 {
 
-    #if !os(Windows)
-
-        public static var current: Self { Self(_unchecked: getpgrp()) }
-    #endif
+    public static var current: Self { Self(_unchecked: getpgrp()) }
 }

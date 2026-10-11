@@ -35,14 +35,3 @@ public import Loader_Vocabulary
     }
 
 #endif
-
-#if canImport(Darwin)
-
-    extension ISO_9945.Loader.Library.Options {
-
-        public static let noLoad = Self(rawValue: RTLD_NOLOAD)
-
-        public static let noDelete = Self(rawValue: RTLD_NODELETE)
-    }
-
-#endif

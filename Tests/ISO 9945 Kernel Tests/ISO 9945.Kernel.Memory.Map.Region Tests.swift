@@ -45,15 +45,3 @@ extension Memory.Map.Region.Test.Unit {
     }
 }
 
-#if os(Windows)
-    extension Memory.Map.Region.Test.Unit {
-        @Test
-        func `Region stores mappingHandle on Windows`() throws {
-            let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
-            let region = try Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Memory.Map.unmap(region) }
-
-            #expect(region.mappingHandle != nil)
-        }
-    }
-#endif

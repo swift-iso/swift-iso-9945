@@ -59,16 +59,3 @@ extension Memory.Map.Anonymous.Test.Unit {
     }
 }
 
-#if os(Windows)
-    extension Memory.Map.Anonymous.Test.Unit {
-        @Test
-        func `map creates a valid region on Windows`() throws {
-            let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
-            let region = try Memory.Map.Anonymous.map(length: pageSize)
-            defer { try? Memory.Map.unmap(region) }
-
-            #expect(region.base != nil)
-            #expect(region.length == pageSize)
-        }
-    }
-#endif

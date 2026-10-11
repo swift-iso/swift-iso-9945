@@ -11,20 +11,10 @@ extension KernelIOTest {
 extension KernelIOTest.Temporary {
 
     public static var directory: Swift.String {
-        #if os(Windows)
-            if let temp = unsafe ISO_9945.Kernel.Environment.get("TEMP") {
-                return unsafe temp.withUnsafePointer { Swift.String(cString: $0) }
-            }
-            if let tmp = unsafe ISO_9945.Kernel.Environment.get("TMP") {
-                return unsafe tmp.withUnsafePointer { Swift.String(cString: $0) }
-            }
-            return "C:\\Temp"
-        #else
-            if let tmpdir = unsafe ISO_9945.Kernel.Environment.get("TMPDIR") {
-                return unsafe tmpdir.withUnsafePointer { unsafe Swift.String(cString: $0) }
-            }
-            return "/tmp"
-        #endif
+        if let tmpdir = unsafe ISO_9945.Kernel.Environment.get("TMPDIR") {
+            return unsafe tmpdir.withUnsafePointer { unsafe Swift.String(cString: $0) }
+        }
+        return "/tmp"
     }
 
     public static func filePath(prefix: Swift.String) -> Swift.String {
@@ -32,10 +22,6 @@ extension KernelIOTest.Temporary {
         let random = Int.random(in: 0..<Int.max)
         let name = "\(prefix)-\(pid)-\(random)"
 
-        #if os(Windows)
-            return directory + "\\" + name
-        #else
-            return directory + "/" + name
-        #endif
+        return directory + "/" + name
     }
 }
