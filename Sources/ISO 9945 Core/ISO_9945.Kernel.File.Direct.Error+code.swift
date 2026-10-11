@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.File.Direct.Error {
         case _ where code == .EBADF:
             self = .invalidHandle
 
-        case _ where Error::Error.Code.POSIX.isENOTSUP(code):
+        case _ where code == .ENOTSUP:
             self = .notSupported
 
         default:

@@ -11,10 +11,6 @@ extension Error::Error.Code {
     public static func captureErrno() -> Self {
         .posix(errno)
     }
-
-    public static func current() -> Self {
-        captureErrno()
-    }
 }
 
 #if canImport(Darwin)
@@ -52,6 +48,9 @@ extension Error::Error.Code {
         public static let ENOLCK = Self.posix(Darwin.ENOLCK)
         public static let EDEADLK = Self.posix(Darwin.EDEADLK)
         public static let ENOTSUP = Self.posix(Darwin.ENOTSUP)
+        public static let ENXIO = Self.posix(Darwin.ENXIO)
+        public static let ENODEV = Self.posix(Darwin.ENODEV)
+        public static let EINPROGRESS = Self.posix(Darwin.EINPROGRESS)
     }
 #elseif canImport(Glibc)
     extension Error::Error.Code {
@@ -88,6 +87,9 @@ extension Error::Error.Code {
         public static let ENOLCK = Self.posix(Glibc.ENOLCK)
         public static let EDEADLK = Self.posix(Glibc.EDEADLK)
         public static let ENOTSUP = Self.posix(Glibc.ENOTSUP)
+        public static let ENXIO = Self.posix(Glibc.ENXIO)
+        public static let ENODEV = Self.posix(Glibc.ENODEV)
+        public static let EINPROGRESS = Self.posix(Glibc.EINPROGRESS)
     }
 #elseif canImport(Musl)
     extension Error::Error.Code {
@@ -124,5 +126,8 @@ extension Error::Error.Code {
         public static let ENOLCK = Self.posix(Musl.ENOLCK)
         public static let EDEADLK = Self.posix(Musl.EDEADLK)
         public static let ENOTSUP = Self.posix(Musl.ENOTSUP)
+        public static let ENXIO = Self.posix(Musl.ENXIO)
+        public static let ENODEV = Self.posix(Musl.ENODEV)
+        public static let EINPROGRESS = Self.posix(Musl.EINPROGRESS)
     }
 #endif

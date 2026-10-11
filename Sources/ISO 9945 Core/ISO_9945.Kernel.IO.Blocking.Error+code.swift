@@ -13,7 +13,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
 
     @inlinable
     public init?(code: Error::Error.Code) {
-        if Error::Error.Code.POSIX.isEAGAIN(code) {
+        if (code == .EAGAIN || code == .EWOULDBLOCK) {
             self = .wouldBlock
         } else {
             return nil

@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.File.Clone.Error {
         case _ where code == .EISDIR:
             self = .isDirectory
 
-        case _ where Error::Error.Code.POSIX.isENOTSUP(code):
+        case _ where code == .ENOTSUP:
             self = .notSupported
 
         default:

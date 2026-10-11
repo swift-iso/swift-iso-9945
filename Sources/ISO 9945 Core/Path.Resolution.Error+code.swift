@@ -17,16 +17,16 @@ extension Path.Resolution.Error {
         case .ENOTDIR:
             self = .notDirectory
 
-        case _ where Error::Error.Code.POSIX.isENOTEMPTY(code):
+        case _ where code == .ENOTEMPTY:
             self = .notEmpty
 
-        case _ where Error::Error.Code.POSIX.isELOOP(code):
+        case _ where code == .ELOOP:
             self = .loop
 
         case .EXDEV:
             self = .crossDevice
 
-        case _ where Error::Error.Code.POSIX.isENAMETOOLONG(code):
+        case _ where code == .ENAMETOOLONG:
             self = .nameTooLong
 
         default:

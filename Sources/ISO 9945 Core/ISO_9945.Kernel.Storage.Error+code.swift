@@ -21,7 +21,7 @@
             case .ENOSPC:
                 self = .exhausted
 
-            case _ where Error::Error.Code.POSIX.isEDQUOT(code):
+            case _ where code == .EDQUOT:
                 self = .quota
 
             default:

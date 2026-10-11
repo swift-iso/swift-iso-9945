@@ -16,10 +16,10 @@ extension ISO_9945.Kernel.IO.Error {
             return .ESPIPE
 
         case .deviceUnsupported:
-            return .POSIX.ENODEV
+            return .ENODEV
 
         case .deviceUnavailable:
-            return .POSIX.ENXIO
+            return .ENXIO
 
         case .unsupported:
             return .ENOTSUP
@@ -35,7 +35,7 @@ extension ISO_9945.Kernel.IO.Error {
         case .EPIPE:
             self = .broken
 
-        case _ where Error::Error.Code.POSIX.isECONNRESET(code):
+        case _ where code == .ECONNRESET:
             self = .reset
 
         case .EIO:
@@ -44,13 +44,13 @@ extension ISO_9945.Kernel.IO.Error {
         case .ESPIPE:
             self = .illegalSeek
 
-        case .POSIX.ENODEV:
+        case .ENODEV:
             self = .deviceUnsupported
 
-        case .POSIX.ENXIO:
+        case .ENXIO:
             self = .deviceUnavailable
 
-        case _ where Error::Error.Code.POSIX.isENOTSUP(code):
+        case _ where code == .ENOTSUP:
             self = .unsupported
 
         default:

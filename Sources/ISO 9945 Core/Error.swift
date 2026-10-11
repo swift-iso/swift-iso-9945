@@ -8,13 +8,6 @@
 
 extension Error::Error {
 
-    public static func captureErrno() -> Error::Error.Code {
-        .posix(errno)
-    }
-}
-
-extension Error::Error {
-
     public static func current(
         operation: StaticString,
         function: StaticString = #function,
