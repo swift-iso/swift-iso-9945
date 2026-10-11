@@ -64,13 +64,6 @@ static inline int swift_WCOREDUMP(int status) {
 }
 #endif
 
-#if defined(__linux__)
-
-extern int execve(const char *__path, char *const __argv[], char *const __envp[]) __attribute__((__nothrow__, __leaf__));
-#else
-#include <unistd.h>
-#endif
-
 static inline int swift_execve(
     const char * _Nonnull path,
     const char * _Nullable const * _Nonnull argv,
