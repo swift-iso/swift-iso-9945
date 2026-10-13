@@ -26,7 +26,7 @@ extension ISO_9945.Utility.Invocation {
         }
 
         public borrowing func parse(
-            _ input: inout ArraySlice<Swift.String>
+            _ input: inout ArraySlice<Swift::String>
         ) throws(ISO_9945.Utility.Invocation.Coder.Error) -> ISO_9945.Utility.Invocation {
             let name: ISO_9945.Utility.Name
             do throws(ISO_9945.Utility.Name.Coder.Error) {
@@ -64,7 +64,7 @@ extension ISO_9945.Utility.Invocation {
 
         public borrowing func serialize(
             _ output: ISO_9945.Utility.Invocation,
-            into buffer: inout [Swift.String]
+            into buffer: inout [Swift::String]
         ) throws(ISO_9945.Utility.Invocation.Coder.Error) {
             do throws(ISO_9945.Utility.Name.Coder.Error) {
                 try self.name.serialize(output.name, into: &buffer)

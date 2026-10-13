@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Thread.Mutex.Lock {
 
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
 
         case contention
 

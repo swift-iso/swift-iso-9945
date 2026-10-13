@@ -53,7 +53,7 @@ extension ISO_9945.Kernel.Link.Test.Unit {
 extension ISO_9945.Kernel.Link.Test.Unit {
     @Test
     func `Link.Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Link.Error.notFound
+        let error: any Swift::Error = ISO_9945.Kernel.Link.Error.notFound
         #expect(error is ISO_9945.Kernel.Link.Error)
     }
 
@@ -81,7 +81,7 @@ extension ISO_9945.Kernel.Link.Test.`Edge Case` {
             .noSpace, .loop, .nameTooLong,
         ]
         for error in cases {
-            let description = Swift.String(describing: error)
+            let description = Swift::String(describing: error)
             #expect(!description.isEmpty)
         }
     }

@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Storage {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case exhausted
 
@@ -9,7 +9,7 @@ extension ISO_9945.Kernel.Storage {
 }
 
 extension ISO_9945.Kernel.Storage.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .exhausted:
             return "no space left on device"

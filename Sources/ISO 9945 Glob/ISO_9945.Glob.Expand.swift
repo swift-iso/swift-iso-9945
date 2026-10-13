@@ -16,7 +16,7 @@ extension ISO_9945.Glob {
     public static func expand(
         pattern: borrowing Path.Borrowed,
         options: Expand.Options = []
-    ) throws(Expand.Error) -> [Swift.String] {
+    ) throws(Expand.Error) -> [Swift::String] {
         var gt = unsafe glob_t()
 
         let result = unsafe glob(
@@ -29,13 +29,13 @@ extension ISO_9945.Glob {
 
         switch result {
         case 0:
-            var paths: [Swift.String] = []
+            var paths: [Swift::String] = []
             let count = unsafe Int(gt.gl_pathc)
             paths.reserveCapacity(count)
 
             for i in 0..<count {
                 if let cPath = unsafe gt.gl_pathv[i] {
-                    paths.append(unsafe Swift.String(cString: cPath))
+                    paths.append(unsafe Swift::String(cString: cPath))
                 }
             }
             return paths

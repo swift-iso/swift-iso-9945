@@ -26,7 +26,7 @@ extension Terminal.Stream.Read.Test.Integration {
 
         var buffer = [UInt8](repeating: 0, count: 16)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(readEnd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(readEnd, into: ptr)
         }
 
         #expect(bytesRead == 0)

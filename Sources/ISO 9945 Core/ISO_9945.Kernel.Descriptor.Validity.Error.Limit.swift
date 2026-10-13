@@ -9,7 +9,7 @@ extension ISO_9945.Kernel.Descriptor.Validity.Error {
 }
 
 extension ISO_9945.Kernel.Descriptor.Validity.Error.Limit: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .process:
             return "too many open files in process"

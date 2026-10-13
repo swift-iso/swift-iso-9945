@@ -23,7 +23,7 @@ extension ISO_9945.Utility.Option {
         }
 
         public borrowing func parse(
-            _ input: inout ArraySlice<Swift.String>
+            _ input: inout ArraySlice<Swift::String>
         ) throws(ISO_9945.Utility.Option.Coder.Error) -> [ISO_9945.Utility.Option] {
             let mark = input.checkpoint
             guard let word = input.popFirst() else { throw .absent }
@@ -55,7 +55,7 @@ extension ISO_9945.Utility.Option {
                     continue
                 }
 
-                let attached = Swift.String(characters[(index + 1)...])
+                let attached = Swift::String(characters[(index + 1)...])
                 if attached.isEmpty {
                     guard let following = input.popFirst() else {
                         input.seek(to: mark)
@@ -73,7 +73,7 @@ extension ISO_9945.Utility.Option {
 
         public borrowing func serialize(
             _ output: [ISO_9945.Utility.Option],
-            into buffer: inout [Swift.String]
+            into buffer: inout [Swift::String]
         ) throws(ISO_9945.Utility.Option.Coder.Error) {
             for option in output {
                 do throws(ISO_9945.Utility.Option.Error) {

@@ -4,7 +4,7 @@ import Path
 
 public enum KernelThreadTest {
 
-    public struct Timeout: Swift.Error, Sendable, Equatable {
+    public struct Timeout: Swift::Error, Sendable, Equatable {
         public init() {}
     }
 
@@ -12,13 +12,13 @@ public enum KernelThreadTest {
         private let mutex: ISO_9945.Kernel.Thread.Mutex
         private let condition: ISO_9945.Kernel.Thread.Condition
         private var state: State
-        private let limit: Swift.Duration
+        private let limit: Swift::Duration
 
         public convenience init(_ initial: State) {
             self.init(initial, limit: .seconds(10))
         }
 
-        package init(_ initial: State, limit: Swift.Duration) {
+        package init(_ initial: State, limit: Swift::Duration) {
             self.mutex = ISO_9945.Kernel.Thread.Mutex()
             self.condition = ISO_9945.Kernel.Thread.Condition()
             self.state = initial
@@ -36,7 +36,7 @@ public enum KernelThreadTest {
             mutex.lock()
             defer { mutex.unlock() }
 
-            let clock = Swift.ContinuousClock()
+            let clock = Swift::ContinuousClock()
             let deadline = clock.now.advanced(by: limit)
             while !predicate(state) {
                 let remaining = clock.now.duration(to: deadline)

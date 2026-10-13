@@ -18,9 +18,9 @@
 
     extension ISO_9945.Kernel.Process.Execute.Test.Integration {
 
-        private static func findTruePath() -> Swift.String {
+        private static func findTruePath() -> Swift::String {
             for path in ["/usr/bin/true", "/bin/true"] {
-                if access(path, X_OK) == 0 {
+                if unsafe access(path, X_OK) == 0 {
                     return path
                 }
             }
@@ -31,9 +31,9 @@
         func `spawn with /usr/bin/true or /bin/true succeeds`() throws {
             let path = Self.findTruePath()
             let argv = [path]
-            let envp: [Swift.String] = []
+            let envp: [Swift::String] = []
 
-            let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
+            let child = try unsafe Path.scope.array(argv, envp) { argvPtr, envpPtr in
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,
@@ -50,12 +50,12 @@
         func `spawn with invalid path throws ENOENT`() throws {
             let path = "/nonexistent/path/to/binary"
             let argv = [path]
-            let envp: [Swift.String] = []
+            let envp: [Swift::String] = []
 
             func doSpawn() throws(Path.String.Error<ISO_9945.Kernel.Process.Error>)
                 -> ISO_9945.Kernel.Process.ID
             {
-                try Path.scope.array(argv, envp) {
+                try unsafe Path.scope.array(argv, envp) {
                     (
                         argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
                         envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>
@@ -83,11 +83,10 @@
 
         @Test
         func `spawn passes arguments to program`() throws {
-            let path = "/bin/sh"
             let argv = ["/bin/sh", "-c", "exit 42"]
-            let envp: [Swift.String] = []
+            let envp: [Swift::String] = []
 
-            let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
+            let child = try unsafe Path.scope.array(argv, envp) { argvPtr, envpPtr in
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,
@@ -102,11 +101,10 @@
         @Test
         func `spawn passes environment to program`() throws {
 
-            let path = "/bin/sh"
             let argv = ["/bin/sh", "-c", "exit ${TEST_EXIT_CODE:-99}"]
             let envp = ["TEST_EXIT_CODE=77"]
 
-            let child = try Path.scope.array(argv, envp) { argvPtr, envpPtr in
+            let child = try unsafe Path.scope.array(argv, envp) { argvPtr, envpPtr in
                 try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                     path: argvPtr[0]!,
                     argv: argvPtr,

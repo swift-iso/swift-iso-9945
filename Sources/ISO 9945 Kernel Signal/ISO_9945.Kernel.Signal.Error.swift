@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Signal {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case interrupted
 
@@ -68,7 +68,7 @@ extension ISO_9945.Kernel.Signal.Error {
 }
 
 extension ISO_9945.Kernel.Signal.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .interrupted:
             return "interrupted by signal"

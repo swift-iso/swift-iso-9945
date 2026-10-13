@@ -20,7 +20,7 @@ extension ISO_9945.Kernel.File.System {
 
         public let nameMax: ISO_9945.Kernel.File.System.Name.Length
 
-        public let fsTypeName: Swift.String?
+        public let fsTypeName: Swift::String?
 
         public init(
             type: ISO_9945.Kernel.File.System.Kind,
@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.File.System {
             freeFiles: ISO_9945.Kernel.File.System.File.Count,
             fsid: ISO_9945.Kernel.File.System.ID,
             nameMax: ISO_9945.Kernel.File.System.Name.Length,
-            fsTypeName: Swift.String? = nil
+            fsTypeName: Swift::String? = nil
         ) {
             self.type = type
             self.blockSize = blockSize

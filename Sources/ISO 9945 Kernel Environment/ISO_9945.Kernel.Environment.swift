@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.Environment {
 
     public static func withValueBytes<R: ~Copyable>(
         _ name: UnsafePointer<String.Char>,
-        _ body: (Swift.Span<String.Char>) -> R
+        _ body: (Swift::Span<String.Char>) -> R
     ) -> R? {
         let cName = unsafe UnsafePointer<CChar>(name)
         guard let valuePtr = unsafe getenv(cName) else {

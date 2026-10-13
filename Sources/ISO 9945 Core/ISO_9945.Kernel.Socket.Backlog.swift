@@ -32,7 +32,7 @@ extension ISO_9945.Kernel.Socket.Backlog: ExpressibleByIntegerLiteral {
 }
 
 extension ISO_9945.Kernel.Socket.Backlog: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         "\(rawValue)"
     }
 }

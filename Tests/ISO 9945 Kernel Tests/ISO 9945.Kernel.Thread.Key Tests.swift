@@ -22,9 +22,9 @@ extension ISO_9945.Kernel.Thread.Key.Test.Unit {
     @Test
     func `set then get returns the same pointer`() throws {
         let key = try ISO_9945.Kernel.Thread.Key()
-        let buffer = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
+        let buffer = UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         defer { unsafe buffer.deallocate() }
-        let raw = unsafe UnsafeMutableRawPointer(buffer)
+        let raw = UnsafeMutableRawPointer(buffer)
 
         unsafe (key.value = raw)
         unsafe (#expect(key.value == raw))
@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.Thread.Key.Test.Unit {
     @Test
     func `set to nil clears the slot`() throws {
         let key = try ISO_9945.Kernel.Thread.Key()
-        let buffer = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
+        let buffer = UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         defer { unsafe buffer.deallocate() }
         unsafe (key.value = UnsafeMutableRawPointer(buffer))
         unsafe (#expect(key.value != nil))
@@ -46,8 +46,8 @@ extension ISO_9945.Kernel.Thread.Key.Test.Unit {
     func `multiple Key instances have independent slots`() throws {
         let a = try ISO_9945.Kernel.Thread.Key()
         let b = try ISO_9945.Kernel.Thread.Key()
-        let bufferA = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
-        let bufferB = unsafe UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
+        let bufferA = UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
+        let bufferB = UnsafeMutablePointer<UInt64>.allocate(capacity: 1)
         defer {
             unsafe bufferA.deallocate()
             unsafe bufferB.deallocate()

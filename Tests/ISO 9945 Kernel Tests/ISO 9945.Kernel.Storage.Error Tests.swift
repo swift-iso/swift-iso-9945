@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
 extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Storage.Error.exhausted
+        let error: any Swift::Error = ISO_9945.Kernel.Storage.Error.exhausted
         #expect(error is ISO_9945.Kernel.Storage.Error)
     }
 
@@ -95,7 +95,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.`Edge Case` {
     func `CustomStringConvertible works for all cases`() {
         let cases: [ISO_9945.Kernel.Storage.Error] = [.exhausted, .quota]
         for error in cases {
-            let description = Swift.String(describing: error)
+            let description = Swift::String(describing: error)
             #expect(!description.isEmpty)
         }
     }

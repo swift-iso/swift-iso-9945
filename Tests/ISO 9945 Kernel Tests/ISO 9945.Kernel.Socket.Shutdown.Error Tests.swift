@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
 extension ISO_9945.Kernel.Socket.Shutdown.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
+        let error: any Swift::Error = ISO_9945.Kernel.Socket.Shutdown.Error.platform(
             Error::Error(code: .posix(1))
         )
         #expect(error is ISO_9945.Kernel.Socket.Shutdown.Error)

@@ -161,7 +161,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
 
         var extra = Array("_extra".utf8)
         _ = try? extra.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Write.write(appendFd, from: UnsafeRawBufferPointer(ptr))
+            try unsafe ISO_9945.Kernel.IO.Write.write(appendFd, from: UnsafeRawBufferPointer(ptr))
         }
 
         let readFd = try Path.scope(path) { p in
@@ -174,9 +174,9 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
         }
         var buffer = [UInt8](repeating: 0, count: 20)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(readFd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(readFd, into: ptr)
         }
-        let content = Swift.String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
+        let content = Swift::String(decoding: buffer.prefix(bytesRead), as: UTF8.self)
         #expect(content == "initial_extra")
     }
 
@@ -209,7 +209,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
 extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
     @Test
     func `open nonexistent file without create throws`() throws {
-        try Path.scope("/nonexistent/path/to/file") { path in
+        _ = try Path.scope("/nonexistent/path/to/file") { path in
             #expect(throws: ISO_9945.Kernel.File.Open.Error.self) {
                 _ = try ISO_9945.Kernel.File.Open.open(
                     path: path,
@@ -223,7 +223,7 @@ extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
 
     @Test
     func `open directory for write throws`() throws {
-        try Path.scope("/tmp") { path in
+        _ = try Path.scope("/tmp") { path in
             #expect(throws: ISO_9945.Kernel.File.Open.Error.self) {
                 _ = try ISO_9945.Kernel.File.Open.open(
                     path: path,

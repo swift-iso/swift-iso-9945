@@ -21,7 +21,7 @@ extension ISO_9945.Kernel.Socket.Send {
 
     public static func send(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
-        from span: Swift.Span<Byte>,
+        from span: Swift::Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try send(fd: descriptor._rawValue, from: span, options: options)
@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.Socket.Send {
 
     public static func to(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
-        from span: Swift.Span<Byte>,
+        from span: Swift::Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = [],
         address: ISO_9945.Kernel.Socket.Address.Storage,
         addressLength: ISO_9945.Kernel.Socket.Address.Length
@@ -56,7 +56,7 @@ extension ISO_9945.Kernel.Socket.Send {
 
     internal static func send(
         fd: Int32,
-        from span: Swift.Span<Byte>,
+        from span: Swift::Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = []
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         try span.withUnsafeBytes { buffer throws(ISO_9945.Kernel.Socket.Error) -> Int in
@@ -79,7 +79,7 @@ extension ISO_9945.Kernel.Socket.Send {
 
     internal static func to(
         fd: Int32,
-        from span: Swift.Span<Byte>,
+        from span: Swift::Span<Byte>,
         options: ISO_9945.Kernel.Socket.Message.Options = [],
         address: ISO_9945.Kernel.Socket.Address.Storage,
         addressLength: ISO_9945.Kernel.Socket.Address.Length

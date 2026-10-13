@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Environment.Error {
 
-    public enum Invalid: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Invalid: Swift::Error, Sendable, Equatable, Hashable {
 
         case emptyName
 
@@ -9,7 +9,7 @@ extension ISO_9945.Kernel.Environment.Error {
 }
 
 extension ISO_9945.Kernel.Environment.Error.Invalid: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .emptyName: return "empty variable name"
         case .nameContainsEquals: return "variable name contains '='"

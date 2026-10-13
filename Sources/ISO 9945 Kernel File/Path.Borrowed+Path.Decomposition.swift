@@ -3,7 +3,7 @@ extension Path.Borrowed: @retroactive Path.Decomposition {
 
     @inlinable
     @_lifetime(copy view)
-    public static func parent(of view: borrowing Path.Borrowed) -> Swift.Span<Path.Char>? {
+    public static func parent(of view: borrowing Path.Borrowed) -> Swift::Span<Path.Char>? {
         guard
             let lastSep = Path.Scan.lastSeparatorIndex(
                 in: view.span,
@@ -22,7 +22,7 @@ extension Path.Borrowed: @retroactive Path.Decomposition {
 
     @inlinable
     @_lifetime(copy view)
-    public static func component(of view: borrowing Path.Borrowed) -> Swift.Span<Path.Char> {
+    public static func component(of view: borrowing Path.Borrowed) -> Swift::Span<Path.Char> {
         guard
             let lastSep = Path.Scan.lastSeparatorIndex(
                 in: view.span,

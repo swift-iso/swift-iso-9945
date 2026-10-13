@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Descriptor.Validity {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case invalid
 
@@ -9,7 +9,7 @@ extension ISO_9945.Kernel.Descriptor.Validity {
 }
 
 extension ISO_9945.Kernel.Descriptor.Validity.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .invalid:
             return "invalid descriptor"

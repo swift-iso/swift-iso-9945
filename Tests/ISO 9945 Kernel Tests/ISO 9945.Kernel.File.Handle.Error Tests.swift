@@ -190,7 +190,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
 extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
+        let error: any Swift::Error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
         #expect(error is ISO_9945.Kernel.File.Handle.Error)
     }
 

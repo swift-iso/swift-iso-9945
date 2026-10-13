@@ -16,7 +16,7 @@ extension ISO_9945.Kernel.File.System {
 }
 
 extension ISO_9945.Kernel.File.System.Kind: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         "\(rawValue)"
     }
 }

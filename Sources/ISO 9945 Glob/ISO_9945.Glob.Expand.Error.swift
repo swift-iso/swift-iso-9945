@@ -1,6 +1,6 @@
 extension ISO_9945.Glob.Expand {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case noSpace
 

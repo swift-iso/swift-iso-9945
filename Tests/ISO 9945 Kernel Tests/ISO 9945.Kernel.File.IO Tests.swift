@@ -69,13 +69,13 @@ struct `File IO Integration Tests` {
             }
 
             let written = try testData.withUnsafeBytes { buffer in
-                try ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
+                try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
             }
             #expect(written == testData.count)
 
             var readBuffer = [UInt8](repeating: 0, count: testData.count)
             let bytesRead = try readBuffer.withUnsafeMutableBytes { buffer in
-                try ISO_9945.Kernel.IO.Read.pread(fd, into: buffer, at: 0)
+                try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: buffer, at: 0)
             }
 
             #expect(bytesRead == testData.count)
@@ -102,7 +102,7 @@ struct `File IO Integration Tests` {
 
             var buffer = [UInt8](repeating: 0, count: 100)
             let bytesRead = try buffer.withUnsafeMutableBytes { buf in
-                try ISO_9945.Kernel.IO.Read.pread(fd, into: buf, at: 0)
+                try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: buf, at: 0)
             }
 
             #expect(bytesRead == 0)
@@ -127,8 +127,8 @@ extension `File IO Integration Tests` {
         var buffer = [UInt8](repeating: 0, count: 10)
         var threwError = false
         do {
-            try buffer.withUnsafeMutableBytes { buf in
-                try ISO_9945.Kernel.IO.Read.read(.invalid, into: buf)
+            _ = try buffer.withUnsafeMutableBytes { buf in
+                try unsafe ISO_9945.Kernel.IO.Read.read(.invalid, into: buf)
             }
         } catch {
             threwError = true
@@ -141,8 +141,8 @@ extension `File IO Integration Tests` {
         let data: [UInt8] = [1, 2, 3]
         var threwError = false
         do {
-            try data.withUnsafeBytes { buf in
-                try ISO_9945.Kernel.IO.Write.write(.invalid, from: buf)
+            _ = try data.withUnsafeBytes { buf in
+                try unsafe ISO_9945.Kernel.IO.Write.write(.invalid, from: buf)
             }
         } catch {
             threwError = true

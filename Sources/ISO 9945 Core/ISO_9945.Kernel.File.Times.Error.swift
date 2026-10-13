@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.File.Times {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case path(Path)
 
@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.File.Times {
 }
 
 extension ISO_9945.Kernel.File.Times.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .path(let pathError):
             return "file times path error: \(pathError)"

@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Directory {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case notFound
 
@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.Directory {
 }
 
 extension ISO_9945.Kernel.Directory.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .notFound: return "directory not found"
         case .permission: return "permission denied"

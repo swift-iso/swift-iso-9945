@@ -1,4 +1,4 @@
-public enum Interrupt: Swift.Error, Sendable, Hashable {
+public enum Interrupt: Swift::Error, Sendable, Hashable {
 
     case occurred
 
@@ -6,7 +6,7 @@ public enum Interrupt: Swift.Error, Sendable, Hashable {
 }
 
 extension Interrupt: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .occurred:
             return "interrupted"

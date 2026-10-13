@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
     @Test
     func `OutputSpan overload has the synchronous typed signature`() {
         let read:
-            (borrowing ISO_9945.Kernel.Descriptor, inout Swift.OutputSpan<Byte>) throws(ISO_9945
+            (borrowing ISO_9945.Kernel.Descriptor, inout Swift::OutputSpan<Byte>) throws(ISO_9945
                 .Kernel.IO.Read.Error) -> Int = ISO_9945.Kernel.IO.Read.read
         _ = read
     }
@@ -34,11 +34,11 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
 
         var buffer = [UInt8](repeating: 0, count: 13)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
 
         #expect(bytesRead == 13)
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, World!")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "Hello, World!")
     }
 
     @Test
@@ -51,11 +51,11 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 10)
         _ = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
 
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
 
         #expect(bytesRead == 0)
@@ -68,8 +68,8 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
         KernelIOTest.write("content", to: fd)
 
-        let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
-        let bytesRead = try ISO_9945.Kernel.IO.Read.read(fd, into: emptyBuffer)
+        let emptyBuffer = unsafe UnsafeMutableRawBufferPointer(start: nil, count: 0)
+        let bytesRead = try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: emptyBuffer)
 
         #expect(bytesRead == 0)
     }
@@ -85,11 +85,11 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
 
         var buffer = [UInt8](repeating: 0, count: 100)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
 
         #expect(bytesRead == 5)
-        #expect(Swift.String(decoding: buffer.prefix(5), as: UTF8.self) == "Short")
+        #expect(Swift::String(decoding: buffer.prefix(5), as: UTF8.self) == "Short")
     }
 
     @Test
@@ -103,11 +103,11 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
 
         var buffer = [UInt8](repeating: 0, count: 3)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(5))
+            try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(5))
         }
 
         #expect(bytesRead == 3)
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "567")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "567")
 
         let finalPos = try ISO_9945.Kernel.File.Seek.tell(fd)
         #expect(finalPos == initialPos)
@@ -122,7 +122,7 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
 
         var buffer = [UInt8](repeating: 0, count: 10)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(100))
+            try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: ptr, at: ISO_9945.Kernel.File.Offset(100))
         }
 
         #expect(bytesRead == 0)
@@ -135,8 +135,8 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
         KernelIOTest.write("content", to: fd)
 
-        let emptyBuffer = UnsafeMutableRawBufferPointer(start: nil, count: 0)
-        let bytesRead = try ISO_9945.Kernel.IO.Read.pread(
+        let emptyBuffer = unsafe UnsafeMutableRawBufferPointer(start: nil, count: 0)
+        let bytesRead = try unsafe ISO_9945.Kernel.IO.Read.pread(
             fd,
             into: emptyBuffer,
             at: ISO_9945.Kernel.File.Offset(0)
@@ -153,7 +153,7 @@ extension ISO_9945.Kernel.IO.Read.Test.`Edge Case` {
 
         #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
             try buffer.withUnsafeMutableBytes { ptr in
-                try ISO_9945.Kernel.IO.Read.read(ISO_9945.Kernel.Descriptor(_raw: -1), into: ptr)
+                try unsafe ISO_9945.Kernel.IO.Read.read(ISO_9945.Kernel.Descriptor(_raw: -1), into: ptr)
             }
         }
     }
@@ -164,7 +164,7 @@ extension ISO_9945.Kernel.IO.Read.Test.`Edge Case` {
 
         #expect(throws: ISO_9945.Kernel.IO.Read.Error.self) {
             try buffer.withUnsafeMutableBytes { ptr in
-                try ISO_9945.Kernel.IO.Read.pread(
+                try unsafe ISO_9945.Kernel.IO.Read.pread(
                     ISO_9945.Kernel.Descriptor(_raw: -1),
                     into: ptr,
                     at: ISO_9945.Kernel.File.Offset(0)

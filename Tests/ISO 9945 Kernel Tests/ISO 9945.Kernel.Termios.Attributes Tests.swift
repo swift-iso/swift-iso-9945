@@ -30,7 +30,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
                 try #require(primary >= 0)
                 try #require(grantpt(primary) == 0)
                 try #require(unlockpt(primary) == 0)
-                let name = try #require(unsafe ptsname(primary))
+                let name = try unsafe #require(unsafe ptsname(primary))
                 let secondary = unsafe open(name, O_RDWR | O_NOCTTY)
                 try #require(secondary >= 0)
                 self.primary = primary

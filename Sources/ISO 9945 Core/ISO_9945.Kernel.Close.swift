@@ -25,7 +25,7 @@ extension ISO_9945.Kernel.Close {
         #if canImport(Darwin)
             result = Darwin.close(raw)
         #elseif canImport(Glibc)
-            result = unsafe Glibc.close(raw)
+            result = Glibc.close(raw)
         #elseif canImport(Musl)
             result = unsafe Musl.close(raw)
         #endif

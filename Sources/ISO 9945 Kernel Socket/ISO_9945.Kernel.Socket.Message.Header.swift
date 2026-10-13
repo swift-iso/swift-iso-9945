@@ -10,6 +10,7 @@ public import ISO_9945_Kernel_File
 
 extension ISO_9945.Kernel.Socket.Message {
 
+    @safe
     public struct Header {
 
         internal var cValue: msghdr

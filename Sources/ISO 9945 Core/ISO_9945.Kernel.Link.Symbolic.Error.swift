@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Link.Symbolic {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case notFound
 
@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Link.Symbolic {
 }
 
 extension ISO_9945.Kernel.Link.Symbolic.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .notFound: return "path not found"
         case .permission: return "permission denied"

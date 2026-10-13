@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.IO {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case broken
 
@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.IO {
 }
 
 extension ISO_9945.Kernel.IO.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .broken:
             return "broken pipe"

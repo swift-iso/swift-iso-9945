@@ -15,21 +15,21 @@ import Testing
 
 private enum LockTestHelper {
 
-    static func executablePath() -> Swift.String? {
+    static func executablePath() -> Swift::String? {
         TestExecutable.path("iso-9945-lock-helper", overrides: ["ISO_9945_LOCK_HELPER"])
     }
 
     static func spawn(
-        lockingFile filePath: Swift.String,
+        lockingFile filePath: Swift::String,
         forMilliseconds milliseconds: Int
     ) throws -> ISO_9945.Kernel.Process.ID {
         guard let helperPath = executablePath() else {
             throw TestExecutable.NotFound(name: "iso-9945-lock-helper")
         }
         let allArgs = [helperPath, filePath, "\(milliseconds)"]
-        let envp: [Swift.String] = []
+        let envp: [Swift::String] = []
 
-        return try Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
+        return try unsafe Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
             try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
                 path: argvPtr[0]!,
                 argv: argvPtr,
@@ -64,7 +64,7 @@ private enum LockTestHelper {
     }
 }
 
-private func makeLockTestFile(prefix: Swift.String) throws -> Swift.String {
+private func makeLockTestFile(prefix: Swift::String) throws -> Swift::String {
     let path = KernelIOTest.makeTempPath(prefix: prefix)
     do {
 
@@ -72,14 +72,14 @@ private func makeLockTestFile(prefix: Swift.String) throws -> Swift.String {
 
         let data = [UInt8](repeating: 0x78, count: 1024)
         _ = try data.withUnsafeBytes { buffer in
-            try ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
+            try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
         }
 
     }
     return path
 }
 
-private func openLockTestFile(_ path: Swift.String) throws -> ISO_9945.Kernel.Descriptor {
+private func openLockTestFile(_ path: Swift::String) throws -> ISO_9945.Kernel.Descriptor {
     try Path.scope(path) { p in
         try ISO_9945.Kernel.File.Open.open(
             path: p,

@@ -8,6 +8,7 @@
 
 extension ISO_9945.Kernel.Thread {
 
+    @safe
     public final class Mutex: @unchecked Sendable {
         private var mutex: pthread_mutex_t
 
@@ -47,7 +48,7 @@ extension ISO_9945.Kernel.Thread.Mutex {
         unsafe pthread_mutex_trylock(&mutex)
     }
 
-    public func withLock<T, E: Swift.Error>(_ body: () throws(E) -> T) throws(E) -> T {
+    public func withLock<T, E: Swift::Error>(_ body: () throws(E) -> T) throws(E) -> T {
         lock()
         defer { unlock() }
         return try body()
@@ -57,6 +58,6 @@ extension ISO_9945.Kernel.Thread.Mutex {
 extension ISO_9945.Kernel.Thread.Mutex {
 
     func withUnsafeMutablePointer<T>(_ body: (UnsafeMutablePointer<pthread_mutex_t>) -> T) -> T {
-        Swift.withUnsafeMutablePointer(to: &mutex, body)
+        Swift::withUnsafeMutablePointer(to: &mutex, body)
     }
 }

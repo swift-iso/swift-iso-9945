@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Socket.Address.Unix {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case pathTooLong(length: Int, capacity: Int)
     }
@@ -21,7 +21,7 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
         MemoryLayout<sockaddr_un>.size - pathOffset
     }
 
-    public init(path: Swift.String) throws(Error) {
+    public init(path: Swift::String) throws(Error) {
         let bytes = Array(path.utf8)
         guard bytes.count + 1 <= Self.pathCapacity else {
             throw .pathTooLong(length: bytes.count, capacity: Self.pathCapacity)
@@ -38,13 +38,13 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
         #endif
     }
 
-    public var path: Swift.String {
+    public var path: Swift::String {
         withUnsafeBytes(of: cValue.sun_path) { bytes in
             var length = 0
             while length < bytes.count && (unsafe bytes[length]) != 0 {
                 length += 1
             }
-            return unsafe Swift.String(decoding: bytes[..<length], as: UTF8.self)
+            return unsafe Swift::String(decoding: bytes[..<length], as: UTF8.self)
         }
     }
 }

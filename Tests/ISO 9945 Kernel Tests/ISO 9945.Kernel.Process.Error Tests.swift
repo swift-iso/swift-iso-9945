@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.Process.Error {
 extension ISO_9945.Kernel.Process.Error.Test.Unit {
     @Test
     func `error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Process.Error.fork(.posix(1))
+        let error: any Swift::Error = ISO_9945.Kernel.Process.Error.fork(.posix(1))
         #expect(error is ISO_9945.Kernel.Process.Error)
     }
 

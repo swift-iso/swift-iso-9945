@@ -8,6 +8,7 @@
 
 extension ISO_9945.Kernel.Thread {
 
+    @safe
     public final class Condition: @unchecked Sendable {
         private var cond: pthread_cond_t
 

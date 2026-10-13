@@ -2,7 +2,7 @@ extension Terminal.Stream.Write {
 
     @discardableResult
     public func callAsFunction(
-        _ bytes: some Swift.Sequence<Byte>
+        _ bytes: some Swift::Sequence<Byte>
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
         let array = ContiguousArray<Byte>(bytes)
         return try array.withUnsafeBufferPointer {

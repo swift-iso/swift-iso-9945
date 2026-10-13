@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Process {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case fork(Error::Error.Code)
 
@@ -65,7 +65,7 @@ extension ISO_9945.Kernel.Process.Error {
 }
 
 extension ISO_9945.Kernel.Process.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .fork(let code):
             return "fork failed: \(code)"

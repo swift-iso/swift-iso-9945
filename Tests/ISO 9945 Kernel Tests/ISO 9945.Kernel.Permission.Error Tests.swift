@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
 
     @Test
     func `Permission.Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Permission.Error.denied
+        let error: any Swift::Error = ISO_9945.Kernel.Permission.Error.denied
         #expect(error is ISO_9945.Kernel.Permission.Error)
     }
 
@@ -119,7 +119,7 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
         ]
 
         for error in cases {
-            let description = Swift.String(describing: error)
+            let description = Swift::String(describing: error)
             #expect(!description.isEmpty, "Description should not be empty for \(error)")
         }
     }

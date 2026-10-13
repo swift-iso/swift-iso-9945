@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Directory.Create {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case notFound
 
@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.Directory.Create {
 }
 
 extension ISO_9945.Kernel.Directory.Create.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .notFound: return "path component not found"
         case .permission: return "permission denied"

@@ -11,7 +11,7 @@ import Testing
 struct `ISO 9945 Utility Coder` {
 
     @Test
-    func `a utility invocation reads its name then its operands`() throws(any Swift.Error) {
+    func `a utility invocation reads its name then its operands`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["greeting", "greet", "Ada"]
 
         let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
@@ -23,7 +23,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `options precede operands so a word after the first operand is an operand`() throws(any Swift.Error) {
+    func `options precede operands so a word after the first operand is an operand`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["counter", "increment", "-l", "3"]
 
         let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
@@ -33,7 +33,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `a subcommand is the invocation that follows the utility name`() throws(any Swift.Error) {
+    func `a subcommand is the invocation that follows the utility name`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["counter", "increment", "-l", "3"]
 
         let utility = try ISO_9945.Utility.Name.coder.parse(&arguments)
@@ -46,7 +46,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `a grouped option run expands to one option per character`() throws(any Swift.Error) {
+    func `a grouped option run expands to one option per character`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["update", "-abc"]
 
         let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
@@ -56,7 +56,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `a group ends with the option that takes an option argument`() throws(any Swift.Error) {
+    func `a group ends with the option that takes an option argument`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["update", "-abl", "3"]
 
         let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
@@ -66,7 +66,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `an option argument is accepted attached to its option`() throws(any Swift.Error) {
+    func `an option argument is accepted attached to its option`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["update", "-l3"]
 
         let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
@@ -75,7 +75,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `an attached option argument is written back as a separate word`() throws(any Swift.Error) {
+    func `an attached option argument is written back as a separate word`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["update", "-l3"]
         let coder = ISO_9945.Utility.Invocation.Coder(arguments: ["l"])
 
@@ -87,7 +87,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `the end of options delimiter ends the option run`() throws(any Swift.Error) {
+    func `the end of options delimiter ends the option run`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["update", "-a", "--", "-l"]
 
         let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
@@ -97,7 +97,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `an operand that reads as an option round trips through the delimiter`() throws(any Swift.Error) {
+    func `an operand that reads as an option round trips through the delimiter`() throws(any Swift::Error) {
         let vector = ["update", "-a", "--", "-l"]
         var arguments: ArraySlice<String> = vector[...]
 
@@ -109,7 +109,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `an argument vector round trips through the codable entry point`() throws(any Swift.Error) {
+    func `an argument vector round trips through the codable entry point`() throws(any Swift::Error) {
         let vector = ["greeting", "greet", "Ada"]
         var arguments: ArraySlice<String> = vector[...]
 
@@ -168,7 +168,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `a lone hyphen is an operand and not an option`() throws(any Swift.Error) {
+    func `a lone hyphen is an operand and not an option`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["update", "-"]
 
         let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
@@ -178,7 +178,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `a utility name is codable on its own`() throws(any Swift.Error) {
+    func `a utility name is codable on its own`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["counter", "increment"]
 
         let name = try ISO_9945.Utility.Name.coder.parse(&arguments)
@@ -190,7 +190,7 @@ struct `ISO 9945 Utility Coder` {
     }
 
     @Test
-    func `an operand is codable on its own`() throws(any Swift.Error) {
+    func `an operand is codable on its own`() throws(any Swift::Error) {
         var arguments: ArraySlice<String> = ["Ada"]
 
         let operand = try ISO_9945.Utility.Operand.coder.parse(&arguments)

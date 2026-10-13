@@ -137,7 +137,7 @@ extension ISO_9945.Kernel.Lock.Token {
 
 extension ISO_9945.Kernel.Lock {
 
-    public static func withExclusive<T, E: Swift.Error>(
+    public static func withExclusive<T, E: Swift::Error>(
         _ descriptor: consuming ISO_9945.Kernel.Descriptor,
         range: ISO_9945.Kernel.Lock.Range = .file,
         acquire: ISO_9945.Kernel.Lock.Acquire = .wait,
@@ -167,7 +167,7 @@ extension ISO_9945.Kernel.Lock {
         }
     }
 
-    public static func withShared<T, E: Swift.Error>(
+    public static func withShared<T, E: Swift::Error>(
         _ descriptor: consuming ISO_9945.Kernel.Descriptor,
         range: ISO_9945.Kernel.Lock.Range = .file,
         acquire: ISO_9945.Kernel.Lock.Acquire = .wait,

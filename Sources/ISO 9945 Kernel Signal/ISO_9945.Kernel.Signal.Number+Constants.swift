@@ -66,7 +66,7 @@ extension ISO_9945.Kernel.Signal.Number {
 }
 
 extension ISO_9945.Kernel.Signal.Number: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .hangup: return "SIGHUP"
         case .interrupt: return "SIGINT"

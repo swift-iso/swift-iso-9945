@@ -111,7 +111,7 @@ extension ISO_9945.Kernel.IO.Read {
     @_disfavoredOverload
     public static func read(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
-        into output: inout Swift.OutputSpan<Byte>
+        into output: inout Swift::OutputSpan<Byte>
     ) throws(Error) -> Int {
         try unsafe output.withUnsafeMutableBufferPointer {
             (

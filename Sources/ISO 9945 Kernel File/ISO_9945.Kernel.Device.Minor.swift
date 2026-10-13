@@ -16,7 +16,7 @@ extension ISO_9945.Kernel.Device.Minor: ExpressibleByIntegerLiteral {
 }
 
 extension ISO_9945.Kernel.Device.Minor: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         "\(rawValue)"
     }
 }

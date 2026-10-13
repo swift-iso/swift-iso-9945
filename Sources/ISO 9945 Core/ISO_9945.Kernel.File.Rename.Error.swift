@@ -1,7 +1,7 @@
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(Linux) || os(Android) || os(OpenBSD)
     extension ISO_9945.Kernel.File.Rename {
 
-        public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+        public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
             case exists
 
@@ -14,7 +14,7 @@
     }
 
     extension ISO_9945.Kernel.File.Rename.Error: CustomStringConvertible {
-        public var description: Swift.String {
+        public var description: Swift::String {
             switch self {
             case .exists:
                 return "rename failed: destination exists"

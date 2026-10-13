@@ -16,7 +16,7 @@ extension ISO_9945.Utility.Name {
         public init() {}
 
         public borrowing func parse(
-            _ input: inout ArraySlice<Swift.String>
+            _ input: inout ArraySlice<Swift::String>
         ) throws(ISO_9945.Utility.Name.Coder.Error) -> ISO_9945.Utility.Name {
             guard let word = input.popFirst() else { throw .absent }
             do throws(ISO_9945.Utility.Name.Error) {
@@ -28,7 +28,7 @@ extension ISO_9945.Utility.Name {
 
         public borrowing func serialize(
             _ output: ISO_9945.Utility.Name,
-            into buffer: inout [Swift.String]
+            into buffer: inout [Swift::String]
         ) throws(ISO_9945.Utility.Name.Coder.Error) {
             do throws(ISO_9945.Utility.Name.Error) {
                 try ISO_9945.Utility.Name.validate(output.rawValue)

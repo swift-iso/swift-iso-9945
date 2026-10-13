@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.IO.Read {
 
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case blocking(ISO_9945.Kernel.IO.Blocking.Error)
         case platform(Error::Error)
@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.IO.Read.Error: Equatable {
 }
 
 extension ISO_9945.Kernel.IO.Read.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .handle(let e): return "handle: \(e)"
         case .blocking(let e): return "blocking: \(e)"

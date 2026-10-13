@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
 
         let content = Array("Hello, World!".utf8)
         let bytesWritten = try content.withUnsafeBytes { ptr in
-            try ISO_9945.Kernel.IO.Write.write(fd, from: ptr)
+            try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: ptr)
         }
 
         #expect(bytesWritten == 13)
@@ -31,9 +31,9 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 13)
         _ = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, World!")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "Hello, World!")
     }
 
     @Test
@@ -42,8 +42,8 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        let emptyBuffer = UnsafeRawBufferPointer(start: nil, count: 0)
-        let bytesWritten = try ISO_9945.Kernel.IO.Write.write(fd, from: emptyBuffer)
+        let emptyBuffer = unsafe UnsafeRawBufferPointer(start: nil, count: 0)
+        let bytesWritten = try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: emptyBuffer)
 
         #expect(bytesWritten == 0)
     }
@@ -58,7 +58,7 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
 
         let content = Array("12345".utf8)
         _ = try content.withUnsafeBytes { ptr in
-            try ISO_9945.Kernel.IO.Write.write(fd, from: ptr)
+            try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: ptr)
         }
 
         let finalPos = try ISO_9945.Kernel.File.Seek.tell(fd)
@@ -74,15 +74,15 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         let first = Array("First".utf8)
         let second = Array("Second".utf8)
 
-        _ = try first.withUnsafeBytes { try ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
-        _ = try second.withUnsafeBytes { try ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
+        _ = try first.withUnsafeBytes { try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
+        _ = try second.withUnsafeBytes { try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
 
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 11)
         _ = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "FirstSecond")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "FirstSecond")
     }
 
     @Test
@@ -92,13 +92,13 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         defer { KernelIOTest.cleanup(path: path) }
 
         let initial = Array("XXXXXXXXXX".utf8)
-        _ = try initial.withUnsafeBytes { try ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
+        _ = try initial.withUnsafeBytes { try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: $0) }
 
         let posAfterWrite = try ISO_9945.Kernel.File.Seek.tell(fd)
 
         let patch = Array("ABC".utf8)
         let bytesWritten = try patch.withUnsafeBytes { ptr in
-            try ISO_9945.Kernel.IO.Write.pwrite(fd, from: ptr, at: ISO_9945.Kernel.File.Offset(3))
+            try unsafe ISO_9945.Kernel.IO.Write.pwrite(fd, from: ptr, at: ISO_9945.Kernel.File.Offset(3))
         }
 
         #expect(bytesWritten == 3)
@@ -109,9 +109,9 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         _ = try ISO_9945.Kernel.File.Seek.seek(fd, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 10)
         _ = try buffer.withUnsafeMutableBytes { ptr in
-            try ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
+            try unsafe ISO_9945.Kernel.IO.Read.read(fd, into: ptr)
         }
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "XXXABCXXXX")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "XXXABCXXXX")
     }
 
     @Test
@@ -120,8 +120,8 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
         let fd = try KernelIOTest.open(at: path)
         defer { KernelIOTest.cleanup(path: path) }
 
-        let emptyBuffer = UnsafeRawBufferPointer(start: nil, count: 0)
-        let bytesWritten = try ISO_9945.Kernel.IO.Write.pwrite(
+        let emptyBuffer = unsafe UnsafeRawBufferPointer(start: nil, count: 0)
+        let bytesWritten = try unsafe ISO_9945.Kernel.IO.Write.pwrite(
             fd,
             from: emptyBuffer,
             at: ISO_9945.Kernel.File.Offset(0)
@@ -138,7 +138,7 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
 
         let content = Array("End".utf8)
         let bytesWritten = try content.withUnsafeBytes { ptr in
-            try ISO_9945.Kernel.IO.Write.pwrite(fd, from: ptr, at: ISO_9945.Kernel.File.Offset(10))
+            try unsafe ISO_9945.Kernel.IO.Write.pwrite(fd, from: ptr, at: ISO_9945.Kernel.File.Offset(10))
         }
 
         #expect(bytesWritten == 3)
@@ -155,7 +155,7 @@ extension ISO_9945.Kernel.IO.Write.Test.`Edge Case` {
 
         #expect(throws: ISO_9945.Kernel.IO.Write.Error.self) {
             try content.withUnsafeBytes { ptr in
-                try ISO_9945.Kernel.IO.Write.write(ISO_9945.Kernel.Descriptor(_raw: -1), from: ptr)
+                try unsafe ISO_9945.Kernel.IO.Write.write(ISO_9945.Kernel.Descriptor(_raw: -1), from: ptr)
             }
         }
     }
@@ -166,7 +166,7 @@ extension ISO_9945.Kernel.IO.Write.Test.`Edge Case` {
 
         #expect(throws: ISO_9945.Kernel.IO.Write.Error.self) {
             try content.withUnsafeBytes { ptr in
-                try ISO_9945.Kernel.IO.Write.pwrite(
+                try unsafe ISO_9945.Kernel.IO.Write.pwrite(
                     ISO_9945.Kernel.Descriptor(_raw: -1),
                     from: ptr,
                     at: ISO_9945.Kernel.File.Offset(0)

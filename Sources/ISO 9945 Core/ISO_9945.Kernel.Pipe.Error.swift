@@ -1,5 +1,5 @@
 extension ISO_9945.Kernel.Pipe {
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case platform(Error::Error)
     }
@@ -16,7 +16,7 @@ extension ISO_9945.Kernel.Pipe.Error: Equatable {
 }
 
 extension ISO_9945.Kernel.Pipe.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .handle(let e): return "handle: \(e)"
         case .platform(let e): return "\(e)"

@@ -1,5 +1,5 @@
 
-extension ISO_9945.Kernel.Descriptor: Swift.Equatable {
+extension ISO_9945.Kernel.Descriptor: Swift::Equatable {
     @inlinable
     public static func == (
         lhs: borrowing ISO_9945.Kernel.Descriptor,

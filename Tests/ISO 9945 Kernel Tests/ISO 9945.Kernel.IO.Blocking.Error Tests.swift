@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
 extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
+        let error: any Swift::Error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
         #expect(error is ISO_9945.Kernel.IO.Blocking.Error)
     }
 

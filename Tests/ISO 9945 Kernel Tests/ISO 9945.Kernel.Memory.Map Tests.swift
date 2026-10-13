@@ -105,7 +105,7 @@ extension Memory.Map.Test.Unit {
 
         #expect(region.length == multiPageSize)
 
-        let lastOffset = try Int(region.length.subtract.saturating(.one))
+        let lastOffset = Int(region.length.subtract.saturating(.one))
         unsafe region.base.mutablePointer.storeBytes(of: UInt8(1), toByteOffset: 0, as: UInt8.self)
         unsafe region.base.mutablePointer.storeBytes(
             of: UInt8(255),

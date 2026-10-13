@@ -4,7 +4,7 @@ extension Syscall {
 
     @discardableResult
     @inlinable
-    public static func require<E: Swift.Error, T>(
+    public static func require<E: Swift::Error, T>(
         _ value: T,
         _ rule: Rule<T>,
         orThrow makeError: @autoclosure () -> E

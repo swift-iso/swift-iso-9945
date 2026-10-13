@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.File.Seek {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case invalidDescriptor
 
@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.File.Seek {
 }
 
 extension ISO_9945.Kernel.File.Seek.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .invalidDescriptor:
             return "Invalid file descriptor"

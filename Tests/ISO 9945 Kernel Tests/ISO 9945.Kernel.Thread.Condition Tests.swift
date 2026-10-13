@@ -145,13 +145,13 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 }
             }
             let context = Context(mutex: mutex, condition: condition, harness: harness)
-            let contextPtr = Unmanaged.passRetained(context).toOpaque()
+            let contextPtr = unsafe Unmanaged.passRetained(context).toOpaque()
 
-            let rc = pthread_create(
+            let rc = unsafe pthread_create(
                 &thread,
                 nil,
                 { raw -> UnsafeMutableRawPointer? in
-                    let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                    let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                     ctx.mutex.lock()
 
@@ -167,7 +167,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     ctx.mutex.unlock()
                     return nil
                 },
-                contextPtr
+                unsafe contextPtr
             )
 
             #expect(rc == 0, "pthread_create should succeed")
@@ -189,8 +189,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             let result = harness.withLocked { $0.wokeWithoutTimeout }
             #expect(result == true, "Thread should have woken without timeout after signal")
 
-            if let t = thread {
-                pthread_join(t, nil)
+            if let t = unsafe thread {
+                unsafe pthread_join(t, nil)
             }
         }
 
@@ -223,15 +223,15 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             }
             let context = Context(mutex: mutex, condition: condition, harness: harness)
 
-            var threads: [pthread_t?] = Array(repeating: nil, count: threadCount)
+            var threads: [pthread_t?] = unsafe Array(repeating: nil, count: threadCount)
 
             for i in 0..<threadCount {
-                let contextPtr = Unmanaged.passRetained(context).toOpaque()
-                let rc = pthread_create(
+                let contextPtr = unsafe Unmanaged.passRetained(context).toOpaque()
+                let rc = unsafe pthread_create(
                     &threads[i],
                     nil,
                     { raw -> UnsafeMutableRawPointer? in
-                        let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                        let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                         ctx.mutex.lock()
 
@@ -246,7 +246,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                         ctx.mutex.unlock()
                         return nil
                     },
-                    contextPtr
+                    unsafe contextPtr
                 )
 
                 #expect(rc == 0, "pthread_create should succeed for thread \(i)")
@@ -267,8 +267,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             try harness.wait(until: { $0.threadsWoken >= threadCount })
 
             for i in 0..<threadCount {
-                if let t = threads[i] {
-                    pthread_join(t, nil)
+                if let t = unsafe threads[i] {
+                    unsafe pthread_join(t, nil)
                 }
             }
 
@@ -310,15 +310,15 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 }
             }
             let context = Context(mutex: mutex, condition: condition, harness: harness)
-            let contextPtr = Unmanaged.passRetained(context).toOpaque()
+            let contextPtr = unsafe Unmanaged.passRetained(context).toOpaque()
 
             var waiterThread: pthread_t? = nil
 
-            let rc = pthread_create(
+            let rc = unsafe pthread_create(
                 &waiterThread,
                 nil,
                 { raw -> UnsafeMutableRawPointer? in
-                    let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                    let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                     ctx.mutex.lock()
                     ctx.harness.update { $0.phase = .hasLocked }
@@ -330,7 +330,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     ctx.mutex.unlock()
                     return nil
                 },
-                contextPtr
+                unsafe contextPtr
             )
 
             #expect(rc == 0, "pthread_create should succeed")
@@ -367,8 +367,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             try harness.wait(until: { $0.phase == .doneWaiting })
 
-            if let t = waiterThread {
-                pthread_join(t, nil)
+            if let t = unsafe waiterThread {
+                unsafe pthread_join(t, nil)
             }
         }
 
@@ -407,15 +407,15 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                 }
             }
             let context = Context(mutex: mutex, condition: condition, harness: harness)
-            let contextPtr = Unmanaged.passRetained(context).toOpaque()
+            let contextPtr = unsafe Unmanaged.passRetained(context).toOpaque()
 
             var thread: pthread_t? = nil
 
-            let rc = pthread_create(
+            let rc = unsafe pthread_create(
                 &thread,
                 nil,
                 { raw -> UnsafeMutableRawPointer? in
-                    let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                    let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                     ctx.mutex.lock()
                     ctx.harness.update { $0.phase = .isWaiting }
@@ -434,7 +434,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     ctx.harness.update { $0.phase = .released }
                     return nil
                 },
-                contextPtr
+                unsafe contextPtr
             )
 
             #expect(rc == 0, "pthread_create should succeed")
@@ -469,8 +469,8 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
             try harness.wait(until: { $0.phase == .released })
 
-            if let t = thread {
-                pthread_join(t, nil)
+            if let t = unsafe thread {
+                unsafe pthread_join(t, nil)
             }
 
             let observed = harness.withLocked { $0.mainObservedHolding }
@@ -519,12 +519,12 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
             var producerThread: pthread_t? = nil
             var consumerThread: pthread_t? = nil
 
-            let consumerPtr = Unmanaged.passRetained(context).toOpaque()
-            let consumerRc = pthread_create(
+            let consumerPtr = unsafe Unmanaged.passRetained(context).toOpaque()
+            let consumerRc = unsafe pthread_create(
                 &consumerThread,
                 nil,
                 { raw -> UnsafeMutableRawPointer? in
-                    let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                    let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                     for _ in 0..<ctx.itemCount {
                         ctx.mutex.lock()
@@ -545,17 +545,17 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     }
                     return nil
                 },
-                consumerPtr
+                unsafe consumerPtr
             )
 
             #expect(consumerRc == 0, "pthread_create should succeed for consumer")
 
-            let producerPtr = Unmanaged.passRetained(context).toOpaque()
-            let producerRc = pthread_create(
+            let producerPtr = unsafe Unmanaged.passRetained(context).toOpaque()
+            let producerRc = unsafe pthread_create(
                 &producerThread,
                 nil,
                 { raw -> UnsafeMutableRawPointer? in
-                    let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                    let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                     for i in 0..<ctx.itemCount {
                         ctx.mutex.lock()
@@ -579,16 +579,16 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
                     ctx.mutex.unlock()
                     return nil
                 },
-                producerPtr
+                unsafe producerPtr
             )
 
             #expect(producerRc == 0, "pthread_create should succeed for producer")
 
-            if let t = producerThread {
-                pthread_join(t, nil)
+            if let t = unsafe producerThread {
+                unsafe pthread_join(t, nil)
             }
-            if let t = consumerThread {
-                pthread_join(t, nil)
+            if let t = unsafe consumerThread {
+                unsafe pthread_join(t, nil)
             }
 
             let (produced, consumed) = harness.withLocked { ($0.produced, $0.consumed) }

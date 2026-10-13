@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Socket.Pair {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case platform(Platform)
     }
@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.Socket.Pair {
 }
 
 extension ISO_9945.Kernel.Socket.Pair.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .platform(let p):
             switch p {

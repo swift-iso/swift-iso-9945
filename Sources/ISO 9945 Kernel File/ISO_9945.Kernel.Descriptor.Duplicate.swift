@@ -80,7 +80,7 @@ extension ISO_9945.Kernel.Descriptor.Duplicate.Error {
 }
 
 extension ISO_9945.Kernel.Descriptor.Duplicate.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .handle(let e):
             return "handle: \(e)"

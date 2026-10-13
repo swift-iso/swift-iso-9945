@@ -29,7 +29,7 @@ extension ISO_9945.Loader.Library.Test.`Edge Case` {
     @Test
     func `POSIX.1-2024 dlopen of a nonexistent file fails`() {
         #expect(throws: ISO_9945.Loader.Error.self) {
-            try unsafe "/nonexistent/iso-9945-loader-test.so".withCString { path in
+            try "/nonexistent/iso-9945-loader-test.so".withCString { path in
                 _ = try unsafe ISO_9945.Loader.Library.open(path: path)
             }
         }

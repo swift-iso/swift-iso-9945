@@ -16,7 +16,7 @@ extension ISO_9945.Utility.Operand {
         public init() {}
 
         public borrowing func parse(
-            _ input: inout ArraySlice<Swift.String>
+            _ input: inout ArraySlice<Swift::String>
         ) throws(ISO_9945.Utility.Operand.Coder.Error) -> ISO_9945.Utility.Operand {
             guard let word = input.popFirst() else { throw .absent }
             return .init(word)
@@ -24,7 +24,7 @@ extension ISO_9945.Utility.Operand {
 
         public borrowing func serialize(
             _ output: ISO_9945.Utility.Operand,
-            into buffer: inout [Swift.String]
+            into buffer: inout [Swift::String]
         ) throws(ISO_9945.Utility.Operand.Coder.Error) {
             buffer.append(output.rawValue)
         }

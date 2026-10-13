@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Environment {
 
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
         case permission(ISO_9945.Kernel.Permission.Error)
         case invalid(Invalid)
         case platform(Error::Error)
@@ -27,7 +27,7 @@ extension ISO_9945.Kernel.Environment.Error: Equatable {
 }
 
 extension ISO_9945.Kernel.Environment.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .permission(let e): return "permission: \(e)"
         case .invalid(let e): return "invalid: \(e)"

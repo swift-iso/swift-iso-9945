@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.File.Handle {
     }
 }
 
-private func cleanup(path: Swift.String) {
+private func cleanup(path: Swift::String) {
     try? Path.scope(path) { p in
         try ISO_9945.Kernel.File.Delete.delete(p)
     }
@@ -50,11 +50,11 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
 
         var buffer = [UInt8](repeating: 0, count: 14)
         let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try handle.read(into: ptr)
+            try unsafe handle.read(into: ptr)
         }
 
         #expect(bytesRead == 14)
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Hello, Handle!")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "Hello, Handle!")
     }
 
     @Test
@@ -67,17 +67,17 @@ extension ISO_9945.Kernel.File.Handle.Test.Unit {
 
         let content = Array("Handle write!".utf8)
         let bytesWritten = try content.withUnsafeBytes { ptr in
-            try handle.write(from: ptr)
+            try unsafe handle.write(from: ptr)
         }
 
         #expect(bytesWritten == 13)
 
         _ = try ISO_9945.Kernel.File.Seek.seek(handle.descriptor, offset: 0, whence: .start)
         var buffer = [UInt8](repeating: 0, count: 13)
-        let bytesRead = try buffer.withUnsafeMutableBytes { ptr in
-            try handle.read(into: ptr)
+        _ = try buffer.withUnsafeMutableBytes { ptr in
+            try unsafe handle.read(into: ptr)
         }
-        #expect(Swift.String(decoding: buffer, as: UTF8.self) == "Handle write!")
+        #expect(Swift::String(decoding: buffer, as: UTF8.self) == "Handle write!")
     }
 
     @Test

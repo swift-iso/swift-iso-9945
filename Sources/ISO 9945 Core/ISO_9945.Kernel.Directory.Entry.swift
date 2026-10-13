@@ -33,10 +33,10 @@ extension ISO_9945.Kernel.Directory.Entry {
         rawName == [0x2E, 0x00] || rawName == [0x2E, 0x2E, 0x00]
     }
 
-    public func withName<R, E: Swift.Error>(
+    public func withName<R, E: Swift::Error>(
         _ body: (borrowing Path.Borrowed) throws(E) -> R
     ) throws(E) -> R {
-        let result: Swift.Result<R, E> = rawName.withUnsafeBufferPointer { buffer in
+        let result: Swift::Result<R, E> = rawName.withUnsafeBufferPointer { buffer in
             let view = unsafe Path.Borrowed(buffer.baseAddress!, count: buffer.count - 1)
             do throws(E) {
                 return .success(try body(view))

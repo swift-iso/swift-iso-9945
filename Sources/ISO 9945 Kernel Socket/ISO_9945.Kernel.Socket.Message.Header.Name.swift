@@ -1,5 +1,6 @@
 extension ISO_9945.Kernel.Socket.Message.Header {
 
+    @safe
     public struct Name {
 
         public var pointer: UnsafeMutableRawPointer?

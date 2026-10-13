@@ -77,7 +77,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
 extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.Lock.Error.contention
+        let error: any Swift::Error = ISO_9945.Kernel.Lock.Error.contention
         #expect(error is ISO_9945.Kernel.Lock.Error)
     }
 

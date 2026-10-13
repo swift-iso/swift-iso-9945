@@ -47,7 +47,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
 extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
-        let error: any Swift.Error = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
+        let error: any Swift::Error = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
         #expect(error is ISO_9945.Kernel.File.Stats.Error)
     }
 

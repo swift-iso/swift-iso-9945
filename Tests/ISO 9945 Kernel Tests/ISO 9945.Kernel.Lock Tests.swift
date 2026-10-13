@@ -327,7 +327,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
         let path = KernelIOTest.makeTempPath(prefix: "lock-with")
         defer { KernelIOTest.cleanup(path: path) }
 
-        struct TestError: Swift.Error {}
+        struct TestError: Swift::Error {}
 
         do {
             try ISO_9945.Kernel.Lock.withExclusive(try KernelIOTest.open(at: path)) {

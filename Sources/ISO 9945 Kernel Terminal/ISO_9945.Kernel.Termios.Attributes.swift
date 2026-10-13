@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
 
     @_spi(Syscall)
     @inlinable
-    public mutating func withUnsafeMutableStorageBytes<T, E: Swift.Error>(
+    public mutating func withUnsafeMutableStorageBytes<T, E: Swift::Error>(
         _ body: (UnsafeMutableRawBufferPointer) throws(E) -> T
     ) throws(E) -> T {
         try withUnsafeMutableBytes(of: &_storage.bytes) {
@@ -40,7 +40,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
 
     @_spi(Syscall)
     @inlinable
-    public func withUnsafeStorageBytes<T, E: Swift.Error>(
+    public func withUnsafeStorageBytes<T, E: Swift::Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> T
     ) throws(E) -> T {
         try withUnsafeBytes(of: _storage.bytes) {

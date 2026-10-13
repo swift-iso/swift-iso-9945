@@ -29,7 +29,7 @@
 
         @Test
         func `Signal.Error conforms to Swift.Error`() {
-            let error: any Swift.Error = ISO_9945.Kernel.Signal.Error.interrupted
+            let error: any Swift::Error = ISO_9945.Kernel.Signal.Error.interrupted
             #expect(error is ISO_9945.Kernel.Signal.Error)
         }
 
@@ -66,7 +66,7 @@
         @Test
         func `CustomStringConvertible conformance`() {
             let error = ISO_9945.Kernel.Signal.Error.interrupted
-            let description = Swift.String(describing: error)
+            let description = Swift::String(describing: error)
             #expect(!description.isEmpty)
             #expect(description.contains("interrupt"))
         }

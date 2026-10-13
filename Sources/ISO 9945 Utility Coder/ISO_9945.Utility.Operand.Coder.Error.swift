@@ -4,7 +4,7 @@ public import ISO_9945_Utility
 
 extension ISO_9945.Utility.Operand.Coder {
 
-    public enum Error: Swift.Error, Equatable {
+    public enum Error: Swift::Error, Equatable {
         case absent
     }
 }

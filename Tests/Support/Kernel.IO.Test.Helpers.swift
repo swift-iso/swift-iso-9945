@@ -5,11 +5,11 @@ public import ISO_9945_Kernel
 
 public enum KernelIOTest {
 
-    public static func makeTempPath(prefix: Swift.String = "io-test") -> Swift.String {
+    public static func makeTempPath(prefix: Swift::String = "io-test") -> Swift::String {
         KernelIOTest.Temporary.filePath(prefix: prefix)
     }
 
-    public static func open(at path: Swift.String) throws -> ISO_9945.Kernel.Descriptor {
+    public static func open(at path: Swift::String) throws -> ISO_9945.Kernel.Descriptor {
         try Path.scope(path) { p in
             try ISO_9945.Kernel.File.Open.open(
                 path: p,
@@ -21,7 +21,7 @@ public enum KernelIOTest {
     }
 
     public static func write(
-        _ content: Swift.String,
+        _ content: Swift::String,
         to fd: borrowing ISO_9945.Kernel.Descriptor
     ) {
         var bytes = Array(content.utf8)
@@ -30,7 +30,7 @@ public enum KernelIOTest {
         }
     }
 
-    public static func cleanup(path: Swift.String) {
+    public static func cleanup(path: Swift::String) {
         try? Path.scope(path) { p in
             try ISO_9945.Kernel.File.Delete.delete(p)
         }

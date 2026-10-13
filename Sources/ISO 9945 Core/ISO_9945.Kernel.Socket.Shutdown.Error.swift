@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Socket.Shutdown {
 
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
 
         case platform(Error::Error)
     }
@@ -15,7 +15,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.Error: Equatable {
 }
 
 extension ISO_9945.Kernel.Socket.Shutdown.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .platform(let e): return "\(e)"
         }

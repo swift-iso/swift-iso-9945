@@ -58,8 +58,8 @@
             try actions.add(dup2: pipe.write, to: .stdout)
             try actions.add(close: .init(pipe.read))
 
-            let argv: [Swift.String] = ["/bin/echo", "hello-from-spawn"]
-            let envp: [Swift.String] = []
+            let argv: [Swift::String] = ["/bin/echo", "hello-from-spawn"]
+            let envp: [Swift::String] = []
             let pid: ISO_9945.Kernel.Process.ID = try unsafe Path.scope.array(argv, envp) {
                 (
                     argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
@@ -78,7 +78,7 @@
             var bytes: [UInt8] = []
             var chunk = [UInt8](repeating: 0, count: 256)
             while true {
-                let n = try unsafe chunk.withUnsafeMutableBufferPointer {
+                let n = try chunk.withUnsafeMutableBufferPointer {
                     (
                         raw: inout UnsafeMutableBufferPointer<UInt8>
                     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
@@ -88,7 +88,7 @@
                 if n == 0 { break }
                 bytes.append(contentsOf: chunk.prefix(n))
             }
-            let captured = Swift.String(decoding: bytes, as: UTF8.self)
+            let captured = Swift::String(decoding: bytes, as: UTF8.self)
             #expect(captured == "hello-from-spawn\n")
 
             let result = try ISO_9945.Kernel.Process.Wait.wait(.process(pid))
@@ -106,8 +106,8 @@
                 try unsafe actions.add(chdir: borrowed.pointer)
             }
 
-            let argv: [Swift.String] = ["/bin/pwd"]
-            let envp: [Swift.String] = []
+            let argv: [Swift::String] = ["/bin/pwd"]
+            let envp: [Swift::String] = []
             let pid: ISO_9945.Kernel.Process.ID = try unsafe Path.scope.array(argv, envp) {
                 (
                     argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
@@ -126,7 +126,7 @@
             var bytes: [UInt8] = []
             var chunk = [UInt8](repeating: 0, count: 256)
             while true {
-                let n = try unsafe chunk.withUnsafeMutableBufferPointer {
+                let n = try chunk.withUnsafeMutableBufferPointer {
                     (
                         raw: inout UnsafeMutableBufferPointer<UInt8>
                     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
@@ -136,7 +136,7 @@
                 if n == 0 { break }
                 bytes.append(contentsOf: chunk.prefix(n))
             }
-            var text = Swift.String(decoding: bytes, as: UTF8.self)
+            var text = Swift::String(decoding: bytes, as: UTF8.self)
             while text.last == "\n" || text.last == "\r" { text.removeLast() }
 
             #expect(text == "/tmp" || text == "/private/tmp", "got: \(text)")

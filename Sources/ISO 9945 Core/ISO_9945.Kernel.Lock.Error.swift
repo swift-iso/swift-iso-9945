@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Lock {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case contention
 
@@ -19,7 +19,7 @@ extension ISO_9945.Kernel.Lock {
 }
 
 extension ISO_9945.Kernel.Lock.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .contention: return "lock contention"
         case .deadlock: return "deadlock detected"

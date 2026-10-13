@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.File.Handle {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case invalidHandle
 
@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.File.Handle {
 }
 
 extension ISO_9945.Kernel.File.Handle.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .invalidHandle:
             return "Invalid file handle"

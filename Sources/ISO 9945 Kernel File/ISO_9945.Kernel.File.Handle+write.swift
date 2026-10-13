@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.File.Handle {
 extension ISO_9945.Kernel.File.Handle {
 
     public borrowing func write(
-        from span: Swift.Span<Byte>
+        from span: Swift::Span<Byte>
     ) throws(Either<ISO_9945.Kernel.File.Handle.Error, Interrupt>) -> Int {
         do throws(ISO_9945.Kernel.IO.Write.Error) {
             return try ISO_9945.Kernel.IO.Write.write(descriptor, from: span)
@@ -46,7 +46,7 @@ extension ISO_9945.Kernel.File.Handle {
     }
 
     public borrowing func pwrite(
-        from span: Swift.Span<Byte>,
+        from span: Swift::Span<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(Either<ISO_9945.Kernel.File.Handle.Error, Interrupt>) -> Int {
         do throws(ISO_9945.Kernel.IO.Write.Error) {

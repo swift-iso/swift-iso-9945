@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Permission {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case denied
 
@@ -11,7 +11,7 @@ extension ISO_9945.Kernel.Permission {
 }
 
 extension ISO_9945.Kernel.Permission.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .denied:
             return "permission denied"

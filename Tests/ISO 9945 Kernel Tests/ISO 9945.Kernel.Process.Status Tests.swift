@@ -50,36 +50,6 @@ extension ISO_9945.Kernel.Process.Status.Test.Unit {
 
 extension ISO_9945.Kernel.Process.Status.Test.Unit {
     @Test
-    func `exit accessor returns Exit struct`() {
-        let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
-        let exit = status.exit
-        #expect(exit is ISO_9945.Kernel.Process.Status.Exit)
-    }
-
-    @Test
-    func `terminating accessor returns Terminating struct`() {
-        let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
-        let terminating = status.terminating
-        #expect(terminating is ISO_9945.Kernel.Process.Status.Terminating)
-    }
-
-    @Test
-    func `stop accessor returns Stop struct`() {
-        let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
-        let stop = status.stop
-        #expect(stop is ISO_9945.Kernel.Process.Status.Stop)
-    }
-
-    @Test
-    func `core accessor returns Core struct`() {
-        let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
-        let core = status.core
-        #expect(core is ISO_9945.Kernel.Process.Status.Core)
-    }
-}
-
-extension ISO_9945.Kernel.Process.Status.Test.Unit {
-    @Test
     func `Classification cases are distinct`() {
         let signal = ISO_9945.Kernel.Signal.Number(rawValue: 9)
         let cases: [ISO_9945.Kernel.Process.Status.Classification] = [

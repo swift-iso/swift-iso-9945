@@ -11,7 +11,7 @@ let testHelperTargets: [Target] = [
     .executableTarget(
         name: "iso-9945-lock-helper",
         dependencies: [
-            "ISO 9945 Kernel"
+            .target(name: "ISO 9945 Kernel")
         ],
         path: "Tests/Support/Lock Helper"
     ),
@@ -277,7 +277,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel File",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -294,7 +294,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Directory",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .product(name: "String", package: "swift-string"),
             ]
         ),
@@ -302,9 +302,9 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Lock",
             dependencies: [
-                "ISO 9945 Core",
-                "ISO 9945 Kernel Clock",
-                "ISO 9945 Kernel System",
+                .target(name: "ISO 9945 Core"),
+                .target(name: "ISO 9945 Kernel Clock"),
+                .target(name: "ISO 9945 Kernel System"),
                 .product(name: "Clock", package: "swift-clock"),
                 .product(
                     name: "Memory Allocation",
@@ -316,17 +316,17 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Socket Address",
             dependencies: [
-                "ISO 9945 Core"
+                .target(name: "ISO 9945 Core")
             ]
         ),
 
         .target(
             name: "ISO 9945 Kernel Socket",
             dependencies: [
-                "ISO 9945 Core",
-                "ISO 9945 Kernel File",
-                "ISO 9945 Kernel Poll",
-                "ISO 9945 Kernel Socket Address",
+                .target(name: "ISO 9945 Core"),
+                .target(name: "ISO 9945 Kernel File"),
+                .target(name: "ISO 9945 Kernel Poll"),
+                .target(name: "ISO 9945 Kernel Socket Address"),
                 .product(name: "Pair", package: "swift-pair"),
             ]
         ),
@@ -334,7 +334,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Memory",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -350,14 +350,14 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Signal",
             dependencies: [
-                "ISO 9945 Core"
+                .target(name: "ISO 9945 Core")
             ]
         ),
 
         .target(
             name: "ISO 9945 Kernel Process",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "POSIX Process Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -369,14 +369,14 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Thread",
             dependencies: [
-                "ISO 9945 Core"
+                .target(name: "ISO 9945 Core")
             ]
         ),
 
         .target(
             name: "ISO 9945 Kernel Terminal",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -388,7 +388,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Environment",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .product(name: "String", package: "swift-string"),
             ]
         ),
@@ -396,7 +396,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Clock",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -408,7 +408,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Time",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .product(name: "Time", package: "swift-time"),
             ]
         ),
@@ -416,7 +416,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel System",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .product(name: "System", package: "swift-system"),
                 .product(name: "Random", package: "swift-random"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
@@ -427,7 +427,7 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Identity",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .product(name: "Tagged", package: "swift-tagged"),
             ]
         ),
@@ -435,14 +435,14 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel Poll",
             dependencies: [
-                "ISO 9945 Core"
+                .target(name: "ISO 9945 Core")
             ]
         ),
 
         .target(
             name: "ISO 9945 Glob",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -455,30 +455,30 @@ let package = Package(
         .target(
             name: "ISO 9945 Kernel",
             dependencies: [
-                "ISO 9945 Core",
-                "ISO 9945 Kernel File",
-                "ISO 9945 Kernel Directory",
-                "ISO 9945 Kernel Lock",
-                "ISO 9945 Kernel Socket Address",
-                "ISO 9945 Kernel Socket",
-                "ISO 9945 Kernel Memory",
-                "ISO 9945 Kernel Signal",
-                "ISO 9945 Kernel Process",
-                "ISO 9945 Kernel Thread",
-                "ISO 9945 Kernel Terminal",
-                "ISO 9945 Kernel Environment",
-                "ISO 9945 Kernel Clock",
-                "ISO 9945 Kernel Time",
-                "ISO 9945 Kernel System",
-                "ISO 9945 Kernel Poll",
-                "ISO 9945 Kernel Identity",
+                .target(name: "ISO 9945 Core"),
+                .target(name: "ISO 9945 Kernel File"),
+                .target(name: "ISO 9945 Kernel Directory"),
+                .target(name: "ISO 9945 Kernel Lock"),
+                .target(name: "ISO 9945 Kernel Socket Address"),
+                .target(name: "ISO 9945 Kernel Socket"),
+                .target(name: "ISO 9945 Kernel Memory"),
+                .target(name: "ISO 9945 Kernel Signal"),
+                .target(name: "ISO 9945 Kernel Process"),
+                .target(name: "ISO 9945 Kernel Thread"),
+                .target(name: "ISO 9945 Kernel Terminal"),
+                .target(name: "ISO 9945 Kernel Environment"),
+                .target(name: "ISO 9945 Kernel Clock"),
+                .target(name: "ISO 9945 Kernel Time"),
+                .target(name: "ISO 9945 Kernel System"),
+                .target(name: "ISO 9945 Kernel Poll"),
+                .target(name: "ISO 9945 Kernel Identity"),
             ]
         ),
 
         .target(
             name: "ISO 9945 Loader",
             dependencies: [
-                "ISO 9945 Core",
+                .target(name: "ISO 9945 Core"),
                 .target(
                     name: "ISO 9945 Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
@@ -490,22 +490,22 @@ let package = Package(
         .target(
             name: "ISO 9945 Utility",
             dependencies: [
-                "ISO 9945 Core"
+                .target(name: "ISO 9945 Core")
             ]
         ),
 
         .testTarget(
             name: "ISO 9945 Utility Tests",
             dependencies: [
-                "ISO 9945 Core",
-                "ISO 9945 Utility",
+                .target(name: "ISO 9945 Core"),
+                .target(name: "ISO 9945 Utility"),
             ]
         ),
 
         .target(
             name: "ISO 9945 Kernel Test Support",
             dependencies: [
-                "ISO 9945 Kernel",
+                .target(name: "ISO 9945 Kernel"),
                 .product(
                     name: "Cardinal Test Support",
                     package: "swift-cardinal"
@@ -521,10 +521,10 @@ let package = Package(
         .testTarget(
             name: "ISO 9945 Kernel Tests",
             dependencies: [
-                "ISO 9945 Kernel",
-                "ISO 9945 Glob",
-                "ISO 9945 Loader",
-                "ISO 9945 Kernel Test Support",
+                .target(name: "ISO 9945 Kernel"),
+                .target(name: "ISO 9945 Glob"),
+                .target(name: "ISO 9945 Loader"),
+                .target(name: "ISO 9945 Kernel Test Support"),
                 .product(name: "Loader Vocabulary", package: "swift-loader-vocabulary"),
                 .product(name: "Error", package: "swift-error"),
                 .product(name: "Path", package: "swift-path"),
@@ -538,16 +538,13 @@ let package = Package(
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    let ecosystem: [SwiftSetting] = [
+    target.swiftSettings = (target.swiftSettings ?? []) + [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+        .enableUpcomingFeature("InferIsolatedConformances"),
         .enableExperimentalFeature("Lifetimes"),
     ]
-
-    let package: [SwiftSetting] = []
-
-    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

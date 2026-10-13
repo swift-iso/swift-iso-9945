@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.Directory.Working {
 
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
 
         case path(Path.Resolution.Error)
 
@@ -22,7 +22,7 @@ extension ISO_9945.Kernel.Directory.Working.Error: Equatable {
 }
 
 extension ISO_9945.Kernel.Directory.Working.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .path(let e): return "working directory: \(e)"
         case .platform(let e): return "working directory: \(e)"

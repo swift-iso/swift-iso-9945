@@ -86,7 +86,7 @@ extension ISO_9945.Kernel.File.Permissions: ExpressibleByIntegerLiteral {
 }
 
 extension ISO_9945.Kernel.File.Permissions: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         let owner =
             "\(rawValue & 0o400 != 0 ? "r" : "-")\(rawValue & 0o200 != 0 ? "w" : "-")\(rawValue & 0o100 != 0 ? "x" : "-")"
         let group =

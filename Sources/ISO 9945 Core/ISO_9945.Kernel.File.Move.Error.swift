@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.File.Move {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case notFound
 
@@ -29,7 +29,7 @@ extension ISO_9945.Kernel.File.Move {
 }
 
 extension ISO_9945.Kernel.File.Move.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .notFound: return "source path not found"
         case .permission: return "permission denied"

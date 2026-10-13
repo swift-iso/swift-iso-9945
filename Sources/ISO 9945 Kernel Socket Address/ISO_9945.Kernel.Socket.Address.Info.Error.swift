@@ -8,7 +8,7 @@
 
 extension ISO_9945.Kernel.Socket.Address.Info {
 
-    public enum Error: Swift.Error, Sendable, Equatable, Hashable {
+    public enum Error: Swift::Error, Sendable, Equatable, Hashable {
 
         case again
 

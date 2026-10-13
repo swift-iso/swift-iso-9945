@@ -23,7 +23,7 @@ extension ISO_9945.Kernel.Inode: ExpressibleByIntegerLiteral {
 }
 
 extension ISO_9945.Kernel.Inode: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         "\(rawValue)"
     }
 }

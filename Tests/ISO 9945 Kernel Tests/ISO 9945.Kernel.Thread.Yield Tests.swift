@@ -50,7 +50,7 @@ struct `Thread Yield Tests` {
 
             let threadCount = 4
             let iterations = 100
-            var threads: [pthread_t?] = Array(repeating: nil, count: threadCount)
+            var threads: [pthread_t?] = unsafe Array(repeating: nil, count: threadCount)
 
             final class Context: @unchecked Sendable {
                 let iterations: Int
@@ -59,13 +59,13 @@ struct `Thread Yield Tests` {
 
             for i in 0..<threadCount {
                 let context = Context(iterations: iterations)
-                let contextPtr = Unmanaged.passRetained(context).toOpaque()
+                let contextPtr = unsafe Unmanaged.passRetained(context).toOpaque()
 
-                let result = pthread_create(
+                let result = unsafe pthread_create(
                     &threads[i],
                     nil,
                     { raw -> UnsafeMutableRawPointer? in
-                        let ctx = Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
+                        let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
                         for _ in 0..<ctx.iterations {
                             ISO_9945.Kernel.Thread.yield()
@@ -73,28 +73,28 @@ struct `Thread Yield Tests` {
 
                         return nil
                     },
-                    contextPtr
+                    unsafe contextPtr
                 )
 
                 guard result == 0 else {
 
                     for j in 0..<i {
-                        if let thread = threads[j] {
-                            pthread_join(thread, nil)
+                        if let thread = unsafe threads[j] {
+                            unsafe pthread_join(thread, nil)
                         }
                     }
                     throw TestError.threadCreationFailed(errno: result)
                 }
             }
 
-            for thread in threads {
-                if let thread {
-                    pthread_join(thread, nil)
+            for unsafe thread in unsafe threads {
+                if let thread = unsafe thread {
+                    unsafe pthread_join(thread, nil)
                 }
             }
         }
 
-        enum TestError: Swift.Error {
+        enum TestError: Swift::Error {
             case threadCreationFailed(errno: Int32)
         }
     }

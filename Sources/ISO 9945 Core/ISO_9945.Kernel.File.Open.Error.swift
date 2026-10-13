@@ -1,5 +1,5 @@
 extension ISO_9945.Kernel.File.Open {
-    public enum Error: Swift.Error, Sendable {
+    public enum Error: Swift::Error, Sendable {
         case path(Path.Resolution.Error)
         case handle(ISO_9945.Kernel.Descriptor.Validity.Error)
         case platform(Error::Error)
@@ -18,7 +18,7 @@ extension ISO_9945.Kernel.File.Open.Error: Equatable {
 }
 
 extension ISO_9945.Kernel.File.Open.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .path(let e): return "path: \(e)"
         case .handle(let e): return "handle: \(e)"

@@ -34,7 +34,7 @@ extension ISO_9945.Kernel.Signal.Set {
     }
 
     public init(
-        _ signals: some Swift.Sequence<ISO_9945.Kernel.Signal.Number>
+        _ signals: some Swift::Sequence<ISO_9945.Kernel.Signal.Number>
     ) throws(ISO_9945.Kernel.Signal.Error) {
         self.init()
         for signal in signals {
@@ -80,15 +80,15 @@ extension ISO_9945.Kernel.Signal.Set {
 extension ISO_9945.Kernel.Signal.Set {
 
     @unsafe
-    internal func withUnsafePointer<R, E: Swift.Error>(
+    internal func withUnsafePointer<R, E: Swift::Error>(
         _ body: (UnsafePointer<sigset_t>) throws(E) -> R
     ) throws(E) -> R {
-        try Swift.withUnsafePointer(to: storage, body)
+        try Swift::withUnsafePointer(to: storage, body)
     }
 
     @unsafe
     @_spi(Syscall)
-    public func withUnsafeRawPointer<R, E: Swift.Error>(
+    public func withUnsafeRawPointer<R, E: Swift::Error>(
         _ body: (UnsafeRawPointer) throws(E) -> R
     ) throws(E) -> R {
         try unsafe withUnsafePointer { (pointer: UnsafePointer<sigset_t>) throws(E) -> R in
@@ -97,10 +97,10 @@ extension ISO_9945.Kernel.Signal.Set {
     }
 
     @unsafe
-    internal mutating func withUnsafeMutablePointer<R, E: Swift.Error>(
+    internal mutating func withUnsafeMutablePointer<R, E: Swift::Error>(
         _ body: (UnsafeMutablePointer<sigset_t>) throws(E) -> R
     ) throws(E) -> R {
-        try Swift.withUnsafeMutablePointer(to: &storage, body)
+        try Swift::withUnsafeMutablePointer(to: &storage, body)
     }
 
     internal init(storage: sigset_t) {

@@ -1,6 +1,6 @@
 extension ISO_9945.Kernel.File.Chown {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case path(Path)
 
@@ -13,7 +13,7 @@ extension ISO_9945.Kernel.File.Chown {
 }
 
 extension ISO_9945.Kernel.File.Chown.Error: CustomStringConvertible {
-    public var description: Swift.String {
+    public var description: Swift::String {
         switch self {
         case .path(let pathError):
             return "chown path error: \(pathError)"

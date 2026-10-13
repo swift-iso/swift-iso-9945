@@ -22,7 +22,7 @@ extension ISO_9945.Kernel {
             #if canImport(Darwin)
                 _ = Darwin.close(_raw)
             #elseif canImport(Glibc)
-                _ = unsafe Glibc.close(_raw)
+                _ = Glibc.close(_raw)
             #elseif canImport(Musl)
                 _ = unsafe Musl.close(_raw)
             #endif
