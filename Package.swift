@@ -261,7 +261,7 @@ let package = Package(
                 .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "ASCII", package: "swift-ascii"),
-                .product(name: "System", package: "swift-system"),
+                .product(name: "System Primitives", package: "swift-system"),
             ]
         ),
 
@@ -417,7 +417,7 @@ let package = Package(
             name: "ISO 9945 Kernel System",
             dependencies: [
                 .target(name: "ISO 9945 Core"),
-                .product(name: "System", package: "swift-system"),
+                .product(name: "System Primitives", package: "swift-system"),
                 .product(name: "Random", package: "swift-random"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "Memory", package: "swift-memory"),
@@ -528,7 +528,7 @@ let package = Package(
                 .product(name: "Loader Vocabulary", package: "swift-loader-vocabulary"),
                 .product(name: "Error", package: "swift-error"),
                 .product(name: "Path", package: "swift-path"),
-                .product(name: "System", package: "swift-system"),
+                .product(name: "System Primitives", package: "swift-system"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Memory", package: "swift-memory"),
             ]

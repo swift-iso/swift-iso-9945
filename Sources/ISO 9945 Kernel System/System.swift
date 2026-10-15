@@ -1,4 +1,4 @@
-public import System
+public import System_Primitives
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
