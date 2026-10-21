@@ -38,7 +38,10 @@ extension Memory.Map {
             throw .map(.captureErrno())
         }
 
-        return unsafe Memory.Address(result!)
+        guard let mapped = unsafe result else {
+            preconditionFailure("mmap returns a non-nil address when it does not return MAP_FAILED")
+        }
+        return unsafe Memory.Address(mapped)
     }
 
     public static func map(

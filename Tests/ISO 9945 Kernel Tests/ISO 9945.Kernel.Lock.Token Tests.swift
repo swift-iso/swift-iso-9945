@@ -39,4 +39,3 @@ extension ISO_9945.Kernel.Lock.Token.Test.Unit {
 
     }
 }
-

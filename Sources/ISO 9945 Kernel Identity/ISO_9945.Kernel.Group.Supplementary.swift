@@ -23,7 +23,10 @@ extension ISO_9945.Kernel.Group.Supplementary {
 
         var gids = [gid_t](repeating: 0, count: Int(count))
         let result = gids.withUnsafeMutableBufferPointer { buf in
-            unsafe getgroups(count, buf.baseAddress!)
+            guard let base = unsafe buf.baseAddress else {
+                preconditionFailure("gids holds count > 0 elements")
+            }
+            return unsafe getgroups(count, base)
         }
 
         guard result >= 0 else {

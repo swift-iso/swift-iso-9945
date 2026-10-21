@@ -9,4 +9,3 @@ extension ISO_9945.Kernel.Storage {
         @Suite struct `Edge Case` {}
     }
 }
-

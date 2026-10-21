@@ -81,7 +81,10 @@ enum TestExecutable {
 
     private static func string(fromNulTerminated buffer: [CChar]) -> Swift::String {
         buffer.withUnsafeBufferPointer { pointer in
-            unsafe Swift::String(cString: pointer.baseAddress!)
+            guard let base = unsafe pointer.baseAddress else {
+                preconditionFailure("A NUL-terminated buffer is non-empty")
+            }
+            return unsafe Swift::String(cString: base)
         }
     }
 

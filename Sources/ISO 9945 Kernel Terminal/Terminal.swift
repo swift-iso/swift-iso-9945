@@ -19,4 +19,3 @@ extension Terminal.Size {
         }
     }
 }
-

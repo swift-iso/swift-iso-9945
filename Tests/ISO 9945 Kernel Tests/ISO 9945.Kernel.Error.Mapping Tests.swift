@@ -216,4 +216,3 @@ struct KernelErrorTests {
         #expect(set.count == 2)
     }
 }
-

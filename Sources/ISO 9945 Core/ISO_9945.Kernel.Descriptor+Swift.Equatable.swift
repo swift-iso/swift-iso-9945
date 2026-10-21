@@ -1,4 +1,3 @@
-
 extension ISO_9945.Kernel.Descriptor: Swift::Equatable {
     @inlinable
     public static func == (

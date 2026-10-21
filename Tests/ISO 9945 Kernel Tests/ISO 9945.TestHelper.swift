@@ -38,8 +38,11 @@
 
             return try unsafe Path.scope.array(allArgs, envp) { argvPtr, envpPtr in
 
-                try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
-                    path: argvPtr[0]!,
+                guard let path = unsafe argvPtr[0] else {
+                    preconditionFailure("argv always contains the executable path")
+                }
+                return try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
+                    path: path,
                     argv: argvPtr,
                     envp: envpPtr
                 )

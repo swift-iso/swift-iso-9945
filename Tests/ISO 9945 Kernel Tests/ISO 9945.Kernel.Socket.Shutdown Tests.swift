@@ -9,4 +9,3 @@ extension ISO_9945.Kernel.Socket.Shutdown {
         @Suite struct `Edge Case` {}
     }
 }
-

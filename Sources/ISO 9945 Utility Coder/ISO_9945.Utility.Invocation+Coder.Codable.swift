@@ -1,12 +1,12 @@
 #if Coder
-public import Coder
-public import ISO_9945_Core
-public import ISO_9945_Utility
+    public import Coder
+    public import ISO_9945_Core
+    public import ISO_9945_Utility
 
-extension ISO_9945.Utility.Invocation {
+    extension ISO_9945.Utility.Invocation {
 
-    public static var coder: ISO_9945.Utility.Invocation.Coder {
-        .init()
+        public static var coder: ISO_9945.Utility.Invocation.Coder {
+            .init()
+        }
     }
-}
 #endif

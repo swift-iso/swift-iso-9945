@@ -6,4 +6,3 @@ extension Terminal.Stream.Read {
         try unsafe ISO_9945.Kernel.IO.Read.read(stream, into: buffer)
     }
 }
-

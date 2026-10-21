@@ -50,4 +50,3 @@ extension ISO_9945.Kernel.IO.Write.Error {
         return .platform(Error::Error(code: code))
     }
 }
-

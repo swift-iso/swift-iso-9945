@@ -54,11 +54,10 @@ extension ISO_9945.Kernel.Signal.Information {
             return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue.si_pid)
         #elseif canImport(Glibc)
 
-            if isUserOrQueue {
-                return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._kill.si_pid)
-            } else {
+            guard isUserOrQueue else {
                 return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._sigchld.si_pid)
             }
+            return ISO_9945.Kernel.Process.ID(rawValue: unsafe cValue._sifields._kill.si_pid)
         #elseif canImport(Musl)
 
             return ISO_9945.Kernel.Process.ID(

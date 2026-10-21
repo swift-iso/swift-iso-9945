@@ -58,4 +58,3 @@ extension Memory.Map.Anonymous.Test.Unit {
         #expect(region.base.bitPattern != 0)
     }
 }
-

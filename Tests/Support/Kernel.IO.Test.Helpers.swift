@@ -1,7 +1,7 @@
-import Path
 import Error
 public import ISO_9945_Kernel
 @_spi(Syscall) import ISO_9945_Kernel_File
+import Path
 
 public enum KernelIOTest {
 
@@ -36,4 +36,3 @@ public enum KernelIOTest {
         }
     }
 }
-

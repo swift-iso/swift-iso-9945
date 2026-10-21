@@ -35,7 +35,10 @@ extension ISO_9945.Kernel.Socket.Address.Storage {
     ) throws(E) -> R {
         try Swift::withUnsafeBytes(of: cValue) {
             (buffer: UnsafeRawBufferPointer) throws(E) -> R in
-            try unsafe body(buffer.baseAddress!, UInt32(buffer.count))
+            guard let base = unsafe buffer.baseAddress else {
+                preconditionFailure("A sockaddr_storage buffer is non-empty")
+            }
+            return try unsafe body(base, UInt32(buffer.count))
         }
     }
 
@@ -44,7 +47,10 @@ extension ISO_9945.Kernel.Socket.Address.Storage {
     ) throws(E) -> R {
         try Swift::withUnsafeMutableBytes(of: &cValue) {
             (buffer: UnsafeMutableRawBufferPointer) throws(E) -> R in
-            try unsafe body(buffer.baseAddress!, UInt32(buffer.count))
+            guard let base = unsafe buffer.baseAddress else {
+                preconditionFailure("A sockaddr_storage buffer is non-empty")
+            }
+            return try unsafe body(base, UInt32(buffer.count))
         }
     }
 }

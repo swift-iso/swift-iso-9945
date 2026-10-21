@@ -13,10 +13,9 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
 
     @inlinable
     public init?(code: Error::Error.Code) {
-        if (code == .EAGAIN || code == .EWOULDBLOCK) {
-            self = .wouldBlock
-        } else {
+        guard code == .EAGAIN || code == .EWOULDBLOCK else {
             return nil
         }
+        self = .wouldBlock
     }
 }

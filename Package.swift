@@ -130,7 +130,7 @@ let package = Package(
         ),
     ],
     traits: [
-        .trait(name: "Coder", description: "Coder integration for utility invocations"),
+        .trait(name: "Coder", description: "Coder integration for utility invocations")
     ],
     dependencies: [
         .package(
@@ -159,7 +159,8 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-binary.git",
-            branch: "main", traits: ["Serializer"]
+            branch: "main",
+            traits: ["Serializer"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-spatial.git",
@@ -167,7 +168,9 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-terminal.git",
-            branch: "main", traits: ["Error", "Input"]),
+            branch: "main",
+            traits: ["Error", "Input"]
+        ),
         .package(
             url: "https://github.com/swift-atoms/swift-error.git",
             branch: "main"
@@ -186,14 +189,18 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-memory.git",
-            branch: "main", traits: ["Lock", "Map", "Shared", "Cursor"]),
+            branch: "main",
+            traits: ["Lock", "Map", "Shared", "Cursor"]
+        ),
         .package(
             url: "https://github.com/swift-molecules/swift-memory-allocation.git",
-            branch: "main", traits: ["MemorySmall", "MemoryAllocatorArena", "MemoryInline"]
+            branch: "main",
+            traits: ["MemorySmall", "MemoryAllocatorArena", "MemoryInline"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-ascii.git",
-            branch: "main", traits: ["Parser", "Serializer"]
+            branch: "main",
+            traits: ["Parser", "Serializer"]
         ),
         .package(
             url: "https://github.com/swift-atoms/swift-cpu.git",
@@ -215,7 +222,15 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-checkpoint.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-coder.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main", traits: [.trait(name: "Append", condition: .when(traits: ["Coder"])), .trait(name: "Either", condition: .when(traits: ["Coder"])), .trait(name: "Iterator", condition: .when(traits: ["Coder"])), .trait(name: "IteratorLeaves", condition: .when(traits: ["Coder"])), .trait(name: "Map", condition: .when(traits: ["Coder"])), .trait(name: "Product", condition: .when(traits: ["Coder"])), .trait(name: "Skip", condition: .when(traits: ["Coder"]))]),
+        .package(
+            url: "https://github.com/swift-atoms/swift-parser.git",
+            branch: "main",
+            traits: [
+                .trait(name: "Append", condition: .when(traits: ["Coder"])), .trait(name: "Either", condition: .when(traits: ["Coder"])), .trait(name: "Iterator", condition: .when(traits: ["Coder"])),
+                .trait(name: "IteratorLeaves", condition: .when(traits: ["Coder"])), .trait(name: "Map", condition: .when(traits: ["Coder"])),
+                .trait(name: "Product", condition: .when(traits: ["Coder"])), .trait(name: "Skip", condition: .when(traits: ["Coder"])),
+            ]
+        ),
         .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main"),
     ],
     targets: [
@@ -538,13 +553,14 @@ let package = Package(
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    target.swiftSettings = (target.swiftSettings ?? []) + [
-        .strictMemorySafety(),
-        .enableUpcomingFeature("ExistentialAny"),
-        .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility"),
-        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableUpcomingFeature("InferIsolatedConformances"),
-        .enableExperimentalFeature("Lifetimes"),
-    ]
+    target.swiftSettings =
+        (target.swiftSettings ?? []) + [
+            .strictMemorySafety(),
+            .enableUpcomingFeature("ExistentialAny"),
+            .enableUpcomingFeature("InternalImportsByDefault"),
+            .enableUpcomingFeature("MemberImportVisibility"),
+            .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            .enableUpcomingFeature("InferIsolatedConformances"),
+            .enableExperimentalFeature("Lifetimes"),
+        ]
 }

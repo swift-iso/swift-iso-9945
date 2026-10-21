@@ -37,7 +37,10 @@ extension ISO_9945.Kernel.Directory.Entry {
         _ body: (borrowing Path.Borrowed) throws(E) -> R
     ) throws(E) -> R {
         let result: Swift::Result<R, E> = rawName.withUnsafeBufferPointer { buffer in
-            let view = unsafe Path.Borrowed(buffer.baseAddress!, count: buffer.count - 1)
+            guard let base = unsafe buffer.baseAddress else {
+                preconditionFailure("A non-empty name buffer has a base address")
+            }
+            let view = unsafe Path.Borrowed(base, count: buffer.count - 1)
             do throws(E) {
                 return .success(try body(view))
             } catch {

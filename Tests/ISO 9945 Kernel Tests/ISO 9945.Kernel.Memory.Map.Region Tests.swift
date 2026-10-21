@@ -44,4 +44,3 @@ extension Memory.Map.Region.Test.Unit {
         #expect(copy.length == region.length)
     }
 }
-

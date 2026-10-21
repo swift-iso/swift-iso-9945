@@ -17,11 +17,14 @@ extension ISO_9945.Kernel.User.Database {
 
     public static func find(name: String) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, pwd, result in
-            name.withCString { cName in
+            guard let base = unsafe buffer.baseAddress else {
+                preconditionFailure("lookup buffer is non-empty")
+            }
+            return name.withCString { cName in
                 unsafe getpwnam_r(
                     cName,
                     pwd,
-                    buffer.baseAddress!,
+                    base,
                     numericCast(buffer.count),
                     result
                 )
@@ -31,10 +34,13 @@ extension ISO_9945.Kernel.User.Database {
 
     public static func find(uid: ISO_9945.Kernel.User.ID) throws(Error) -> Entry? {
         try unsafe withReentrantLookup { buffer, pwd, result in
-            unsafe getpwuid_r(
+            guard let base = unsafe buffer.baseAddress else {
+                preconditionFailure("lookup buffer is non-empty")
+            }
+            return unsafe getpwuid_r(
                 uid.underlying,
                 pwd,
-                buffer.baseAddress!,
+                base,
                 numericCast(buffer.count),
                 result
             )

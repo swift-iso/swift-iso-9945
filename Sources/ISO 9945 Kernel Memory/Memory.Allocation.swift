@@ -15,6 +15,10 @@ extension Memory.Allocation {
 
         let pageSize = raw > 0 ? Int(raw) : 4096
 
-        return Memory.Allocation.Granularity(_unchecked: try! Memory.Alignment(pageSize))
+        do {
+            return Memory.Allocation.Granularity(_unchecked: try Memory.Alignment(pageSize))
+        } catch {
+            preconditionFailure("The system page size is a valid alignment: \(error)")
+        }
     }
 }

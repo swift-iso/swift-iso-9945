@@ -31,4 +31,3 @@ extension Terminal.Stream.Write {
         return written
     }
 }
-

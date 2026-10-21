@@ -148,8 +148,7 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
                 let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>)
-                {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.harness = harness
                 }
@@ -217,8 +216,7 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
                 let mutex: ISO_9945.Kernel.Thread.Mutex
                 let harness: KernelThreadTest.Harness<State>
 
-                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>)
-                {
+                init(mutex: ISO_9945.Kernel.Thread.Mutex, harness: KernelThreadTest.Harness<State>) {
                     self.mutex = mutex
                     self.harness = harness
                 }

@@ -1,7 +1,6 @@
 import Error
-import Testing
-
 @_spi(Syscall) import ISO_9945_Kernel
+import Testing
 
 #if canImport(Darwin)
     import Darwin

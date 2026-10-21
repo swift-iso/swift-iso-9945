@@ -58,8 +58,7 @@ extension ISO_9945.Kernel.Thread.Key {
         }
     }
 
-    public func setValue(_ newValue: UnsafeMutableRawPointer?) throws(ISO_9945.Kernel.Thread.Error)
-    {
+    public func setValue(_ newValue: UnsafeMutableRawPointer?) throws(ISO_9945.Kernel.Thread.Error) {
 
         let result = unsafe pthread_setspecific(key, newValue)
         guard result == 0 else {
