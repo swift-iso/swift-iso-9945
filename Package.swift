@@ -163,7 +163,7 @@ let package = Package(
             traits: ["Serializer"]
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-spatial.git",
+            url: "https://github.com/swift-atoms/swift-space.git",
             branch: "main"
         ),
         .package(
@@ -272,7 +272,7 @@ let package = Package(
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Time", package: "swift-time"),
                 .product(name: "Binary", package: "swift-binary"),
-                .product(name: "Space", package: "swift-spatial"),
+                .product(name: "Space", package: "swift-space"),
                 .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "ASCII", package: "swift-ascii"),
