@@ -37,7 +37,7 @@
 
                     print("LOCKED")
 
-                    System.sleep(.milliseconds(milliseconds))
+                    _ = System.nanosleep(.milliseconds(milliseconds))
                 }
 
                 print("RELEASED")

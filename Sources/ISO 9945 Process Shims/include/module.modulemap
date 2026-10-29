@@ -1,4 +1,4 @@
-module POSIX_Process_Shims {
+module ISO_9945_Process_Shims {
     header "shim.h"
     export *
 }

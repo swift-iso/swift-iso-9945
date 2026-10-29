@@ -281,7 +281,7 @@ let package = Package(
         ),
 
         .target(
-            name: "POSIX Process Shims",
+            name: "ISO 9945 Process Shims",
             dependencies: []
         ),
         .target(
@@ -374,7 +374,7 @@ let package = Package(
             dependencies: [
                 .target(name: "ISO 9945 Core"),
                 .target(
-                    name: "POSIX Process Shims",
+                    name: "ISO 9945 Process Shims",
                     condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS, .linux])
                 ),
                 .product(name: "Path", package: "swift-path"),

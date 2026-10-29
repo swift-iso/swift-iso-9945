@@ -54,7 +54,7 @@ private enum LockTestHelper {
 
                 try? ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
 
-                System.sleep(.milliseconds(5))
+                _ = System.nanosleep(.milliseconds(5))
             } catch {
 
                 return true
@@ -266,7 +266,7 @@ extension `POSIX Lock Integration` {
 
         let helper = try LockTestHelper.spawn(lockingFile: path, forMilliseconds: 100)
 
-        System.sleep(.milliseconds(50))
+        _ = System.nanosleep(.milliseconds(50))
 
         try ISO_9945.Kernel.Lock.unlock(fd: fd._rawValue, range: .file)
 
