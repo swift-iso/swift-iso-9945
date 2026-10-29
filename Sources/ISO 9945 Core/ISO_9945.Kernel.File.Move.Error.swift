@@ -8,6 +8,10 @@ extension ISO_9945.Kernel.File.Move {
 
         case crossDevice
 
+        case exists
+
+        case notSupported
+
         case notEmpty
 
         case notDirectory
@@ -34,6 +38,8 @@ extension ISO_9945.Kernel.File.Move.Error: CustomStringConvertible {
         case .notFound: return "source path not found"
         case .permission: return "permission denied"
         case .crossDevice: return "cross-device move not supported"
+        case .exists: return "destination exists"
+        case .notSupported: return "operation not supported by this file system"
         case .notEmpty: return "destination directory not empty"
         case .notDirectory: return "path component is not a directory"
         case .invalidArgument: return "invalid argument"

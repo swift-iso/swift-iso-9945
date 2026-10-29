@@ -94,43 +94,52 @@ extension ISO_9945.Kernel.File.Move {
 extension ISO_9945.Kernel.File.Move.Error {
 
     internal static func current() -> Self {
-        let code = Error::Error.Code.captureErrno()
-        switch code {
+        Self(code: Error::Error.Code.captureErrno())
+    }
+
+    public init(code: Error::Error.Code) {
+        self = switch code {
         case .ENOENT:
-            return .notFound
+            .notFound
 
         case .EACCES, .EPERM:
-            return .permission
+            .permission
 
         case .EXDEV:
-            return .crossDevice
+            .crossDevice
+
+        case .EEXIST:
+            .exists
+
+        case .ENOTSUP:
+            .notSupported
 
         case .ENOTEMPTY:
-            return .notEmpty
+            .notEmpty
 
         case .ENOTDIR:
-            return .notDirectory
+            .notDirectory
 
         case .EINVAL:
-            return .invalidArgument
+            .invalidArgument
 
         case .EISDIR:
-            return .isDirectory
+            .isDirectory
 
         case .EROFS:
-            return .readOnly
+            .readOnly
 
         case .ELOOP:
-            return .loop
+            .loop
 
         case .ENAMETOOLONG:
-            return .nameTooLong
+            .nameTooLong
 
         case .ENOSPC:
-            return .noSpace
+            .noSpace
 
         default:
-            return .platform(Error::Error(code: code))
+            .platform(Error::Error(code: code))
         }
     }
 }
