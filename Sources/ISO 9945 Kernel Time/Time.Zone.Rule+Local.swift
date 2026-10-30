@@ -1,3 +1,5 @@
+public import Time
+
 #if canImport(Darwin)
     internal import Darwin
 #elseif canImport(Glibc)
@@ -6,7 +8,6 @@
     internal import Musl
 #endif
 
-public import Time
 
 extension Time.Zone.Rule {
 
