@@ -8,7 +8,6 @@ public import Time
     internal import Musl
 #endif
 
-
 extension Time.Zone.Rule {
 
     /// The process's local time zone, as `localtime_r` gives it (`tm_gmtoff`): the zone the `TZ` variable names, or the
