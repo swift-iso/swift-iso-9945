@@ -98,48 +98,49 @@ extension ISO_9945.Kernel.File.Move.Error {
     }
 
     public init(code: Error::Error.Code) {
-        self = switch code {
-        case .ENOENT:
-            .notFound
+        self =
+            switch code {
+            case .ENOENT:
+                .notFound
 
-        case .EACCES, .EPERM:
-            .permission
+            case .EACCES, .EPERM:
+                .permission
 
-        case .EXDEV:
-            .crossDevice
+            case .EXDEV:
+                .crossDevice
 
-        case .EEXIST:
-            .exists
+            case .EEXIST:
+                .exists
 
-        case .ENOTSUP:
-            .notSupported
+            case .ENOTSUP:
+                .notSupported
 
-        case .ENOTEMPTY:
-            .notEmpty
+            case .ENOTEMPTY:
+                .notEmpty
 
-        case .ENOTDIR:
-            .notDirectory
+            case .ENOTDIR:
+                .notDirectory
 
-        case .EINVAL:
-            .invalidArgument
+            case .EINVAL:
+                .invalidArgument
 
-        case .EISDIR:
-            .isDirectory
+            case .EISDIR:
+                .isDirectory
 
-        case .EROFS:
-            .readOnly
+            case .EROFS:
+                .readOnly
 
-        case .ELOOP:
-            .loop
+            case .ELOOP:
+                .loop
 
-        case .ENAMETOOLONG:
-            .nameTooLong
+            case .ENAMETOOLONG:
+                .nameTooLong
 
-        case .ENOSPC:
-            .noSpace
+            case .ENOSPC:
+                .noSpace
 
-        default:
-            .platform(Error::Error(code: code))
-        }
+            default:
+                .platform(Error::Error(code: code))
+            }
     }
 }

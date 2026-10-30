@@ -546,6 +546,7 @@ let package = Package(
                 .product(name: "System Primitives", package: "swift-system"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Memory", package: "swift-memory"),
+                .product(name: "Time", package: "swift-time"),
             ]
         ),
     ] + testHelperTargets,
