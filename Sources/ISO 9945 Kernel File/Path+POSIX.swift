@@ -4,6 +4,29 @@
 
 extension Path.`Protocol` where Self: ~Copyable {
 
+    /// The pathname `string` spells. POSIX gives `/` no rewriting: the code units are the text's.
+    ///
+    /// Text may not be empty or contain NUL or control characters; see `init(validating:)`.
+    @inlinable
+    public init(_ string: Swift::String) throws(Path.Error) {
+        try self.init(validating: string)
+    }
+}
+
+extension Path: @retroactive ExpressibleByStringLiteral {
+
+    @inlinable
+    public init(stringLiteral value: Swift::String) {
+        do throws(Path.Error) {
+            try self.init(value)
+        } catch {
+            fatalError("Invalid path literal: \(value) (\(error))")
+        }
+    }
+}
+
+extension Path.`Protocol` where Self: ~Copyable {
+
     /// Whether the path begins at the root.
     @inlinable
     public var isAbsolute: Bool {
