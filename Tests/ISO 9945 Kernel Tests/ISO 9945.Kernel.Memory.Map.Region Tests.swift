@@ -17,7 +17,7 @@ extension Memory.Map.Region {
 extension Memory.Map.Region.Test.Unit {
     @Test
     func `Region stores base address`() throws {
-        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
+        let pageSize = Memory.Address.Count(Memory.Page.size.underlying.rawValue)
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -26,7 +26,7 @@ extension Memory.Map.Region.Test.Unit {
 
     @Test
     func `Region stores length`() throws {
-        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
+        let pageSize = Memory.Address.Count(Memory.Page.size.underlying.rawValue)
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 
@@ -35,7 +35,7 @@ extension Memory.Map.Region.Test.Unit {
 
     @Test
     func `Region init sets values correctly`() throws {
-        let pageSize = Memory.Address.Count((try #require(UInt(exactly: System.pageSize))))
+        let pageSize = Memory.Address.Count(Memory.Page.size.underlying.rawValue)
         let region = try Memory.Map.Anonymous.map(length: pageSize)
         defer { try? Memory.Map.unmap(region) }
 

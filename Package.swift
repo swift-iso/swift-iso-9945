@@ -184,10 +184,6 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-system.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/swift-atoms/swift-memory.git",
             branch: "main",
             traits: ["Lock", "Map", "Shared", "Cursor"]
@@ -276,7 +272,6 @@ let package = Package(
                 .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "ASCII", package: "swift-ascii"),
-                .product(name: "System Primitives", package: "swift-system"),
             ]
         ),
 
@@ -432,7 +427,7 @@ let package = Package(
             name: "ISO 9945 Kernel System",
             dependencies: [
                 .target(name: "ISO 9945 Core"),
-                .product(name: "System Primitives", package: "swift-system"),
+                .product(name: "CPU", package: "swift-cpu"),
                 .product(name: "Random", package: "swift-random"),
                 .product(name: "Cardinal", package: "swift-cardinal"),
                 .product(name: "Memory", package: "swift-memory"),
@@ -543,7 +538,6 @@ let package = Package(
                 .product(name: "Loader Vocabulary", package: "swift-loader-vocabulary"),
                 .product(name: "Error", package: "swift-error"),
                 .product(name: "Path", package: "swift-path"),
-                .product(name: "System Primitives", package: "swift-system"),
                 .product(name: "Tagged", package: "swift-tagged"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(name: "Time", package: "swift-time"),

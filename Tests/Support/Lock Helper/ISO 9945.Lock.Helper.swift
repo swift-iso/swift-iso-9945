@@ -37,7 +37,7 @@
 
                     print("LOCKED")
 
-                    _ = System.nanosleep(.milliseconds(milliseconds))
+                    _ = ISO_9945.Kernel.Thread.sleep(.milliseconds(milliseconds))
                 }
 
                 print("RELEASED")
