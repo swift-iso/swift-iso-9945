@@ -17,6 +17,15 @@ struct Path_POSIX_Tests {
     }
 
     @Test
+    func `an interpolated literal spells a path and a component`() {
+        let name = "local"
+        let path: Path = "/usr/\(name)/bin"
+        let component: Path.Component = "\(name).txt"
+        #expect(path == "/usr/local/bin")
+        #expect(component == "local.txt")
+    }
+
+    @Test
     func `parent climbs to the root, then stops`() {
         let path: Path = "/usr/local/bin"
         #expect(path.parent == "/usr/local")

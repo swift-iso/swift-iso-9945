@@ -25,6 +25,9 @@ extension Path: @retroactive ExpressibleByStringLiteral {
     }
 }
 
+/// Interpolated text is a path by the same rule as a plain literal.
+extension Path: @retroactive ExpressibleByStringInterpolation {}
+
 extension Path.`Protocol` where Self: ~Copyable {
 
     /// Whether the path begins at the root.
