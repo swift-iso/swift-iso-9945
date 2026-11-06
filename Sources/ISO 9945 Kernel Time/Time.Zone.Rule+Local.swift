@@ -17,13 +17,13 @@ extension Time.Zone.Rule {
         tzset()
         var seconds = time_t(instant.secondsSinceUnixEpoch)
         #if canImport(Darwin)
-            var broken = Darwin.tm()
+            var broken = unsafe Darwin.tm()
         #elseif canImport(Musl)
-            var broken = Musl.tm()
+            var broken = unsafe Musl.tm()
         #elseif canImport(Glibc)
-            var broken = Glibc.tm()
+            var broken = unsafe Glibc.tm()
         #endif
         guard unsafe localtime_r(&seconds, &broken) != nil else { return .utc }
-        return .seconds(Int(broken.tm_gmtoff))
+        return .seconds(Int(unsafe broken.tm_gmtoff))
     }
 }

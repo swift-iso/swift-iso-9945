@@ -34,7 +34,7 @@ extension ISO_9945.Kernel.IO.Vector {
         }
         let iovecs = unsafe buffers.map { unsafe $0.cValue }
         let result = iovecs.withUnsafeBufferPointer { buf in
-            guard let base = unsafe buf.baseAddress else {
+            guard let base = buf.baseAddress else {
                 preconditionFailure("iovec array is non-empty")
             }
             return unsafe readv(fd, base, Int32(buf.count))
@@ -61,7 +61,7 @@ extension ISO_9945.Kernel.IO.Vector {
         }
         let iovecs = unsafe buffers.map { unsafe $0.cValue }
         let result = iovecs.withUnsafeBufferPointer { buf in
-            guard let base = unsafe buf.baseAddress else {
+            guard let base = buf.baseAddress else {
                 preconditionFailure("iovec array is non-empty")
             }
             return unsafe writev(fd, base, Int32(buf.count))

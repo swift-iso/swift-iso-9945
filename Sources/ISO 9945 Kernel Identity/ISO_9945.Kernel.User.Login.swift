@@ -20,7 +20,7 @@ extension ISO_9945.Kernel.User.Login {
         while true {
             var buffer = [CChar](repeating: 0, count: bufferSize)
             let rc = buffer.withUnsafeMutableBufferPointer { bufferPtr in
-                guard let base = unsafe bufferPtr.baseAddress else {
+                guard let base = bufferPtr.baseAddress else {
                     preconditionFailure("login buffer is non-empty")
                 }
                 return unsafe getlogin_r(base, numericCast(bufferPtr.count))
@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.User.Login {
 
             if rc == 0 {
                 return buffer.withUnsafeBufferPointer { bufferPtr in
-                    guard let base = unsafe bufferPtr.baseAddress else {
+                    guard let base = bufferPtr.baseAddress else {
                         preconditionFailure("login buffer is non-empty")
                     }
                     return unsafe String(cString: base)

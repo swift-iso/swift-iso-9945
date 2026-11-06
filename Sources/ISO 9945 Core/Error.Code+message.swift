@@ -16,7 +16,7 @@ extension Error::Error.Code {
             let result = unsafe strerror_r(rawValue, &buffer, buffer.count)
             guard result == 0 else { return nil }
             return buffer.withUnsafeBufferPointer { (pointer: UnsafeBufferPointer<CChar>) -> Swift::String in
-                guard let base = unsafe pointer.baseAddress else {
+                guard let base = pointer.baseAddress else {
                     preconditionFailure("A non-empty buffer has a base address")
                 }
                 return unsafe Swift::String(cString: base)
