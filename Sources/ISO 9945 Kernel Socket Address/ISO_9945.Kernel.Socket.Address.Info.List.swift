@@ -28,6 +28,8 @@ extension ISO_9945.Kernel.Socket.Address.Info {
 extension ISO_9945.Kernel.Socket.Address.Info.List {
 
     public static func get(
+        // swift-linter:disable:next raw concept
+        // REASON: getaddrinfo's node text, a host name or numeric address handed to the C call; RFC_3986.URI.Host is a URI component, and swift-rfc-3986 would bring about a hundred packages into this kernel layer.
         host: String,
         service: String? = nil,
         hints: ISO_9945.Kernel.Socket.Address.Info.Hints = .init()

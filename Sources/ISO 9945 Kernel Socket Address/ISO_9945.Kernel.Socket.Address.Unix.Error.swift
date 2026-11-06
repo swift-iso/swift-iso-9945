@@ -21,6 +21,8 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
         MemoryLayout<sockaddr_un>.size - pathOffset
     }
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's sun_path text, capacity-limited bytes rather than a file; looked at Path, which refuses the empty text an unnamed socket has.
     public init(path: Swift::String) throws(Error) {
         let bytes = Array(path.utf8)
         guard bytes.count + 1 <= Self.pathCapacity else {
@@ -38,6 +40,8 @@ extension ISO_9945.Kernel.Socket.Address.Unix {
         #endif
     }
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's sun_path text, read back from the kernel and empty for an unnamed socket; looked at Path, which refuses empty text.
     public var path: Swift::String {
         withUnsafeBytes(of: cValue.sun_path) { bytes in
             var length = 0
