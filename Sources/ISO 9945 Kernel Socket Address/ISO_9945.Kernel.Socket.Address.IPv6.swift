@@ -11,6 +11,8 @@ extension ISO_9945.Kernel.Socket.Address {
     public struct IPv6: Sendable {
         internal var cValue: sockaddr_in6
 
+        // swift-linter:disable:next raw concept
+        // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
         public init(port: UInt16 = 0) {
             self.cValue = sockaddr_in6()
             self.cValue.sin6_family = sa_family_t(AF_INET6)
@@ -26,6 +28,8 @@ extension ISO_9945.Kernel.Socket.Address {
                 UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
                 UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8
             ),
+            // swift-linter:disable:next raw concept
+            // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
             port: UInt16 = 0,
             flowInfo: UInt32 = 0,
             scopeId: UInt32 = 0
@@ -52,6 +56,8 @@ extension ISO_9945.Kernel.Socket.Address {
                 UInt16, UInt16, UInt16, UInt16,
                 UInt16, UInt16, UInt16, UInt16
             ),
+            // swift-linter:disable:next raw concept
+            // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
             port: UInt16 = 0,
             flowInfo: UInt32 = 0,
             scopeId: UInt32 = 0
@@ -89,6 +95,8 @@ extension ISO_9945.Kernel.Socket.Address.IPv6 {
         .inet6
     }
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
     public var port: UInt16 {
         get { UInt16(bigEndian: cValue.sin6_port) }
         set { cValue.sin6_port = newValue.bigEndian }
@@ -130,10 +138,14 @@ extension ISO_9945.Kernel.Socket.Address.IPv6 {
 
 extension ISO_9945.Kernel.Socket.Address.IPv6 {
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
     public static func any(port: UInt16) -> Self {
         Self(port: port)
     }
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
     public static func loopback(port: UInt16) -> Self {
         var addr = Self(port: port)
         addr.cValue.sin6_addr = in6addr_loopback

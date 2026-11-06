@@ -13,21 +13,6 @@ extension Path.`Protocol` where Self: ~Copyable {
     }
 }
 
-extension Path: @retroactive ExpressibleByStringLiteral {
-
-    @inlinable
-    public init(stringLiteral value: Swift::String) {
-        do throws(Path.Error) {
-            try self.init(value)
-        } catch {
-            fatalError("Invalid path literal: \(value) (\(error))")
-        }
-    }
-}
-
-/// Interpolated text is a path by the same rule as a plain literal.
-extension Path: @retroactive ExpressibleByStringInterpolation {}
-
 extension Path.`Protocol` where Self: ~Copyable {
 
     /// Whether the path begins at the root.

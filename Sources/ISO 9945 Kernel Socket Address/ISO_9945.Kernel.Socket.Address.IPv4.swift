@@ -11,6 +11,8 @@ extension ISO_9945.Kernel.Socket.Address {
     public struct IPv4: Sendable, Equatable {
         internal var cValue: sockaddr_in
 
+        // swift-linter:disable:next raw concept
+        // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
         public init(address: UInt32 = 0, port: UInt16 = 0) {
             self.cValue = sockaddr_in()
             self.cValue.sin_family = sa_family_t(AF_INET)
@@ -30,6 +32,8 @@ extension ISO_9945.Kernel.Socket.Address.IPv4 {
         .inet
     }
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
     public var port: UInt16 {
         get { UInt16(bigEndian: cValue.sin_port) }
         set { cValue.sin_port = newValue.bigEndian }
@@ -47,10 +51,14 @@ extension ISO_9945.Kernel.Socket.Address.IPv4 {
 
 extension ISO_9945.Kernel.Socket.Address.IPv4 {
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
     public static func any(port: UInt16) -> Self {
         Self(address: UInt32(INADDR_ANY).bigEndian, port: port)
     }
 
+    // swift-linter:disable:next raw concept
+    // REASON: A socket address's port as the kernel holds it, 16 bits, where 0 asks for any free port; looked at RFC_3986.URI.Port, a URI component, and swift-rfc-3986 doesn't belong under a system-call wrapper.
     public static func loopback(port: UInt16) -> Self {
         Self(address: UInt32(INADDR_LOOPBACK).bigEndian, port: port)
     }
