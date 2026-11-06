@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.File.Open.Mode {
+enum `ISO_9945.Kernel.File.Open.Mode Tests` {}
+
+extension `ISO_9945.Kernel.File.Open.Mode Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.File.Open.Mode {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Mode Tests`.Test.Unit {
     @Test
     func `explicit init sets read/write fields`() {
         let mode = ISO_9945.Kernel.File.Open.Mode(read: true, write: false)
@@ -44,7 +46,7 @@ extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Mode Tests`.Test.Unit {
     @Test
     func `Mode is Sendable`() {
         let mode: any Sendable = ISO_9945.Kernel.File.Open.Mode.read
@@ -70,7 +72,7 @@ extension ISO_9945.Kernel.File.Open.Mode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Mode.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Open.Mode Tests`.Test.`Edge Case` {
     @Test
     func `.read and .write are distinct modes`() {
         #expect(ISO_9945.Kernel.File.Open.Mode.read != ISO_9945.Kernel.File.Open.Mode.write)

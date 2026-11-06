@@ -5,14 +5,16 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Name {
+enum `ISO_9945.Kernel.Name Tests` {}
+
+extension `ISO_9945.Kernel.Name Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension ISO_9945.Kernel.Name.Test.Unit {
+extension `ISO_9945.Kernel.Name Tests`.Test.Unit {
     @Test
     func `current names the running system`() throws {
         let name = try #require(ISO_9945.Kernel.Name.current)

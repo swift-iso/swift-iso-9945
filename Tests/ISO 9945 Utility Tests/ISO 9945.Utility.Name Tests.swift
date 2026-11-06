@@ -2,7 +2,9 @@ import ISO_9945_Core
 import ISO_9945_Utility
 import Testing
 
-extension ISO_9945.Utility.Name {
+enum `ISO_9945.Utility.Name Tests` {}
+
+extension `ISO_9945.Utility.Name Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Utility.Name {
     }
 }
 
-extension ISO_9945.Utility.Name.Test.Unit {
+extension `ISO_9945.Utility.Name Tests`.Test.Unit {
 
     @Test
     func `a utility name of lowercase letters and digits is accepted`() throws {
@@ -28,7 +30,7 @@ extension ISO_9945.Utility.Name.Test.Unit {
     }
 }
 
-extension ISO_9945.Utility.Name.Test.`Edge Case` {
+extension `ISO_9945.Utility.Name Tests`.Test.`Edge Case` {
 
     @Test
     func `a one character utility name violates the length guideline`() {

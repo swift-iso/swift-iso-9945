@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Inode {
+enum `ISO_9945.Kernel.Inode Tests` {}
+
+extension `ISO_9945.Kernel.Inode Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Inode {
     }
 }
 
-extension ISO_9945.Kernel.Inode.Test.Unit {
+extension `ISO_9945.Kernel.Inode Tests`.Test.Unit {
 
     @Test
     func `Inode from rawValue`() {
@@ -25,7 +27,7 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Inode.Test.Unit {
+extension `ISO_9945.Kernel.Inode Tests`.Test.Unit {
     @Test
     func `Inode from integer literal`() {
         let inode: ISO_9945.Kernel.Inode = 42
@@ -33,7 +35,7 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Inode.Test.Unit {
+extension `ISO_9945.Kernel.Inode Tests`.Test.Unit {
     @Test
     func `Inode is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Inode(0)
@@ -59,7 +61,7 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Inode.Test.Unit {
+extension `ISO_9945.Kernel.Inode Tests`.Test.Unit {
     @Test
     func `Inode description shows raw value`() {
         let inode = ISO_9945.Kernel.Inode(12345)
@@ -67,7 +69,7 @@ extension ISO_9945.Kernel.Inode.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Inode.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Inode Tests`.Test.`Edge Case` {
     @Test
     func `Inode zero`() {
         let inode = ISO_9945.Kernel.Inode(0)

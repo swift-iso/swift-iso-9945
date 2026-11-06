@@ -3,7 +3,9 @@ import ISO_9945_Kernel_Test_Support
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Lock.Range {
+enum `ISO_9945.Kernel.Lock.Range Tests` {}
+
+extension `ISO_9945.Kernel.Lock.Range Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Kernel.Lock.Range {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Range.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Range Tests`.Test.Unit {
     @Test
     func `file case exists`() {
         let range = ISO_9945.Kernel.Lock.Range.file
@@ -49,7 +51,7 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Range.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Range Tests`.Test.Unit {
     @Test
     func `Range is Sendable`() {
         let range: any Sendable = ISO_9945.Kernel.Lock.Range.file
@@ -76,7 +78,7 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Range.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Range Tests`.Test.Unit {
     @Test
     func `bytes ranges with same values are equal`() {
         let a = ISO_9945.Kernel.Lock.Range.bytes(start: 100, end: 200)
@@ -109,7 +111,7 @@ extension ISO_9945.Kernel.Lock.Range.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Range.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Lock.Range Tests`.Test.`Edge Case` {
     @Test
     func `file and bytes are distinct`() {
         let file = ISO_9945.Kernel.Lock.Range.file

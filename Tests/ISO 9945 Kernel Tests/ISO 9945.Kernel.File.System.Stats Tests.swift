@@ -3,7 +3,9 @@ import ISO_9945_Kernel_Test_Support
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.System.Stats {
+enum `ISO_9945.Kernel.File.System.Stats Tests` {}
+
+extension `ISO_9945.Kernel.File.System.Stats Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Kernel.File.System.Stats {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Stats Tests`.Test.Unit {
     @Test
     func `Statfs memberwise init`() {
         let fs = ISO_9945.Kernel.File.System.Stats(
@@ -133,7 +135,7 @@ extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Stats Tests`.Test.Unit {
     @Test
     func `availableBlocks <= freeBlocks (typical)`() {
 

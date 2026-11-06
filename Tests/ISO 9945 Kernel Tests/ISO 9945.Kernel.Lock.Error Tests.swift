@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Lock.Error {
+enum `ISO_9945.Kernel.Lock.Error Tests` {}
+
+extension `ISO_9945.Kernel.Lock.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Lock.Error {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Error.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Error Tests`.Test.Unit {
     @Test
     func `contention case exists`() {
         let error = ISO_9945.Kernel.Lock.Error.contention
@@ -42,7 +44,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Error.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Error Tests`.Test.Unit {
     @Test
     func `timedOut is distinct from contention`() {
         #expect(ISO_9945.Kernel.Lock.Error.timedOut != ISO_9945.Kernel.Lock.Error.contention)
@@ -54,7 +56,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Error.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Error Tests`.Test.Unit {
     @Test
     func `contention description`() {
         let error = ISO_9945.Kernel.Lock.Error.contention
@@ -74,7 +76,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Error.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.Lock.Error.contention
@@ -113,7 +115,7 @@ extension ISO_9945.Kernel.Lock.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Lock.Error Tests`.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.Lock.Error] = [

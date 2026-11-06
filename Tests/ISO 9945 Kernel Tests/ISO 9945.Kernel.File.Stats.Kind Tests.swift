@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Stats.Kind {
+enum `ISO_9945.Kernel.File.Stats.Kind Tests` {}
+
+extension `ISO_9945.Kernel.File.Stats.Kind Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.File.Stats.Kind {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Kind Tests`.Test.Unit {
     @Test
     func `regular case exists`() {
         let kind = ISO_9945.Kernel.File.Stats.Kind.regular
@@ -82,7 +84,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Kind Tests`.Test.Unit {
     @Test
     func `Kind is Sendable`() {
         let kind: any Sendable = ISO_9945.Kernel.File.Stats.Kind.regular
@@ -108,7 +110,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Stats.Kind Tests`.Test.`Edge Case` {
     @Test
     func `all simple cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Stats.Kind] = [

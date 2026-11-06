@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Socket.Error {
+enum `ISO_9945.Kernel.Socket.Error Tests` {}
+
+extension `ISO_9945.Kernel.Socket.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Socket.Error {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Error.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Error Tests`.Test.Unit {
 
     @Test
     func `platform case exists`() {
@@ -24,7 +26,7 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Error.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.Socket.Error.platform(
@@ -51,7 +53,7 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Error.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Error Tests`.Test.Unit {
     @Test
     func `platform error description`() {
         let platformError = Error::Error(code: .posix(42))
@@ -60,7 +62,7 @@ extension ISO_9945.Kernel.Socket.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Socket.Error Tests`.Test.`Edge Case` {
     @Test
     func `Same case with different values are not equal`() {
         let a = ISO_9945.Kernel.Socket.Error.platform(Error::Error(code: .posix(1)))

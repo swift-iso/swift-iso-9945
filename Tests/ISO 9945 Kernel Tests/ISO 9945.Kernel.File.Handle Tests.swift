@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.File.Handle {
+enum `ISO_9945.Kernel.File.Handle Tests` {}
+
+extension `ISO_9945.Kernel.File.Handle Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -21,7 +23,7 @@ private func cleanup(path: Swift::String) {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Test.Unit {
+extension `ISO_9945.Kernel.File.Handle Tests`.Test.Unit {
     @Test
     func `init stores descriptor`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "handle-test")

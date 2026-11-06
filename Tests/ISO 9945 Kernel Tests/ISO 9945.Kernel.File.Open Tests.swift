@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.File.Open {
+enum `ISO_9945.Kernel.File.Open Tests` {}
+
+extension `ISO_9945.Kernel.File.Open Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.File.Open {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Test.Unit {
+extension `ISO_9945.Kernel.File.Open Tests`.Test.Unit {
     @Test
     func `Options is OptionSet`() {
         let options: ISO_9945.Kernel.File.Open.Options = [.create, .truncate]
@@ -58,7 +60,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Open Tests`.Test.`Edge Case` {
     @Test
     func `empty options has zero raw value`() {
         let empty = ISO_9945.Kernel.File.Open.Options()
@@ -74,7 +76,7 @@ extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Test.Unit {
+extension `ISO_9945.Kernel.File.Open Tests`.Test.Unit {
     @Test
     func `open existing file for read succeeds`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "open-test")
@@ -206,7 +208,7 @@ extension ISO_9945.Kernel.File.Open.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Open Tests`.Test.`Edge Case` {
     @Test
     func `open nonexistent file without create throws`() throws {
         _ = try Path.scope("/nonexistent/path/to/file") { path in

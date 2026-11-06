@@ -5,7 +5,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Process.Status {
+enum `ISO_9945.Kernel.Process.Status Tests` {}
+
+extension `ISO_9945.Kernel.Process.Status Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Process.Status {
     }
 }
 
-extension ISO_9945.Kernel.Process.Status.Test.Unit {
+extension `ISO_9945.Kernel.Process.Status Tests`.Test.Unit {
     @Test
     func `status is RawRepresentable`() {
         let status = ISO_9945.Kernel.Process.Status(rawValue: 0)
@@ -48,7 +50,7 @@ extension ISO_9945.Kernel.Process.Status.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Process.Status.Test.Unit {
+extension `ISO_9945.Kernel.Process.Status Tests`.Test.Unit {
     @Test
     func `Classification cases are distinct`() {
         let signal = ISO_9945.Kernel.Signal.Number(rawValue: 9)

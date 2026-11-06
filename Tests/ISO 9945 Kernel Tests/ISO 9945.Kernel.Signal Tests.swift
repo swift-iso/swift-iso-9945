@@ -5,7 +5,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Signal {
+enum `ISO_9945.Kernel.Signal Tests` {}
+
+extension `ISO_9945.Kernel.Signal Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Signal {
     }
 }
 
-extension ISO_9945.Kernel.Signal.Test.Unit {
+extension `ISO_9945.Kernel.Signal Tests`.Test.Unit {
     #if canImport(Darwin) || canImport(Glibc) || canImport(Musl)
 
     #endif

@@ -3,7 +3,9 @@ import ISO_9945_Loader
 import Loader_Vocabulary
 import Testing
 
-extension ISO_9945.Loader.Library {
+enum `ISO_9945.Loader.Library Tests` {}
+
+extension `ISO_9945.Loader.Library Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Loader.Library {
     }
 }
 
-extension ISO_9945.Loader.Library.Test.Unit {
+extension `ISO_9945.Loader.Library Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 dlopen with a null file returns a handle to the global symbol object`() throws {
         let handle = try unsafe ISO_9945.Loader.Library.open(path: nil, options: .now)
@@ -25,7 +27,7 @@ extension ISO_9945.Loader.Library.Test.Unit {
     }
 }
 
-extension ISO_9945.Loader.Library.Test.`Edge Case` {
+extension `ISO_9945.Loader.Library Tests`.Test.`Edge Case` {
     @Test
     func `POSIX.1-2024 dlopen of a nonexistent file fails`() {
         #expect(throws: ISO_9945.Loader.Error.self) {

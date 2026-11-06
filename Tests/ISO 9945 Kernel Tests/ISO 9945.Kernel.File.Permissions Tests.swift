@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Permissions {
+enum `ISO_9945.Kernel.File.Permissions Tests` {}
+
+extension `ISO_9945.Kernel.File.Permissions Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.File.Permissions {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `Permissions from rawValue`() {
         let perms = ISO_9945.Kernel.File.Permissions(rawValue: 0o644)
@@ -24,7 +26,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `ownerRead constant`() {
         #expect(ISO_9945.Kernel.File.Permissions.ownerRead.rawValue == 0o400)
@@ -51,7 +53,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `groupRead constant`() {
         #expect(ISO_9945.Kernel.File.Permissions.groupRead.rawValue == 0o040)
@@ -78,7 +80,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `otherRead constant`() {
         #expect(ISO_9945.Kernel.File.Permissions.otherRead.rawValue == 0o004)
@@ -105,7 +107,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `none constant`() {
         #expect(ISO_9945.Kernel.File.Permissions.none.rawValue == 0o000)
@@ -142,7 +144,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `OR operator combines permissions`() {
         let combined = ISO_9945.Kernel.File.Permissions.ownerRead | .ownerWrite
@@ -169,7 +171,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `description for standard (rw-r--r--)`() {
         #expect(ISO_9945.Kernel.File.Permissions.standard.description == "rw-r--r--")
@@ -192,7 +194,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.Unit {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.Unit {
     @Test
     func `Permissions is Sendable`() {
         let perms: any Sendable = ISO_9945.Kernel.File.Permissions.standard
@@ -218,7 +220,7 @@ extension ISO_9945.Kernel.File.Permissions.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Permissions.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Permissions Tests`.Test.`Edge Case` {
     @Test
     func `combining all individual permissions equals 0o777`() {
         let all =

@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Stats.Error {
+enum `ISO_9945.Kernel.File.Stats.Error Tests` {}
+
+extension `ISO_9945.Kernel.File.Stats.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.File.Stats.Error {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Error Tests`.Test.Unit {
     @Test
     func `handle case stores Descriptor.Validity.Error`() {
         let handleError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
@@ -35,7 +37,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Error Tests`.Test.Unit {
     @Test
     func `handle description format`() {
         let error = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
@@ -44,7 +46,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
 
 }
 
-extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.File.Stats.Error.handle(.invalid)
@@ -67,7 +69,7 @@ extension ISO_9945.Kernel.File.Stats.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Stats.Error Tests`.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Stats.Error] = [

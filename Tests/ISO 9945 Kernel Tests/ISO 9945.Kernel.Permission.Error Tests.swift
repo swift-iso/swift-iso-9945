@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Permission.Error {
+enum `ISO_9945.Kernel.Permission.Error Tests` {}
+
+extension `ISO_9945.Kernel.Permission.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Permission.Error {
     }
 }
 
-extension ISO_9945.Kernel.Permission.Error.Test.Unit {
+extension `ISO_9945.Kernel.Permission.Error Tests`.Test.Unit {
     @Test
     func `denied case exists`() {
         let error = ISO_9945.Kernel.Permission.Error.denied
@@ -111,7 +113,7 @@ extension ISO_9945.Kernel.Permission.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Permission.Error.Test.Unit {
+extension `ISO_9945.Kernel.Permission.Error Tests`.Test.Unit {
     @Test
     func `CustomStringConvertible works for all cases`() {
         let cases: [ISO_9945.Kernel.Permission.Error] = [

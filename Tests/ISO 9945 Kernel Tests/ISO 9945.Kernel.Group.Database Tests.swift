@@ -1,7 +1,9 @@
 import ISO_9945_Kernel
 import Testing
 
-extension ISO_9945.Kernel.Group.Database {
+enum `ISO_9945.Kernel.Group.Database Tests` {}
+
+extension `ISO_9945.Kernel.Group.Database Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -9,7 +11,7 @@ extension ISO_9945.Kernel.Group.Database {
     }
 }
 
-extension ISO_9945.Kernel.Group.Database.Test.Unit {
+extension `ISO_9945.Kernel.Group.Database Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 getgrgid finds the group database entry for group ID 0`() throws {
         let entry = try #require(try ISO_9945.Kernel.Group.Database.find(gid: 0))
@@ -25,7 +27,7 @@ extension ISO_9945.Kernel.Group.Database.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Group.Database.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Group.Database Tests`.Test.`Edge Case` {
     @Test
     func `POSIX.1-2024 getgrnam returns no entry for an unknown name`() throws {
         #expect(try ISO_9945.Kernel.Group.Database.find(name: "iso-9945-no-such-group") == nil)

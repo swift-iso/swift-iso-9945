@@ -11,7 +11,9 @@ import Testing
     import Glibc
 #endif
 
-extension ISO_9945.Kernel.Process.Error {
+enum `ISO_9945.Kernel.Process.Error Tests` {}
+
+extension `ISO_9945.Kernel.Process.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -20,7 +22,7 @@ extension ISO_9945.Kernel.Process.Error {
     }
 }
 
-extension ISO_9945.Kernel.Process.Error.Test.Unit {
+extension `ISO_9945.Kernel.Process.Error Tests`.Test.Unit {
     @Test
     func `error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.Process.Error.fork(.posix(1))
@@ -91,7 +93,7 @@ extension ISO_9945.Kernel.Process.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Process.Error.Test.Unit {
+extension `ISO_9945.Kernel.Process.Error Tests`.Test.Unit {
     @Test
     func `semantic classification works`() {
         let resourceLimit = ISO_9945.Kernel.Process.Error.fork(.posix(EAGAIN))

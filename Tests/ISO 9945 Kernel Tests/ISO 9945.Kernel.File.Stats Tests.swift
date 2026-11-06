@@ -3,7 +3,9 @@ import ISO_9945_Kernel_Test_Support
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Stats {
+enum `ISO_9945.Kernel.File.Stats Tests` {}
+
+extension `ISO_9945.Kernel.File.Stats Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Kernel.File.Stats {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats Tests`.Test.Unit {
     @Test
     func `Stat stores all fields`() {
         let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 1000)
@@ -92,7 +94,7 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats Tests`.Test.Unit {
     @Test
     func `Kind cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Stats.Kind] = [
@@ -143,7 +145,7 @@ extension ISO_9945.Kernel.File.Stats.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Stats Tests`.Test.`Edge Case` {
     @Test
     func `zero size file`() {
         let time = ISO_9945.Kernel.Time(secondsSinceUnixEpoch: 0)

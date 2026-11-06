@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.IO.Read {
+enum `ISO_9945.Kernel.IO.Read Tests` {}
+
+extension `ISO_9945.Kernel.IO.Read Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.IO.Read {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Test.Unit {
+extension `ISO_9945.Kernel.IO.Read Tests`.Test.Unit {
     @Test
     func `OutputSpan overload has the synchronous typed signature`() {
         let read:
@@ -146,7 +148,7 @@ extension ISO_9945.Kernel.IO.Read.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Test.`Edge Case` {
+extension `ISO_9945.Kernel.IO.Read Tests`.Test.`Edge Case` {
     @Test
     func `read throws on invalid descriptor`() {
         var buffer = [UInt8](repeating: 0, count: 10)

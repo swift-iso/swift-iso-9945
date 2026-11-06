@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.IO.Blocking.Error {
+enum `ISO_9945.Kernel.IO.Blocking.Error Tests` {}
+
+extension `ISO_9945.Kernel.IO.Blocking.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error {
     }
 }
 
-extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Blocking.Error Tests`.Test.Unit {
     @Test
     func `wouldBlock case exists`() {
         let error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Blocking.Error Tests`.Test.Unit {
     @Test
     func `wouldBlock description`() {
         let error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock
@@ -30,7 +32,7 @@ extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Blocking.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Blocking.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.IO.Blocking.Error.wouldBlock

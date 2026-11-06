@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map {
+enum `Memory.Map Tests` {}
+
+extension `Memory.Map Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map {
     }
 }
 
-extension Memory.Map.Test.Unit {
+extension `Memory.Map Tests`.Test.Unit {
     @Test
     func `anonymous map succeeds`() throws {
         let pageSize = Memory.Address.Count(Memory.Page.size.underlying.rawValue)
@@ -128,7 +130,7 @@ extension Memory.Map.Test.Unit {
     }
 }
 
-extension Memory.Map.Test.`Edge Case` {
+extension `Memory.Map Tests`.Test.`Edge Case` {
     @Test
     func `map with zero length throws`() {
         #expect(throws: Memory.Map.Error.self) {

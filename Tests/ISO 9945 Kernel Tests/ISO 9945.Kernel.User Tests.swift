@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.User {
+enum `ISO_9945.Kernel.User Tests` {}
+
+extension `ISO_9945.Kernel.User Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.User {
     }
 }
 
-extension ISO_9945.Kernel.User.Test.Unit {
+extension `ISO_9945.Kernel.User Tests`.Test.Unit {
     @Test
     func `User.ID from UInt32`() {
         let uid: ISO_9945.Kernel.User.ID = 501
@@ -28,7 +30,7 @@ extension ISO_9945.Kernel.User.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.User.Test.Unit {
+extension `ISO_9945.Kernel.User Tests`.Test.Unit {
     @Test
     func `User.ID is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.User.ID.root
@@ -56,7 +58,7 @@ extension ISO_9945.Kernel.User.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.User.Test.`Edge Case` {
+extension `ISO_9945.Kernel.User Tests`.Test.`Edge Case` {
     @Test
     func `User.ID zero is root`() {
         let uid: ISO_9945.Kernel.User.ID = 0

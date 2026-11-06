@@ -6,7 +6,9 @@ import Testing
 
 @testable @_spi(Syscall) import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Descriptor {
+enum `ISO_9945.Kernel.Descriptor Tests` {}
+
+extension `ISO_9945.Kernel.Descriptor Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Descriptor {
     }
 }
 
-extension ISO_9945.Kernel.Descriptor.Test.Unit {
+extension `ISO_9945.Kernel.Descriptor Tests`.Test.Unit {
     @Test
     func `invalid descriptor has correct raw value on POSIX`() {
         let invalidFd = ISO_9945.Kernel.Descriptor.invalid._rawValue

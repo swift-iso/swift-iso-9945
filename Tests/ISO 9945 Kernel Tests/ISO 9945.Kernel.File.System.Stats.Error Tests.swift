@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.System.Stats.Error {
+enum `ISO_9945.Kernel.File.System.Stats.Error Tests` {}
+
+extension `ISO_9945.Kernel.File.System.Stats.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Stats.Error Tests`.Test.Unit {
     @Test
     func `path case exists`() {
         let error = ISO_9945.Kernel.File.System.Stats.Error.path(.notFound)
@@ -44,7 +46,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Stats.Error Tests`.Test.Unit {
     @Test
     func `path description format`() {
         let error = ISO_9945.Kernel.File.System.Stats.Error.path(.notFound)
@@ -59,7 +61,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
 
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Stats.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.File.System.Stats.Error.handle(.invalid)
@@ -90,7 +92,7 @@ extension ISO_9945.Kernel.File.System.Stats.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Stats.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.System.Stats.Error Tests`.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let code = Error::Error.Code.posix(999)

@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.IO.Write {
+enum `ISO_9945.Kernel.IO.Write Tests` {}
+
+extension `ISO_9945.Kernel.IO.Write Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.IO.Write {
     }
 }
 
-extension ISO_9945.Kernel.IO.Write.Test.Unit {
+extension `ISO_9945.Kernel.IO.Write Tests`.Test.Unit {
     @Test
     func `write writes bytes to file`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "write-test")
@@ -148,7 +150,7 @@ extension ISO_9945.Kernel.IO.Write.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Write.Test.`Edge Case` {
+extension `ISO_9945.Kernel.IO.Write Tests`.Test.`Edge Case` {
     @Test
     func `write throws on invalid descriptor`() {
         let content = Array("test".utf8)

@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Stats.Kind.Device {
+enum `ISO_9945.Kernel.File.Stats.Kind.Device Tests` {}
+
+extension `ISO_9945.Kernel.File.Stats.Kind.Device Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Kind.Device Tests`.Test.Unit {
     @Test
     func `block case exists`() {
         let device = ISO_9945.Kernel.File.Stats.Kind.Device.block
@@ -32,7 +34,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Kind.Device Tests`.Test.Unit {
     @Test
     func `Device is Sendable`() {
         let device: any Sendable = ISO_9945.Kernel.File.Stats.Kind.Device.block
@@ -58,7 +60,7 @@ extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Device.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Stats.Kind.Device Tests`.Test.`Edge Case` {
     @Test
     func `block and character are distinct`() {
         let block = ISO_9945.Kernel.File.Stats.Kind.Device.block

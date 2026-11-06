@@ -2,14 +2,16 @@ import ISO_9945_Kernel
 import ISO_9945_Kernel_Test_Support
 import Testing
 
-extension KernelThreadTest {
+enum `KernelThreadTest Tests` {}
+
+extension `KernelThreadTest Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension KernelThreadTest.Test.Unit {
+extension `KernelThreadTest Tests`.Test.Unit {
     @Test
     func `Harness wait throws Timeout when the predicate never holds within the limit`() {
         let harness = KernelThreadTest.Harness<Int>(0, limit: .milliseconds(50))

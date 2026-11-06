@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Socket {
+enum `ISO_9945.Kernel.Socket Tests` {}
+
+extension `ISO_9945.Kernel.Socket Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,6 +12,6 @@ extension ISO_9945.Kernel.Socket {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Test.Unit {
+extension `ISO_9945.Kernel.Socket Tests`.Test.Unit {
 
 }

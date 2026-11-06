@@ -7,7 +7,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Terminal.Stream.Read {
+enum `Terminal.Stream.Read Tests` {}
+
+extension `Terminal.Stream.Read Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -16,7 +18,7 @@ extension Terminal.Stream.Read {
     }
 }
 
-extension Terminal.Stream.Read.Test.Integration {
+extension `Terminal.Stream.Read Tests`.Test.Integration {
 
     @Test
     func `Read returns 0 on EOF when write end closed`() throws {

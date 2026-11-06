@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Environment {
+enum `ISO_9945.Kernel.Environment Tests` {}
+
+extension `ISO_9945.Kernel.Environment Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Environment {
     }
 }
 
-extension ISO_9945.Kernel.Environment.Test.Unit {
+extension `ISO_9945.Kernel.Environment Tests`.Test.Unit {
     @Test
     func `get returns nil for unset variable`() {
         let result = unsafe ISO_9945.Kernel.Environment.get("__KERNEL_TEST_UNSET_VAR_12345__")
@@ -33,7 +35,7 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Environment.Test.Unit {
+extension `ISO_9945.Kernel.Environment Tests`.Test.Unit {
     @Test
     func `set then get roundtrips and unset removes`() throws {
         let name = "__ISO9945_ENV_SET_TEST__"
@@ -73,7 +75,7 @@ extension ISO_9945.Kernel.Environment.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Environment.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Environment Tests`.Test.`Edge Case` {
     @Test
     func `set with empty name throws emptyName`() {
         #expect(throws: ISO_9945.Kernel.Environment.Error.invalid(.emptyName)) {
@@ -96,7 +98,7 @@ extension ISO_9945.Kernel.Environment.Test.`Edge Case` {
     }
 }
 
-extension ISO_9945.Kernel.Environment.Test.Unit {
+extension `ISO_9945.Kernel.Environment Tests`.Test.Unit {
     @Test
     func `entries yields the set variable with its value`() throws {
         let name = "__ISO9945_ENV_ENTRIES_TEST__"

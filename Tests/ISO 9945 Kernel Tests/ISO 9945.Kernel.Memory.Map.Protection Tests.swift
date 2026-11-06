@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map.Protection {
+enum `Memory.Map.Protection Tests` {}
+
+extension `Memory.Map.Protection Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map.Protection {
     }
 }
 
-extension Memory.Map.Protection.Test.Unit {
+extension `Memory.Map.Protection Tests`.Test.Unit {
     @Test
     func `none has zero raw value`() {
         #expect(Memory.Map.Protection.none.rawValue == 0)

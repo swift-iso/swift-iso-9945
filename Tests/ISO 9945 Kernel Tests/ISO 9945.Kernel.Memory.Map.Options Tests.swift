@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map.Options {
+enum `Memory.Map.Options Tests` {}
+
+extension `Memory.Map.Options Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map.Options {
     }
 }
 
-extension Memory.Map.Options.Test.Unit {
+extension `Memory.Map.Options Tests`.Test.Unit {
     @Test
     func `shared and private are distinct`() {
         let shared = Memory.Map.Options.shared

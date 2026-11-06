@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.IO.Write.Error {
+enum `ISO_9945.Kernel.IO.Write.Error Tests` {}
+
+extension `ISO_9945.Kernel.IO.Write.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.IO.Write.Error {
     }
 }
 
-extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Write.Error Tests`.Test.Unit {
     @Test
     func `handle case stores Descriptor.Validity.Error`() {
         let validityError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
@@ -46,7 +48,7 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Write.Error Tests`.Test.Unit {
     @Test
     func `handle description format`() {
         let error = ISO_9945.Kernel.IO.Write.Error.handle(.invalid)
@@ -61,7 +63,7 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
 
 }
 
-extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Write.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.IO.Write.Error.handle(.invalid)
@@ -84,7 +86,7 @@ extension ISO_9945.Kernel.IO.Write.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Write.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.IO.Write.Error Tests`.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.IO.Write.Error] = [

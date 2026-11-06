@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Socket.Backlog {
+enum `ISO_9945.Kernel.Socket.Backlog Tests` {}
+
+extension `ISO_9945.Kernel.Socket.Backlog Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Socket.Backlog {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Backlog Tests`.Test.Unit {
 
     @Test
     func `Backlog from rawValue`() {
@@ -29,7 +31,7 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Backlog Tests`.Test.Unit {
     @Test
     func `Backlog.default is 128`() {
         #expect(ISO_9945.Kernel.Socket.Backlog.default.rawValue == 128)
@@ -52,7 +54,7 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Backlog Tests`.Test.Unit {
     @Test
     func `Backlog from integer literal`() {
         let backlog: ISO_9945.Kernel.Socket.Backlog = 512
@@ -60,7 +62,7 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Backlog Tests`.Test.Unit {
     @Test
     func `Backlog is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Socket.Backlog.default
@@ -86,7 +88,7 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Backlog Tests`.Test.Unit {
     @Test
     func `Backlog description shows raw value`() {
         let backlog = ISO_9945.Kernel.Socket.Backlog(100)
@@ -94,7 +96,7 @@ extension ISO_9945.Kernel.Socket.Backlog.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Backlog.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Socket.Backlog Tests`.Test.`Edge Case` {
     @Test
     func `Backlog zero`() {
         let backlog = ISO_9945.Kernel.Socket.Backlog(0)

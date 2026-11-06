@@ -14,7 +14,9 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.File.Open.Options {
+enum `ISO_9945.Kernel.File.Open.Options Tests` {}
+
+extension `ISO_9945.Kernel.File.Open.Options Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.File.Open.Options {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.Unit {
     @Test
     func `Options from rawValue`() {
         let options = ISO_9945.Kernel.File.Open.Options(rawValue: 1)
@@ -30,7 +32,7 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.Unit {
     @Test
     func `create maps to O_CREAT`() {
         #expect(ISO_9945.Kernel.File.Open.Options.create.rawValue == O_CREAT)
@@ -57,7 +59,7 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.Unit {
     @Test
     func `options can be combined`() {
         let options: ISO_9945.Kernel.File.Open.Options = [.create, .truncate]
@@ -100,7 +102,7 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.Unit {
     @Test
     func `create rawValue contains O_CREAT`() {
         let options: ISO_9945.Kernel.File.Open.Options = [.create]
@@ -147,7 +149,7 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
+extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.Unit {
     @Test
     func `Options is Sendable`() {
         let options: any Sendable = ISO_9945.Kernel.File.Open.Options.create
@@ -173,7 +175,7 @@ extension ISO_9945.Kernel.File.Open.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Open.Options.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.`Edge Case` {
     @Test
     func `all standard options are distinct`() {
         let options: [ISO_9945.Kernel.File.Open.Options] = [

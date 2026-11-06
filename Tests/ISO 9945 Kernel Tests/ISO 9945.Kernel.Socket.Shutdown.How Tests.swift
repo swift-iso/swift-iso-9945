@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Socket.Shutdown.How {
+enum `ISO_9945.Kernel.Socket.Shutdown.How Tests` {}
+
+extension `ISO_9945.Kernel.Socket.Shutdown.How Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.How {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Shutdown.How Tests`.Test.Unit {
 
     @Test
     func `read case has rawValue 0`() {
@@ -31,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Shutdown.How Tests`.Test.Unit {
     @Test
     func `How is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Socket.Shutdown.How.read
@@ -59,7 +61,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Shutdown.How Tests`.Test.Unit {
     @Test
     func `How from rawValue 0 is read`() {
         let how = ISO_9945.Kernel.Socket.Shutdown.How(rawValue: 0)
@@ -79,7 +81,7 @@ extension ISO_9945.Kernel.Socket.Shutdown.How.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Shutdown.How.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Socket.Shutdown.How Tests`.Test.`Edge Case` {
     @Test
     func `How from invalid rawValue is nil`() {
         let how = ISO_9945.Kernel.Socket.Shutdown.How(rawValue: 99)

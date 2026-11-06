@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map.Anonymous {
+enum `Memory.Map.Anonymous Tests` {}
+
+extension `Memory.Map.Anonymous Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map.Anonymous {
     }
 }
 
-extension Memory.Map.Anonymous.Test.Unit {
+extension `Memory.Map.Anonymous Tests`.Test.Unit {
     @Test
     func `map creates a valid region`() throws {
         let pageSize = Memory.Address.Count(Memory.Page.size.underlying.rawValue)

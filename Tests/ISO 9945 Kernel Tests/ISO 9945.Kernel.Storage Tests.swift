@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Storage {
+enum `ISO_9945.Kernel.Storage Tests` {}
+
+extension `ISO_9945.Kernel.Storage Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}

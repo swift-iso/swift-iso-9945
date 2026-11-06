@@ -9,14 +9,16 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.User.Real {
+enum `ISO_9945.Kernel.User.Real Tests` {}
+
+extension `ISO_9945.Kernel.User.Real Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension ISO_9945.Kernel.User.Real.Test.Unit {
+extension `ISO_9945.Kernel.User.Real Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 getuid returns the real user ID of the calling process`() {
         #expect(ISO_9945.Kernel.User.Real.id() == ISO_9945.Kernel.User.ID(getuid()))

@@ -10,7 +10,9 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.Termios.Attributes {
+enum `ISO_9945.Kernel.Termios.Attributes Tests` {}
+
+extension `ISO_9945.Kernel.Termios.Attributes Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -19,7 +21,7 @@ extension ISO_9945.Kernel.Termios.Attributes {
 }
 
 #if canImport(Darwin)
-    extension ISO_9945.Kernel.Termios.Attributes.Test {
+    extension `ISO_9945.Kernel.Termios.Attributes Tests`.Test {
         struct Terminal: ~Copyable {
             let primary: Int32
             let secondary: Int32
@@ -49,40 +51,40 @@ extension ISO_9945.Kernel.Termios.Attributes {
         }
     }
 
-    extension ISO_9945.Kernel.Termios.Attributes.Test.Unit {
+    extension `ISO_9945.Kernel.Termios.Attributes Tests`.Test.Unit {
         @Test
         func `POSIX.1-2024 tcgetattr reads the attributes of a pseudo-terminal`() throws {
-            let terminal = try ISO_9945.Kernel.Termios.Attributes.Test.Terminal()
+            let terminal = try `ISO_9945.Kernel.Termios.Attributes Tests`.Test.Terminal()
             _ = try ISO_9945.Kernel.Termios.Attributes.get(fd: terminal.secondary)
         }
 
         @Test
         func `POSIX.1-2024 tcsetattr applies raw mode so ICANON and ECHO read back cleared`() throws {
-            let terminal = try ISO_9945.Kernel.Termios.Attributes.Test.Terminal()
+            let terminal = try `ISO_9945.Kernel.Termios.Attributes Tests`.Test.Terminal()
             let original = try ISO_9945.Kernel.Termios.Attributes.get(fd: terminal.secondary)
             try ISO_9945.Kernel.Termios.Attributes.set(original.withRaw(), fd: terminal.secondary, action: .now)
             let applied = try ISO_9945.Kernel.Termios.Attributes.get(fd: terminal.secondary)
-            let flags = ISO_9945.Kernel.Termios.Attributes.Test.localFlags(applied)
+            let flags = `ISO_9945.Kernel.Termios.Attributes Tests`.Test.localFlags(applied)
             #expect(flags & tcflag_t(ICANON) == 0)
             #expect(flags & tcflag_t(ECHO) == 0)
         }
 
         @Test
         func `POSIX.1-2024 tcsetattr restores the original canonical and echo modes`() throws {
-            let terminal = try ISO_9945.Kernel.Termios.Attributes.Test.Terminal()
+            let terminal = try `ISO_9945.Kernel.Termios.Attributes Tests`.Test.Terminal()
             let original = try ISO_9945.Kernel.Termios.Attributes.get(fd: terminal.secondary)
             try ISO_9945.Kernel.Termios.Attributes.set(original.withRaw(), fd: terminal.secondary)
             try ISO_9945.Kernel.Termios.Attributes.set(original, fd: terminal.secondary, action: .drain)
             let restored = try ISO_9945.Kernel.Termios.Attributes.get(fd: terminal.secondary)
-            let expected = ISO_9945.Kernel.Termios.Attributes.Test.localFlags(original)
+            let expected = `ISO_9945.Kernel.Termios.Attributes Tests`.Test.localFlags(original)
             let mask = tcflag_t(ICANON | ECHO | ISIG | IEXTEN)
-            let restoredFlags = ISO_9945.Kernel.Termios.Attributes.Test.localFlags(restored)
+            let restoredFlags = `ISO_9945.Kernel.Termios.Attributes Tests`.Test.localFlags(restored)
             #expect(restoredFlags & mask == expected & mask)
         }
     }
 #endif
 
-extension ISO_9945.Kernel.Termios.Attributes.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Termios.Attributes Tests`.Test.`Edge Case` {
     @Test
     func `POSIX.1-2024 tcgetattr on a pipe fails with ENOTTY`() throws {
         var fds: [Int32] = [-1, -1]

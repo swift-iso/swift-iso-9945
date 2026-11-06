@@ -2,7 +2,9 @@ import ISO_9945_Core
 import ISO_9945_Utility
 import Testing
 
-extension ISO_9945.Utility.Option {
+enum `ISO_9945.Utility.Option Tests` {}
+
+extension `ISO_9945.Utility.Option Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Utility.Option {
     }
 }
 
-extension ISO_9945.Utility.Option.Test.Unit {
+extension `ISO_9945.Utility.Option Tests`.Test.Unit {
 
     @Test
     func `an option is a single alphanumeric character`() throws {
@@ -36,7 +38,7 @@ extension ISO_9945.Utility.Option.Test.Unit {
     }
 }
 
-extension ISO_9945.Utility.Option.Test.`Edge Case` {
+extension `ISO_9945.Utility.Option Tests`.Test.`Edge Case` {
 
     @Test
     func `a hyphen is not an option name`() {

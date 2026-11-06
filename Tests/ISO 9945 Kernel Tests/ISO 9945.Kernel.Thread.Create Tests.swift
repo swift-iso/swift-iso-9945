@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Thread {
+enum `ISO_9945.Kernel.Thread Tests` {}
+
+extension `ISO_9945.Kernel.Thread Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -15,7 +17,7 @@ extension ISO_9945.Kernel.Thread {
     }
 }
 
-extension ISO_9945.Kernel.Thread.Test.Unit {
+extension `ISO_9945.Kernel.Thread Tests`.Test.Unit {
     @Test
     func `create spawns thread that executes body`() throws {
         let executed = Atomic<Bool>(false)
@@ -53,7 +55,7 @@ extension ISO_9945.Kernel.Thread.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Thread.Test.Integration {
+extension `ISO_9945.Kernel.Thread Tests`.Test.Integration {
     @Test
     func `multiple threads can execute concurrently`() throws {
         let counter = Atomic<Int>(0)

@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Open.Exec {
+enum `ISO_9945.Kernel.File.Open.Exec Tests` {}
+
+extension `ISO_9945.Kernel.File.Open.Exec Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}

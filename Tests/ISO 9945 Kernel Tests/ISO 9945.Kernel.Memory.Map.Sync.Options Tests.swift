@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map.Sync.Options {
+enum `Memory.Map.Sync.Options Tests` {}
+
+extension `Memory.Map.Sync.Options Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map.Sync.Options {
     }
 }
 
-extension Memory.Map.Sync.Options.Test.Unit {
+extension `Memory.Map.Sync.Options Tests`.Test.Unit {
     @Test
     func `Options from rawValue`() {
         let flags = Memory.Map.Sync.Options(rawValue: 0)
@@ -23,7 +25,7 @@ extension Memory.Map.Sync.Options.Test.Unit {
 
 }
 
-extension Memory.Map.Sync.Options.Test.Unit {
+extension `Memory.Map.Sync.Options Tests`.Test.Unit {
     @Test
     func `bitwise OR combines flags`() {
         let sync = Memory.Map.Sync.Options.sync
@@ -34,7 +36,7 @@ extension Memory.Map.Sync.Options.Test.Unit {
     }
 }
 
-extension Memory.Map.Sync.Options.Test.Unit {
+extension `Memory.Map.Sync.Options Tests`.Test.Unit {
     @Test
     func `Options is Sendable`() {
         let flags: any Sendable = Memory.Map.Sync.Options.sync
@@ -60,7 +62,7 @@ extension Memory.Map.Sync.Options.Test.Unit {
     }
 }
 
-extension Memory.Map.Sync.Options.Test.`Edge Case` {
+extension `Memory.Map.Sync.Options Tests`.Test.`Edge Case` {
     @Test
     func `sync and async are distinct`() {
         let sync = Memory.Map.Sync.Options.sync

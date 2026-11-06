@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Device {
+enum `ISO_9945.Kernel.Device Tests` {}
+
+extension `ISO_9945.Kernel.Device Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Device {
     }
 }
 
-extension ISO_9945.Kernel.Device.Test.Unit {
+extension `ISO_9945.Kernel.Device Tests`.Test.Unit {
 
     @Test
     func `Device from rawValue`() {
@@ -25,7 +27,7 @@ extension ISO_9945.Kernel.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Device.Test.Unit {
+extension `ISO_9945.Kernel.Device Tests`.Test.Unit {
     @Test
     func `Device from integer literal`() {
         let device: ISO_9945.Kernel.Device = 256
@@ -33,7 +35,7 @@ extension ISO_9945.Kernel.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Device.Test.Unit {
+extension `ISO_9945.Kernel.Device Tests`.Test.Unit {
     @Test
     func `Device is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Device(0)
@@ -59,7 +61,7 @@ extension ISO_9945.Kernel.Device.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Device.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Device Tests`.Test.`Edge Case` {
     @Test
     func `Device zero`() {
         let device = ISO_9945.Kernel.Device(0)

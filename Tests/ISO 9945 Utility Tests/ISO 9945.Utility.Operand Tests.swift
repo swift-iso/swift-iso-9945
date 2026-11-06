@@ -2,12 +2,14 @@ import ISO_9945_Core
 import ISO_9945_Utility
 import Testing
 
-extension ISO_9945.Utility.Operand {
+enum `ISO_9945.Utility.Operand Tests` {}
+
+extension `ISO_9945.Utility.Operand Tests` {
     @Suite
     struct Test {}
 }
 
-extension ISO_9945.Utility.Operand.Test {
+extension `ISO_9945.Utility.Operand Tests`.Test {
 
     @Test(arguments: ["file.txt", "", " ", "  leading and trailing  ", "\t\n", "naïve 日本語 🦀", "-", "--", "-l", "--verbose", "a=b,c;d"])
     func `an operand round-trips through its description`(_ text: String) {
@@ -25,7 +27,7 @@ extension ISO_9945.Utility.Operand.Test {
     }
 }
 
-extension ISO_9945.Utility.Operand.Test {
+extension `ISO_9945.Utility.Operand Tests`.Test {
 
     @Test
     func `an empty operand keeps its empty raw value`() {

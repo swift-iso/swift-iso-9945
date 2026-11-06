@@ -3,7 +3,9 @@ import ISO_9945_Kernel_Test_Support
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Handle.Error {
+enum `ISO_9945.Kernel.File.Handle.Error Tests` {}
+
+extension `ISO_9945.Kernel.File.Handle.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Kernel.File.Handle.Error {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Handle.Error Tests`.Test.Unit {
     @Test
     func `invalidHandle case exists`() {
         let error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
@@ -117,7 +119,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Handle.Error Tests`.Test.Unit {
     @Test
     func `invalidHandle description`() {
         #expect(
@@ -187,7 +189,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Handle.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.File.Handle.Error.invalidHandle
@@ -210,7 +212,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
+extension `ISO_9945.Kernel.File.Handle.Error Tests`.Test.Unit {
     @Test
     func `Operation read case`() {
         let op = ISO_9945.Kernel.File.Handle.Operation.read
@@ -236,7 +238,7 @@ extension ISO_9945.Kernel.File.Handle.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.Handle.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.Handle.Error Tests`.Test.`Edge Case` {
     @Test
     func `simple cases are distinct`() {
         let cases: [ISO_9945.Kernel.File.Handle.Error] = [

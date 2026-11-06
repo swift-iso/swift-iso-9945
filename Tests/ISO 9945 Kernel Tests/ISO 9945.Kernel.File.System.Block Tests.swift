@@ -3,7 +3,9 @@ import ISO_9945_Kernel_Test_Support
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.System.Block {
+enum `ISO_9945.Kernel.File.System.Block Tests` {}
+
+extension `ISO_9945.Kernel.File.System.Block Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Kernel.File.System.Block {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Block.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Block Tests`.Test.Unit {
     @Test
     func `Size from UInt64`() {
         let size = ISO_9945.Kernel.File.System.Block.Size(512)
@@ -69,7 +71,7 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Block.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Block Tests`.Test.Unit {
     @Test
     func `Count zero constant`() {
         let count = ISO_9945.Kernel.File.System.Block.Count.zero
@@ -93,7 +95,7 @@ extension ISO_9945.Kernel.File.System.Block.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Block.Test.`Edge Case` {
+extension `ISO_9945.Kernel.File.System.Block Tests`.Test.`Edge Case` {
     @Test
     func `Size zero value`() {
         let size = ISO_9945.Kernel.File.System.Block.Size(0)

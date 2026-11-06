@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.IO.Read.Error {
+enum `ISO_9945.Kernel.IO.Read.Error Tests` {}
+
+extension `ISO_9945.Kernel.IO.Read.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.IO.Read.Error {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Read.Error Tests`.Test.Unit {
     @Test
     func `handle case stores Descriptor.Validity.Error`() {
         let validityError = ISO_9945.Kernel.Descriptor.Validity.Error.invalid
@@ -46,7 +48,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Read.Error Tests`.Test.Unit {
     @Test
     func `handle description format`() {
         let error = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
@@ -60,7 +62,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Read.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.IO.Read.Error.handle(.invalid)
@@ -95,7 +97,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.IO.Read.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.IO.Read.Error Tests`.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.IO.Read.Error] = [
@@ -120,7 +122,7 @@ extension ISO_9945.Kernel.IO.Read.Error.Test.`Edge Case` {
     import Musl
 #endif
 
-extension ISO_9945.Kernel.IO.Read.Error.Test.Unit {
+extension `ISO_9945.Kernel.IO.Read.Error Tests`.Test.Unit {
     @Test
     func `broken-classed code (EPIPE) folds into platform`() {
         let error = ISO_9945.Kernel.IO.Read.Error(code: .posix(EPIPE))

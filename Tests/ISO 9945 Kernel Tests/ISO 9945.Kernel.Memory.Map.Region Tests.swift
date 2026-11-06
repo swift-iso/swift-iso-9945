@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map.Region {
+enum `Memory.Map.Region Tests` {}
+
+extension `Memory.Map.Region Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map.Region {
     }
 }
 
-extension Memory.Map.Region.Test.Unit {
+extension `Memory.Map.Region Tests`.Test.Unit {
     @Test
     func `Region stores base address`() throws {
         let pageSize = Memory.Address.Count(Memory.Page.size.underlying.rawValue)

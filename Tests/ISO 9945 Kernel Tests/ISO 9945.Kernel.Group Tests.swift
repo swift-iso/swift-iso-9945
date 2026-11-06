@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Group {
+enum `ISO_9945.Kernel.Group Tests` {}
+
+extension `ISO_9945.Kernel.Group Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Group {
     }
 }
 
-extension ISO_9945.Kernel.Group.Test.Unit {
+extension `ISO_9945.Kernel.Group Tests`.Test.Unit {
     @Test
     func `Group.ID from literal`() {
         let gid: ISO_9945.Kernel.Group.ID = 100
@@ -28,7 +30,7 @@ extension ISO_9945.Kernel.Group.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Group.Test.Unit {
+extension `ISO_9945.Kernel.Group Tests`.Test.Unit {
     @Test
     func `Group.ID is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Group.ID.root
@@ -56,7 +58,7 @@ extension ISO_9945.Kernel.Group.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Group.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Group Tests`.Test.`Edge Case` {
     @Test
     func `Group.ID zero is root`() {
         let gid: ISO_9945.Kernel.Group.ID = 0

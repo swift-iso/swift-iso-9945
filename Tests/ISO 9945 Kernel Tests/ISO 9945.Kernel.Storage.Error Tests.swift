@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Storage.Error {
+enum `ISO_9945.Kernel.Storage.Error Tests` {}
+
+extension `ISO_9945.Kernel.Storage.Error Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Storage.Error {
     }
 }
 
-extension ISO_9945.Kernel.Storage.Error.Test.Unit {
+extension `ISO_9945.Kernel.Storage.Error Tests`.Test.Unit {
 
     @Test
     func `exhausted case exists`() {
@@ -37,7 +39,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Storage.Error.Test.Unit {
+extension `ISO_9945.Kernel.Storage.Error Tests`.Test.Unit {
     @Test
     func `Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.Storage.Error.exhausted
@@ -69,7 +71,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Storage.Error.Test.Unit {
+extension `ISO_9945.Kernel.Storage.Error Tests`.Test.Unit {
     @Test
     func `exhausted description`() {
         let error = ISO_9945.Kernel.Storage.Error.exhausted
@@ -83,7 +85,7 @@ extension ISO_9945.Kernel.Storage.Error.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Storage.Error.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Storage.Error Tests`.Test.`Edge Case` {
     @Test
     func `All cases are distinct`() {
         let cases: [ISO_9945.Kernel.Storage.Error] = [.exhausted, .quota]

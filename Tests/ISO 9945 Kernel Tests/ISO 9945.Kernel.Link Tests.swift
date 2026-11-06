@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Link {
+enum `ISO_9945.Kernel.Link Tests` {}
+
+extension `ISO_9945.Kernel.Link Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Link {
     }
 }
 
-extension ISO_9945.Kernel.Link.Test.Unit {
+extension `ISO_9945.Kernel.Link Tests`.Test.Unit {
     @Test
     func `Link.Count zero constant`() {
         let zero = ISO_9945.Kernel.Link.Count.zero
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.Link.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Link.Test.Unit {
+extension `ISO_9945.Kernel.Link Tests`.Test.Unit {
     @Test
     func `Link.Count is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Link.Count.zero
@@ -50,7 +52,7 @@ extension ISO_9945.Kernel.Link.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Link.Test.Unit {
+extension `ISO_9945.Kernel.Link Tests`.Test.Unit {
     @Test
     func `Link.Error conforms to Swift.Error`() {
         let error: any Swift::Error = ISO_9945.Kernel.Link.Error.notFound
@@ -72,7 +74,7 @@ extension ISO_9945.Kernel.Link.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Link.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Link Tests`.Test.`Edge Case` {
     @Test
     func `Link.Error descriptions are non-empty`() {
         let cases: [ISO_9945.Kernel.Link.Error] = [

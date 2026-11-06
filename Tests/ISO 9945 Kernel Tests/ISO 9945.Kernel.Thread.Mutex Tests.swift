@@ -14,7 +14,9 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.Thread.Mutex {
+enum `ISO_9945.Kernel.Thread.Mutex Tests` {}
+
+extension `ISO_9945.Kernel.Thread.Mutex Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.Thread.Mutex {
     }
 }
 
-extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
+extension `ISO_9945.Kernel.Thread.Mutex Tests`.Test.Unit {
     @Test
     func `init creates valid mutex`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
@@ -132,7 +134,7 @@ extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
 
 #if canImport(Darwin)
 
-    extension ISO_9945.Kernel.Thread.Mutex.Test.Unit {
+    extension `ISO_9945.Kernel.Thread.Mutex Tests`.Test.Unit {
         @Test
         func `lock.immediate throws contention when held by another thread`() throws {
             let mutex = ISO_9945.Kernel.Thread.Mutex()

@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.System.Kind {
+enum `ISO_9945.Kernel.File.System.Kind Tests` {}
+
+extension `ISO_9945.Kernel.File.System.Kind Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.File.System.Kind {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Kind Tests`.Test.Unit {
     @Test
     func `Kind from rawValue`() {
         let kind = ISO_9945.Kernel.File.System.Kind(rawValue: 0x1234)
@@ -31,7 +33,7 @@ extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.File.System.Kind.Test.Unit {
+extension `ISO_9945.Kernel.File.System.Kind Tests`.Test.Unit {
     @Test
     func `Kind is Sendable`() {
         let kind: any Sendable = ISO_9945.Kernel.File.System.Kind(0x1234)

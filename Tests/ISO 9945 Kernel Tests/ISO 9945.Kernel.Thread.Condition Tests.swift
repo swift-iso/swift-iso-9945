@@ -14,7 +14,9 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.Thread.Condition {
+enum `ISO_9945.Kernel.Thread.Condition Tests` {}
+
+extension `ISO_9945.Kernel.Thread.Condition Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.Thread.Condition {
     }
 }
 
-extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
+extension `ISO_9945.Kernel.Thread.Condition Tests`.Test.Unit {
     @Test
     func `init creates valid condition`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
@@ -109,7 +111,7 @@ extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
 
 #if canImport(Darwin)
 
-    extension ISO_9945.Kernel.Thread.Condition.Test.Unit {
+    extension `ISO_9945.Kernel.Thread.Condition Tests`.Test.Unit {
         @Test
         func `signal wakes waiting thread`() throws {
             let mutex = ISO_9945.Kernel.Thread.Mutex()

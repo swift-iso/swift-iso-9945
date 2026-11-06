@@ -9,14 +9,16 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.Group.Supplementary {
+enum `ISO_9945.Kernel.Group.Supplementary Tests` {}
+
+extension `ISO_9945.Kernel.Group.Supplementary Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension ISO_9945.Kernel.Group.Supplementary.Test.Unit {
+extension `ISO_9945.Kernel.Group.Supplementary Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 getgroups returns the supplementary group IDs of the calling process`() throws {
         let count = getgroups(0, nil)

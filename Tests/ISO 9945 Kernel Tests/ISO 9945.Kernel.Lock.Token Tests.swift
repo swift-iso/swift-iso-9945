@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Lock.Token {
+enum `ISO_9945.Kernel.Lock.Token Tests` {}
+
+extension `ISO_9945.Kernel.Lock.Token Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Lock.Token {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Token.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Token Tests`.Test.Unit {
     @Test
     func `withExclusive exists`() {
 

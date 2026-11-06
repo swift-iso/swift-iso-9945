@@ -9,14 +9,16 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.User.Effective {
+enum `ISO_9945.Kernel.User.Effective Tests` {}
+
+extension `ISO_9945.Kernel.User.Effective Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension ISO_9945.Kernel.User.Effective.Test.Unit {
+extension `ISO_9945.Kernel.User.Effective Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 geteuid returns the effective user ID of the calling process`() {
         #expect(ISO_9945.Kernel.User.Effective.id() == ISO_9945.Kernel.User.ID(geteuid()))

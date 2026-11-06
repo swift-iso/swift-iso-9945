@@ -2,7 +2,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Lock.Kind {
+enum `ISO_9945.Kernel.Lock.Kind Tests` {}
+
+extension `ISO_9945.Kernel.Lock.Kind Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Lock.Kind {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Kind Tests`.Test.Unit {
     @Test
     func `shared case exists`() {
         let kind = ISO_9945.Kernel.Lock.Kind.shared
@@ -32,7 +34,7 @@ extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Kind Tests`.Test.Unit {
     @Test
     func `Kind is Sendable`() {
         let kind: any Sendable = ISO_9945.Kernel.Lock.Kind.shared
@@ -58,7 +60,7 @@ extension ISO_9945.Kernel.Lock.Kind.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Kind.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Lock.Kind Tests`.Test.`Edge Case` {
     @Test
     func `shared and exclusive are distinct`() {
         let shared = ISO_9945.Kernel.Lock.Kind.shared

@@ -2,14 +2,16 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.File.Stats.Kind.Link {
+enum `ISO_9945.Kernel.File.Stats.Kind.Link Tests` {}
+
+extension `ISO_9945.Kernel.File.Stats.Kind.Link Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension ISO_9945.Kernel.File.Stats.Kind.Link.Test.Unit {
+extension `ISO_9945.Kernel.File.Stats.Kind.Link Tests`.Test.Unit {
     @Test
     func `symbolic case matches`() {
         let link = ISO_9945.Kernel.File.Stats.Kind.Link.symbolic

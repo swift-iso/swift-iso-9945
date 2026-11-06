@@ -1,7 +1,9 @@
 import ISO_9945_Kernel
 import Testing
 
-extension ISO_9945.Kernel.User.Database {
+enum `ISO_9945.Kernel.User.Database Tests` {}
+
+extension `ISO_9945.Kernel.User.Database Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -9,7 +11,7 @@ extension ISO_9945.Kernel.User.Database {
     }
 }
 
-extension ISO_9945.Kernel.User.Database.Test.Unit {
+extension `ISO_9945.Kernel.User.Database Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 getpwuid finds the user database entry for user ID 0`() throws {
         let entry = try #require(try ISO_9945.Kernel.User.Database.find(uid: 0))
@@ -25,7 +27,7 @@ extension ISO_9945.Kernel.User.Database.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.User.Database.Test.`Edge Case` {
+extension `ISO_9945.Kernel.User.Database Tests`.Test.`Edge Case` {
     @Test
     func `POSIX.1-2024 getpwnam returns no entry for an unknown name`() throws {
         #expect(try ISO_9945.Kernel.User.Database.find(name: "iso-9945-no-such-user") == nil)

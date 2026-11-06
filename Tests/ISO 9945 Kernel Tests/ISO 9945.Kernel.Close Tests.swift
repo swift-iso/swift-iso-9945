@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Close {
+enum `ISO_9945.Kernel.Close Tests` {}
+
+extension `ISO_9945.Kernel.Close Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension ISO_9945.Kernel.Close {
     }
 }
 
-extension ISO_9945.Kernel.Close.Test.Unit {
+extension `ISO_9945.Kernel.Close Tests`.Test.Unit {
     @Test
     func `close succeeds on valid descriptor`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "close-test")
@@ -32,7 +34,7 @@ extension ISO_9945.Kernel.Close.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Close.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Close Tests`.Test.`Edge Case` {
     @Test
     func `close throws on negative descriptor`() {
         #expect(throws: ISO_9945.Kernel.Close.Error.self) {

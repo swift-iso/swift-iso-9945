@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Thread.Handle {
+enum `ISO_9945.Kernel.Thread.Handle Tests` {}
+
+extension `ISO_9945.Kernel.Thread.Handle Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,5 +16,5 @@ extension ISO_9945.Kernel.Thread.Handle {
     }
 }
 
-extension ISO_9945.Kernel.Thread.Handle.Test.Unit {
+extension `ISO_9945.Kernel.Thread.Handle Tests`.Test.Unit {
 }

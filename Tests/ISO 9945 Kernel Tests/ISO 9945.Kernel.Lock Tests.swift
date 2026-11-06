@@ -7,7 +7,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Lock {
+enum `ISO_9945.Kernel.Lock Tests` {}
+
+extension `ISO_9945.Kernel.Lock Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -15,7 +17,7 @@ extension ISO_9945.Kernel.Lock {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `Range.file is equatable`() {
         let r1 = ISO_9945.Kernel.Lock.Range.file
@@ -66,7 +68,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `Kind.shared and Kind.exclusive`() {
         let shared = ISO_9945.Kernel.Lock.Kind.shared
@@ -78,7 +80,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `Acquire.try case`() {
         let acquire = ISO_9945.Kernel.Lock.Acquire.try
@@ -111,7 +113,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `Range is hashable`() {
         var set = Set<ISO_9945.Kernel.Lock.Range>()
@@ -137,7 +139,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `lock and unlock on file succeeds`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "lock-test")
@@ -214,7 +216,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `Token acquires and releases lock`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "lock-token")
@@ -282,7 +284,7 @@ extension ISO_9945.Kernel.Lock.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Test.Unit {
+extension `ISO_9945.Kernel.Lock Tests`.Test.Unit {
     @Test
     func `withExclusive executes body and releases lock`() throws {
         let path = KernelIOTest.makeTempPath(prefix: "lock-with")

@@ -3,7 +3,9 @@ import ISO_9945_Kernel
 import Tagged
 import Testing
 
-extension ISO_9945.Kernel.Lock.Acquire {
+enum `ISO_9945.Kernel.Lock.Acquire Tests` {}
+
+extension `ISO_9945.Kernel.Lock.Acquire Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -11,7 +13,7 @@ extension ISO_9945.Kernel.Lock.Acquire {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Acquire Tests`.Test.Unit {
     @Test
     func `try case exists`() {
         let acquire = ISO_9945.Kernel.Lock.Acquire.try
@@ -44,7 +46,7 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
+extension `ISO_9945.Kernel.Lock.Acquire Tests`.Test.Unit {
     @Test
     func `Acquire is Sendable`() {
         let acquire: any Sendable = ISO_9945.Kernel.Lock.Acquire.wait
@@ -87,7 +89,7 @@ extension ISO_9945.Kernel.Lock.Acquire.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Lock.Acquire.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Lock.Acquire Tests`.Test.`Edge Case` {
     @Test
     func `all cases are distinct`() {
         let cases: [ISO_9945.Kernel.Lock.Acquire] = [

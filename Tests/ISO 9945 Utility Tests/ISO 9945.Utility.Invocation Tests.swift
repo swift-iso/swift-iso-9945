@@ -2,7 +2,9 @@ import ISO_9945_Core
 import ISO_9945_Utility
 import Testing
 
-extension ISO_9945.Utility.Invocation {
+enum `ISO_9945.Utility.Invocation Tests` {}
+
+extension `ISO_9945.Utility.Invocation Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Utility.Invocation {
     }
 }
 
-extension ISO_9945.Utility.Invocation.Test.Unit {
+extension `ISO_9945.Utility.Invocation Tests`.Test.Unit {
 
     @Test
     func `an invocation records the name the options and the operands in order`() throws {
@@ -41,7 +43,7 @@ extension ISO_9945.Utility.Invocation.Test.Unit {
     }
 }
 
-extension ISO_9945.Utility.Invocation.Test.`Edge Case` {
+extension `ISO_9945.Utility.Invocation Tests`.Test.`Edge Case` {
 
     @Test
     func `an operand that reads as an option requires the end of options delimiter`() throws {

@@ -2,7 +2,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.Resource.Limit {
+enum `ISO_9945.Kernel.Resource.Limit Tests` {}
+
+extension `ISO_9945.Kernel.Resource.Limit Tests` {
     @Suite(.serialized)
     struct Test {
         @Suite struct Unit {}
@@ -10,7 +12,7 @@ extension ISO_9945.Kernel.Resource.Limit {
     }
 }
 
-extension ISO_9945.Kernel.Resource.Limit.Test.Unit {
+extension `ISO_9945.Kernel.Resource.Limit Tests`.Test.Unit {
     @Test
     func `the descriptor limit reads back with current at most maximum`() throws {
         let limit = try ISO_9945.Kernel.Resource.Limit.get(.descriptors)
@@ -33,7 +35,7 @@ extension ISO_9945.Kernel.Resource.Limit.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Resource.Limit.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Resource.Limit Tests`.Test.`Edge Case` {
     @Test
     func `a current limit above the maximum is invalid`() throws {
         var limit = try ISO_9945.Kernel.Resource.Limit.get(.stack)

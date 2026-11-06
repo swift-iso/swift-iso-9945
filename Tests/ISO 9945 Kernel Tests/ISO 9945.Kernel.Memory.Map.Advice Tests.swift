@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension Memory.Map.Advice {
+enum `Memory.Map.Advice Tests` {}
+
+extension `Memory.Map.Advice Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -14,7 +16,7 @@ extension Memory.Map.Advice {
     }
 }
 
-extension Memory.Map.Advice.Test.Unit {
+extension `Memory.Map.Advice Tests`.Test.Unit {
     @Test
     func `Advice from rawValue`() {
         let advice = Memory.Map.Advice(rawValue: 0)
@@ -23,7 +25,7 @@ extension Memory.Map.Advice.Test.Unit {
 
 }
 
-extension Memory.Map.Advice.Test.Unit {
+extension `Memory.Map.Advice Tests`.Test.Unit {
     @Test
     func `Advice is Sendable`() {
         let advice: any Sendable = Memory.Map.Advice.normal
@@ -49,7 +51,7 @@ extension Memory.Map.Advice.Test.Unit {
     }
 }
 
-extension Memory.Map.Advice.Test.`Edge Case` {
+extension `Memory.Map.Advice Tests`.Test.`Edge Case` {
     @Test
     func `all advice types are distinct`() {
         let advices: [Memory.Map.Advice] = [

@@ -6,7 +6,9 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-extension ISO_9945.Kernel.File.Seek {
+enum `ISO_9945.Kernel.File.Seek Tests` {}
+
+extension `ISO_9945.Kernel.File.Seek Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.File.Seek {
     import Musl
 #endif
 
-extension ISO_9945.Kernel.File.Seek.Test.Unit {
+extension `ISO_9945.Kernel.File.Seek Tests`.Test.Unit {
     @Test
     func `POSIX.1-2024 lseek whence values are SEEK_SET, SEEK_CUR and SEEK_END`() {
         #expect(ISO_9945.Kernel.File.Seek.Whence.start.rawValue == SEEK_SET)

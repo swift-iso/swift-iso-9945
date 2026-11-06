@@ -14,7 +14,9 @@ import Testing
     import Musl
 #endif
 
-extension ISO_9945.Kernel.Socket.Options {
+enum `ISO_9945.Kernel.Socket.Options Tests` {}
+
+extension `ISO_9945.Kernel.Socket.Options Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -22,7 +24,7 @@ extension ISO_9945.Kernel.Socket.Options {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Options.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Options Tests`.Test.Unit {
 
     @Test
     func `Options from rawValue`() {
@@ -31,7 +33,7 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Options.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Options Tests`.Test.Unit {
     @Test
     func `nonBlock flag`() {
         let flags = ISO_9945.Kernel.Socket.Options.nonBlock
@@ -59,7 +61,7 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Options.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Options Tests`.Test.Unit {
     @Test
     func `Options can be combined with array literal`() {
         let combined: ISO_9945.Kernel.Socket.Options = [.nonBlock, .closeOnExec]
@@ -81,7 +83,7 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Options.Test.Unit {
+extension `ISO_9945.Kernel.Socket.Options Tests`.Test.Unit {
     @Test
     func `Options is Sendable`() {
         let value: any Sendable = ISO_9945.Kernel.Socket.Options.none
@@ -98,7 +100,7 @@ extension ISO_9945.Kernel.Socket.Options.Test.Unit {
     }
 }
 
-extension ISO_9945.Kernel.Socket.Options.Test.`Edge Case` {
+extension `ISO_9945.Kernel.Socket.Options Tests`.Test.`Edge Case` {
     @Test
     func `Empty flags is none`() {
         let empty: ISO_9945.Kernel.Socket.Options = []

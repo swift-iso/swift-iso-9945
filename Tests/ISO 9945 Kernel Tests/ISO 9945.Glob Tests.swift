@@ -4,7 +4,9 @@ import Path
 import Tagged
 import Testing
 
-extension ISO_9945.Glob.Fnmatch {
+enum `ISO_9945.Glob.Fnmatch Tests` {}
+
+extension `ISO_9945.Glob.Fnmatch Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
@@ -12,7 +14,7 @@ extension ISO_9945.Glob.Fnmatch {
     }
 }
 
-extension ISO_9945.Glob.Fnmatch.Test.Unit {
+extension `ISO_9945.Glob.Fnmatch Tests`.Test.Unit {
     @Testing.Test
     func `star wildcard matches suffix`() throws {
         let matched = try Path.scope("*.swift", "file.swift") { pattern, name in
@@ -118,7 +120,7 @@ extension ISO_9945.Glob.Fnmatch.Test.Unit {
     }
 }
 
-extension ISO_9945.Glob.Fnmatch.Test.`Edge Case` {
+extension `ISO_9945.Glob.Fnmatch Tests`.Test.`Edge Case` {
     @Testing.Test
     func `period flag prevents star from matching leading dot`() throws {
         let matched = try Path.scope("*", ".hidden") { pattern, name in
@@ -152,14 +154,16 @@ extension ISO_9945.Glob.Fnmatch.Test.`Edge Case` {
     }
 }
 
-extension ISO_9945.Glob.Expand {
+enum `ISO_9945.Glob.Expand Tests` {}
+
+extension `ISO_9945.Glob.Expand Tests` {
     @Suite
     struct Test {
         @Suite struct Unit {}
     }
 }
 
-extension ISO_9945.Glob.Expand.Test.Unit {
+extension `ISO_9945.Glob.Expand Tests`.Test.Unit {
     @Testing.Test
     func `non-existent pattern throws noMatch`() throws {
         do throws(Path.String.Error<ISO_9945.Glob.Expand.Error>) {
@@ -174,7 +178,7 @@ extension ISO_9945.Glob.Expand.Test.Unit {
     }
 }
 
-extension ISO_9945.Glob.Expand.Test.Unit {
+extension `ISO_9945.Glob.Expand Tests`.Test.Unit {
     @Testing.Test
     func `POSIX.1-2024 glob GLOB_NOCHECK returns the pattern when nothing matches`() throws {
         let pattern = "/nonexistent-iso-9945-glob/*.none"
