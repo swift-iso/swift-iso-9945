@@ -31,18 +31,6 @@ extension ISO_9945.Filename {
     /// The separator a filename may not contain.
     public static var separator: Path.Char { 0x2F }
 
-    public enum Error: Swift::Error, Sendable, Equatable {
-
-        case empty
-
-        case containsPathSeparator
-
-        case containsControlCharacters
-
-        case containsInteriorNUL
-
-        case invalidUTF8
-    }
 }
 
 extension ISO_9945.Filename.Error: CustomStringConvertible {
