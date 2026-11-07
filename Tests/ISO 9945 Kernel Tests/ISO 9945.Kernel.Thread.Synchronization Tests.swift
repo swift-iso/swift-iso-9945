@@ -16,8 +16,8 @@ import Testing
 struct `Thread Synchronization Tests` {}
 
 extension `Thread Synchronization Tests` {
-    @Suite("Mutex Unit")
-    struct MutexUnit {}
+    @Suite
+    struct `Mutex Unit` {}
 }
 
 extension `Thread Synchronization Tests`.MutexUnit {
@@ -89,8 +89,8 @@ extension `Thread Synchronization Tests`.MutexUnit {
 }
 
 extension `Thread Synchronization Tests` {
-    @Suite("Condition Unit")
-    struct ConditionUnit {}
+    @Suite
+    struct `Condition Unit` {}
 }
 
 extension `Thread Synchronization Tests`.ConditionUnit {

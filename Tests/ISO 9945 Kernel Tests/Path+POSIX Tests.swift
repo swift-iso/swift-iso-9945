@@ -2,8 +2,8 @@ import ISO_9945_Kernel
 import Path
 import Testing
 
-@Suite("Path + POSIX grammar")
-struct Path_POSIX_Tests {
+@Suite
+struct `Path + POSIX grammar` {
 
     @Test
     func `absolute, relative and root`() {
