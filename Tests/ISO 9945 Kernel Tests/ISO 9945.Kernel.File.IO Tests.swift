@@ -6,111 +6,115 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite
-struct `File IO Integration Tests` {
-    @Test
-    func `open and close file`() throws {
-        let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test")
+enum `ISO 9945.Kernel.File.IO Tests` {}
 
-        try Path.scope(pathString) { path in
+extension `ISO 9945.Kernel.File.IO Tests` {
+    @Suite
+    struct `File IO Integration Tests` {
+        @Test
+        func `open and close file`() throws {
+            let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test")
 
-            let fd = try ISO_9945.Kernel.File.Open.open(
-                path: path,
-                mode: .readWrite,
-                options: [.create, .truncate],
-                permissions: .standard
-            )
-
-            let fdIsValid = fd.isValid
-            #expect(fdIsValid)
-
-            try ISO_9945.Kernel.Close.close(fd)
-
-            try? ISO_9945.Kernel.File.Delete.delete(path)
-        }
-    }
-
-    @Test
-    func `open nonexistent file throws`() throws {
-        let pathString = "/nonexistent/path/that/does/not/exist/file.txt"
-
-        var threwError = false
-        do {
             try Path.scope(pathString) { path in
-                _ = try ISO_9945.Kernel.File.Open.open(
+
+                let fd = try ISO_9945.Kernel.File.Open.open(
                     path: path,
-                    mode: .read,
-                    options: [],
-                    permissions: 0
+                    mode: .readWrite,
+                    options: [.create, .truncate],
+                    permissions: .standard
                 )
-            }
-        } catch {
-            threwError = true
-        }
-        #expect(threwError)
-    }
 
-    @Test
-    func `write and read data`() throws {
-        let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test-rw")
-        let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
+                let fdIsValid = fd.isValid
+                #expect(fdIsValid)
 
-        try Path.scope(pathString) { path in
+                try ISO_9945.Kernel.Close.close(fd)
 
-            let fd = try ISO_9945.Kernel.File.Open.open(
-                path: path,
-                mode: .readWrite,
-                options: [.create, .truncate],
-                permissions: .standard
-            )
-
-            defer {
                 try? ISO_9945.Kernel.File.Delete.delete(path)
             }
-
-            let written = try testData.withUnsafeBytes { buffer in
-                try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
-            }
-            #expect(written == testData.count)
-
-            var readBuffer = [UInt8](repeating: 0, count: testData.count)
-            let bytesRead = try readBuffer.withUnsafeMutableBytes { buffer in
-                try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: buffer, at: 0)
-            }
-
-            #expect(bytesRead == testData.count)
-            #expect(readBuffer == testData)
         }
-    }
 
-    @Test
-    func `read returns 0 on EOF`() throws {
-        let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test-eof")
+        @Test
+        func `open nonexistent file throws`() throws {
+            let pathString = "/nonexistent/path/that/does/not/exist/file.txt"
 
-        try Path.scope(pathString) { path in
-
-            let fd = try ISO_9945.Kernel.File.Open.open(
-                path: path,
-                mode: .readWrite,
-                options: [.create, .truncate],
-                permissions: .standard
-            )
-
-            defer {
-                try? ISO_9945.Kernel.File.Delete.delete(path)
+            var threwError = false
+            do {
+                try Path.scope(pathString) { path in
+                    _ = try ISO_9945.Kernel.File.Open.open(
+                        path: path,
+                        mode: .read,
+                        options: [],
+                        permissions: 0
+                    )
+                }
+            } catch {
+                threwError = true
             }
+            #expect(threwError)
+        }
 
-            var buffer = [UInt8](repeating: 0, count: 100)
-            let bytesRead = try buffer.withUnsafeMutableBytes { buf in
-                try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: buf, at: 0)
+        @Test
+        func `write and read data`() throws {
+            let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test-rw")
+            let testData: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]
+
+            try Path.scope(pathString) { path in
+
+                let fd = try ISO_9945.Kernel.File.Open.open(
+                    path: path,
+                    mode: .readWrite,
+                    options: [.create, .truncate],
+                    permissions: .standard
+                )
+
+                defer {
+                    try? ISO_9945.Kernel.File.Delete.delete(path)
+                }
+
+                let written = try testData.withUnsafeBytes { buffer in
+                    try unsafe ISO_9945.Kernel.IO.Write.write(fd, from: buffer)
+                }
+                #expect(written == testData.count)
+
+                var readBuffer = [UInt8](repeating: 0, count: testData.count)
+                let bytesRead = try readBuffer.withUnsafeMutableBytes { buffer in
+                    try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: buffer, at: 0)
+                }
+
+                #expect(bytesRead == testData.count)
+                #expect(readBuffer == testData)
             }
+        }
 
-            #expect(bytesRead == 0)
+        @Test
+        func `read returns 0 on EOF`() throws {
+            let pathString = KernelIOTest.Temporary.filePath(prefix: "posix-io-test-eof")
+
+            try Path.scope(pathString) { path in
+
+                let fd = try ISO_9945.Kernel.File.Open.open(
+                    path: path,
+                    mode: .readWrite,
+                    options: [.create, .truncate],
+                    permissions: .standard
+                )
+
+                defer {
+                    try? ISO_9945.Kernel.File.Delete.delete(path)
+                }
+
+                var buffer = [UInt8](repeating: 0, count: 100)
+                let bytesRead = try buffer.withUnsafeMutableBytes { buf in
+                    try unsafe ISO_9945.Kernel.IO.Read.pread(fd, into: buf, at: 0)
+                }
+
+                #expect(bytesRead == 0)
+            }
         }
     }
 }
 
-extension `File IO Integration Tests` {
+extension `ISO 9945.Kernel.File.IO Tests`.`File IO Integration Tests` {
     @Test
     func `close invalid descriptor throws`() {
         var threwError = false

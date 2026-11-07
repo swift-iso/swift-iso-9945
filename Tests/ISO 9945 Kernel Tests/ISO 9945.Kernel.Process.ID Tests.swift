@@ -5,23 +5,27 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite
-struct `Process ID Parent Tests` {
-    @Test
-    func `parent returns positive PID`() {
-        let parent = ISO_9945.Kernel.Process.ID.parent
-        #expect(parent.rawValue > 0)
-    }
+enum `ISO 9945.Kernel.Process.ID Tests` {}
 
-    @Test
-    func `spawned child's parent matches spawner's current`() throws {
-        #if os(macOS)
-            let ourPID = ISO_9945.Kernel.Process.ID.current
+extension `ISO 9945.Kernel.Process.ID Tests` {
+    @Suite
+    struct `Process ID Parent Tests` {
+        @Test
+        func `parent returns positive PID`() {
+            let parent = ISO_9945.Kernel.Process.ID.parent
+            #expect(parent.rawValue > 0)
+        }
 
-            let child = try POSIXTestHelper.spawn("verify-parent", "\(ourPID.rawValue)")
+        @Test
+        func `spawned child's parent matches spawner's current`() throws {
+            #if os(macOS)
+                let ourPID = ISO_9945.Kernel.Process.ID.current
 
-            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
-            #expect(result?.status.exit.code == 0, "Child's parent should match spawner's PID")
-        #endif
+                let child = try POSIXTestHelper.spawn("verify-parent", "\(ourPID.rawValue)")
+
+                let result = try ISO_9945.Kernel.Process.Wait.wait(.process(child))
+                #expect(result?.status.exit.code == 0, "Child's parent should match spawner's PID")
+            #endif
+        }
     }
 }

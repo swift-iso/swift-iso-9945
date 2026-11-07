@@ -12,15 +12,19 @@ import Testing
     import Glibc
 #endif
 
-@Suite
-struct `Thread Synchronization Tests` {}
+enum `ISO 9945.Kernel.Thread.Synchronization Tests` {}
 
-extension `Thread Synchronization Tests` {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests` {
+    @Suite
+    struct `Thread Synchronization Tests` {}
+}
+
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests` {
     @Suite
     struct `Mutex Unit` {}
 }
 
-extension `Thread Synchronization Tests`.MutexUnit {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.MutexUnit {
     @Test
     func `mutex can be locked and unlocked`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
@@ -88,12 +92,12 @@ extension `Thread Synchronization Tests`.MutexUnit {
     }
 }
 
-extension `Thread Synchronization Tests` {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests` {
     @Suite
     struct `Condition Unit` {}
 }
 
-extension `Thread Synchronization Tests`.ConditionUnit {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.ConditionUnit {
     @Test
     func `condition can signal without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()
@@ -121,7 +125,7 @@ extension `Thread Synchronization Tests`.ConditionUnit {
     }
 }
 
-extension `Thread Synchronization Tests` {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests` {
     @Suite("Integration")
     struct Integration {}
 }
@@ -134,7 +138,7 @@ private func smallSleep(milliseconds: UInt32) {
     #endif
 }
 
-extension `Thread Synchronization Tests`.Integration {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.Integration {
     @Test
     func `signal wakes one waiter`() throws {
         let mutex = ISO_9945.Kernel.Thread.Mutex()

@@ -3,122 +3,126 @@ import ISO_9945_Kernel_Test_Support
 import Tagged
 import Testing
 
-@Suite
-struct `File Offset Tests` {
+enum `ISO 9945.Kernel.File.Offset Tests` {}
 
-    @Test
-    func `Offset from integer literal`() {
-        let offset: ISO_9945.Kernel.File.Offset = 1000
-        #expect(offset == 1000)
-    }
+extension `ISO 9945.Kernel.File.Offset Tests` {
+    @Suite
+    struct `File Offset Tests` {
 
-    @Test
-    func `Offset from Int`() {
-        let offset = ISO_9945.Kernel.File.Offset(100)
-        #expect(offset == 100)
-    }
+        @Test
+        func `Offset from integer literal`() {
+            let offset: ISO_9945.Kernel.File.Offset = 1000
+            #expect(offset == 1000)
+        }
 
-    @Test
-    func `Offset from Int64`() {
-        let offset = ISO_9945.Kernel.File.Offset(Int64(5000))
-        #expect(offset == 5000)
-    }
+        @Test
+        func `Offset from Int`() {
+            let offset = ISO_9945.Kernel.File.Offset(100)
+            #expect(offset == 100)
+        }
 
-    @Test
-    func `zero constant`() {
-        #expect(ISO_9945.Kernel.File.Offset.zero == 0)
-    }
+        @Test
+        func `Offset from Int64`() {
+            let offset = ISO_9945.Kernel.File.Offset(Int64(5000))
+            #expect(offset == 5000)
+        }
 
-    @Test
-    func `max constant`() {
-        #expect(ISO_9945.Kernel.File.Offset.max.underlying == Int64.max)
-    }
+        @Test
+        func `zero constant`() {
+            #expect(ISO_9945.Kernel.File.Offset.zero == 0)
+        }
 
-    @Test
-    func `Offset minus Offset equals Delta`() {
-        let start: ISO_9945.Kernel.File.Offset = 1000
-        let end: ISO_9945.Kernel.File.Offset = 5000
-        let delta = end - start
-        #expect(delta == 4000)
-    }
+        @Test
+        func `max constant`() {
+            #expect(ISO_9945.Kernel.File.Offset.max.underlying == Int64.max)
+        }
 
-    @Test
-    func `Offset plus Delta equals Offset`() {
-        let offset: ISO_9945.Kernel.File.Offset = 1000
-        let delta = ISO_9945.Kernel.File.Delta(3000)
-        let result = offset + delta
-        #expect(result == 4000)
-    }
+        @Test
+        func `Offset minus Offset equals Delta`() {
+            let start: ISO_9945.Kernel.File.Offset = 1000
+            let end: ISO_9945.Kernel.File.Offset = 5000
+            let delta = end - start
+            #expect(delta == 4000)
+        }
 
-    @Test
-    func `Offset minus Delta equals Offset`() {
-        let offset: ISO_9945.Kernel.File.Offset = 5000
-        let delta = ISO_9945.Kernel.File.Delta(2000)
-        let result = offset - delta
-        #expect(result == 3000)
-    }
+        @Test
+        func `Offset plus Delta equals Offset`() {
+            let offset: ISO_9945.Kernel.File.Offset = 1000
+            let delta = ISO_9945.Kernel.File.Delta(3000)
+            let result = offset + delta
+            #expect(result == 4000)
+        }
 
-    @Test
-    func `Offset plus Size equals Offset`() {
-        let offset: ISO_9945.Kernel.File.Offset = 1000
-        let size: ISO_9945.Kernel.File.Size = 4096
-        let result = offset + size
-        #expect(result == 5096)
-    }
+        @Test
+        func `Offset minus Delta equals Offset`() {
+            let offset: ISO_9945.Kernel.File.Offset = 5000
+            let delta = ISO_9945.Kernel.File.Delta(2000)
+            let result = offset - delta
+            #expect(result == 3000)
+        }
 
-    @Test
-    func `Offset minus Size equals Offset`() {
-        let offset: ISO_9945.Kernel.File.Offset = 5096
-        let size: ISO_9945.Kernel.File.Size = 4096
-        let result = offset - size
-        #expect(result == 1000)
-    }
+        @Test
+        func `Offset plus Size equals Offset`() {
+            let offset: ISO_9945.Kernel.File.Offset = 1000
+            let size: ISO_9945.Kernel.File.Size = 4096
+            let result = offset + size
+            #expect(result == 5096)
+        }
 
-    @Test
-    func `Offset plus Size in place`() {
-        var offset: ISO_9945.Kernel.File.Offset = 1000
-        let size: ISO_9945.Kernel.File.Size = 500
-        offset += size
-        #expect(offset == 1500)
-    }
+        @Test
+        func `Offset minus Size equals Offset`() {
+            let offset: ISO_9945.Kernel.File.Offset = 5096
+            let size: ISO_9945.Kernel.File.Size = 4096
+            let result = offset - size
+            #expect(result == 1000)
+        }
 
-    @Test
-    func `Offset minus Size in place`() {
-        var offset: ISO_9945.Kernel.File.Offset = 1500
-        let size: ISO_9945.Kernel.File.Size = 500
-        offset -= size
-        #expect(offset == 1000)
-    }
+        @Test
+        func `Offset plus Size in place`() {
+            var offset: ISO_9945.Kernel.File.Offset = 1000
+            let size: ISO_9945.Kernel.File.Size = 500
+            offset += size
+            #expect(offset == 1500)
+        }
 
-    @Test
-    func `Offset is Equatable`() {
-        let a: ISO_9945.Kernel.File.Offset = 1000
-        let b: ISO_9945.Kernel.File.Offset = 1000
-        let c: ISO_9945.Kernel.File.Offset = 2000
-        #expect(a == b)
-        #expect(a != c)
-    }
+        @Test
+        func `Offset minus Size in place`() {
+            var offset: ISO_9945.Kernel.File.Offset = 1500
+            let size: ISO_9945.Kernel.File.Size = 500
+            offset -= size
+            #expect(offset == 1000)
+        }
 
-    @Test
-    func `Offset is Hashable`() {
-        var set = Set<ISO_9945.Kernel.File.Offset>()
-        set.insert(ISO_9945.Kernel.File.Offset(1000))
-        set.insert(ISO_9945.Kernel.File.Offset(2000))
-        set.insert(ISO_9945.Kernel.File.Offset(1000))
-        #expect(set.count == 2)
-    }
+        @Test
+        func `Offset is Equatable`() {
+            let a: ISO_9945.Kernel.File.Offset = 1000
+            let b: ISO_9945.Kernel.File.Offset = 1000
+            let c: ISO_9945.Kernel.File.Offset = 2000
+            #expect(a == b)
+            #expect(a != c)
+        }
 
-    @Test
-    func `Offset is Sendable`() {
-        let offset: any Sendable = ISO_9945.Kernel.File.Offset(1000)
-        #expect(offset is ISO_9945.Kernel.File.Offset)
-    }
+        @Test
+        func `Offset is Hashable`() {
+            var set = Set<ISO_9945.Kernel.File.Offset>()
+            set.insert(ISO_9945.Kernel.File.Offset(1000))
+            set.insert(ISO_9945.Kernel.File.Offset(2000))
+            set.insert(ISO_9945.Kernel.File.Offset(1000))
+            #expect(set.count == 2)
+        }
 
-    @Test
-    func `Offset is Comparable`() {
-        let a: ISO_9945.Kernel.File.Offset = 1000
-        let b: ISO_9945.Kernel.File.Offset = 2000
-        #expect(a < b)
-        #expect(b > a)
+        @Test
+        func `Offset is Sendable`() {
+            let offset: any Sendable = ISO_9945.Kernel.File.Offset(1000)
+            #expect(offset is ISO_9945.Kernel.File.Offset)
+        }
+
+        @Test
+        func `Offset is Comparable`() {
+            let a: ISO_9945.Kernel.File.Offset = 1000
+            let b: ISO_9945.Kernel.File.Offset = 2000
+            #expect(a < b)
+            #expect(b > a)
+        }
     }
 }

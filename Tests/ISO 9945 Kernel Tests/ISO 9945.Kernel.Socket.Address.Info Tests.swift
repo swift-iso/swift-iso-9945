@@ -2,14 +2,18 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite
-struct `Socket Address Info Tests` {
-    @Suite struct Unit {}
-    @Suite struct `Edge Case` {}
-    @Suite struct Integration {}
+enum `ISO 9945.Kernel.Socket.Address.Info Tests` {}
+
+extension `ISO 9945.Kernel.Socket.Address.Info Tests` {
+    @Suite
+    struct `Socket Address Info Tests` {
+        @Suite struct Unit {}
+        @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
+    }
 }
 
-extension `Socket Address Info Tests`.Unit {
+extension `ISO 9945.Kernel.Socket.Address.Info Tests`.`Socket Address Info Tests`.Unit {
     @Test
     func `error message is non empty and codes round trip`() {
         let error = ISO_9945.Kernel.Socket.Address.Info.Error.noName
@@ -18,7 +22,7 @@ extension `Socket Address Info Tests`.Unit {
     }
 }
 
-extension `Socket Address Info Tests`.`Edge Case` {
+extension `ISO 9945.Kernel.Socket.Address.Info Tests`.`Socket Address Info Tests`.`Edge Case` {
     @Test
     func `non numeric garbage under numericHost throws noName`() {
         do throws(ISO_9945.Kernel.Socket.Address.Info.Error) {
@@ -49,7 +53,7 @@ extension `Socket Address Info Tests`.`Edge Case` {
     }
 }
 
-extension `Socket Address Info Tests`.Integration {
+extension `ISO 9945.Kernel.Socket.Address.Info Tests`.`Socket Address Info Tests`.Integration {
     @Test
     func `numeric IPv4 host resolves to one owned inet entry`() throws(ISO_9945.Kernel.Socket
         .Address.Info.Error)

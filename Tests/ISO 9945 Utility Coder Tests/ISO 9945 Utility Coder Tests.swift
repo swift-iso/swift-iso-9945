@@ -7,198 +7,202 @@
     import Serializer
     import Testing
 
-    @Suite
-    struct `ISO 9945 Utility Coder` {
+enum `ISO 9945 Utility Coder Tests` {}
 
-        @Test
-        func `a utility invocation reads its name then its operands`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["greeting", "greet", "Ada"]
+extension `ISO 9945 Utility Coder Tests` {
+        @Suite
+        struct `ISO 9945 Utility Coder` {
 
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+            @Test
+            func `a utility invocation reads its name then its operands`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["greeting", "greet", "Ada"]
 
-            #expect(invocation.name.rawValue == "greeting")
-            #expect(invocation.options.isEmpty)
-            #expect(invocation.operands.map(\.rawValue) == ["greet", "Ada"])
-            #expect(arguments.isEmpty)
-        }
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
 
-        @Test
-        func `options precede operands so a word after the first operand is an operand`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["counter", "increment", "-l", "3"]
+                #expect(invocation.name.rawValue == "greeting")
+                #expect(invocation.options.isEmpty)
+                #expect(invocation.operands.map(\.rawValue) == ["greet", "Ada"])
+                #expect(arguments.isEmpty)
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+            @Test
+            func `options precede operands so a word after the first operand is an operand`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["counter", "increment", "-l", "3"]
 
-            #expect(invocation.options.isEmpty)
-            #expect(invocation.operands.map(\.rawValue) == ["increment", "-l", "3"])
-        }
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
 
-        @Test
-        func `a subcommand is the invocation that follows the utility name`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["counter", "increment", "-l", "3"]
+                #expect(invocation.options.isEmpty)
+                #expect(invocation.operands.map(\.rawValue) == ["increment", "-l", "3"])
+            }
 
-            let utility = try ISO_9945.Utility.Name.coder.parse(&arguments)
-            let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
+            @Test
+            func `a subcommand is the invocation that follows the utility name`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["counter", "increment", "-l", "3"]
 
-            #expect(utility.rawValue == "counter")
-            #expect(invocation.name.rawValue == "increment")
-            #expect(invocation.options == [try .init("l", argument: .init("3"))])
-            #expect(invocation.operands.isEmpty)
-        }
+                let utility = try ISO_9945.Utility.Name.coder.parse(&arguments)
+                let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
 
-        @Test
-        func `a grouped option run expands to one option per character`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["update", "-abc"]
+                #expect(utility.rawValue == "counter")
+                #expect(invocation.name.rawValue == "increment")
+                #expect(invocation.options == [try .init("l", argument: .init("3"))])
+                #expect(invocation.operands.isEmpty)
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+            @Test
+            func `a grouped option run expands to one option per character`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["update", "-abc"]
 
-            #expect(invocation.options.map(\.name) == ["a", "b", "c"])
-            #expect(invocation.options.allSatisfy { $0.argument == nil })
-        }
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
 
-        @Test
-        func `a group ends with the option that takes an option argument`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["update", "-abl", "3"]
+                #expect(invocation.options.map(\.name) == ["a", "b", "c"])
+                #expect(invocation.options.allSatisfy { $0.argument == nil })
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
+            @Test
+            func `a group ends with the option that takes an option argument`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["update", "-abl", "3"]
 
-            #expect(invocation.options.map(\.name) == ["a", "b", "l"])
-            #expect(invocation.options.last?.argument == ISO_9945.Utility.Option.Argument("3"))
-        }
+                let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
 
-        @Test
-        func `an option argument is accepted attached to its option`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["update", "-l3"]
+                #expect(invocation.options.map(\.name) == ["a", "b", "l"])
+                #expect(invocation.options.last?.argument == ISO_9945.Utility.Option.Argument("3"))
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
+            @Test
+            func `an option argument is accepted attached to its option`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["update", "-l3"]
 
-            #expect(invocation.options == [try .init("l", argument: .init("3"))])
-        }
+                let invocation = try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
 
-        @Test
-        func `an attached option argument is written back as a separate word`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["update", "-l3"]
-            let coder = ISO_9945.Utility.Invocation.Coder(arguments: ["l"])
+                #expect(invocation.options == [try .init("l", argument: .init("3"))])
+            }
 
-            let invocation = try coder.parse(&arguments)
-            var written: [String] = []
-            try coder.serialize(invocation, into: &written)
+            @Test
+            func `an attached option argument is written back as a separate word`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["update", "-l3"]
+                let coder = ISO_9945.Utility.Invocation.Coder(arguments: ["l"])
 
-            #expect(written == ["update", "-l", "3"])
-        }
+                let invocation = try coder.parse(&arguments)
+                var written: [String] = []
+                try coder.serialize(invocation, into: &written)
 
-        @Test
-        func `the end of options delimiter ends the option run`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["update", "-a", "--", "-l"]
+                #expect(written == ["update", "-l", "3"])
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+            @Test
+            func `the end of options delimiter ends the option run`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["update", "-a", "--", "-l"]
 
-            #expect(invocation.options.map(\.name) == ["a"])
-            #expect(invocation.operands.map(\.rawValue) == ["-l"])
-        }
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
 
-        @Test
-        func `an operand that reads as an option round trips through the delimiter`() throws(any Swift::Error) {
-            let vector = ["update", "-a", "--", "-l"]
-            var arguments: ArraySlice<String> = vector[...]
+                #expect(invocation.options.map(\.name) == ["a"])
+                #expect(invocation.operands.map(\.rawValue) == ["-l"])
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
-            var written: [String] = []
-            try ISO_9945.Utility.Invocation.coder.serialize(invocation, into: &written)
+            @Test
+            func `an operand that reads as an option round trips through the delimiter`() throws(any Swift::Error) {
+                let vector = ["update", "-a", "--", "-l"]
+                var arguments: ArraySlice<String> = vector[...]
 
-            #expect(written == vector)
-        }
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+                var written: [String] = []
+                try ISO_9945.Utility.Invocation.coder.serialize(invocation, into: &written)
 
-        @Test
-        func `an argument vector round trips through the codable entry point`() throws(any Swift::Error) {
-            let vector = ["greeting", "greet", "Ada"]
-            var arguments: ArraySlice<String> = vector[...]
+                #expect(written == vector)
+            }
 
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
-            var written: [String] = []
-            try ISO_9945.Utility.Invocation.coder.serialize(invocation, into: &written)
+            @Test
+            func `an argument vector round trips through the codable entry point`() throws(any Swift::Error) {
+                let vector = ["greeting", "greet", "Ada"]
+                var arguments: ArraySlice<String> = vector[...]
 
-            #expect(written == vector)
-        }
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+                var written: [String] = []
+                try ISO_9945.Utility.Invocation.coder.serialize(invocation, into: &written)
 
-        @Test
-        func `a utility name of ten characters violates the length guideline`() {
-            var arguments: ArraySlice<String> = ["increments"]
+                #expect(written == vector)
+            }
 
-            #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.name(.invalid(.invalidLength(10)))) {
-                try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+            @Test
+            func `a utility name of ten characters violates the length guideline`() {
+                var arguments: ArraySlice<String> = ["increments"]
+
+                #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.name(.invalid(.invalidLength(10)))) {
+                    try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+                }
+            }
+
+            @Test
+            func `an uppercase utility name violates the portable character guideline`() {
+                var arguments: ArraySlice<String> = ["Counter"]
+
+                #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.name(.invalid(.invalidCharacter("C")))) {
+                    try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+                }
+            }
+
+            @Test
+            func `an empty argument vector has no utility name`() {
+                var arguments: ArraySlice<String> = []
+
+                #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.name(.absent)) {
+                    try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+                }
+            }
+
+            @Test
+            func `an option name that is not alphanumeric is rejected`() {
+                var arguments: ArraySlice<String> = ["update", "-!"]
+
+                #expect(
+                    throws: ISO_9945.Utility.Invocation.Coder.Error.option(.invalid(.invalidCharacter("!")))
+                ) {
+                    try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+                }
+            }
+
+            @Test
+            func `an option that takes an option argument is rejected without one`() {
+                var arguments: ArraySlice<String> = ["update", "-l"]
+
+                #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.option(.missingArgument("l"))) {
+                    try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
+                }
+            }
+
+            @Test
+            func `a lone hyphen is an operand and not an option`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["update", "-"]
+
+                let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
+
+                #expect(invocation.options.isEmpty)
+                #expect(invocation.operands.map(\.rawValue) == ["-"])
+            }
+
+            @Test
+            func `a utility name is codable on its own`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["counter", "increment"]
+
+                let name = try ISO_9945.Utility.Name.coder.parse(&arguments)
+                var written: [String] = []
+                try ISO_9945.Utility.Name.coder.serialize(name, into: &written)
+
+                #expect(written == ["counter"])
+                #expect(arguments == ["increment"])
+            }
+
+            @Test
+            func `an operand is codable on its own`() throws(any Swift::Error) {
+                var arguments: ArraySlice<String> = ["Ada"]
+
+                let operand = try ISO_9945.Utility.Operand.coder.parse(&arguments)
+                var written: [String] = []
+                try ISO_9945.Utility.Operand.coder.serialize(operand, into: &written)
+
+                #expect(operand.rawValue == "Ada")
+                #expect(written == ["Ada"])
             }
         }
-
-        @Test
-        func `an uppercase utility name violates the portable character guideline`() {
-            var arguments: ArraySlice<String> = ["Counter"]
-
-            #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.name(.invalid(.invalidCharacter("C")))) {
-                try ISO_9945.Utility.Invocation.coder.parse(&arguments)
-            }
-        }
-
-        @Test
-        func `an empty argument vector has no utility name`() {
-            var arguments: ArraySlice<String> = []
-
-            #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.name(.absent)) {
-                try ISO_9945.Utility.Invocation.coder.parse(&arguments)
-            }
-        }
-
-        @Test
-        func `an option name that is not alphanumeric is rejected`() {
-            var arguments: ArraySlice<String> = ["update", "-!"]
-
-            #expect(
-                throws: ISO_9945.Utility.Invocation.Coder.Error.option(.invalid(.invalidCharacter("!")))
-            ) {
-                try ISO_9945.Utility.Invocation.coder.parse(&arguments)
-            }
-        }
-
-        @Test
-        func `an option that takes an option argument is rejected without one`() {
-            var arguments: ArraySlice<String> = ["update", "-l"]
-
-            #expect(throws: ISO_9945.Utility.Invocation.Coder.Error.option(.missingArgument("l"))) {
-                try ISO_9945.Utility.Invocation.Coder(arguments: ["l"]).parse(&arguments)
-            }
-        }
-
-        @Test
-        func `a lone hyphen is an operand and not an option`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["update", "-"]
-
-            let invocation = try ISO_9945.Utility.Invocation.coder.parse(&arguments)
-
-            #expect(invocation.options.isEmpty)
-            #expect(invocation.operands.map(\.rawValue) == ["-"])
-        }
-
-        @Test
-        func `a utility name is codable on its own`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["counter", "increment"]
-
-            let name = try ISO_9945.Utility.Name.coder.parse(&arguments)
-            var written: [String] = []
-            try ISO_9945.Utility.Name.coder.serialize(name, into: &written)
-
-            #expect(written == ["counter"])
-            #expect(arguments == ["increment"])
-        }
-
-        @Test
-        func `an operand is codable on its own`() throws(any Swift::Error) {
-            var arguments: ArraySlice<String> = ["Ada"]
-
-            let operand = try ISO_9945.Utility.Operand.coder.parse(&arguments)
-            var written: [String] = []
-            try ISO_9945.Utility.Operand.coder.serialize(operand, into: &written)
-
-            #expect(operand.rawValue == "Ada")
-            #expect(written == ["Ada"])
-        }
-    }
+}
 #endif

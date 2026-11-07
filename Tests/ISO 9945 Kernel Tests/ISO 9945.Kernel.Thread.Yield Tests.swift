@@ -6,34 +6,38 @@ import Testing
 
 @testable import ISO_9945_Kernel
 
-@Suite
-struct `Thread Yield Tests` {
+enum `ISO 9945.Kernel.Thread.Yield Tests` {}
 
-    @Test
-    func `yield completes without error`() {
+extension `ISO 9945.Kernel.Thread.Yield Tests` {
+    @Suite
+    struct `Thread Yield Tests` {
 
-        ISO_9945.Kernel.Thread.yield()
-    }
+        @Test
+        func `yield completes without error`() {
 
-    @Test
-    func `yield can be called repeatedly`() {
-
-        for _ in 0..<100 {
             ISO_9945.Kernel.Thread.yield()
         }
-    }
 
-    @Test
-    func `yield from concurrent tasks`() async {
+        @Test
+        func `yield can be called repeatedly`() {
 
-        let iterations = 100
-        let taskCount = 4
+            for _ in 0..<100 {
+                ISO_9945.Kernel.Thread.yield()
+            }
+        }
 
-        await withTaskGroup(of: Void.self) { group in
-            for _ in 0..<taskCount {
-                group.addTask {
-                    for _ in 0..<iterations {
-                        ISO_9945.Kernel.Thread.yield()
+        @Test
+        func `yield from concurrent tasks`() async {
+
+            let iterations = 100
+            let taskCount = 4
+
+            await withTaskGroup(of: Void.self) { group in
+                for _ in 0..<taskCount {
+                    group.addTask {
+                        for _ in 0..<iterations {
+                            ISO_9945.Kernel.Thread.yield()
+                        }
                     }
                 }
             }
@@ -44,7 +48,7 @@ struct `Thread Yield Tests` {
 #if canImport(Darwin)
     import Darwin
 
-    extension `Thread Yield Tests` {
+    extension `ISO 9945.Kernel.Thread.Yield Tests`.`Thread Yield Tests` {
         @Test
         func `yield from multiple OS threads`() throws {
 

@@ -90,10 +90,14 @@ private func openLockTestFile(_ path: Swift::String) throws -> ISO_9945.Kernel.D
     }
 }
 
-@Suite
-struct `POSIX Lock Integration` {}
+enum `ISO 9945.Kernel.Lock.Integration Tests` {}
 
-extension `POSIX Lock Integration` {
+extension `ISO 9945.Kernel.Lock.Integration Tests` {
+    @Suite
+    struct `POSIX Lock Integration` {}
+}
+
+extension `ISO 9945.Kernel.Lock.Integration Tests`.`POSIX Lock Integration` {
     @Test
     func `Token acquires and releases lock`() throws {
         let path = try makeLockTestFile(prefix: "posix-lock-token")
@@ -186,7 +190,7 @@ extension `POSIX Lock Integration` {
     }
 }
 
-extension `POSIX Lock Integration` {
+extension `ISO 9945.Kernel.Lock.Integration Tests`.`POSIX Lock Integration` {
     @Test
     func `Direct lock and unlock API`() throws {
         let path = try makeLockTestFile(prefix: "posix-lock-direct")
@@ -213,7 +217,7 @@ extension `POSIX Lock Integration` {
 
 }
 
-extension `POSIX Lock Integration` {
+extension `ISO 9945.Kernel.Lock.Integration Tests`.`POSIX Lock Integration` {
     @Test
     func `withExclusive executes body under lock`() throws {
         let path = try makeLockTestFile(prefix: "posix-lock-with")
@@ -255,7 +259,7 @@ extension `POSIX Lock Integration` {
     }
 }
 
-extension `POSIX Lock Integration` {
+extension `ISO 9945.Kernel.Lock.Integration Tests`.`POSIX Lock Integration` {
     @Test
     func `release allows cross-process acquisition`() throws {
         let path = try makeLockTestFile(prefix: "posix-lock-release-verify")

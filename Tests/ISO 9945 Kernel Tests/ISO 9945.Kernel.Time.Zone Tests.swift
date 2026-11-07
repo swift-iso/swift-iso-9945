@@ -10,12 +10,16 @@ import Time
     import Musl
 #endif
 
-@Suite(.serialized)
-struct `Kernel Time Zone Tests` {
-    @Suite(.serialized) struct Unit {}
+enum `ISO 9945.Kernel.Time.Zone Tests` {}
+
+extension `ISO 9945.Kernel.Time.Zone Tests` {
+    @Suite(.serialized)
+    struct `Kernel Time Zone Tests` {
+        @Suite(.serialized) struct Unit {}
+    }
 }
 
-extension `Kernel Time Zone Tests`.Unit {
+extension `ISO 9945.Kernel.Time.Zone Tests`.`Kernel Time Zone Tests`.Unit {
     /// Runs `body` with `TZ` set to `zone`, then puts `TZ` back as it was.
     private static func with(zone: Swift.String, _ body: () -> Void) {
         let previous = unsafe getenv("TZ").map { unsafe Swift.String(cString: $0) }

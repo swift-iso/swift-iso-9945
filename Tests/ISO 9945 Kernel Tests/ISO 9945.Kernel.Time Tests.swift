@@ -9,12 +9,16 @@ import Testing
     import Musl
 #endif
 
-@Suite
-struct `Kernel Time Tests` {
-    @Suite struct Unit {}
+enum `ISO 9945.Kernel.Time Tests` {}
+
+extension `ISO 9945.Kernel.Time Tests` {
+    @Suite
+    struct `Kernel Time Tests` {
+        @Suite struct Unit {}
+    }
 }
 
-extension `Kernel Time Tests`.Unit {
+extension `ISO 9945.Kernel.Time Tests`.`Kernel Time Tests`.Unit {
     private static func clockRealtimeSeconds() -> Int64 {
         var ts = timespec()
         unsafe clock_gettime(CLOCK_REALTIME, &ts)
