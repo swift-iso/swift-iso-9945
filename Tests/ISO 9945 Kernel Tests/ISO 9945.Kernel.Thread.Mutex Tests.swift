@@ -322,7 +322,7 @@ extension `ISO_9945.Kernel.Thread.Mutex Tests`.Test.Unit {
 
             try harness.wait(until: { $0.threadsCompleted >= threadCount })
 
-            for i in 0..<threadCount {
+            (0..<threadCount).forEach { i in
                 if let t = unsafe threads[i] {
                     unsafe pthread_join(t, nil)
                 }

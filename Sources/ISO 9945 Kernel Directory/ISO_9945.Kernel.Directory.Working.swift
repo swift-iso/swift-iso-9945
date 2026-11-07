@@ -90,7 +90,6 @@ extension ISO_9945.Kernel.Directory.Working {
                 continue
             }
             if let thrown { throw thrown }
-            // The body ran exactly once on this path, so result is set; R may be ~Copyable, which rules out a guard-let rebind.
             // swift-format-ignore: NeverForceUnwrap
             return result!
         }
@@ -143,7 +142,6 @@ extension ISO_9945.Kernel.Directory.Working {
                 continue
             }
             if let thrown { throw thrown }
-            // The body ran exactly once on this path, so result is set; R may be ~Copyable, which rules out a guard-let rebind.
             // swift-format-ignore: NeverForceUnwrap
             return result!
         }

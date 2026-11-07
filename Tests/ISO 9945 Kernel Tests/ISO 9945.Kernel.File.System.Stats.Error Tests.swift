@@ -104,7 +104,7 @@ extension `ISO_9945.Kernel.File.System.Stats.Error Tests`.Test.`Edge Case` {
             .platform(unmapped),
         ]
 
-        for i in 0..<cases.count {
+        (0..<cases.count).forEach { i in
             for j in (i + 1)..<cases.count {
                 #expect(cases[i] != cases[j])
             }

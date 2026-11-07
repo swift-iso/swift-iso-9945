@@ -7,8 +7,8 @@
     @Suite("ISO_9945.Kernel.Process.Spawn.Actions")
     struct ISO9945KernelProcessSpawnActionsTests {
 
-        @Test("Actions() succeeds and deinit cleans up")
-        func initAndDeinit() throws {
+        @Test
+        func `Actions() succeeds and deinit cleans up`() throws {
 
             _ = try ISO_9945.Kernel.Process.Spawn.Actions()
 
@@ -16,8 +16,8 @@
             _ = try ISO_9945.Kernel.Process.Spawn.Actions()
         }
 
-        @Test("Target constants are distinct and Equatable")
-        func targetConstants() {
+        @Test
+        func `Target constants are distinct and Equatable`() {
             let stdin = ISO_9945.Kernel.Process.Spawn.Actions.Target.stdin
             let stdout = ISO_9945.Kernel.Process.Spawn.Actions.Target.stdout
             let stderr = ISO_9945.Kernel.Process.Spawn.Actions.Target.stderr
@@ -28,22 +28,22 @@
             #expect(stdin == ISO_9945.Kernel.Process.Spawn.Actions.Target.stdin)
         }
 
-        @Test("add(close: .stdin) succeeds")
-        func addCloseStdin() throws {
+        @Test
+        func `add(close: .stdin) succeeds`() throws {
             var actions = try ISO_9945.Kernel.Process.Spawn.Actions()
             try actions.add(close: .stdin)
         }
 
-        @Test("add(dup2: …, to: .stdout) succeeds")
-        func addDup2ToStdout() throws {
+        @Test
+        func `add(dup2: …, to: .stdout) succeeds`() throws {
             var actions = try ISO_9945.Kernel.Process.Spawn.Actions()
             let pipe = try ISO_9945.Kernel.Pipe.pipe()
             try actions.add(dup2: pipe.write, to: .stdout)
             try actions.add(close: .init(pipe.read))
         }
 
-        @Test("add(chdir: …) accepts a NUL-terminated path")
-        func addChdir() throws {
+        @Test
+        func `add(chdir: …) accepts a NUL-terminated path`() throws {
             var actions = try ISO_9945.Kernel.Process.Spawn.Actions()
             try Path.scope("/tmp") {
                 (borrowed: borrowing Path.Borrowed) throws(ISO_9945.Kernel.Process.Error) in
@@ -51,8 +51,8 @@
             }
         }
 
-        @Test("Spawn /bin/echo with stdout redirected to a pipe captures the output")
-        func integrationStdoutPipe() throws {
+        @Test
+        func `Spawn /bin/echo with stdout redirected to a pipe captures the output`() throws {
             let pipe = try ISO_9945.Kernel.Pipe.pipe()
             var actions = try ISO_9945.Kernel.Process.Spawn.Actions()
             try actions.add(dup2: pipe.write, to: .stdout)
@@ -95,8 +95,8 @@
             #expect(result?.status.exit.code == 0)
         }
 
-        @Test("Spawn /bin/pwd with addchdir → child's cwd is the supplied path")
-        func integrationChdir() throws {
+        @Test
+        func `Spawn /bin/pwd with addchdir → child's cwd is the supplied path`() throws {
             let pipe = try ISO_9945.Kernel.Pipe.pipe()
             var actions = try ISO_9945.Kernel.Process.Spawn.Actions()
             try actions.add(dup2: pipe.write, to: .stdout)

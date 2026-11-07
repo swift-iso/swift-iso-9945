@@ -125,7 +125,7 @@ extension `ISO_9945.Kernel.File.System.Block Tests`.Test.`Edge Case` {
             ISO_9945.Kernel.File.System.Block.Size(4096),
         ]
 
-        for i in 0..<(sizes.count - 1) {
+        (0..<(sizes.count - 1)).forEach { i in
             #expect(sizes[i] < sizes[i + 1])
         }
     }

@@ -1,7 +1,3 @@
-// The POSIX pathname grammar (IEEE 1003.1-2024 §3.254, §4.16): `/` separates components, and a
-// pathname that begins with `/` is absolute. Written once on `Path.Protocol`, so it reaches every
-// store. The scans read `view` inline: see `Path.Protocol` on why it is not bound to a local.
-
 extension Path.`Protocol` where Self: ~Copyable {
 
     /// The pathname `string` spells. POSIX gives `/` no rewriting: the code units are the text's.

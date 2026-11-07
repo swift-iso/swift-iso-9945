@@ -181,7 +181,7 @@ extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.`Edge Case` {
         let options: [ISO_9945.Kernel.File.Open.Options] = [
             .create, .truncate, .append, .exclusive, .noFollow,
         ]
-        for i in 0..<options.count {
+        (0..<options.count).forEach { i in
             for j in (i + 1)..<options.count {
                 #expect(options[i].rawValue & options[j].rawValue == 0)
             }

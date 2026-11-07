@@ -78,7 +78,7 @@ struct `Thread Yield Tests` {
 
                 guard result == 0 else {
 
-                    for j in 0..<i {
+                    (0..<i).forEach { j in
                         if let thread = unsafe threads[j] {
                             unsafe pthread_join(thread, nil)
                         }

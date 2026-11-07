@@ -98,7 +98,7 @@ extension `ISO_9945.Kernel.Lock.Acquire Tests`.Test.`Edge Case` {
             .deadline(Clock::Clock.Continuous.Instant(offset: .nanoseconds(42))),
         ]
 
-        for i in 0..<cases.count {
+        (0..<cases.count).forEach { i in
             for j in (i + 1)..<cases.count {
                 #expect(cases[i] != cases[j])
             }

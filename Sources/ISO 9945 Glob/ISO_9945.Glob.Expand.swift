@@ -33,7 +33,7 @@ extension ISO_9945.Glob {
             let count = unsafe Int(gt.gl_pathc)
             paths.reserveCapacity(count)
 
-            for i in 0..<count {
+            (0..<count).forEach { i in
                 if let cPath = unsafe gt.gl_pathv[i] {
                     paths.append(unsafe Swift::String(cString: cPath))
                 }

@@ -94,7 +94,7 @@ extension `ISO_9945.Kernel.File.Open.Error Tests`.Test.`Edge Case` {
             .platform(Error::Error(code: .posix(1))),
         ]
 
-        for i in 0..<cases.count {
+        (0..<cases.count).forEach { i in
             for j in (i + 1)..<cases.count {
                 #expect(cases[i] != cases[j])
             }

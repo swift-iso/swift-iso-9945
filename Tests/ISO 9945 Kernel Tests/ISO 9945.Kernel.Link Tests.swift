@@ -66,7 +66,7 @@ extension `ISO_9945.Kernel.Link Tests`.Test.Unit {
             .isDirectory, .notDirectory, .readOnly, .tooManyLinks,
             .noSpace, .loop, .nameTooLong,
         ]
-        for i in 0..<cases.count {
+        (0..<cases.count).forEach { i in
             for j in (i + 1)..<cases.count {
                 #expect(cases[i] != cases[j])
             }
