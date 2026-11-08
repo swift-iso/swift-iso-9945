@@ -25,7 +25,7 @@
         }
     }
 
-extension ISO_9945.Utility.Invocation.Coder {
+    extension ISO_9945.Utility.Invocation.Coder {
         public borrowing func parse(
             _ input: inout ArraySlice<Swift::String>
         ) throws(ISO_9945.Utility.Invocation.Coder.Error) -> ISO_9945.Utility.Invocation {
@@ -94,5 +94,5 @@ extension ISO_9945.Utility.Invocation.Coder {
                 }
             }
         }
-}
+    }
 #endif

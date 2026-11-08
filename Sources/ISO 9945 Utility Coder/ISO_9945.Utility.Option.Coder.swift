@@ -22,7 +22,7 @@
         }
     }
 
-extension ISO_9945.Utility.Option.Coder {
+    extension ISO_9945.Utility.Option.Coder {
         public borrowing func parse(
             _ input: inout ArraySlice<Swift::String>
         ) throws(ISO_9945.Utility.Option.Coder.Error) -> [ISO_9945.Utility.Option] {
@@ -99,7 +99,7 @@ extension ISO_9945.Utility.Option.Coder {
                 }
             }
         }
-}
+    }
 
     extension ISO_9945.Utility.Option {
         public static var coder: ISO_9945.Utility.Option.Coder {

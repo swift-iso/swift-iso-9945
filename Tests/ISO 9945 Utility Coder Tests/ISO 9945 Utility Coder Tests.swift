@@ -7,9 +7,9 @@
     import Serializer
     import Testing
 
-enum `ISO 9945 Utility Coder Tests` {}
+    enum `ISO 9945 Utility Coder Tests` {}
 
-extension `ISO 9945 Utility Coder Tests` {
+    extension `ISO 9945 Utility Coder Tests` {
         @Suite
         struct `ISO 9945 Utility Coder` {
 
@@ -204,5 +204,5 @@ extension `ISO 9945 Utility Coder Tests` {
                 #expect(written == ["Ada"])
             }
         }
-}
+    }
 #endif
