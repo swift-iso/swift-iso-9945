@@ -126,7 +126,7 @@ extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization
 }
 
 extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests` {
-    @Suite("Integration")
+    @Suite
     struct Integration {}
 }
 

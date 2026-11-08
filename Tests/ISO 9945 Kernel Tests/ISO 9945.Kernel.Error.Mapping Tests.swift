@@ -15,7 +15,7 @@ import Testing
     import Musl
 #endif
 
-@Suite("Path.Resolution.Error Mapping")
+@Suite
 struct PathResolutionErrorMappingTests {
     @Test
     func `notFound from ENOENT`() {
@@ -48,7 +48,7 @@ struct PathResolutionErrorMappingTests {
     }
 }
 
-@Suite("Permission.Error Mapping")
+@Suite
 struct PermissionErrorMappingTests {
     @Test
     func `denied from EACCES`() {
@@ -75,7 +75,7 @@ struct PermissionErrorMappingTests {
     }
 }
 
-@Suite("Descriptor.Validity.Error Mapping")
+@Suite
 struct DescriptorValidityErrorMappingTests {
     @Test
     func `invalid from EBADF`() {
@@ -102,7 +102,7 @@ struct DescriptorValidityErrorMappingTests {
     }
 }
 
-@Suite("IO.Blocking.Error Mapping")
+@Suite
 struct IOBlockingErrorMappingTests {
     @Test
     func `wouldBlock from EAGAIN`() {
@@ -117,7 +117,7 @@ struct IOBlockingErrorMappingTests {
     }
 }
 
-@Suite("Storage.Error Mapping")
+@Suite
 struct StorageErrorMappingTests {
     @Test
     func `exhausted from ENOSPC`() {
@@ -138,7 +138,7 @@ struct StorageErrorMappingTests {
     }
 }
 
-@Suite("Memory.Allocation.Error Mapping")
+@Suite
 struct MemoryAllocationErrorMappingTests {
     @Test
     func `exhausted from ENOMEM`() {
@@ -153,7 +153,7 @@ struct MemoryAllocationErrorMappingTests {
     }
 }
 
-@Suite("IO.Error Mapping")
+@Suite
 struct IOErrorMappingTests {
     @Test
     func `hardware from EIO`() {
@@ -180,7 +180,7 @@ struct IOErrorMappingTests {
     }
 }
 
-@Suite("Error.Error")
+@Suite
 struct KernelErrorTests {
     @Test
     func `creates error from errno code`() {

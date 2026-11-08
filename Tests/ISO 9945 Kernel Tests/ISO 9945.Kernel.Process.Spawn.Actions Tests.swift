@@ -4,7 +4,7 @@
     import Path
     @testable import ISO_9945_Kernel
 
-    @Suite("ISO_9945.Kernel.Process.Spawn.Actions")
+    @Suite
     struct ISO9945KernelProcessSpawnActionsTests {
 
         @Test
