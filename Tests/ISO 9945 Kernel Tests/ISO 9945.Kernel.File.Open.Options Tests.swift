@@ -182,7 +182,7 @@ extension `ISO_9945.Kernel.File.Open.Options Tests`.Test.`Edge Case` {
             .create, .truncate, .append, .exclusive, .noFollow,
         ]
         (0..<options.count).forEach { i in
-            for j in (i + 1)..<options.count {
+            ((i + 1)..<options.count).forEach { j in
                 #expect(options[i].rawValue & options[j].rawValue == 0)
             }
         }

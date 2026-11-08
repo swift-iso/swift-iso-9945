@@ -79,7 +79,7 @@ extension `Memory.Map.Sync.Options Tests`.Test.`Edge Case` {
         ]
 
         (0..<flags.count).forEach { i in
-            for j in (i + 1)..<flags.count {
+            ((i + 1)..<flags.count).forEach { j in
                 #expect(flags[i] != flags[j])
             }
         }

@@ -63,7 +63,7 @@ extension `Memory.Map.Advice Tests`.Test.`Edge Case` {
         ]
 
         (0..<advices.count).forEach { i in
-            for j in (i + 1)..<advices.count {
+            ((i + 1)..<advices.count).forEach { j in
                 #expect(advices[i] != advices[j])
             }
         }

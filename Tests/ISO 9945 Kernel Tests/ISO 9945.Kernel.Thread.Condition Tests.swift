@@ -559,7 +559,7 @@ extension `ISO_9945.Kernel.Thread.Condition Tests`.Test.Unit {
                 { raw -> UnsafeMutableRawPointer? in
                     let ctx = unsafe Unmanaged<Context>.fromOpaque(raw).takeRetainedValue()
 
-                    for i in 0..<ctx.itemCount {
+                    (0..<ctx.itemCount).forEach { i in
                         ctx.mutex.lock()
                         ctx.harness.update {
                             $0.buffer.append(i)
