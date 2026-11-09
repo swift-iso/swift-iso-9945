@@ -115,3 +115,19 @@ extension `Path+POSIX Tests` {
         }
     }
 }
+
+        @Test
+        func `a platform-native filename keeps control characters`() throws {
+            let name = try ISO_9945.Filename(platformNative: Array("a\nb".utf8))
+            #expect(name.string == "a\nb")
+            #expect(name.count == 3)
+            let units: [([Path.Char], ISO_9945.Filename.Error)] = [
+                ([], .empty),
+                (Array("a/b".utf8), .containsPathSeparator),
+                ([0x61, 0x00, 0x62], .containsInteriorNUL),
+                ([0x61, 0xFF], .invalidUTF8),
+            ]
+            for (codeUnits, error) in units {
+                #expect(throws: error) { _ = try ISO_9945.Filename(platformNative: codeUnits) }
+            }
+        }

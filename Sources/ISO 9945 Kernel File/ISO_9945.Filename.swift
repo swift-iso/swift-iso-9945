@@ -64,14 +64,17 @@ extension ISO_9945.Filename {
         }
     }
 
-    /// The filename a directory entry names, from its code units. The units must be valid UTF-8 and
-    /// hold to the rules for text.
+    /// The filename a directory entry names, from its code units. The units must be valid UTF-8,
+    /// non-empty and free of `/` and NUL; control characters are kept.
     @inlinable
     public init(platformNative codeUnits: [Path.Char]) throws(Error) {
-        guard let string = Swift::String(validating: codeUnits, as: UTF8.self) else {
+        guard !codeUnits.isEmpty else { throw .empty }
+        if codeUnits.contains(0) { throw .containsInteriorNUL }
+        if codeUnits.contains(Self.separator) { throw .containsPathSeparator }
+        guard Swift::String(validating: codeUnits, as: UTF8.self) != nil else {
             throw .invalidUTF8
         }
-        try self.init(string)
+        self.init(unchecked: codeUnits.span)
     }
 
     /// Code units already known to form a filename: non-empty, no `/`, no NUL.
