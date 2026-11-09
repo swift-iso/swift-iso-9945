@@ -70,6 +70,26 @@ extension `ISO_9945.Kernel.Thread.Condition Tests`.Test.Unit {
     }
 
     @Test
+    func `timed wait lasts at least its timeout`() {
+        let mutex = ISO_9945.Kernel.Thread.Mutex()
+        let condition = ISO_9945.Kernel.Thread.Condition()
+        let clock = ContinuousClock()
+
+        mutex.lock()
+        var elapsed = Duration.zero
+        for _ in 0..<10 {
+            let start = clock.now
+            let wasSignaled = condition.wait(mutex: mutex, timeout: .milliseconds(50))
+            elapsed = clock.now - start
+            if !wasSignaled { break }
+        }
+        mutex.unlock()
+
+        #expect(elapsed >= .milliseconds(45))
+        #expect(elapsed < .seconds(5))
+    }
+
+    @Test
     func `multiple conditions are independent`() {
 
         let mutex = ISO_9945.Kernel.Thread.Mutex()

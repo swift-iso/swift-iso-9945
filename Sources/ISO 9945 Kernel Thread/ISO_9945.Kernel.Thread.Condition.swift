@@ -39,31 +39,22 @@ extension ISO_9945.Kernel.Thread.Condition {
 
     public func wait(mutex: ISO_9945.Kernel.Thread.Mutex, timeout: Duration) -> Bool {
         unsafe mutex.withUnsafeMutablePointer { mutexPtr in
+            let (seconds, attoseconds) = timeout.components
             var ts = timespec()
-
             #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
-
-                var tv = timeval()
-                unsafe gettimeofday(&tv, nil)
-                let (seconds, attoseconds) = timeout.components
-                ts.tv_sec = tv.tv_sec + Int(seconds)
-                ts.tv_nsec = Int(tv.tv_usec) * 1000 + Int(attoseconds / 1_000_000_000)
-                if ts.tv_nsec >= 1_000_000_000 {
-                    ts.tv_sec += 1
-                    ts.tv_nsec -= 1_000_000_000
-                }
+                ts.tv_sec = Int(seconds)
+                ts.tv_nsec = Int(attoseconds / 1_000_000_000)
+                let result = unsafe pthread_cond_timedwait_relative_np(&cond, mutexPtr, &ts)
             #else
-
                 clock_gettime(CLOCK_MONOTONIC, &ts)
-                let (seconds, attoseconds) = timeout.components
                 ts.tv_sec += Int(seconds)
                 ts.tv_nsec += Int(attoseconds / 1_000_000_000)
                 if ts.tv_nsec >= 1_000_000_000 {
                     ts.tv_sec += 1
                     ts.tv_nsec -= 1_000_000_000
                 }
+                let result = unsafe pthread_cond_timedwait(&cond, mutexPtr, &ts)
             #endif
-            let result = unsafe pthread_cond_timedwait(&cond, mutexPtr, &ts)
             return result == 0
         }
     }
