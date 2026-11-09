@@ -265,7 +265,7 @@ static inline int swift_posix_spawn_isolated(
     (void)argv;
     (void)envp;
     return ENOSYS;
-#elif defined(__APPLE__)
+#else
     posix_spawnattr_t attributes;
     int rc = posix_spawnattr_init(&attributes);
     if (rc != 0) {
@@ -282,7 +282,11 @@ static inline int swift_posix_spawn_isolated(
         rc = posix_spawnattr_setsigmask(&attributes, &mask);
     }
     if (rc == 0) {
+#if defined(__APPLE__)
         rc = posix_spawnattr_setflags(&attributes, POSIX_SPAWN_CLOEXEC_DEFAULT | POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
+#else
+        rc = posix_spawnattr_setflags(&attributes, POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
+#endif
     }
     if (rc == 0) {
         rc = posix_spawn(
@@ -296,15 +300,6 @@ static inline int swift_posix_spawn_isolated(
     }
     int destroyed = posix_spawnattr_destroy(&attributes);
     return rc != 0 ? rc : destroyed;
-#else
-    return posix_spawn(
-        pid,
-        path,
-        (const posix_spawn_file_actions_t *)file_actions,
-        NULL,
-        (char *const *)argv,
-        (char *const *)envp
-    );
 #endif
 }
 

@@ -2,6 +2,12 @@
 
     import Testing
     import Path
+
+    #if canImport(Darwin)
+        import Darwin
+    #elseif canImport(Glibc)
+        import Glibc
+    #endif
     @testable import ISO_9945_Kernel
 
     @Suite
@@ -143,6 +149,58 @@
 
             let result = try ISO_9945.Kernel.Process.Wait.wait(.process(pid))
             #expect(result?.status.exit.code == 0)
+        }
+
+        private func shellExitCode(
+            _ script: Swift::String,
+            actions: borrowing ISO_9945.Kernel.Process.Spawn.Actions,
+            isolated: Bool
+        ) throws -> Int32? {
+            let argv: [Swift::String] = ["/bin/sh", "-c", script]
+            let envp: [Swift::String] = []
+            let pid: ISO_9945.Kernel.Process.ID = try unsafe Path.scope.array(argv, envp) {
+                (
+                    argvPtr: UnsafePointer<UnsafePointer<Path.Char>?>,
+                    envpPtr: UnsafePointer<UnsafePointer<Path.Char>?>
+                ) throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.ID in
+                try unsafe ISO_9945.Kernel.Process.Spawn.spawn(
+                    path: argvPtr[0]!,
+                    argv: argvPtr,
+                    envp: envpPtr,
+                    actions: actions,
+                    isolated: isolated
+                )
+            }
+            let result = try ISO_9945.Kernel.Process.Wait.wait(.process(pid))
+            return result?.status.exit.code
+        }
+
+        @Test
+        func `an isolated spawn keeps a stray descriptor from the child`() throws {
+            let pipe = try ISO_9945.Kernel.Pipe.pipe()
+            let script = "[ -e /dev/fd/\(pipe.read._raw) ]"
+
+            let plain = try ISO_9945.Kernel.Process.Spawn.Actions()
+            #expect(try shellExitCode(script, actions: plain, isolated: false) == 0)
+
+            var actions = try ISO_9945.Kernel.Process.Spawn.Actions()
+            guard try actions.isolate() else { return }
+            #expect(try shellExitCode(script, actions: actions, isolated: true) == 1)
+        }
+
+        @Test
+        func `an isolated spawn clears the signal mask`() throws {
+            var blocked = sigset_t()
+            var previous = sigset_t()
+            sigemptyset(&blocked)
+            sigaddset(&blocked, SIGUSR1)
+            pthread_sigmask(SIG_BLOCK, &blocked, &previous)
+            defer { pthread_sigmask(SIG_SETMASK, &previous, nil) }
+
+            let script = "kill -USR1 $$; exit 0"
+            let actions = try ISO_9945.Kernel.Process.Spawn.Actions()
+            #expect(try shellExitCode(script, actions: actions, isolated: false) == 0)
+            #expect(try shellExitCode(script, actions: actions, isolated: true) == nil)
         }
     }
 
