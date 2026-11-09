@@ -143,9 +143,6 @@ extension ISO_9945.Filename: ExpressibleByStringLiteral {
     }
 }
 
-/// Interpolated text is a filename by the same rule as a plain literal.
-extension ISO_9945.Filename: ExpressibleByStringInterpolation {}
-
 extension ISO_9945.Filename: Binary.Serializable {
 
     /// The name's text, as UTF-8.

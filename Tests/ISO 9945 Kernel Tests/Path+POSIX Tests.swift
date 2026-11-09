@@ -20,12 +20,15 @@ extension `Path+POSIX Tests` {
         }
 
         @Test
-        func `an interpolated literal spells a path and a component`() {
+        func `an interpolated literal spells a path, and runtime text a component by throwing`() throws {
             let name = "local"
             let path: Path = "/usr/\(name)/bin"
-            let component: Path.Component = "\(name).txt"
+            let component = try Path.Component("\(name).txt")
             #expect(path == "/usr/local/bin")
             #expect(component == "local.txt")
+            #expect(throws: ISO_9945.Filename.Error.containsPathSeparator) {
+                try Path.Component("\(name)/bin")
+            }
         }
 
         @Test
@@ -113,8 +116,6 @@ extension `Path+POSIX Tests` {
             #expect(name.count == 8)
             #expect(Path.Component.self == ISO_9945.Filename.self)
         }
-    }
-}
 
         @Test
         func `a platform-native filename keeps control characters`() throws {
@@ -131,3 +132,5 @@ extension `Path+POSIX Tests` {
                 #expect(throws: error) { _ = try ISO_9945.Filename(platformNative: codeUnits) }
             }
         }
+    }
+}
