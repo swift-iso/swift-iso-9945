@@ -20,7 +20,7 @@ extension ISO_9945.Kernel.File.Seek {
         #if canImport(Darwin)
             let result = Darwin.lseek(fd, offset, whence.rawValue)
         #elseif canImport(Musl)
-            let result = unsafe Musl.lseek(fd, offset, whence.rawValue)
+            let result = unsafe Musl.lseek(fd, off_t(offset), whence.rawValue)
         #elseif canImport(Glibc)
             let result = unsafe Glibc.lseek(fd, off_t(offset), whence.rawValue)
         #endif

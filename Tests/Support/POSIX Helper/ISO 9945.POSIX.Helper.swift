@@ -4,6 +4,8 @@
         import Darwin
     #elseif canImport(Glibc)
         import Glibc
+    #elseif canImport(Musl)
+        import Musl
     #endif
 
     @main

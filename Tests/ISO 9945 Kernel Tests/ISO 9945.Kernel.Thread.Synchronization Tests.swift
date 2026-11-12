@@ -24,7 +24,7 @@ extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization
     struct `Mutex Unit` {}
 }
 
-extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.MutexUnit {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.`Mutex Unit` {
     @Test
     func `mutex can be locked and unlocked`() {
         let mutex = ISO_9945.Kernel.Thread.Mutex()
@@ -97,7 +97,7 @@ extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization
     struct `Condition Unit` {}
 }
 
-extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.ConditionUnit {
+extension `ISO 9945.Kernel.Thread.Synchronization Tests`.`Thread Synchronization Tests`.`Condition Unit` {
     @Test
     func `condition can signal without waiters`() {
         let condition = ISO_9945.Kernel.Thread.Condition()

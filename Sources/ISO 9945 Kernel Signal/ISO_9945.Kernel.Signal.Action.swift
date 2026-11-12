@@ -85,16 +85,16 @@ extension sigaction {
         #elseif canImport(Musl)
             switch unsafe configuration.handler {
             case .default:
-                unsafe (self.sa_handler = SIG_DFL)
+                unsafe (self.__sa_handler.sa_handler = SIG_DFL)
 
             case .ignore:
-                unsafe (self.sa_handler = SIG_IGN)
+                unsafe (self.__sa_handler.sa_handler = SIG_IGN)
 
             case .custom(let handler):
-                unsafe (self.sa_handler = handler)
+                unsafe (self.__sa_handler.sa_handler = handler)
 
             case .customInfo(let handler):
-                unsafe (self.sa_sigaction = handler)
+                unsafe (self.__sa_handler.sa_sigaction = handler)
             }
         #endif
     }
@@ -116,8 +116,8 @@ extension ISO_9945.Kernel.Signal.Action.Configuration {
             let handlerPtr = unsafe action.__sigaction_handler.sa_handler
             let sigactionPtr = unsafe action.__sigaction_handler.sa_sigaction
         #elseif canImport(Musl)
-            let handlerPtr = unsafe action.sa_handler
-            let sigactionPtr = unsafe action.sa_sigaction
+            let handlerPtr = unsafe action.__sa_handler.sa_handler
+            let sigactionPtr = unsafe action.__sa_handler.sa_sigaction
         #endif
 
         let sigDflRaw = unsafe unsafeBitCast(SIG_DFL, to: Int.self)

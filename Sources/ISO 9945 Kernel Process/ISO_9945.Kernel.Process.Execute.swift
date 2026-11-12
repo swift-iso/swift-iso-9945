@@ -28,7 +28,7 @@ extension ISO_9945.Kernel.Process.Execute {
         #elseif canImport(Glibc)
             _ = unsafe swift_execve(path, argv, envp)
         #elseif canImport(Musl)
-            _ = unsafe Musl.execve(path, argv, envp)
+            _ = unsafe swift_execve(path, argv, envp)
         #endif
         throw .execute(Error::Error.Code.captureErrno())
     }

@@ -43,6 +43,31 @@ extension ISO_9945.Kernel.Thread {
 
             return unsafe ISO_9945.Kernel.Thread.Handle(rawValue: thread)
 
+        #elseif canImport(Musl)
+            var thread: pthread_t?
+
+            let result = unsafe pthread_create(
+                &thread,
+                nil,
+                { ctx in
+                    guard let ctx = unsafe ctx else { return nil }
+                    let bodyPtr = unsafe ctx.assumingMemoryBound(to: (@Sendable () -> Void).self)
+                    let work = unsafe bodyPtr.move()
+                    unsafe bodyPtr.deallocate()
+                    work()
+                    return nil
+                },
+                context
+            )
+
+            guard result == 0, let thread = unsafe thread else {
+                unsafe context.deinitialize(count: 1)
+                unsafe context.deallocate()
+                throw .create(.posix(result))
+            }
+
+            return unsafe ISO_9945.Kernel.Thread.Handle(rawValue: thread)
+
         #else
 
             var thread: pthread_t = 0
